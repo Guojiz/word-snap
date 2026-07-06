@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a practice, UI, or learning improvement
+title: "Feature: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Learning problem
+      description: What should become easier for the learner?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: interaction
+    attributes:
+      label: Interaction details
+      description: How should it behave on desktop and mobile?
+  - type: textarea
+    id: data
+    attributes:
+      label: Data or vocabulary notes
+      description: Do not paste copyrighted or private word lists unless they can be redistributed.
