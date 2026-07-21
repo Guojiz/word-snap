@@ -1,5 +1,13 @@
-# Word Match Quest
+# Word Snap
 
-This repository has been redirected. Please use the current page: https://guojiz.github.io/word-match/
+A bilingual vocabulary matching app with immediate feedback, custom word lists, adaptive review, and PWA installation.
 
-Word Match Quest was a vocabulary matching practice page, and the maintained version now lives at the correct website above.
+The maintained app lives at: https://guojiz.github.io/word-snap/
+
+---
+
+# Word Snap（中文）
+
+支持即时反馈、自定义词表、自适应复习和 PWA 安装的双语单词匹配应用。
+
+维护中的应用入口：https://guojiz.github.io/word-snap/
