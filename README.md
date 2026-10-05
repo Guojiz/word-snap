@@ -14,7 +14,7 @@
 
 A bilingual vocabulary matching app with immediate feedback, custom word lists, adaptive review, and PWA installation.
 
-The maintained app lives on the official site. This repository is the public project page, license, and contribution notes for that live practice surface.
+This repository holds the app's full source. The `main` branch is deployed with GitHub Pages to the official site. Feature details, review logic, import format and data notes: [GUIDE.md](GUIDE.md).
 
 ## Official website
 
@@ -73,7 +73,7 @@ MIT. See [LICENSE](LICENSE).
 
 支持即时反馈、自定义词表、自适应复习和 PWA 安装的双语单词匹配应用。
 
-维护中的应用在官网上。本仓库是该练习页的项目说明、许可证和贡献入口。
+本仓库是应用的完整源码，`main` 分支通过 GitHub Pages 部署到官网。功能细节、复习逻辑、导入格式和数据说明见 [GUIDE.md](GUIDE.md)。
 
 ## 官网
 
