@@ -1,0 +1,7 @@
+# Word Snap profile layer: one Host row (static route + shared library tools +
+# the panel's loopback RPC channel). The package name resolves both halves —
+# this row is the Host entry, and the client-modules scan picks up the same
+# package's `dsh.client` bundle for the browser panel.
+- insert:
+    - id: wordsnap-host
+      name: 'wordsnap-dsh'
