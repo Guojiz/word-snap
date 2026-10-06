@@ -4,7 +4,7 @@
 
 ### Added
 
-- **Trial level for first-time visitors.** The built-in words are a demo, not a study list: after the intro, new visitors play one 10-word trial level (“Trial level · n/10”, generous timer, not used as a pace sample). Its completion screen says the words were samples and offers **Import my words** (opens Library → Add words) or *keep practicing with the sample words for now*. The intro also has **I have a list — import it** to skip the trial. Existing users never see it; re-opening the intro later only shows *Got it*.
+- **Trial level for first-time visitors.** The built-in words are a demo, not a study list: after the intro, new visitors play one 10-word trial level (“Trial level · n/10”, generous timer, not used as a pace sample). Its completion screen says the words were samples and offers **Import my words** (opens Library → Add words) or *keep practicing with the sample words for now*. The trial only ends when words are actually imported or *keep the samples* is chosen: closing the import window, ×, reloading or editing the library all return to this choice (with a reminder), so the demo words never silently become the study list. The intro also has **I have a list — import it** to skip the trial. Existing users never see it; re-opening the intro later only shows *Got it*.
 - **Replace the sample words on import.** While sample words are in the library, Add words shows “Remove the N sample words when importing”, ticked by default — so the first import gives you a library of only your own words. Untick it to keep them. *My words* also has a one-click *Remove all sample words*.
 
 ### Changed

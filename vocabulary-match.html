@@ -2100,7 +2100,8 @@
         trial: {
           doneTitle: "Trial complete!",
           doneText: "Those were sample words. Now bring in the words you actually need — type them, paste a list, or let any AI make one.",
-          importBtn: "Import my words"
+          importBtn: "Import my words",
+          notYet: "No words imported yet — tap “Import my words”, or keep practicing with the samples for now."
         },
         ai: {
           copied: "AI prompt copied. Send it to any AI, then paste its answer here.",
@@ -2227,7 +2228,8 @@
         trial: {
           doneTitle: "体验完成！",
           doneText: "刚才是示例词。现在换成你真正要背的词吧：手动输入、粘贴词表，或者让 AI 帮你生成。",
-          importBtn: "导入我的单词"
+          importBtn: "导入我的单词",
+          notYet: "还没有导入单词。点「导入我的单词」继续，或者先用示例词练。"
         },
         ai: {
           copied: "AI 提示词已复制。发给任意 AI，再把它的回答粘贴到这里。",
@@ -2461,7 +2463,8 @@
       roundComplete: false,
       lastPairAt: 0,
       pausedAt: 0,
-      // "trial": a first-time visitor's demo level with the sample words; "done" afterwards.
+      // First visit: "trial" (demo level with the sample words) → "choose" (trial
+      // finished: import my words, or keep the samples) → "done".
       onboarding: "done",
       // wordId -> when both halves of the pair were on the board (reaction-time baseline).
       visibleAt: new Map(),
@@ -3179,8 +3182,32 @@
       return state.onboarding === "trial" && sampleWords().length > 0;
     }
 
+    /**
+     * Trial finished but the learner hasn't decided yet. Closing the library
+     * without importing must not quietly turn the demo words into their study
+     * list, so every way back (close, ×, reload, edits) returns to this choice
+     * until they import words or pick "keep the samples".
+     */
+    function awaitingTrialChoice() {
+      return state.onboarding === "choose" && sampleWords().length > 0;
+    }
+
     function endTrial() {
       state.onboarding = "done";
+      state.trialLibraryVisited = false;
+    }
+
+    function showTrialChoice() {
+      clearLevelTimers();
+      clearSelection();
+      state.levelEndsAt = 0;
+      els.practiceView.classList.add("hidden");
+      els.completionView.classList.add("show");
+      els.completionBadge.textContent = "✓";
+      els.main.scrollTop = 0;
+      state.lastCompletion = { allDone: false, reason: "queue", trial: true };
+      renderCompletionCopy();
+      renderStats();
     }
 
     const listView = { filter: "all", sort: "progress", query: "" };
@@ -3565,6 +3592,10 @@
     }
 
     function renderRound() {
+      if (awaitingTrialChoice()) {
+        showTrialChoice();
+        return;
+      }
       clearLevelTimers();
       state.selected = null;
       state.locked = false;
@@ -4113,7 +4144,9 @@
       els.completionBadge.textContent = "✓";
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
-      state.lastCompletion = { allDone, reason, trial: isTrial() };
+      const trial = isTrial();
+      if (trial) state.onboarding = "choose";
+      state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
@@ -4134,7 +4167,12 @@
       els.trialKeepBtn.hidden = !trial;
       if (trial) {
         els.completionTitle.textContent = t("trial.doneTitle");
-        els.completionText.textContent = `${summary} ${t("trial.doneText")}`;
+        // After a reload there are no level stats to report — just the choice.
+        els.completionText.textContent = [
+          state.completedThisRun ? summary : "",
+          t("trial.doneText"),
+          state.trialLibraryVisited ? t("trial.notYet") : ""
+        ].filter(Boolean).join(" ");
         els.continueBtn.textContent = t("trial.importBtn");
         renderReviewList();
         return;
@@ -4554,6 +4592,8 @@
     function closeLibrary() {
       if (!els.libraryModal.classList.contains("open")) return;
       els.libraryModal.classList.remove("open");
+      // Closed without importing: back on the choice screen, now with a nudge.
+      if (awaitingTrialChoice()) renderCompletionCopy();
       resumeLevel();
     }
 
@@ -4998,13 +5038,16 @@
         openLibrary();
         return;
       }
-      const afterTrial = state.lastCompletion && state.lastCompletion.trial;
-      if (afterTrial) endTrial();
+      // After the trial: open the import page. The trial only ends once words
+      // are actually imported (or "keep the samples" is chosen).
+      if (awaitingTrialChoice()) {
+        state.trialLibraryVisited = true;
+        openLibrary("add");
+        return;
+      }
       state.round += 1;
       saveWords();
       renderRound();
-      // The trial's whole point: next, bring in the words you actually need.
-      if (afterTrial) openLibrary("add");
     });
     els.trialKeepBtn.addEventListener("click", () => {
       endTrial();
@@ -5084,7 +5127,7 @@
     }
     // Existing users skip the trial; a first visit starts with it.
     state.onboarding = savedState
-      ? (savedState.onboarding === "trial" ? "trial" : "done")
+      ? (["trial", "choose"].includes(savedState.onboarding) ? savedState.onboarding : "done")
       : "trial";
     if (savedState) {
       if (Number.isFinite(Number(savedState.round)) && Number(savedState.round) >= 1) {
