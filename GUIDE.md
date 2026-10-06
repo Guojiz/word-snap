@@ -22,7 +22,8 @@ Word Snap is a static single-page vocabulary matching practice app. Match pairs 
 - Wrong pairs shake and roll back into practice.
 - Box-based review: missed words come back next round, correct ones after longer and longer gaps; new words arrive in small batches.
 - **Library** in three tabs: **My words** (stage filters with counts, search, sort, grouped by learning stage), **Add words** (single, bulk, AI prompt), **Print / export**.
-- New words are introduced **your own words first**, in the order you added them; the built-in sample words wait until after them, and can be removed in one click once you have your own list.
+- **Trial level**: first-time visitors play one 10-word level with the built-in sample words, then get **Import my words**. On import, the sample words are replaced by your list (a ticked-by-default option); untick it to keep them, or skip the trial from the intro with **I have a list — import it**.
+- If you keep the samples, **your own words are introduced first**, in the order you added them.
 - **Settings** (side rail / bottom nav) hold the practice options, save automatically, and keep the rarely needed ones under **Advanced**. Resetting learning progress lives here too, behind a confirmation — it is no longer a main navigation button.
 - **My words → Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Copy word list backup** first; pasting the backup into Bulk input restores the words (not their progress).
 - Empty-library prompt when there is nothing to practice.
@@ -153,7 +154,8 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 - 10 格流式配对：左 5、右 5；快捷键 `1`–`0`；即时判定。
 - 盒子式复习（答错下一轮再来，答对隔得越来越久）、新词小批量加入。
 - **词库**分三个标签页：**我的词库**（按阶段筛选并显示数量、搜索、排序、按学习阶段分组）、**添加单词**（单个、批量、AI 提示词）、**打印导出**。
-- 新词**先学你自己的词**（按添加顺序），内置示例词排在后面；有了自己的词表后可以一键移除没练过的示例词。
+- **体验关**：第一次打开先用内置示例词玩一关（10 个词），结束后点「导入我的单词」。导入时默认勾选「移除示例词」，词库里就只剩你自己的词；取消勾选可以保留示例词。也可以在介绍卡上点「我有词表，直接导入」跳过体验关。
+- 如果保留示例词，新词**先学你自己的词**（按添加顺序），示例词排在后面。
 - **设置**（侧栏 / 底栏）放练习选项，改完自动保存，不常用的收在「高级选项」里。重置学习进度也在这里，需要确认，不再是主导航按钮。
 - **我的词库 → 危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「复制词表备份」，之后粘贴回「批量录入」即可恢复单词（学习进度不恢复）。
 - 设置：语言对、练习模式（自适应 / 只练弱项 / 全量顺序）、外观、每局最多单词数、每关时间、按速度自动调时、钢琴音阶；高级：时间容错、补词延迟、选中暂停补词、全部掌握后继续循环。
