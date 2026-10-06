@@ -1015,7 +1015,7 @@
       grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    .intro-link {
+    .link-button.intro-link {
       margin: 6px 0 0 -8px;
       color: var(--blue);
     }
@@ -1319,6 +1319,7 @@
     .lang-toggle {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 3px;
     }
     .lang-toggle .lang-opt {
@@ -1331,6 +1332,26 @@
     .lang-toggle .sep {
       opacity: .35;
     }
+    .completion-actions {
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+    }
+
+    .link-button.trial-keep {
+      color: var(--muted);
+      font-size: 15px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .check-row.drop-samples {
+      margin: 0 0 16px;
+      border: 2px dashed var(--line-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+
     .intro-card {
       width: min(460px, 100%);
     }
@@ -1369,7 +1390,9 @@
 
     .intro-actions {
       display: flex;
+      flex-wrap: wrap;
       justify-content: flex-end;
+      gap: 10px;
       padding: 20px;
     }
 
@@ -1395,6 +1418,171 @@
       color: var(--green);
     }
 
+    /* `label { display: grid }` would otherwise beat the hidden attribute */
+    [hidden] {
+      display: none !important;
+    }
+
+    .tab-bar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      gap: 6px;
+      padding: 10px 20px 0;
+      border-bottom: 2px solid var(--line);
+      background: var(--panel);
+    }
+
+    .tab-btn {
+      flex: 1 1 0;
+      min-height: 44px;
+      border: 2px solid transparent;
+      border-bottom: 0;
+      border-radius: 12px 12px 0 0;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .tab-btn[aria-selected="true"] {
+      border-color: var(--line);
+      color: var(--green);
+      background: var(--panel-soft);
+      margin-bottom: -2px;
+      padding-bottom: 2px;
+    }
+
+    .stage-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stage-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 12px;
+      color: var(--muted);
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .stage-chip b {
+      color: var(--text);
+    }
+
+    .stage-chip[aria-pressed="true"] {
+      border-color: var(--blue);
+      color: var(--selected-ink);
+      background: var(--selected-bg);
+    }
+
+    .stage-chip[aria-pressed="true"] b {
+      color: inherit;
+    }
+
+    .list-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .list-tools select {
+      width: auto;
+    }
+
+    @media (max-width: 640px) {
+      .list-tools {
+        grid-template-columns: 1fr;
+      }
+
+      .list-tools select {
+        width: 100%;
+      }
+    }
+
+    .sample-note {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 10px;
+      margin-top: 12px;
+      border: 2px dashed var(--line-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .sample-note .link-button {
+      color: var(--blue);
+      padding: 0;
+    }
+
+    .list-group {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .list-group:first-child {
+      margin-top: 0;
+    }
+
+    .list-group small {
+      margin-left: 6px;
+      font-weight: 700;
+      text-transform: none;
+    }
+
+    .custom-row .stage-tag {
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .custom-row .stage-tag.is-learning {
+      color: var(--weak-wrong);
+    }
+
+    .custom-row .stage-tag.is-mastered {
+      color: var(--green);
+    }
+
+    .list-foot {
+      margin-top: 14px;
+    }
+
+    .advanced {
+      margin-top: 16px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 14px 14px;
+    }
+
+    .advanced summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .advanced[open] summary {
+      margin-bottom: 4px;
+    }
+
     .lang-pair-custom {
       grid-column: 1 / -1;
     }
@@ -1404,9 +1592,9 @@
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
       <div class="logo" aria-hidden="true">W</div>
-      <button class="rail-btn active" type="button" data-en="Practice" data-zh="练习">练习</button>
+      <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
       <button class="rail-btn" type="button" id="openLibraryRail" data-en="Library" data-zh="词库">词库</button>
-      <button class="rail-btn" type="button" id="resetRail" data-en="Reset" data-zh="重置">重置</button>
+      <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
       <a class="rail-btn" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer">GitHub</a>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
       <button class="rail-btn lang-toggle" type="button" id="langToggleRail" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
@@ -1414,9 +1602,9 @@
 
     <main class="main">
       <nav class="mobile-nav" aria-label="窄屏导航" data-en-aria="Mobile navigation" data-zh-aria="窄屏导航">
-        <button class="rail-btn active" type="button" data-en="Practice" data-zh="练习">练习</button>
+        <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
         <button class="rail-btn" type="button" id="openLibraryMobile" data-en="Library" data-zh="词库">词库</button>
-        <button class="rail-btn" type="button" id="resetMobile" data-en="Reset" data-zh="重置">重置</button>
+        <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
         <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
         <button class="rail-btn lang-toggle" type="button" id="langToggleMobile" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
       </nav>
@@ -1440,7 +1628,10 @@
           <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
           <p class="review-heading" id="reviewHeading"></p>
           <ul class="review-list" id="reviewList"></ul>
-          <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+          <div class="completion-actions">
+            <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+            <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
+          </div>
         </div>
 
       </section>
@@ -1494,57 +1685,27 @@
         <li data-en="Left: meanings. Right: words. Tap one card, then its match on the other side. On a keyboard, use 1–0." data-zh="左边是释义，右边是单词。先点一张，再点另一侧对应的那张。电脑上也可以按数字键 1–0。">左边是释义，右边是单词。先点一张，再点另一侧对应的那张。电脑上也可以按数字键 1–0。</li>
         <li data-en="Each level is timed. Matched pairs disappear and new words slide in." data-zh="每关有时间限制。配对成功的卡片会消失，新词随即补上。">每关有时间限制。配对成功的卡片会消失，新词随即补上。</li>
         <li data-en="Words you miss come back next round; words you get right come back after longer and longer gaps. New words arrive in small batches." data-zh="答错的词下一轮再来，答对的词隔得越来越久再来；新词每轮放一小批。每关结束还会列出你混淆的词。">答错的词下一轮再来，答对的词隔得越来越久再来；新词每轮放一小批。每关结束还会列出你混淆的词。</li>
-        <li data-en="Open Library to add your own words, or copy the AI prompt to generate a list. Everything stays in this browser." data-zh="在「词库」里可以添加自己的单词，或复制 AI 提示词让 AI 生成词表。数据只保存在这个浏览器里。">在「词库」里可以添加自己的单词，或复制 AI 提示词让 AI 生成词表。数据只保存在这个浏览器里。</li>
+        <li data-en="Start with a short trial level of sample words, then import the words you actually need (or let any AI make the list for you). Everything stays in this browser." data-zh="先用示例词玩一关体验，再导入你自己要背的词（也可以让 AI 帮你生成词表）。数据只保存在这个浏览器里。">先用示例词玩一关体验，再导入你自己要背的词（也可以让 AI 帮你生成词表）。数据只保存在这个浏览器里。</li>
       </ol>
       <div class="intro-actions">
-        <button class="duo-button" type="button" id="introStartBtn" data-en="Start practicing" data-zh="开始练习">开始练习</button>
+        <button class="duo-button secondary" type="button" id="introImportBtn" data-en="I have a list — import it" data-zh="我有词表，直接导入">我有词表，直接导入</button>
+        <button class="duo-button" type="button" id="introStartBtn" data-en="Play the trial level" data-zh="先玩一关体验">先玩一关体验</button>
+        <button class="duo-button" type="button" id="introOkBtn" hidden data-en="Got it" data-zh="知道了">知道了</button>
       </div>
     </div>
   </div>
 
-  <div class="modal" id="libraryModal" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
+  <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
     <div class="modal-card">
       <div class="modal-top">
         <div>
-          <h2 id="libraryTitle" data-en="Library" data-zh="词库">词库</h2>
-          <p id="librarySummary">在这里添加、删除或清空单词。修改只保存在当前浏览器里。</p>
+          <h2 id="settingsTitle" data-en="Settings" data-zh="设置">设置</h2>
+          <p data-en="Changes save automatically and apply from the next level." data-zh="修改会自动保存，下一关生效。">修改会自动保存，下一关生效。</p>
           <button class="link-button intro-link" type="button" id="showIntroBtn" data-en="How to play" data-zh="玩法说明">玩法说明</button>
         </div>
-        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+        <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
       </div>
-
-      <section class="modal-section">
-        <div class="form-grid">
-          <label>
-            <span id="sideLabelA">英文</span>
-            <input id="newEnglish" autocomplete="off" placeholder="example" data-en-ph="example" data-zh-ph="example" />
-          </label>
-          <label>
-            <span id="sideLabelB">中文</span>
-            <input id="newChinese" autocomplete="off" placeholder="释义" data-en-ph="meaning" data-zh-ph="释义" />
-          </label>
-        </div>
-        <p class="import-status" id="addOneStatus" role="status" aria-live="polite"></p>
-        <div class="form-actions">
-          <button class="duo-button secondary" type="button" id="addOneBtn" data-en="Add one" data-zh="添加一个">添加一个</button>
-        </div>
-      </section>
-
-      <section class="modal-section">
-        <label>
-          <span data-en="Bulk input" data-zh="批量录入">批量录入</span>
-          <textarea id="bulkInput" placeholder="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织" data-en-ph="One per line: literature,文学&#10;Or: UNESCO = 联合国教科文组织" data-zh-ph="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织"></textarea>
-        </label>
-        <p class="import-hint" data-en="No word list? Copy the AI prompt, send it to any AI, then paste its whole answer here. Words and settings (language pair, words per round, level time) import in one go." data-zh="没有词表？点“复制 AI 提示词”发给任意 AI，再把它的回答整段粘贴到这里，单词和设置（语言对、每局词数、每关时间）一次导入。">没有词表？点“复制 AI 提示词”发给任意 AI，再把它的回答整段粘贴到这里，单词和设置（语言对、每局词数、每关时间）一次导入。</p>
-        <p class="import-status" id="importStatus" role="status" aria-live="polite"></p>
-        <div class="form-actions">
-          <button class="duo-button secondary" type="button" id="copyAiPromptBtn" data-en="Copy AI prompt" data-zh="复制 AI 提示词">复制 AI 提示词</button>
-          <button class="duo-button secondary" type="button" id="addBulkBtn" data-en="Bulk add" data-zh="批量添加">批量添加</button>
-        </div>
-      </section>
-
-      <section class="modal-section">
-        <h2 data-en="Practice options" data-zh="练习选项">练习选项</h2>
+      <section class="modal-section" id="settingsSection">
         <div class="option-grid">
           <label>
             <span data-en="Language pair" data-zh="语言对">语言对</span>
@@ -1574,48 +1735,118 @@
             <span data-en="Base level time (sec)" data-zh="基础每关时间（秒）">基础每关时间（秒）</span>
             <input id="levelSeconds" type="number" min="20" max="900" step="5" />
           </label>
-          <label>
-            <span data-en="Time tolerance (e.g. 0.2)" data-zh="时间容错（如 0.2）">时间容错（如 0.2）</span>
-            <input id="levelTimeTolerance" type="number" min="0" max="2" step="0.05" />
-          </label>
-          <label>
-            <span data-en="Refill min delay (sec)" data-zh="补词最短延迟（秒）">补词最短延迟（秒）</span>
-            <input id="refillMinSeconds" type="number" min="0.1" max="10" step="0.1" />
-          </label>
-          <label>
-            <span data-en="Refill max delay (sec)" data-zh="补词最长延迟（秒）">补词最长延迟（秒）</span>
-            <input id="refillMaxSeconds" type="number" min="0.1" max="15" step="0.1" />
-          </label>
         </div>
         <label class="check-row">
           <input id="adaptiveLevelTime" type="checkbox" />
-          <span data-en="Adaptive level time from last real clear pace (+ tolerance)" data-zh="按上次实际通关配速自适应本关时间（加容错）">按上次实际通关配速自适应本关时间（加容错）</span>
-        </label>
-        <label class="check-row">
-          <input id="pauseRefillWhileSelected" type="checkbox" />
-          <span data-en="Pause refill while a card is selected" data-zh="选中卡片时暂停补词，不打断当前选择">选中卡片时暂停补词，不打断当前选择</span>
-        </label>
-        <label class="check-row">
-          <input id="recycleMastered" type="checkbox" />
-          <span data-en="Keep cycling after all mastered" data-zh="全部掌握后继续循环练习，不让队列空掉">全部掌握后继续循环练习，不让队列空掉</span>
+          <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
         </label>
         <label class="check-row">
           <input id="streakTones" type="checkbox" />
-          <span data-en="Streak piano tones on correct matches" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
+          <span data-en="Piano notes for a streak of correct matches" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
         </label>
+        <details class="advanced">
+          <summary data-en="Advanced" data-zh="高级选项">高级选项</summary>
+          <div class="option-grid">
+            <label>
+              <span data-en="Time tolerance (e.g. 0.2)" data-zh="时间容错（如 0.2）">时间容错（如 0.2）</span>
+              <input id="levelTimeTolerance" type="number" min="0" max="2" step="0.05" />
+            </label>
+            <label>
+              <span data-en="Refill min delay (sec)" data-zh="补词最短延迟（秒）">补词最短延迟（秒）</span>
+              <input id="refillMinSeconds" type="number" min="0.1" max="10" step="0.1" />
+            </label>
+            <label>
+              <span data-en="Refill max delay (sec)" data-zh="补词最长延迟（秒）">补词最长延迟（秒）</span>
+              <input id="refillMaxSeconds" type="number" min="0.1" max="15" step="0.1" />
+            </label>
+          </div>
+          <label class="check-row">
+            <input id="pauseRefillWhileSelected" type="checkbox" />
+            <span data-en="Pause refill while a card is selected" data-zh="选中卡片时暂停补词，不打断当前选择">选中卡片时暂停补词，不打断当前选择</span>
+          </label>
+          <label class="check-row">
+            <input id="recycleMastered" type="checkbox" />
+            <span data-en="Keep practicing after everything is mastered" data-zh="全部掌握后继续循环练习">全部掌握后继续循环练习</span>
+          </label>
+        </details>
         <p class="import-status" id="optionsStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="modal-section danger-zone" aria-labelledby="resetTitle">
+        <h2 id="resetTitle" data-en="Reset learning progress" data-zh="重置学习进度">重置学习进度</h2>
+        <p data-en="Puts every word back to “new” and clears the score. Your word list is kept. This cannot be undone." data-zh="把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。">把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。</p>
         <div class="form-actions">
-          <button class="duo-button secondary" type="button" id="saveOptionsBtn" data-en="Save options" data-zh="保存选项">保存选项</button>
+          <button class="duo-button danger" type="button" id="resetSettingsBtn" data-en="Reset progress" data-zh="重置进度">重置进度</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal" id="libraryModal" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <h2 id="libraryTitle" data-en="Library" data-zh="词库">词库</h2>
+          <p id="librarySummary"></p>
+        </div>
+        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+      </div>
+      <div class="tab-bar" role="tablist" aria-label="词库" data-en-aria="Library" data-zh-aria="词库">
+        <button class="tab-btn" type="button" role="tab" data-tab="list" data-en="My words" data-zh="我的词库">我的词库</button>
+        <button class="tab-btn" type="button" role="tab" data-tab="add" data-en="Add words" data-zh="添加单词">添加单词</button>
+        <button class="tab-btn" type="button" role="tab" data-tab="print" data-en="Print / export" data-zh="打印导出">打印导出</button>
+      </div>
+
+      <section class="modal-section" data-tab-panel="list">
+        <div class="stage-filters" id="stageFilters" role="group" aria-label="按阶段筛选" data-en-aria="Filter by stage" data-zh-aria="按阶段筛选"></div>
+        <div class="list-tools">
+          <input id="wordSearch" type="search" autocomplete="off" placeholder="搜索单词或释义" data-en-ph="Search words or meanings" data-zh-ph="搜索单词或释义" />
+          <select id="wordSort" aria-label="排序" data-en-aria="Sort" data-zh-aria="排序"></select>
+        </div>
+        <div class="sample-note" id="sampleNote" hidden>
+          <span id="sampleNoteText"></span>
+          <button class="link-button" type="button" id="removeSamplesBtn"></button>
+        </div>
+        <div class="custom-list" id="customList"></div>
+        <p class="import-hint list-foot" data-en="Mastered words don't need deleting — they just come up rarely." data-zh="已掌握的词不用删，它们只是很少再出现。">已掌握的词不用删，它们只是很少再出现。</p>
+      </section>
+
+      <section class="modal-section" data-tab-panel="add">
+        <label class="check-row drop-samples" id="dropSamplesRow" hidden>
+          <input id="dropSamples" type="checkbox" checked />
+          <span id="dropSamplesText"></span>
+        </label>
+        <h2 data-en="Add one word" data-zh="添加一个词">添加一个词</h2>
+        <div class="form-grid">
+          <label>
+            <span id="sideLabelA">英文</span>
+            <input id="newEnglish" autocomplete="off" placeholder="example" data-en-ph="example" data-zh-ph="example" />
+          </label>
+          <label>
+            <span id="sideLabelB">中文</span>
+            <input id="newChinese" autocomplete="off" placeholder="释义" data-en-ph="meaning" data-zh-ph="释义" />
+          </label>
+        </div>
+        <p class="import-status" id="addOneStatus" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="duo-button secondary" type="button" id="addOneBtn" data-en="Add one" data-zh="添加一个">添加一个</button>
         </div>
       </section>
 
-      <section class="modal-section">
-        <h2 data-en="Word list" data-zh="词库列表">词库列表</h2>
-        <p data-en="All words in your library. Delete single words here; mastered words simply come up less often." data-zh="这里显示当前词库里的全部单词。可以单独删除某个词；已经掌握的词只是出现得更少，不需要删。">这里显示当前词库里的全部单词。可以单独删除某个词；已经掌握的词只是出现得更少，不需要删。</p>
-        <div class="custom-list" id="customList"></div>
+      <section class="modal-section" data-tab-panel="add">
+        <label>
+          <span data-en="Bulk input" data-zh="批量录入">批量录入</span>
+          <textarea id="bulkInput" placeholder="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织" data-en-ph="One per line: literature,文学&#10;Or: UNESCO = 联合国教科文组织" data-zh-ph="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织"></textarea>
+        </label>
+        <p class="import-hint" data-en="No word list? Copy the AI prompt, send it to any AI, then paste its whole answer here. Words and settings (language pair, words per round, level time) import in one go." data-zh="没有词表？点“复制 AI 提示词”发给任意 AI，再把它的回答整段粘贴到这里，单词和设置（语言对、每局词数、每关时间）一次导入。">没有词表？点“复制 AI 提示词”发给任意 AI，再把它的回答整段粘贴到这里，单词和设置（语言对、每局词数、每关时间）一次导入。</p>
+        <p class="import-status" id="importStatus" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="duo-button secondary" type="button" id="copyAiPromptBtn" data-en="Copy AI prompt" data-zh="复制 AI 提示词">复制 AI 提示词</button>
+          <button class="duo-button secondary" type="button" id="addBulkBtn" data-en="Bulk add" data-zh="批量添加">批量添加</button>
+        </div>
       </section>
 
-      <section class="modal-section" id="printSection" aria-labelledby="printTitle">
+      <section class="modal-section" id="printSection" data-tab-panel="print" aria-labelledby="printTitle">
         <h2 id="printTitle" data-en="Print / export weak words" data-zh="打印 / 导出薄弱词">打印 / 导出薄弱词</h2>
         <p data-en="Print the words you still need to work on — stick them on your desk, or cover one side and test yourself. Every option below is yours to change." data-zh="把还需要巩固的词打印出来：贴在桌上看，或者遮住一侧自己默写。下面每一项都可以调。">把还需要巩固的词打印出来：贴在桌上看，或者遮住一侧自己默写。下面每一项都可以调。</p>
         <div class="option-grid">
@@ -1663,7 +1894,7 @@
         </div>
       </section>
 
-      <section class="modal-section danger-zone" aria-labelledby="dangerTitle">
+      <section class="modal-section danger-zone" data-tab-panel="list" aria-labelledby="dangerTitle">
         <h2 id="dangerTitle" data-en="Danger zone" data-zh="危险操作">危险操作</h2>
         <p data-en="&lt;b&gt;Clear all words&lt;/b&gt; deletes every word in your library together with its learning progress. This cannot be undone." data-zh="&lt;b&gt;清空全部词&lt;/b&gt;会删除词库里的所有单词，以及它们的学习进度，无法撤销。"><b>清空全部词</b>会删除词库里的所有单词，以及它们的学习进度，无法撤销。</p>
         <p data-en="&lt;b&gt;Why it exists:&lt;/b&gt; the library is meant to keep growing. Practice mixes reviewing old words with learning new ones, so you normally never need to clear it. Use this only to switch to a completely different set, such as a new textbook, a new term, or another language." data-zh="&lt;b&gt;设计目的：&lt;/b&gt;词库是用来越积越多的。练习时会自动把复习旧词和学习新词混在一起安排，所以平时不需要清空。这个选项只用于彻底换一套词，比如换教材、换学期或换一种语言。"><b>设计目的：</b>词库是用来越积越多的。练习时会自动把复习旧词和学习新词混在一起安排，所以平时不需要清空。这个选项只用于彻底换一套词，比如换教材、换学期或换一种语言。</p>
@@ -1674,6 +1905,14 @@
           <button class="duo-button danger" type="button" id="clearCustomBtn" data-en="Clear all words" data-zh="清空全部词">清空全部词</button>
         </div>
       </section>
+        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+      </div>
+
+
+
+
+
+
     </div>
   </div>
 
@@ -1761,7 +2000,7 @@
           langToggle: "Switch language"
         },
         lesson: {
-          roundN: "Round {n}", roundLevel: "Level {n} · {done}/{total}",
+          roundN: "Round {n}", roundLevel: "Level {n} · {done}/{total}", trialLevel: "Trial level · {done}/{total}",
           choosePair: "Match the pairs", continueBtn: "Continue",
           emptyTitle: "No words yet", emptyText: "Open the Library to add words first, then start matching.",
           emptyAddBtn: "Add words"
@@ -1793,7 +2032,14 @@
           listBlurb: "All words in your library. You can re-add after clearing.",
           deleteBtn: "Delete", speak: "Listen to {w}", stageNew: "New", stageBox: "Box {n}/{max}", stageMastered: "Mastered",
           emptyListA: "No words yet", emptyListB: "Add some above",
-          langPairLabel: "Language pair", custom: "Custom", sideA: "Side A", sideB: "Side B"
+          langPairLabel: "Language pair", custom: "Custom", sideA: "Side A", sideB: "Side B",
+          stage_all: "All", stage_learning: "Learning", stage_review: "In review", stage_new: "New", stage_mastered: "Mastered",
+          groupHint_learning: "come up first", groupHint_review: "spaced review", groupHint_new: "join practice in this order", groupHint_mastered: "occasional spot checks",
+          summaryStages: "{n} words: {learning} learning, {review} in review, {fresh} new, {mastered} mastered.",
+          sortProgress: "By progress", sortRecent: "Newest first", sortAlpha: "A → Z", noMatch: "No words match.",
+          sampleNote: "Sample words are only for trying the game; they're queued after your own words.",
+          removeSamples: "Remove all {n} sample words",
+          dropSamples: "Replace the {n} sample words with what I import (they're only for trying the game)"
         },
         weak: { wrongN: "Missed {n}", toConsolidate: "Review", noWeak: "No weak words", done: "Done" },
         print: {
@@ -1825,7 +2071,8 @@
         },
         confirm: {
           clearAllConfirm: "Delete all {n} words and their learning progress? This cannot be undone.\n\nOnly do this to switch to a completely different word set. Copy a backup first if you might want these words back.",
-          resetProgress: "Clear all learning progress (mastery, review schedule, score)? Your word list is kept."
+          resetProgress: "Clear all learning progress (mastery, review schedule, score)? Your word list is kept.",
+          removeSamples: "Remove all {n} built-in sample words and their progress? Your own words stay."
         },
         timeouts: {
           allPass: "All passed!", timeUp: "Time's up!", levelComplete: "Level complete!", roundOver: "Round complete!",
@@ -1851,6 +2098,12 @@
           actionGotIt: "Got it", noRemind: "Don't remind me", closeInstall: "Close install prompt"
         },
         appearance: { auto: "Auto", light: "Light", dark: "Dark" },
+        trial: {
+          doneTitle: "Trial complete!",
+          doneText: "Those were sample words. Now bring in the words you actually need — type them, paste a list, or let any AI make one.",
+          importBtn: "Import my words",
+          notYet: "No words imported yet — tap “Import my words”, or keep practicing with the samples for now."
+        },
         ai: {
           copied: "AI prompt copied. Send it to any AI, then paste its answer here.",
           copyFailed: "Couldn't copy automatically. The prompt is in the box above: copy it manually, then clear the box.",
@@ -1858,6 +2111,7 @@
           imported: "Added {n} words.", dupOnly: "No new words (already in the library).",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
+          samplesRemoved: "Removed {n} sample words.",
           backupCopied: "Backup of {n} words copied. Keep it somewhere safe (e.g. a note).",
           backupFailed: "Couldn't copy automatically. The backup is in the Bulk input box above: copy it manually.",
           backupEmpty: "The library is empty; nothing to back up."
@@ -1874,7 +2128,7 @@
           langToggle: "切换语言"
         },
         lesson: {
-          roundN: "第 {n} 轮", roundLevel: "第 {n} 关 · {done}/{total}",
+          roundN: "第 {n} 轮", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
           choosePair: "选择配对", continueBtn: "继续",
           emptyTitle: "还没有单词", emptyText: "请先进入词库添加单词。添加后就可以开始配对练习。",
           emptyAddBtn: "去添加单词"
@@ -1906,7 +2160,14 @@
           listBlurb: "这里显示当前词库里的全部单词。清空后可以重新录入。",
           deleteBtn: "删除", speak: "朗读 {w}", stageNew: "新词", stageBox: "熟练 {n}/{max}", stageMastered: "已掌握",
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
-          langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧"
+          langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
+          stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
+          groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
+          summaryStages: "共 {n} 个词：学习中 {learning}，复习中 {review}，待学 {fresh}，已掌握 {mastered}。",
+          sortProgress: "按学习进度", sortRecent: "最近添加在前", sortAlpha: "按字母 A → Z", noMatch: "没有符合条件的词。",
+          sampleNote: "示例词只用来体验，会排在你自己的词后面。",
+          removeSamples: "移除全部 {n} 个示例词",
+          dropSamples: "导入时移除 {n} 个示例词（示例词只用来体验）"
         },
         weak: { wrongN: "错 {n}", toConsolidate: "待巩固", noWeak: "暂时没有弱项", done: "完成" },
         print: {
@@ -1938,7 +2199,8 @@
         },
         confirm: {
           clearAllConfirm: "将删除全部 {n} 个单词及学习进度，无法撤销。\n\n只有在彻底换一套词时才需要这样做。如果以后可能还要用这些词，请先复制备份。确定清空吗？",
-          resetProgress: "清空全部学习进度（掌握情况、复习计划、得分）？词库里的单词会保留。"
+          resetProgress: "清空全部学习进度（掌握情况、复习计划、得分）？词库里的单词会保留。",
+          removeSamples: "移除全部 {n} 个内置示例词及其进度？你自己添加的词不受影响。"
         },
         timeouts: {
           allPass: "全部过关", timeUp: "时间到", levelComplete: "这一关完成", roundOver: "这一轮结束",
@@ -1964,6 +2226,12 @@
           actionGotIt: "知道了", noRemind: "不再提示", closeInstall: "关闭安装提醒"
         },
         appearance: { auto: "自动", light: "浅色", dark: "深色" },
+        trial: {
+          doneTitle: "体验完成！",
+          doneText: "刚才是示例词。现在换成你真正要背的词吧：手动输入、粘贴词表，或者让 AI 帮你生成。",
+          importBtn: "导入我的单词",
+          notYet: "还没有导入单词。点「导入我的单词」继续，或者先用示例词练。"
+        },
         ai: {
           copied: "AI 提示词已复制。发给任意 AI，再把它的回答粘贴到这里。",
           copyFailed: "无法自动复制，提示词已放进上面的输入框，请手动复制后再清空输入框。",
@@ -1971,6 +2239,7 @@
           imported: "已添加 {n} 个单词。", dupOnly: "没有新增单词（都已在词库里）。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
+          samplesRemoved: "已移除 {n} 个示例词。",
           backupCopied: "已复制 {n} 个词的备份，请存到安全的地方（比如备忘录）。",
           backupFailed: "无法自动复制，备份已放进上方「批量录入」框，请手动复制。",
           backupEmpty: "词库是空的，没有可备份的内容。"
@@ -2135,7 +2404,18 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
-      saveOptionsBtn: document.getElementById("saveOptionsBtn"),
+      settingsModal: document.getElementById("settingsModal"),
+      trialKeepBtn: document.getElementById("trialKeepBtn"),
+      dropSamples: document.getElementById("dropSamples"),
+      dropSamplesRow: document.getElementById("dropSamplesRow"),
+      dropSamplesText: document.getElementById("dropSamplesText"),
+      settingsSection: document.getElementById("settingsSection"),
+      stageFilters: document.getElementById("stageFilters"),
+      wordSearch: document.getElementById("wordSearch"),
+      wordSort: document.getElementById("wordSort"),
+      sampleNote: document.getElementById("sampleNote"),
+      sampleNoteText: document.getElementById("sampleNoteText"),
+      removeSamplesBtn: document.getElementById("removeSamplesBtn"),
       installNudge: document.getElementById("installNudge"),
       installTitle: document.getElementById("installTitle"),
       installText: document.getElementById("installText"),
@@ -2184,6 +2464,9 @@
       roundComplete: false,
       lastPairAt: 0,
       pausedAt: 0,
+      // First visit: "trial" (demo level with the sample words) → "choose" (trial
+      // finished: import my words, or keep the samples) → "done".
+      onboarding: "done",
       // wordId -> when both halves of the pair were on the board (reaction-time baseline).
       visibleAt: new Map(),
       // Words confused during the current level, shown for review on the completion screen.
@@ -2206,7 +2489,7 @@
         streak: 0,
         mastered: false,
         lastMs: 0,
-        // Review box 0–5 (see BOX_ROUND_GAPS). A word is "new" until first drawn (draws === 0).
+        // Review box 0–5 (see BOX_ROUND_GAPS). A word is "new" until first answered (see isNewWord).
         box: 0,
         dueRound: 0,
         dueAt: 0,
@@ -2319,6 +2602,7 @@
           settings: state.settings,
           drawHistory: state.drawHistory,
           mode: state.mode,
+          onboarding: state.onboarding,
           round: state.round,
           score: state.score,
           mistakes: state.mistakes,
@@ -2466,6 +2750,8 @@
     function computeLevelDurationMs(sessionTotal) {
       const settings = state.settings;
       const base = settings.levelDurationMs;
+      // The trial is about learning the controls, not racing a clock.
+      if (isTrial()) return Math.max(base, 120000);
       if (!settings.adaptiveLevelTime) return base;
       const msPerPair = resolveMsPerPair(settings);
       if (!(msPerPair > 0)) return base;
@@ -2553,8 +2839,13 @@
       return d.getTime();
     }
 
+    /**
+     * New until it has been answered at least once (right or wrong). Merely
+     * appearing on the board — e.g. the level was left or timed out — keeps a
+     * word new, in its place in the new-word queue.
+     */
     function isNewWord(word) {
-      return !(word.draws > 0);
+      return !(word.seen > 0 || word.mistakes > 0);
     }
 
     function isDueForReview(word, now = Date.now()) {
@@ -2643,7 +2934,7 @@
           : s.source === "all" ? true
           : s.source === "pick" ? picked.has(word.id)
           : !word.mastered && !isNewWord(word));
-      if (s.sort === "mistakes") list = [...list].sort((a, b) => a.box - b.box || b.mistakes - a.mistakes);
+      if (s.sort === "mistakes") list = [...list].sort((a, b) => b.mistakes - a.mistakes || a.box - b.box);
       else if (s.sort === "stage") list = [...list].sort((a, b) => a.box - b.box || Number(a.mastered) - Number(b.mastered));
       else if (s.sort === "alpha") list = [...list].sort((a, b) => String(a.en).localeCompare(String(b.en), undefined, { sensitivity: "base" }));
       else if (s.sort === "random") list = seededShuffle(list, printSeed);
@@ -2856,18 +3147,157 @@
       return true;
     }
 
-    function renderCustomList() {
-      els.customList.innerHTML = state.words.length
-        ? state.words.map(word => `
+    /** learning = boxes 0–1, review = boxes 2–4, then new and mastered. */
+    function wordStage(word) {
+      if (isNewWord(word)) return "new";
+      if (word.mastered) return "mastered";
+      return word.box <= 1 ? "learning" : "review";
+    }
+
+    const STAGE_ORDER = ["learning", "review", "new", "mastered"];
+
+    /**
+     * The order new words are introduced in: your own words first (in the order
+     * you added them — e.g. textbook order), the built-in sample words last, so
+     * an import never waits behind 60 demo words.
+     */
+    function newWordsInOrder() {
+      const fresh = state.words.filter(isNewWord);
+      return [...fresh.filter(word => word.custom), ...fresh.filter(word => !word.custom)];
+    }
+
+    /** The built-in sample words — they exist to try the game, not to be studied. */
+    function sampleWords() {
+      return state.words.filter(word => !word.custom);
+    }
+
+    function removeSampleWords() {
+      const before = state.words.length;
+      state.words = state.words.filter(word => word.custom);
+      return before - state.words.length;
+    }
+
+    const TRIAL_SIZE = 10;
+
+    function isTrial() {
+      return state.onboarding === "trial" && sampleWords().length > 0;
+    }
+
+    /**
+     * Trial finished but the learner hasn't decided yet. Closing the library
+     * without importing must not quietly turn the demo words into their study
+     * list, so every way back (close, ×, reload, edits) returns to this choice
+     * until they import words or pick "keep the samples".
+     */
+    function awaitingTrialChoice() {
+      return state.onboarding === "choose" && sampleWords().length > 0;
+    }
+
+    function endTrial() {
+      state.onboarding = "done";
+      state.trialLibraryVisited = false;
+    }
+
+    function showTrialChoice() {
+      clearLevelTimers();
+      clearSelection();
+      state.levelEndsAt = 0;
+      els.practiceView.classList.add("hidden");
+      els.completionView.classList.add("show");
+      els.completionBadge.textContent = "✓";
+      els.main.scrollTop = 0;
+      state.lastCompletion = { allDone: false, reason: "queue", trial: true };
+      renderCompletionCopy();
+      renderStats();
+    }
+
+    const listView = { filter: "all", sort: "progress", query: "" };
+
+    function listedWords() {
+      const q = listView.query.trim().toLowerCase();
+      let list = state.words.filter(word =>
+        (listView.filter === "all" || wordStage(word) === listView.filter)
+        && (!q || word.en.toLowerCase().includes(q) || word.zh.toLowerCase().includes(q)));
+      if (listView.sort === "recent") return list.slice().reverse();
+      if (listView.sort === "alpha") return list.slice().sort((a, b) => a.en.localeCompare(b.en, undefined, { sensitivity: "base" }));
+      // Learning progress: shakiest first; new words in the order they will be introduced.
+      const newRank = new Map(newWordsInOrder().map((word, i) => [word.id, i]));
+      const rank = word => {
+        const stage = wordStage(word);
+        if (stage === "learning") return [0, word.box, -word.mistakes];
+        if (stage === "review") return [1, word.box, word.dueAt || 0];
+        if (stage === "new") return [2, newRank.get(word.id), 0];
+        return [3, 0, word.dueAt || 0];
+      };
+      return list.slice().sort((a, b) => {
+        const ra = rank(a), rb = rank(b);
+        return ra[0] - rb[0] || ra[1] - rb[1] || ra[2] - rb[2];
+      });
+    }
+
+    function stageTag(word) {
+      const stage = wordStage(word);
+      const cls = stage === "learning" ? " is-learning" : stage === "mastered" ? " is-mastered" : "";
+      return `<span class="stage-tag${cls}">${wordStageLabel(word)}</span>`;
+    }
+
+    function wordRow(word) {
+      return `
           <div class="custom-row">
             ${speakButton(word.en) || "<span></span>"}
             <b title="${escapeHtml(word.en)}">${escapeHtml(word.en)}</b>
             <span class="cr-mean" title="${escapeHtml(word.zh)}">${escapeHtml(word.zh)}</span>
-            <span>${wordStageLabel(word)}</span>
+            ${stageTag(word)}
             <button class="link-button" type="button" data-delete="${escapeHtml(word.id)}">${t("library.deleteBtn")}</button>
-          </div>
-        `).join("")
-        : `<div class="custom-row"><span></span><b>${t("library.emptyListA")}</b><span>${t("library.emptyListB")}</span><span></span><span></span></div>`;
+          </div>`;
+    }
+
+    function renderStageFilters() {
+      els.wordSort.innerHTML = ["progress", "recent", "alpha"].map(key =>
+        `<option value="${key}">${t("library.sort" + key[0].toUpperCase() + key.slice(1))}</option>`).join("");
+      els.wordSort.value = listView.sort;
+      const counts = { all: state.words.length, learning: 0, review: 0, new: 0, mastered: 0 };
+      state.words.forEach(word => { counts[wordStage(word)] += 1; });
+      els.stageFilters.innerHTML = ["all", ...STAGE_ORDER].map(key =>
+        `<button class="stage-chip" type="button" data-filter="${key}" aria-pressed="${listView.filter === key}">${t("library.stage_" + key)} <b>${counts[key]}</b></button>`
+      ).join("");
+      els.librarySummary.textContent = state.words.length
+        ? t("library.summaryStages", { n: counts.all, learning: counts.learning, review: counts.review, fresh: counts.new, mastered: counts.mastered })
+        : t("library.summaryInitial");
+    }
+
+    function renderCustomList() {
+      renderStageFilters();
+      const samples = sampleWords();
+      els.sampleNote.hidden = !samples.length;
+      if (samples.length) {
+        els.sampleNoteText.textContent = t("library.sampleNote");
+        els.removeSamplesBtn.textContent = t("library.removeSamples", { n: samples.length });
+      }
+      if (!state.words.length) {
+        els.customList.innerHTML = `<div class="custom-row"><span></span><b>${t("library.emptyListA")}</b><span>${t("library.emptyListB")}</span><span></span><span></span></div>`;
+        return;
+      }
+      const list = listedWords();
+      if (!list.length) {
+        els.customList.innerHTML = `<p class="import-hint">${t("library.noMatch")}</p>`;
+        return;
+      }
+      // Group headers only for the progress view of the whole list.
+      if (listView.sort !== "progress" || listView.filter !== "all") {
+        els.customList.innerHTML = list.map(wordRow).join("");
+        return;
+      }
+      let html = "", current = "";
+      list.forEach(word => {
+        const stage = wordStage(word);
+        if (stage !== current) {
+          current = stage;
+          html += `<p class="list-group">${t("library.stage_" + stage)}<small>${t("library.groupHint_" + stage)}</small></p>`;
+        }
+        html += wordRow(word);
+      });
+      els.customList.innerHTML = html;
     }
 
     const SLOT_COUNT = 5;
@@ -3041,6 +3471,7 @@
     function shouldPauseLevel() {
       return document.hidden
         || els.libraryModal.classList.contains("open")
+        || els.settingsModal.classList.contains("open")
         || els.introModal.classList.contains("open");
     }
 
@@ -3092,6 +3523,7 @@
      * schedule and are still due next round.
      */
     function buildWordQueue() {
+      if (isTrial()) return shuffle(sampleWords().slice(0, TRIAL_SIZE));
       const limit = state.settings.roundSize;
       const now = Date.now();
       const byOldest = (a, b) => (a.lastDrawRound || 0) - (b.lastDrawRound || 0);
@@ -3121,14 +3553,14 @@
       const learningCount = introduced.filter(isLearning).length;
       const newBatch = Math.max(5, Math.min(15, Math.round(limit / 3)));
       const newAllowance = Math.min(newBatch, Math.max(0, limit - learningCount), limit - queue.length);
-      const fresh = state.words.filter(isNewWord).slice(0, newAllowance);
+      const fresh = newWordsInOrder().slice(0, newAllowance);
       let chosen = [...queue, ...fresh];
       if (chosen.length < minRound) {
         chosen = [...chosen, ...notDue.slice(0, minRound - chosen.length)];
       }
       // Still short (small library, little introduced yet): allow more new words.
       if (chosen.length < minRound) {
-        const moreNew = state.words.filter(word => isNewWord(word) && !chosen.includes(word));
+        const moreNew = newWordsInOrder().filter(word => !chosen.includes(word));
         chosen = [...chosen, ...moreNew.slice(0, minRound - chosen.length)];
       }
       return shuffle(chosen);
@@ -3161,6 +3593,10 @@
     }
 
     function renderRound() {
+      if (awaitingTrialChoice()) {
+        showTrialChoice();
+        return;
+      }
       clearLevelTimers();
       state.selected = null;
       state.locked = false;
@@ -3214,7 +3650,7 @@
 
       els.practiceView.classList.remove("hidden");
       els.completionView.classList.remove("show");
-      els.roundLabel.textContent = t("lesson.roundLevel", { n: state.round, done: 0, total: state.sessionTotal });
+      els.roundLabel.textContent = levelLabel(0, state.sessionTotal);
       els.feedback.className = "feedback";
       const timeLabel = formatTime(state.levelDurationMs);
       if (state.levelTimeIsAdaptive) {
@@ -3700,7 +4136,8 @@
       clearSelection();
       state.roundComplete = reason !== "timeout";
       // Sample real clear pace only (not the fixed countdown allotment / timeout cutoff).
-      recordLevelPace(reason);
+      // A first-timer learning the controls is not a pace sample.
+      if (!isTrial()) recordLevelPace(reason);
       // Each finished level rotates the color skin.
       advanceThemeAfterLevel();
       els.practiceView.classList.add("hidden");
@@ -3708,7 +4145,9 @@
       els.completionBadge.textContent = "✓";
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
-      state.lastCompletion = { allDone, reason };
+      const trial = isTrial();
+      if (trial) state.onboarding = "choose";
+      state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
@@ -3716,10 +4155,30 @@
       renderStats();
     }
 
+    function levelLabel(done, total) {
+      return isTrial()
+        ? t("lesson.trialLevel", { done, total })
+        : t("lesson.roundLevel", { n: state.round, done, total });
+    }
+
     function renderCompletionCopy() {
-      const { allDone, reason } = state.lastCompletion || { allDone: false, reason: "queue" };
+      const { allDone, reason, trial } = state.lastCompletion || { allDone: false, reason: "queue" };
       const remaining = state.words.filter(isLearning).length;
       const summary = t("timeouts.levelSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0 });
+      els.trialKeepBtn.hidden = !trial;
+      if (trial) {
+        els.completionTitle.textContent = t("trial.doneTitle");
+        // After a reload there are no level stats to report — just the choice.
+        els.completionText.textContent = [
+          state.completedThisRun ? summary : "",
+          t("trial.doneText"),
+          state.trialLibraryVisited ? t("trial.notYet") : ""
+        ].filter(Boolean).join(" ");
+        els.continueBtn.textContent = t("trial.importBtn");
+        renderReviewList();
+        return;
+      }
+      els.continueBtn.textContent = t("lesson.continueBtn");
       els.completionTitle.textContent = allDone ? t("timeouts.allPass") : reason === "timeout" ? t("timeouts.timeUp") : t("timeouts.levelComplete");
       els.completionText.textContent = allDone
         ? t("timeouts.allDoneText")
@@ -3789,12 +4248,11 @@
           : 0;
       els.progressFill.style.width = `${pct}%`;
       renderTimer();
-      els.roundLabel.textContent = t("lesson.roundLevel", { n: state.round, done: state.completedThisRun || 0, total: targetTotal });
+      els.roundLabel.textContent = levelLabel(state.completedThisRun || 0, targetTotal);
       els.score.textContent = state.score;
       els.mistakes.textContent = state.mistakes;
       els.streak.textContent = state.streak;
       els.remaining.textContent = remaining;
-      els.librarySummary.textContent = t("library.summary", { n: state.words.length, m: state.words.filter(word => word.custom).length });
 
       const weak = state.words
         .filter(word => !word.mastered && !isNewWord(word))
@@ -3982,7 +4440,20 @@
       el.className = `import-status${kind ? " " + kind : ""}`;
     }
 
+    /** Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped. */
+    let lastRemovedSamples = 0;
     function addWords(pairs) {
+      lastRemovedSamples = 0;
+      const valid = pairs.filter(pair => pair && pair[0] && pair[1]);
+      // "Remove the sample words when importing" (ticked by default while samples exist).
+      if (valid.length && els.dropSamples.checked && !els.dropSamplesRow.hidden && sampleWords().length) {
+        const ownKeys = new Set(valid.map(pair => `${pair[0].toLowerCase()}::${pair[1]}`));
+        const before = state.words.length;
+        // Keep a sample only if the learner is importing that exact word themselves (it becomes theirs).
+        state.words = state.words.filter(word => word.custom || ownKeys.has(`${word.en.toLowerCase()}::${word.zh}`));
+        lastRemovedSamples = before - state.words.length;
+        state.words.forEach(word => { word.custom = true; });
+      }
       const existing = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
       let added = 0;
       pairs.forEach(pair => {
@@ -3994,11 +4465,13 @@
         added += 1;
       });
 
-      if (added > 0) {
+      if (added > 0 || lastRemovedSamples) {
+        endTrial();
         saveWords();
         // Restart the level with the new words, but don't count it as a round
         // played — rounds drive the review schedule.
         renderRound();
+        syncDropSamplesRow();
       }
       return added;
     }
@@ -4039,27 +4512,71 @@
       renderRound();
     }
 
-    function openLibrary() {
+    let libraryTab = "list";
+
+    function showLibraryTab(tab) {
+      libraryTab = ["list", "add", "print"].includes(tab) ? tab : "list";
+      els.libraryModal.querySelectorAll("[data-tab]").forEach(btn => {
+        btn.setAttribute("aria-selected", String(btn.dataset.tab === libraryTab));
+      });
+      els.libraryModal.querySelectorAll("[data-tab-panel]").forEach(panel => {
+        panel.hidden = panel.dataset.tabPanel !== libraryTab;
+      });
+      els.libraryModal.querySelector(".modal-card").scrollTop = 0;
+      if (libraryTab === "list") renderCustomList();
+      if (libraryTab === "print") { setPrintStatus(""); renderPrintPanel(); }
+      if (libraryTab === "add") syncDropSamplesRow();
+      // Don't pop the on-screen keyboard over the library on phones.
+      if (libraryTab === "add" && (!window.matchMedia || !matchMedia("(pointer: coarse)").matches)) els.newEnglish.focus();
+    }
+
+    /** Opens on "My words", or on "Add words" when the library is empty. */
+    function openLibrary(tab) {
+      closeSettings();
+      closeInstallNudge(false);
       els.libraryModal.classList.add("open");
       pauseLevel();
-      // Don't pop the on-screen keyboard over the library on phones.
-      if (!window.matchMedia || !matchMedia("(pointer: coarse)").matches) els.newEnglish.focus();
       setAddOneStatus("");
       setImportStatus("");
       setDangerStatus("");
+      applyLangPairLabels();
+      renderStats();
+      showLibraryTab(typeof tab === "string" ? tab : state.words.length ? "list" : "add");
+    }
+
+    function openSettings() {
+      closeLibrary();
+      closeInstallNudge(false);
+      els.settingsModal.classList.add("open");
+      pauseLevel();
       if (els.optionsStatus) els.optionsStatus.textContent = "";
       syncOptionsUI();
-      renderStats();
-      setPrintStatus("");
-      renderPrintPanel();
+    }
+
+    function closeSettings() {
+      if (!els.settingsModal.classList.contains("open")) return;
+      els.settingsModal.classList.remove("open");
+      resumeLevel();
     }
 
     const INTRO_SEEN_KEY = "word_snap_intro_seen_v1";
 
     function openIntro() {
+      // First visit: "play the trial" or "import my list". Re-opened later: just "Got it".
+      const trial = isTrial();
+      document.getElementById("introStartBtn").hidden = !trial;
+      document.getElementById("introImportBtn").hidden = !trial;
+      document.getElementById("introOkBtn").hidden = trial;
       els.introModal.classList.add("open");
       pauseLevel();
-      document.getElementById("introStartBtn").focus();
+      document.getElementById(trial ? "introStartBtn" : "introOkBtn").focus();
+    }
+
+    /** Shown in Add words while sample words are still in the library. */
+    function syncDropSamplesRow() {
+      const n = sampleWords().length;
+      els.dropSamplesRow.hidden = !n;
+      if (n) els.dropSamplesText.textContent = t("library.dropSamples", { n });
     }
 
     function closeIntro() {
@@ -4074,7 +4591,10 @@
     }
 
     function closeLibrary() {
+      if (!els.libraryModal.classList.contains("open")) return;
       els.libraryModal.classList.remove("open");
+      // Closed without importing: back on the choice screen, now with a nudge.
+      if (awaitingTrialChoice()) renderCompletionCopy();
       resumeLevel();
     }
 
@@ -4228,7 +4748,7 @@
     function showInstallNudge() {
       if (!els.installNudge || isStandaloneApp() || hasHiddenInstallNudge()) return;
       // One overlay at a time: the intro re-offers this when it closes.
-      if (els.introModal.classList.contains("open")) return;
+      if (document.querySelector(".modal.open")) return;
       setInstallNudgeCopy();
       els.installNudge.classList.add("show");
     }
@@ -4276,22 +4796,64 @@
       });
     }
 
-    document.getElementById("openLibrary").addEventListener("click", openLibrary);
-    document.getElementById("openLibraryRail").addEventListener("click", openLibrary);
-    document.getElementById("openLibraryMobile").addEventListener("click", openLibrary);
+    document.getElementById("openLibrary").addEventListener("click", () => openLibrary());
+    document.getElementById("openLibraryRail").addEventListener("click", () => openLibrary());
+    document.getElementById("openLibraryMobile").addEventListener("click", () => openLibrary());
+    document.querySelectorAll("[data-open-settings]").forEach(btn => btn.addEventListener("click", openSettings));
+    document.querySelectorAll("[data-nav-practice]").forEach(btn => btn.addEventListener("click", () => {
+      closeLibrary();
+      closeSettings();
+    }));
+    document.getElementById("closeSettings").addEventListener("click", closeSettings);
+    els.settingsModal.addEventListener("click", event => {
+      if (event.target === els.settingsModal) closeSettings();
+    });
+    // Options save as soon as they change — no Save button to forget.
+    els.settingsSection.addEventListener("change", event => {
+      if (event.target && event.target.id === "colorModeSelect") return;
+      saveOptionsFromUI();
+    });
+    els.libraryModal.querySelector(".tab-bar").addEventListener("click", event => {
+      const btn = event.target.closest("[data-tab]");
+      if (btn) showLibraryTab(btn.dataset.tab);
+    });
+    els.stageFilters.addEventListener("click", event => {
+      const chip = event.target.closest("[data-filter]");
+      if (!chip) return;
+      listView.filter = chip.dataset.filter;
+      renderCustomList();
+    });
+    els.wordSearch.addEventListener("input", () => {
+      listView.query = els.wordSearch.value;
+      renderCustomList();
+    });
+    els.wordSort.addEventListener("change", () => {
+      listView.sort = els.wordSort.value;
+      renderCustomList();
+    });
+    els.removeSamplesBtn.addEventListener("click", () => {
+      const samples = sampleWords();
+      if (!samples.length || !confirm(t("confirm.removeSamples", { n: samples.length }))) return;
+      removeSampleWords();
+      endTrial();
+      saveWords();
+      renderRound();
+    });
     document.getElementById("closeLibrary").addEventListener("click", closeLibrary);
     document.getElementById("modeBtn").addEventListener("click", toggleMode);
     function confirmResetProgress() {
       if (confirm(t("confirm.resetProgress"))) resetProgress();
     }
     document.getElementById("resetProgress").addEventListener("click", confirmResetProgress);
-    document.getElementById("resetRail").addEventListener("click", confirmResetProgress);
-    document.getElementById("resetMobile").addEventListener("click", confirmResetProgress);
+    document.getElementById("resetSettingsBtn").addEventListener("click", () => {
+      if (!confirm(t("confirm.resetProgress"))) return;
+      resetProgress();
+      closeSettings();
+    });
     document.getElementById("quitBtn").addEventListener("click", () => {
       if (!state.words.length) return;
       renderRound();
     });
-    els.saveOptionsBtn.addEventListener("click", saveOptionsFromUI);
     if (els.langPairSelect) {
       els.langPairSelect.addEventListener("change", () => {
         const isCustom = els.langPairSelect.value === "custom";
@@ -4327,7 +4889,9 @@
       }
       els.newEnglish.value = "";
       els.newChinese.value = "";
-      setAddOneStatus(t("feedback.addedOne"), "good");
+      setAddOneStatus(lastRemovedSamples
+        ? `${t("feedback.addedOne")} ${t("ai.samplesRemoved", { n: lastRemovedSamples })}`
+        : t("feedback.addedOne"), "good");
       els.newEnglish.focus();
     }
 
@@ -4352,6 +4916,7 @@
       const added = addWords(pairs);
       const messages = [];
       if (added) messages.push(t("ai.imported", { n: added }));
+      if (lastRemovedSamples) messages.push(t("ai.samplesRemoved", { n: lastRemovedSamples }));
       else if (pairs.length) messages.push(t("ai.dupOnly"));
       if (configParts.length) messages.push(t("ai.config", { list: configParts.join(currentLang === "zh" ? "、" : ", ") }));
       if (skipped) messages.push(t("ai.skipped", { n: skipped }));
@@ -4474,6 +5039,19 @@
         openLibrary();
         return;
       }
+      // After the trial: open the import page. The trial only ends once words
+      // are actually imported (or "keep the samples" is chosen).
+      if (awaitingTrialChoice()) {
+        state.trialLibraryVisited = true;
+        openLibrary("add");
+        return;
+      }
+      state.round += 1;
+      saveWords();
+      renderRound();
+    });
+    els.trialKeepBtn.addEventListener("click", () => {
+      endTrial();
       state.round += 1;
       saveWords();
       renderRound();
@@ -4491,8 +5069,8 @@
         closeInstallNudge(false);
         return;
       }
-      if (els.libraryModal.classList.contains("open")) {
-        if (event.key === "Escape") closeLibrary();
+      if (els.libraryModal.classList.contains("open") || els.settingsModal.classList.contains("open")) {
+        if (event.key === "Escape") { closeLibrary(); closeSettings(); }
         return;
       }
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
@@ -4510,8 +5088,16 @@
     });
 
     document.getElementById("introStartBtn").addEventListener("click", closeIntro);
+    document.getElementById("introOkBtn").addEventListener("click", closeIntro);
+    document.getElementById("introImportBtn").addEventListener("click", () => {
+      endTrial();
+      saveWords();
+      renderRound();
+      closeIntro();
+      openLibrary("add");
+    });
     document.getElementById("showIntroBtn").addEventListener("click", () => {
-      closeLibrary();
+      closeSettings();
       openIntro();
     });
 
@@ -4540,6 +5126,10 @@
     if (savedState && ["adaptive", "weak", "all"].includes(savedState.mode)) {
       state.mode = savedState.mode;
     }
+    // Existing users skip the trial; a first visit starts with it.
+    state.onboarding = savedState
+      ? (["trial", "choose"].includes(savedState.onboarding) ? savedState.onboarding : "done")
+      : "trial";
     if (savedState) {
       if (Number.isFinite(Number(savedState.round)) && Number(savedState.round) >= 1) {
         state.round = Math.round(Number(savedState.round));

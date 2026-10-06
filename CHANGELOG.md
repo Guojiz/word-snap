@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-10-06
+
+### Added
+
+- **Trial level for first-time visitors.** The built-in words are a demo, not a study list: after the intro, new visitors play one 10-word trial level (“Trial level · n/10”, generous timer, not used as a pace sample). Its completion screen says the words were samples and offers **Import my words** (opens Library → Add words) or *keep practicing with the sample words for now*. The trial only ends when words are actually imported or *keep the samples* is chosen: closing the import window, ×, reloading or editing the library all return to this choice (with a reminder), so the demo words never silently become the study list. The intro also has **I have a list — import it** to skip the trial. Existing users never see it; re-opening the intro later only shows *Got it*.
+- **Replace the sample words on import.** While sample words are in the library, Add words shows “Remove the N sample words when importing”, ticked by default — so the first import gives you a library of only your own words. Untick it to keep them. *My words* also has a one-click *Remove all sample words*.
+
+### Changed
+
+- **Library reorganised into tabs**: *My words*, *Add words*, *Print / export*. It used to be one ~7,000 px scroll in which the word list started below 900 px of practice options and the print section sat under the whole list.
+- **Word list order**: grouped by learning stage — Learning (shakiest first) → In review (soonest due first) → New (in the exact order they will be introduced) → Mastered — with stage filter chips and counts, a search box, and *Newest first* / *A → Z* sorting. A newly added word was previously appended to the bottom of the list.
+- **Your own words are introduced before the built-in samples** if you keep both. An imported textbook list used to wait behind ~60 untouched demo words.
+- A word stays **new** until it has been answered once. Words that only appeared on the board (level left or timed out) no longer count as “learning” or jump the queue as if they had been missed.
+- **Settings** is its own window (side rail / bottom nav): changes save automatically (no more “Save options” to forget — the appearance menu already behaved that way), rarely used options are under *Advanced*, and *Reset learning progress* moved here behind a confirmation instead of being a main navigation button. “Practice” in the navigation now closes any open window.
+
+### Fixed
+
+- The custom language-pair inputs (“Side A / Side B”) were always visible: `label { display: grid }` overrode the `hidden` attribute.
+- Print / export “Most mistakes first” actually sorted by review stage first.
+- The “Add to Home Screen” prompt could cover the Library on phones; it no longer appears while a window is open.
+- Service worker cache bumped to `word-snap-v40`.
+
 ## 2026-10-05
 
 ### Added
