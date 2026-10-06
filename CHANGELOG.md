@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-06
+
+### Changed
+
+- **Library reorganised into tabs**: *My words*, *Add words*, *Print / export*. It used to be one ~7,000 px scroll in which the word list started below 900 px of practice options and the print section sat under the whole list.
+- **Word list order**: grouped by learning stage — Learning (shakiest first) → In review (soonest due first) → New (in the exact order they will be introduced) → Mastered — with stage filter chips and counts, a search box, and *Newest first* / *A → Z* sorting. A newly added word was previously appended to the bottom of the list.
+- **Your own words are introduced before the built-in samples.** An imported textbook list used to wait behind ~60 untouched demo words. Once you have your own words, *My words* offers to remove the sample words you haven't practiced.
+- A word stays **new** until it has been answered once. Words that only appeared on the board (level left or timed out) no longer count as “learning” or jump the queue as if they had been missed.
+- **Settings** is its own window (side rail / bottom nav): changes save automatically (no more “Save options” to forget — the appearance menu already behaved that way), rarely used options are under *Advanced*, and *Reset learning progress* moved here behind a confirmation instead of being a main navigation button. “Practice” in the navigation now closes any open window.
+
+### Fixed
+
+- The custom language-pair inputs (“Side A / Side B”) were always visible: `label { display: grid }` overrode the `hidden` attribute.
+- Print / export “Most mistakes first” actually sorted by review stage first.
+- The “Add to Home Screen” prompt could cover the Library on phones; it no longer appears while a window is open.
+- Service worker cache bumped to `word-snap-v39`.
+
 ## 2026-10-05
 
 ### Added

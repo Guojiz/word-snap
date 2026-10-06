@@ -21,10 +21,12 @@ Word Snap is a static single-page vocabulary matching practice app. Match pairs 
 - Correct pairs flash and clear; new words refill from the queue.
 - Wrong pairs shake and roll back into practice.
 - Box-based review: missed words come back next round, correct ones after longer and longer gaps; new words arrive in small batches.
-- Single and bulk word import; every word can be deleted.
-- **Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Copy word list backup** first; pasting the backup into Bulk input restores the words (not their progress).
+- **Library** in three tabs: **My words** (stage filters with counts, search, sort, grouped by learning stage), **Add words** (single, bulk, AI prompt), **Print / export**.
+- New words are introduced **your own words first**, in the order you added them; the built-in sample words wait until after them, and can be removed in one click once you have your own list.
+- **Settings** (side rail / bottom nav) hold the practice options, save automatically, and keep the rarely needed ones under **Advanced**. Resetting learning progress lives here too, behind a confirmation — it is no longer a main navigation button.
+- **My words → Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Copy word list backup** first; pasting the backup into Bulk input restores the words (not their progress).
 - Empty-library prompt when there is nothing to practice.
-- Practice options: practice mode (adaptive / weak only / all in order), level timer, refill delay, pause refill while selected, recycle mastered words.
+- Settings: language pair, practice mode (adaptive / weak only / all in order), appearance, max words per round, level time, adaptive time, piano notes; Advanced: time tolerance, refill delay, pause refill while selected, keep practicing after everything is mastered.
 - Synonyms count: if two entries share a meaning (e.g. `big` / `large` = 大的), either English card matches it.
 - End-of-level review: words you mixed up are listed with their meaning.
 - The level timer pauses while the Library is open or the app is in the background.
@@ -41,7 +43,7 @@ Word Snap is a static single-page vocabulary matching practice app. Match pairs 
 
 ## Language pairs (word labels)
 
-In **Library → Practice options → Language pair** you can rename the two column labels, for example:
+In **Settings → Language pair** you can rename the two column labels, for example:
 
 - English ↔ 中文 (default)
 - English ↔ 日本語
@@ -78,7 +80,20 @@ Which words go into a round is decided by priority (“Max words per round” is
 
 The chosen words are then **shuffled**. If missed words always came first, their position would give the answer away and hard words would bunch up. Nothing is lost if time runs out: words you didn't get to keep their schedule and are still due next round. Only finishing a level counts as a round; adding words or switching modes does not. (“All in order” mode keeps library order.)
 
+A word counts as **new** until you have answered it once (right or wrong); just appearing on the board, e.g. in a level you left or that timed out, keeps it new. New words are introduced **your own words first** (in the order you added them, e.g. textbook order), then the built-in sample words — so an import never waits behind the demo list.
+
 The library is meant to keep growing; you don't need to clear it. Mastered words simply come up rarely.
+
+## Library word list
+
+**My words** groups the list by stage, in the order that matters for practice:
+
+1. **Learning** (boxes 0–1) — shakiest and most-missed first; these come up first.
+2. **In review** (boxes 2–4) — in spaced review, soonest due first.
+3. **New** — in the exact order they will be introduced.
+4. **Mastered** — occasional spot checks.
+
+Stage chips filter the list (each shows its count), the search box matches word or meaning, and the sort menu also offers *Newest first* (to find what you just added) and *A → Z*.
 
 ## How to use
 
@@ -94,7 +109,7 @@ On iPhone/iPad: Safari → Share → **Add to Home Screen**. The PWA name is **W
 
 ## Bulk import format
 
-In Library → Bulk input, one pair per line:
+In **Library → Add words → Bulk input**, one pair per line:
 
 ```text
 apple,苹果
@@ -136,9 +151,12 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 ## 功能特点
 
 - 10 格流式配对：左 5、右 5；快捷键 `1`–`0`；即时判定。
-- 盒子式复习（答错下一轮再来，答对隔得越来越久）、新词小批量加入、单条/批量加词、单个删除。
-- **危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「复制词表备份」，之后粘贴回「批量录入」即可恢复单词（学习进度不恢复）。
-- 练习选项：练习模式（自适应 / 只练弱项 / 全量顺序）、每关时间、补词延迟、选中暂停补词、掌握后循环。
+- 盒子式复习（答错下一轮再来，答对隔得越来越久）、新词小批量加入。
+- **词库**分三个标签页：**我的词库**（按阶段筛选并显示数量、搜索、排序、按学习阶段分组）、**添加单词**（单个、批量、AI 提示词）、**打印导出**。
+- 新词**先学你自己的词**（按添加顺序），内置示例词排在后面；有了自己的词表后可以一键移除没练过的示例词。
+- **设置**（侧栏 / 底栏）放练习选项，改完自动保存，不常用的收在「高级选项」里。重置学习进度也在这里，需要确认，不再是主导航按钮。
+- **我的词库 → 危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「复制词表备份」，之后粘贴回「批量录入」即可恢复单词（学习进度不恢复）。
+- 设置：语言对、练习模式（自适应 / 只练弱项 / 全量顺序）、外观、每局最多单词数、每关时间、按速度自动调时、钢琴音阶；高级：时间容错、补词延迟、选中暂停补词、全部掌握后继续循环。
 - 同义词都算对：两个词条释义相同时（如 `big` / `large` = 大的），任一英文卡都能配上。
 - 每关结束列出本关混淆过的词及释义，方便回顾。
 - 打开词库或切到后台时，本关计时自动暂停。
@@ -153,7 +171,7 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 
 ## 多语言词对用法
 
-在 **词库 → 练习选项 → 语言对** 可改两侧列标题，例如 English↔中文、English↔日本語、自定义等。
+在 **设置 → 语言对** 可改两侧列标题，例如 English↔中文、English↔日本語、自定义等。
 
 **注意（方案 Option 2）：** 只改显示标签，内部字段仍是 `en`/`zh`，匹配逻辑不变。左列始终显示 `zh` 字段内容，右列始终显示 `en` 字段内容；选「中文→English」只换标签、不翻边。内置词库仅英↔中。全量字段重构（Option 1）在后续路线图。
 
@@ -161,9 +179,20 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 
 本地打开 `index.html`，或使用线上地址。iPhone 用 Safari「添加到主屏幕」；若仍见旧版中文缓存，可强关 Safari 再开以激活新 SW（`word-snap-v9+`）。
 
+## 词库列表
+
+「我的词库」按学习阶段分组，顺序就是练习时的优先顺序：
+
+1. **学习中**（0–1 号盒）：最不稳、错得最多的在前，会优先出现；
+2. **复习中**（2–4 号盒）：按间隔复习，最快到期的在前；
+3. **待学新词**：就是之后加入练习的顺序；
+4. **已掌握**：偶尔抽查。
+
+一个词在你第一次作答（答对或答错）之前都算「新词」；只是出现在棋盘上（比如中途离开或时间到）不算。阶段标签可以筛选（带数量），搜索框可搜单词或释义，排序还可以选「最近添加在前」（方便找刚加的词）和「按字母」。
+
 ## 批量导入
 
-每行一对，逗号或等号均可：
+在 **词库 → 添加单词 → 批量录入**，每行一对，逗号或等号均可：
 
 ```text
 apple,苹果
