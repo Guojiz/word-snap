@@ -1548,6 +1548,23 @@
       text-transform: none;
     }
 
+    .custom-row .cr-ex {
+      grid-column: 2 / -1;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .custom-row .cr-ex small {
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .custom-row .cr-own {
+      color: var(--green);
+    }
+
     .custom-row .stage-tag {
       color: var(--muted);
       font-size: 14px;
@@ -2083,7 +2100,7 @@
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
           addOne: "Add one", bulkLabel: "Bulk input",
-          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning",
+          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning\nWith an example: word,meaning | Example sentence. | Translation",
           addBulk: "Bulk add", clearAll: "Clear all words",
           optionsTitle: "Practice options",
           optLevelSeconds: "Base level time (sec)", optLevelTimeTolerance: "Time tolerance (e.g. 0.2)",
@@ -2100,6 +2117,7 @@
           emptyListA: "No words yet", emptyListB: "Add some above",
           dueNow: "Due now", dueToday: "Later today", dueTomorrow: "Tomorrow", dueInDays: "In {n} days",
           forecastTitle: "Reviews in the next 7 days", dayToday: "Today", dayTomorrow: "Tmrw",
+          mySentences: "My sentences: ",
           langPairLabel: "Language pair", custom: "Custom", sideA: "Side A", sideB: "Side B",
           stage_all: "All", stage_learning: "Learning", stage_review: "In review", stage_new: "New", stage_mastered: "Mastered",
           groupHint_learning: "come up first", groupHint_review: "spaced review", groupHint_new: "join practice in this order", groupHint_mastered: "occasional spot checks",
@@ -2184,6 +2202,7 @@
           copyFailed: "Couldn't copy automatically. The prompt is in the box above: copy it manually, then clear the box.",
           nothing: "Nothing recognised. Paste the AI's answer (one “word,meaning” per line).",
           imported: "Added {n} words.", dupOnly: "No new words (already in the library).",
+          examplesAdded: "Added example sentences to {n} words already in the library.",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
           samplesRemoved: "Removed {n} sample words.",
@@ -2221,7 +2240,7 @@
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
           addOne: "添加一个", bulkLabel: "批量录入",
-          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义",
+          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义\n带例句：单词,释义 | 例句 | 例句翻译",
           addBulk: "批量添加", clearAll: "清空全部词",
           optionsTitle: "练习选项",
           optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "时间容错（如 0.2）",
@@ -2238,6 +2257,7 @@
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
           dueNow: "待复习", dueToday: "今天稍后", dueTomorrow: "明天", dueInDays: "{n} 天后",
           forecastTitle: "未来 7 天复习量", dayToday: "今天", dayTomorrow: "明天",
+          mySentences: "我的例句：",
           langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
           stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
           groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
@@ -2322,6 +2342,7 @@
           copyFailed: "无法自动复制，提示词已放进上面的输入框，请手动复制后再清空输入框。",
           nothing: "没有识别到内容。请粘贴 AI 的回答（每行一个“单词,释义”）。",
           imported: "已添加 {n} 个单词。", dupOnly: "没有新增单词（都已在词库里）。",
+          examplesAdded: "已为词库里已有的 {n} 个词补上例句。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
           samplesRemoved: "已移除 {n} 个示例词。",
@@ -2570,8 +2591,8 @@
       drawHistory: []
     };
 
-    function createWord(en, zh, custom = false, id = null) {
-      return {
+    function createWord(en, zh, custom = false, id = null, extra = null) {
+      const word = {
         id: id || `${custom ? "custom" : "base"}-${en.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
         en,
         zh,
@@ -2589,6 +2610,16 @@
         draws: 0,
         lastDrawRound: 0
       };
+      setExample(word, extra && extra.ex, extra && extra.exZh);
+      return word;
+    }
+
+    /** Optional example sentence (side A) and its translation (side B). Only stored when present. */
+    function setExample(word, ex, exZh) {
+      ex = typeof ex === "string" ? ex.trim().slice(0, 300) : "";
+      exZh = typeof exZh === "string" ? exZh.trim().slice(0, 300) : "";
+      if (ex) word.ex = ex; else delete word.ex;
+      if (ex && exZh) word.exZh = exZh; else delete word.exZh;
     }
 
     function readSavedState() {
@@ -2674,7 +2705,7 @@
         .filter(savedWord => savedWord && savedWord.en && savedWord.zh)
         .map(savedWord => {
           const word = {
-            ...createWord(savedWord.en, savedWord.zh, Boolean(savedWord.custom), savedWord.id),
+            ...createWord(savedWord.en, savedWord.zh, Boolean(savedWord.custom), savedWord.id, savedWord),
             seen: savedWord.seen || 0,
             correct: savedWord.correct || 0,
             mistakes: savedWord.mistakes || 0,
@@ -2685,6 +2716,7 @@
             draws: savedWord.draws || 0,
             lastDrawRound: savedWord.lastDrawRound || 0
           };
+          if (Array.isArray(savedWord.sentences)) word.sentences = savedWord.sentences.filter(x => x && typeof x.text === "string").slice(-10);
           if (!word.srs) Object.assign(word, legacyBox(savedWord));
           WordSnapEngine.ensureWord(word, now);
           delete word.box;
@@ -3333,6 +3365,15 @@
       return `<span class="stage-tag${cls}">${wordStageLabel(word)}</span>`;
     }
 
+    /** The imported example and the learner's own accepted sentences, under the word. */
+    function exampleLine(word) {
+      const own = (word.sentences || []).filter(x => x.ok).map(x => x.text);
+      return [
+        word.ex ? `<span class="cr-ex">${escapeHtml(word.ex)}${word.exZh ? ` <small>${escapeHtml(word.exZh)}</small>` : ""}</span>` : "",
+        own.length ? `<span class="cr-ex cr-own">${t("library.mySentences")}${escapeHtml(own.slice(-2).join(" · "))}</span>` : ""
+      ].join("");
+    }
+
     function wordRow(word) {
       return `
           <div class="custom-row">
@@ -3341,6 +3382,7 @@
             <span class="cr-mean" title="${escapeHtml(word.zh)}">${escapeHtml(word.zh)}</span>
             ${stageTag(word)}
             <button class="link-button" type="button" data-delete="${escapeHtml(word.id)}">${t("library.deleteBtn")}</button>
+            ${exampleLine(word)}
           </div>`;
     }
 
@@ -4455,9 +4497,34 @@
       return Math.max(state.sessionTotal || 0, state.completedThisRun || 0);
     }
 
+    /**
+     * One import line → [word, meaning, example?, exampleTranslation?].
+     * Example columns come after " | " (spaced pipe), or as the 3rd/4th
+     * column of a tab-separated (spreadsheet) row. Older two-column lines are unchanged.
+     */
     function normalizePair(line) {
-      const trimmed = line.trim();
+      let trimmed = line.trim();
       if (!trimmed) return null;
+      let ex = "", exZh = "";
+      const tabs = trimmed.split("\t");
+      if (tabs.length >= 3 && tabs[0].trim() && tabs[1].trim()) {
+        [ex, exZh] = [tabs[2] || "", tabs[3] || ""];
+        trimmed = `${tabs[0]}\t${tabs[1]}`;
+      } else {
+        const cols = trimmed.split(/\s+\|\s+/);
+        if (cols.length >= 2) {
+          [ex, exZh] = [cols[1] || "", cols[2] || ""];
+          trimmed = cols[0];
+        }
+      }
+      const pair = splitWordMeaning(trimmed);
+      if (!pair) return null;
+      ex = ex.trim();
+      exZh = exZh.trim();
+      return ex ? [...pair, ex, exZh] : pair;
+    }
+
+    function splitWordMeaning(trimmed) {
       // Split on the first separator only, so a meaning may itself contain commas.
       // Tab first: rows pasted from a spreadsheet or Anki export.
       const separator = ["\t", "=", "，", ","].find(sep => trimmed.includes(sep));
@@ -4536,12 +4603,12 @@
 
     function aiExampleLines(a, b) {
       const examples = {
-        "English|中文": ["literature,文学", "take part in,参加"],
-        "English|日本語": ["literature,文学", "take part in,参加する"],
-        "English|Español": ["literature,literatura", "take part in,participar en"],
-        "中文|English": ["文学,literature", "参加,take part in"]
+        "English|中文": ["literature,文学 | She studies English literature at university. | 她在大学学习英国文学。", "take part in,参加 | Everyone can take part in the game. | 每个人都可以参加这个游戏。"],
+        "English|日本語": ["literature,文学 | She studies English literature at university. | 彼女は大学で英文学を学んでいる。", "take part in,参加する | Everyone can take part in the game. | 誰でもその試合に参加できる。"],
+        "English|Español": ["literature,literatura | She studies English literature at university. | Estudia literatura inglesa en la universidad.", "take part in,participar en | Everyone can take part in the game. | Todos pueden participar en el juego."],
+        "中文|English": ["文学,literature | 她在大学学习英国文学。 | She studies English literature at university.", "参加,take part in | 每个人都可以参加这个游戏。 | Everyone can take part in the game."]
       };
-      return examples[`${a}|${b}`] || ["word_1,meaning_1", "word_2,meaning_2"];
+      return examples[`${a}|${b}`] || ["word_1,meaning_1 | example sentence 1 | translation 1", "word_2,meaning_2 | example sentence 2 | translation 2"];
     }
 
     function buildAiPrompt() {
@@ -4561,8 +4628,10 @@
           `   @lang: ${a} | ${b}    the two languages; entries are written in this order`,
           `   @round: ${round}    max words per round (5-200)`,
           `   @time: ${secs}    base seconds per level (20-900)`,
-          `3. After the config lines, one entry per line: ${a} word,${b} meaning`,
-          "   - separate with a single ASCII comma; no numbering, bullets, tables or blank lines;",
+          `3. After the config lines, one entry per line: ${a} word,${b} meaning | ${a} example sentence | ${b} translation of the sentence`,
+          "   - word and meaning are separated by a single ASCII comma; the example and its translation follow, each after “ | ” (space, vertical bar, space);",
+          "   - the example is one short, natural sentence that really uses the word (an inflected form is fine);",
+          "   - no numbering, bullets, tables or blank lines;",
           "   - keep meanings short; separate several meanings with “;” and never put a comma inside a meaning;",
           "   - no duplicate entries.",
           "",
@@ -4582,8 +4651,10 @@
         `   @lang: ${a} | ${b}    两侧语言，词条按这个顺序书写`,
         `   @round: ${round}    每局最多单词数（5–200）`,
         `   @time: ${secs}    每关基础时间，单位秒（20–900）`,
-        `3. 配置行之后，每行一个词条：${a}词,${b}释义`,
-        "   - 只用一个英文逗号分隔；不要序号、项目符号、表格、空行；",
+        `3. 配置行之后，每行一个词条：${a}词,${b}释义 | ${a}例句 | 例句的${b}翻译`,
+        "   - 单词和释义之间只用一个英文逗号；例句和翻译依次跟在后面，各用“ | ”（空格、竖线、空格）隔开；",
+        "   - 例句是一句简短自然、真正用到这个词的句子（可以是变形）；",
+        "   - 不要序号、项目符号、表格、空行；",
         "   - 释义尽量简短，多个释义用“；”隔开，释义里不要出现英文逗号；",
         "   - 不要出现重复词条。",
         "",
@@ -4626,6 +4697,7 @@
 
     /** Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped. */
     let lastRemovedSamples = 0;
+    let lastExamplesAdded = 0;
     function addWords(pairs) {
       lastRemovedSamples = 0;
       const valid = pairs.filter(pair => pair && pair[0] && pair[1]);
@@ -4638,17 +4710,25 @@
         lastRemovedSamples = before - state.words.length;
         state.words.forEach(word => { word.custom = true; });
       }
-      const existing = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
-      let added = 0;
+      const existing = new Map(state.words.map(word => [`${word.en.toLowerCase()}::${word.zh}`, word]));
+      let added = 0, withExample = 0;
       pairs.forEach(pair => {
         if (!pair) return;
         const key = `${pair[0].toLowerCase()}::${pair[1]}`;
-        if (existing.has(key)) return;
-        existing.add(key);
-        state.words.push(createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`));
+        const known = existing.get(key);
+        if (known) {
+          // Re-importing a word with an example sentence adds the sentence (progress is kept).
+          if (pair[2] && !known.ex) { setExample(known, pair[2], pair[3]); withExample += 1; }
+          return;
+        }
+        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3] });
+        existing.set(key, word);
+        state.words.push(word);
         added += 1;
       });
+      lastExamplesAdded = withExample;
 
+      if (withExample && !(added > 0 || lastRemovedSamples)) saveWords();
       if (added > 0 || lastRemovedSamples) {
         endTrial();
         saveWords();
@@ -5115,8 +5195,9 @@
       const added = addWords(pairs);
       const messages = [];
       if (added) messages.push(t("ai.imported", { n: added }));
+      else if (pairs.length && !lastExamplesAdded) messages.push(t("ai.dupOnly"));
       if (lastRemovedSamples) messages.push(t("ai.samplesRemoved", { n: lastRemovedSamples }));
-      else if (pairs.length) messages.push(t("ai.dupOnly"));
+      if (lastExamplesAdded) messages.push(t("ai.examplesAdded", { n: lastExamplesAdded }));
       if (configParts.length) messages.push(t("ai.config", { list: configParts.join(currentLang === "zh" ? "、" : ", ") }));
       if (skipped) messages.push(t("ai.skipped", { n: skipped }));
       if (added || configParts.length) els.bulkInput.value = "";
@@ -5124,7 +5205,7 @@
         els.feedback.className = "feedback good";
         els.feedback.textContent = t("feedback.addedN", { n: added });
       }
-      setImportStatus(messages.join(" "), added || configParts.length ? "good" : "");
+      setImportStatus(messages.join(" "), added || configParts.length || lastExamplesAdded ? "good" : "");
     });
 
     document.getElementById("copyAiPromptBtn").addEventListener("click", async () => {
@@ -5205,7 +5286,8 @@
     /** Same format as Bulk input (tab-separated, plus @lang), so pasting it back restores the list. */
     function buildBackupText() {
       const { a, b } = state.settings.langPair;
-      return [`@lang: ${a} | ${b}`, ...state.words.map(word => `${word.en}\t${word.zh}`)].join("\n");
+      return [`@lang: ${a} | ${b}`, ...state.words.map(word =>
+        [word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
     }
 
     document.getElementById("copyBackupBtn").addEventListener("click", async () => {
