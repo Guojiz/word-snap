@@ -1688,6 +1688,7 @@
           <ul class="review-list" id="reviewList"></ul>
           <div class="completion-actions">
             <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
             <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
           </div>
         </div>
@@ -2495,6 +2496,7 @@
       streakTones: document.getElementById("streakTones"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
+      focusPairsBtn: document.getElementById("focusPairsBtn"),
       dropSamples: document.getElementById("dropSamples"),
       dropSamplesRow: document.getElementById("dropSamplesRow"),
       dropSamplesText: document.getElementById("dropSamplesText"),
@@ -3629,8 +3631,10 @@
       if (isTrial()) return shuffle(sampleWords().slice(0, TRIAL_SIZE));
       const limit = state.settings.roundSize;
       if (isEndless()) {
-        const picked = [];
-        for (let i = 0; i < SLOT_COUNT + 2; i++) {
+        // "Practice the mixed-up pairs": those words open the next set together.
+        const picked = (state.focusWords || []).filter(word => state.words.includes(word)).slice(0, SLOT_COUNT + 2);
+        state.focusWords = null;
+        while (picked.length < SLOT_COUNT + 2) {
           const word = pickNextWord(picked);
           if (!word) break;
           picked.push(word);
@@ -4315,6 +4319,7 @@
       const remaining = state.words.filter(isLearning).length;
       const summary = t("timeouts.levelSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0 });
       els.trialKeepBtn.hidden = !trial;
+      els.focusPairsBtn.hidden = true;
       if (trial) {
         els.completionTitle.textContent = t("trial.doneTitle");
         // After a reload there are no level stats to report — just the choice.
@@ -4328,6 +4333,7 @@
         return;
       }
       els.continueBtn.textContent = t("lesson.continueBtn");
+      els.focusPairsBtn.hidden = !(reason === "block" && confusedWords().length >= 2);
       if (reason === "block") {
         const block = state.lastBlock || {};
         const dueToday = engine.forecast(state.words, 1)[0];
@@ -4346,6 +4352,13 @@
           ? `${summary} ${t("timeouts.timeUpText")}`
           : `${summary} ${remaining ? t("timeouts.stillLearning", { n: remaining }) : t("timeouts.allStable")}`;
       renderReviewList();
+    }
+
+    /** Every word that was part of a mix-up this level / set, once each. */
+    function confusedWords() {
+      const seen = new Set();
+      (state.levelConfusions || []).flat().forEach(word => { if (state.words.includes(word)) seen.add(word); });
+      return [...seen];
     }
 
     /** The words mixed up this level, with their correct meaning — the part a learner actually needs to see. */
@@ -4380,6 +4393,7 @@
       els.completionTitle.textContent = t("lesson.emptyTitle");
       els.completionText.textContent = t("lesson.emptyText");
       els.continueBtn.textContent = t("lesson.emptyAddBtn");
+      els.focusPairsBtn.hidden = true;
       els.feedback.className = "feedback";
       els.feedback.textContent = t("feedback.emptyLib");
       renderStats();
@@ -5231,6 +5245,12 @@
         openLibrary("add");
         return;
       }
+      state.round += 1;
+      saveWords();
+      renderRound();
+    });
+    els.focusPairsBtn.addEventListener("click", () => {
+      state.focusWords = confusedWords();
       state.round += 1;
       saveWords();
       renderRound();
