@@ -21,6 +21,8 @@
 
 - **Android app (Capacitor)**: `package.json`, `capacitor.config.json` and the generated `android/` project; `npm run build:www` copies the site into `www/`, `npm run apk:debug` builds a debug APK. API calls go through CapacitorHttp (no CORS limits). **Daily reminder** (Settings, app only) schedules a week of local notifications and drops today's once the goal is done.
 
+- **On-device Qwen3.5 4B in the Android app**: a Capacitor plugin (`LlmPlugin.java` + JNI `llm_jni.cpp`) runs MNN's prebuilt LLM engine (3.6.1, arm64); the model downloads once from ModelScope with resume and progress. `js/ai-native.js` wraps it as the same engine as the API key, so sentence feedback, contrast, examples and word lists all work offline in any language pair. Only offered on phones with 12 GB of memory or more.
+
 ### Changed
 
 - Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).

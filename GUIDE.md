@@ -109,6 +109,10 @@ The **On-device model** part of *Settings → AI (optional)* appears only on dev
 - What it does **not** do: judge whether a sentence uses the word with the right meaning. We tested models up to 1.7B on 60 labelled sentences (`tools/ai-eval.html`) and none was reliable enough, so the sentence card asks you to check the meaning yourself.
 - Every request has an 8-second limit; on any failure the app falls back silently to the rule-based check.
 
+### In the Android app: Qwen3.5 4B on the phone
+
+In the app, *On-device model* is **Qwen3.5 4B** (4-bit, run by [MNN](https://github.com/alibaba/MNN)), offered only on phones with **12 GB of memory or more** (others get a hint to use an API key). It downloads once (about 2.7 GB, resumable, from ModelScope) and then works offline. It is strong enough for everything the API key does — sentence feedback with meaning, pair contrast, examples, word lists (up to 30 words) — in any language pair, and nothing leaves the phone. Answers take a few seconds; the API key is used first when both are on.
+
 ## AI with your own API key (optional)
 
 **Settings → AI (optional) → Your own API key** works on every device (no WebGPU needed) and for **any language pair**: explanations are written in side B (the meaning side). The **Use AI features** switch at the top turns every AI feature off at once.
@@ -288,6 +292,10 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 - 它做什么：造句卡点「我没有思路」时给一句中文情景；为当前这一组里没有例句的词补例句。AI 例句必须通过语法检查、并且确实用到这个词，才会保存，词库里会标明是 AI 生成。
 - 它**不**做什么：判断句子里这个词的意思用得对不对。我们用 60 条标注句子（`tools/ai-eval.html`）测试了 1.7B 以内的模型，没有一个足够可靠，所以造句卡会提醒你自己对照释义。
 - 每次请求限时 8 秒，出任何问题都会静默回退到规则检查。
+
+### 安卓 App 里：手机上跑 Qwen3.5 4B
+
+App 里的「端侧模型」是 **Qwen3.5 4B**（4bit，用 [MNN](https://github.com/alibaba/MNN) 运行），只在**内存 12GB 及以上**的手机上提供（其他手机会提示改用 API Key）。模型从魔搭（ModelScope）下载一次（约 2.7GB，可断点续传），之后离线可用。它能做 API Key 能做的所有事：造句批改（连意思一起查）、混淆辨析、补例句、生成词表（每次最多 30 个），任何语言对都可以，内容不出手机。每次回答要几秒钟；两者都开时优先用 API Key。
 
 ## 用自己的 API Key（可选）
 
