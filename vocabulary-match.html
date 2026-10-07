@@ -2158,6 +2158,7 @@
           <div class="form-actions">
             <button class="duo-button" type="button" id="aiToggleBtn"></button>
             <button class="small-button" type="button" id="aiDeleteBtn" data-en="Delete model" data-zh="删除模型" hidden>删除模型</button>
+            <a class="link-button" id="aiEvalLink" href="./tools/ai-eval.html?model=native" hidden data-en="Test its accuracy" data-zh="测一测准确率">测一测准确率</a>
           </div>
         </div>
       </section>
@@ -3044,6 +3045,7 @@
       bookImportBtn: document.getElementById("bookImportBtn"),
       aiWordListInput: document.getElementById("aiWordListInput"),
       aiWordListBtn: document.getElementById("aiWordListBtn"),
+      aiEvalLink: document.getElementById("aiEvalLink"),
       aiApiBlock: document.getElementById("aiApiBlock"),
       aiLocalBlock: document.getElementById("aiLocalBlock"),
       aiApiAbout: document.getElementById("aiApiAbout"),
@@ -5266,6 +5268,7 @@
         : aiState.cached ? t("aiSettings.turnOn")
           : aiState.progress > 0 ? t("aiSettings.resume", { mb }) : t("aiSettings.enable", { mb });
       els.aiDeleteBtn.hidden = !aiState.cached || aiState.busy;
+      if (els.aiEvalLink) els.aiEvalLink.hidden = !aiState.native || !aiState.cached || aiState.busy;
       let message = aiState.message, kind = aiState.messageKind;
       if (aiState.busy) {
         message = aiState.progress < 1 && !aiState.cached

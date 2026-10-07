@@ -17,7 +17,10 @@ const ENTRIES = [
   "icon.svg",
   "js",
   "vendor",
-  "wordbooks"
+  "wordbooks",
+  // The accuracy eval, so the on-device model can be measured on the phone itself.
+  "tools/ai-eval.html",
+  "tests/fixtures"
 ];
 
 rmSync(out, { recursive: true, force: true });
@@ -25,6 +28,7 @@ mkdirSync(out, { recursive: true });
 for (const entry of ENTRIES) {
   const from = join(root, entry);
   if (!existsSync(from)) continue;
+  mkdirSync(dirname(join(out, entry)), { recursive: true });
   cpSync(from, join(out, entry), { recursive: true });
 }
 console.log(`www/ ready (${ENTRIES.filter(e => existsSync(join(root, e))).length} entries)`);
