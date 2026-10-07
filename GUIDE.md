@@ -82,6 +82,13 @@ A word counts as **new** until you have answered it once (right or wrong); just 
 
 The library is meant to keep growing; you don't need to clear it. Mastered words simply come up rarely.
 
+## Daily goal and streak
+
+- **Today's goal**: clear the words that are due, and learn the day's new words (*Settings → New words per day*, default 10; fewer if your list has fewer new words left). The bar above the board says what is left and about how long it takes (from your own pace), and turns into **✓ Today's goal done** when it is met.
+- **Day streak**: days in a row with the goal done. Days change at 4 am, like the review schedule. The side panel shows it next to *Combo* (correct pairs in a row in this session).
+- **Streak freeze**: one missed day per week (Monday–Sunday) is bridged automatically; the bar says when it was used. A frozen day keeps the streak but does not add to it.
+- The trial level does not count.
+
 ## Spelling and sentence cards
 
 After each set of 25 pairs, the summary can show up to three short cards (Settings → *Cards after each set*):
@@ -249,6 +256,13 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 **限时关卡**里，每局的词也由同一个引擎挑选（上限是「每局最多单词数」）；「只练弱项」挑最可能忘的词，「全量顺序」按词库顺序。
 
 一个词在你第一次作答（答对或答错）之前都算「新词」；只是出现在棋盘上不算。新词**先学你自己的词**（按添加顺序），示例词排在后面。词库是越积越多的，不需要清空；已掌握的词只是很少出现。
+
+## 每日目标和连续天数
+
+- **今日目标**：把到期的词复习完，再学当天的新词（**设置 → 每天新词数**，默认 10 个；词库里新词不够就按剩下的算）。棋盘上方的横条会写还剩多少、大约几分钟（按你自己的速度估算），完成后变成 **✓ 今日完成**。
+- **连续天数**：连续完成目标的天数，和复习计划一样凌晨 4 点换日。侧栏里和「本局连对」（这次练习连续配对正确的次数）放在一起。
+- **免断签**：每周（周一到周日）自动补上一天没练的日子，横条上会提示用掉了。补上的那天保住连续天数，但不计入天数。
+- 体验关不计入。
 
 ## 拼写卡和造句卡
 

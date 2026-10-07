@@ -254,6 +254,41 @@
       margin-bottom: 54px;
     }
 
+    .today-bar {
+      grid-column: 1 / -1;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 14px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .today-bar b {
+      color: var(--text);
+    }
+
+    .today-bar.done {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .today-bar.celebrate {
+      animation: today-pop 0.6s ease;
+    }
+
+    .today-bar small {
+      display: block;
+      margin-top: 2px;
+      font-weight: 700;
+    }
+
+    @keyframes today-pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
     .icon-button {
       width: 36px;
       height: 36px;
@@ -1883,6 +1918,7 @@
           <button class="icon-button" type="button" id="quitBtn" aria-label="重新开始" data-en-aria="Start over" data-zh-aria="重新开始">×</button>
           <div class="progress" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
           <div class="top-count" id="topCount">10</div>
+          <div class="today-bar" id="todayBar" hidden></div>
         </div>
 
         <div class="prompt" id="practiceView">
@@ -1928,7 +1964,8 @@
         <div class="stats">
           <div class="stat"><strong id="score">0</strong><span data-en="Correct" data-zh="正确配对">正确配对</span></div>
           <div class="stat"><strong id="mistakes">0</strong><span data-en="Mistakes" data-zh="错选">错选</span></div>
-          <div class="stat"><strong id="streak">0</strong><span data-en="Streak" data-zh="连对">连对</span></div>
+          <div class="stat"><strong id="streak">0</strong><span data-en="Combo" data-zh="本局连对">本局连对</span></div>
+          <div class="stat"><strong id="dayStreak">0</strong><span data-en="Day streak" data-zh="连续天数">连续天数</span></div>
           <div class="stat"><strong id="remaining">0</strong><span data-en="Unmastered" data-zh="未掌握">未掌握</span></div>
         </div>
         <div class="weak-list" id="weakList"></div>
@@ -2014,6 +2051,10 @@
           <label>
             <span data-en="Cards after each set (spelling / sentence)" data-zh="每组后的练习卡（拼写 / 造句）">每组后的练习卡（拼写 / 造句）</span>
             <select id="drillsSelect"></select>
+          </label>
+          <label>
+            <span data-en="New words per day (daily goal)" data-zh="每天新词数（每日目标）">每天新词数（每日目标）</span>
+            <select id="dailyNewSelect"></select>
           </label>
           <label>
             <span data-en="Appearance" data-zh="外观">外观</span>
@@ -2267,6 +2308,7 @@
   </div>
 
   <script src="./js/engine.js"></script>
+  <script src="./js/habit.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
@@ -2451,7 +2493,13 @@
         },
         settings: {
           flow_endless: "Endless (recommended)", flow_levels: "Timed levels",
-          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards"
+          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards",
+          dailyNew: "{n} new words"
+        },
+        today: {
+          done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
+          left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
+          frozen: "You missed a day — this week's streak freeze kept your streak."
         },
         aiSettings: {
           about: "Runs a small language model ({name}) on this device: when you have no idea for a sentence card it suggests a situation in Chinese, and it writes example sentences for words that have none (each one passes the grammar check first). Free, no account, nothing you write leaves the device. It needs English–Chinese words and a download of about {mb} MB, once.",
@@ -2648,7 +2696,13 @@
         },
         settings: {
           flow_endless: "无限练习（推荐）", flow_levels: "限时关卡",
-          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张"
+          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张",
+          dailyNew: "{n} 个"
+        },
+        today: {
+          done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
+          left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
+          frozen: "昨天没练，本周的免断签保住了连续天数。"
         },
         aiSettings: {
           about: "在这台设备上运行一个小语言模型（{name}）：造句卡没有思路时，给你一句中文情景；没有例句的词，自动补上例句（每句都先过语法检查）。免费，不用账号，你写的内容不会离开这台设备。需要词库是英文–中文，并下载约 {mb}MB，只需一次。",
@@ -2809,6 +2863,7 @@
       flow: "endless",
       // Spelling / sentence cards shown after each set (0–3).
       drills: 2,
+      dailyNew: 10,
       levelDurationMs: 120000,
       roundSize: 30,
       adaptiveLevelTime: true,
@@ -2893,6 +2948,9 @@
       modeSelect: document.getElementById("modeSelect"),
       flowSelect: document.getElementById("flowSelect"),
       drillsSelect: document.getElementById("drillsSelect"),
+      dailyNewSelect: document.getElementById("dailyNewSelect"),
+      todayBar: document.getElementById("todayBar"),
+      dayStreak: document.getElementById("dayStreak"),
       drill: document.getElementById("drill"),
       drillKicker: document.getElementById("drillKicker"),
       drillTitle: document.getElementById("drillTitle"),
@@ -3079,6 +3137,7 @@
       return {
         flow: raw.flow === "levels" ? "levels" : "endless",
         drills: Math.round(clampNumber(raw.drills, 0, 3, DEFAULT_SETTINGS.drills)),
+        dailyNew: Math.round(clampNumber(raw.dailyNew, 0, 50, DEFAULT_SETTINGS.dailyNew)),
         levelDurationMs: clampNumber(raw.levelDurationMs, 20000, 900000, DEFAULT_SETTINGS.levelDurationMs),
         roundSize: Math.round(clampNumber(raw.roundSize, 5, 200, DEFAULT_SETTINGS.roundSize)),
         adaptiveLevelTime: raw.adaptiveLevelTime !== false,
@@ -3161,6 +3220,7 @@
           words: state.words,
           settings: state.settings,
           engine: engine.serialize(),
+          habit,
           drawHistory: state.drawHistory,
           mode: state.mode,
           onboarding: state.onboarding,
@@ -3398,14 +3458,80 @@
 
     /** Right answer on the board. `ms` = reaction time for this pair. */
     function recordCorrect(word, ms) {
+      const wasNew = engine.isNew(word);
       engine.recordAnswer(word, engine.grade(true, ms), Date.now(), { ms, kind: "match" });
       syncMastered(word);
+      recordHabit(wasNew, ms);
     }
 
     /** The word being answered was missed. */
     function recordWrong(word) {
+      const wasNew = engine.isNew(word);
       engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
       syncMastered(word);
+      recordHabit(wasNew, 0);
+    }
+
+    // ---- Daily goal and day streak (js/habit.js) ----
+    // Today's goal: no words due right now, plus the day's new words (Settings).
+    // Days change at 4 am. One missed day a week is bridged by the streak freeze.
+    let habit = WordSnapHabit.normalize(null);
+    let habitNotice = "";
+    let habitCelebrate = false;
+
+    function recordHabit(wasNew, ms) {
+      if (isTrial()) return;
+      WordSnapHabit.recordAnswer(habit, { wasNew, ms });
+    }
+
+    function habitStatus(now = Date.now()) {
+      let due = 0, newAvailable = 0;
+      for (const word of state.words) {
+        if (engine.isNew(word)) newAvailable += 1;
+        else if (engine.dueAt(word, now) <= now) due += 1;
+      }
+      return WordSnapHabit.today(habit, { due, newAvailable, goalNew: state.settings.dailyNew, now });
+    }
+
+    /** Bridges a missed day with the weekly freeze (once a day) and says so on the today bar. */
+    function settleHabit() {
+      const frozen = WordSnapHabit.settle(habit);
+      if (frozen.length) {
+        habitNotice = t("today.frozen");
+        saveWords();
+      }
+    }
+
+    function renderToday() {
+      if (!els.todayBar) return;
+      els.todayBar.hidden = isTrial() || !state.words.length;
+      if (els.todayBar.hidden) return;
+      settleHabit(); // once a day, also when the page stays open past 4 am
+      const status = habitStatus();
+      if (status.justDone) {
+        habitCelebrate = true;
+        saveWords();
+      }
+      const streakText = status.streak ? t("today.streak", { n: status.streak }) : "";
+      let html;
+      if (status.done) {
+        html = `<b>${t("today.done")}</b>${streakText ? ` · ${streakText}` : ""}`;
+      } else {
+        const parts = [];
+        if (status.dueLeft) parts.push(t("today.due", { n: status.dueLeft }));
+        if (status.newLeft) parts.push(t("today.new", { n: status.newLeft }));
+        html = `${streakText ? `${streakText} · ` : ""}${t("today.left", { list: parts.join(currentLang === "zh" ? "、" : ", ") || t("today.practice"), m: status.minutes })}`;
+      }
+      if (habitNotice) html += `<small>${escapeHtml(habitNotice)}</small>`;
+      els.todayBar.innerHTML = html;
+      els.todayBar.classList.toggle("done", status.done);
+      if (habitCelebrate) {
+        habitCelebrate = false;
+        els.todayBar.classList.remove("celebrate");
+        void els.todayBar.offsetWidth; // restart the animation
+        els.todayBar.classList.add("celebrate");
+      }
+      if (els.dayStreak) els.dayStreak.textContent = status.streak;
     }
 
     /** The card picked by mistake: mixed up, so it loses some stability (no review logged). */
@@ -5453,7 +5579,9 @@
       card.grade = grade;
       engine.recordAnswer(card.word, grade, Date.now(), { kind: card.type });
       syncMastered(card.word);
+      recordHabit(false, 0);
       saveWords();
+      renderToday();
     }
 
     /** A sentence grade waits until the card is left, so "I used the wrong meaning" can still change it. */
@@ -5792,6 +5920,7 @@
       els.mistakes.textContent = state.mistakes;
       els.streak.textContent = state.streak;
       els.remaining.textContent = remaining;
+      renderToday();
 
       const weak = state.words
         .filter(word => !isNewWord(word) && !isMastered(word))
@@ -6220,6 +6349,13 @@
         els.drillsSelect.innerHTML = [0, 1, 2, 3].map(n => `<option value="${n}">${t("settings.drills_" + n)}</option>`).join("");
         els.drillsSelect.value = String(state.settings.drills);
       }
+      if (els.dailyNewSelect) {
+        els.dailyNewSelect.innerHTML = [0, 5, 10, 15, 20, 30].map(n => `<option value="${n}">${t("settings.dailyNew", { n })}</option>`).join("");
+        if (![0, 5, 10, 15, 20, 30].includes(state.settings.dailyNew)) {
+          els.dailyNewSelect.insertAdjacentHTML("beforeend", `<option value="${state.settings.dailyNew}">${t("settings.dailyNew", { n: state.settings.dailyNew })}</option>`);
+        }
+        els.dailyNewSelect.value = String(state.settings.dailyNew);
+      }
       // Level length and timer only matter for timed levels.
       els.settingsModal.querySelectorAll("[data-levels-only]").forEach(el => { el.hidden = state.settings.flow !== "levels"; });
       els.levelSeconds.value = Math.round(state.settings.levelDurationMs / 1000);
@@ -6259,6 +6395,7 @@
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
+        dailyNew: els.dailyNewSelect ? Number(els.dailyNewSelect.value) : state.settings.dailyNew,
         levelDurationMs: Number(els.levelSeconds.value) * 1000,
         roundSize: Number(els.roundSize.value),
         adaptiveLevelTime: els.adaptiveLevelTime ? els.adaptiveLevelTime.checked : true,
@@ -6742,6 +6879,7 @@
     const savedState = readSavedState();
     state.settings = normalizeSettings(loadSettings(savedState));
     engine = WordSnapEngine.create(savedState && savedState.engine, { blockSize: BLOCK_SIZE });
+    habit = WordSnapHabit.normalize(savedState && savedState.habit);
     state.words = loadWords(savedState);
     state.words.forEach(syncMastered);
     state.drawHistory = Array.isArray(savedState && savedState.drawHistory) ? savedState.drawHistory : [];

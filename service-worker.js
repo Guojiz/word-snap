@@ -1,9 +1,10 @@
-const CACHE_NAME = "word-snap-v48";
+const CACHE_NAME = "word-snap-v49";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./vocabulary-match.html",
   "./js/engine.js",
+  "./js/habit.js",
   "./js/sentence.js",
   "./js/ai.js",
   "./js/ai-api.js",
