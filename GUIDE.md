@@ -147,6 +147,10 @@ Online: open the [live URL](https://guojiz.github.io/word-snap/vocabulary-match.
 
 On iPhone/iPad: Safari → Share → **Add to Home Screen**. The PWA name is **Word Snap**. After updates, if you still see an old Chinese-only UI, fully quit Safari and reopen so the new service worker (`word-snap-v9+`) can replace the cache.
 
+## Word books
+
+*Library → Add words → From a word book* has built-in English → Chinese books: middle school (zhongkao), high school (gaokao), CET-4, CET-6, postgraduate (kaoyan), TOEFL, IELTS and GRE. They come from the open-source [ECDICT](https://github.com/skywind3000/ECDICT) (MIT) exam tags, ordered most frequent first, with a short meaning. Each import adds the next words you don't have yet (20 to all); the line under the menu says how many you already have. A book is downloaded the first time you open it, then works offline. Rebuild them with `node tools/build-wordbooks.mjs path/to/ecdict.csv`.
+
 ## Bulk import format
 
 In **Library → Add words → Bulk input**, one pair per line:
@@ -307,6 +311,10 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 4. **已掌握**：稳定性达到 21 天以上，且跨过至少三天；偶尔抽查。
 
 列表上方的小图显示未来 7 天每天的复习量。点开一个词可以看到例句和「我的例句」。阶段标签可以筛选（带数量），搜索框可搜单词或释义，排序还可以选「最近添加在前」和「按字母」。
+
+## 词书
+
+**词库 → 添加单词 → 从词书导入** 内置英语→中文词书：中考、高考、四级、六级、考研、托福、雅思、GRE。词表来自开源的 [ECDICT](https://github.com/skywind3000/ECDICT)（MIT 协议）的考试标注，按词频从常用到少用排列，释义取简短的几项。每次导入都接着加你还没有的词（20 个到全部），下拉框下面会写你已经有多少个。词书第一次打开时下载，之后可以离线使用。重新生成：`node tools/build-wordbooks.mjs path/to/ecdict.csv`。
 
 ## 批量导入
 

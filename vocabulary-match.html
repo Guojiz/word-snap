@@ -1645,6 +1645,10 @@
       accent-color: var(--green);
     }
 
+    .wordbook .option-grid {
+      margin-top: 8px;
+    }
+
     .ai-wordlist {
       margin-bottom: 14px;
     }
@@ -2194,6 +2198,26 @@
       </section>
 
       <section class="modal-section" data-tab-panel="add">
+        <h2 data-en="From a word book" data-zh="从词书导入">从词书导入</h2>
+        <div class="wordbook" id="wordbookRow">
+          <div class="option-grid">
+            <label>
+              <span data-en="Word book" data-zh="词书">词书</span>
+              <select id="bookSelect"></select>
+            </label>
+            <label>
+              <span data-en="How many" data-zh="导入多少个">导入多少个</span>
+              <select id="bookCount"></select>
+            </label>
+          </div>
+          <p class="import-hint" id="bookInfo"></p>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="bookImportBtn" data-en="Add from the book" data-zh="从词书导入">从词书导入</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="modal-section" data-tab-panel="add">
         <label class="check-row drop-samples" id="dropSamplesRow" hidden>
           <input id="dropSamples" type="checkbox" checked />
           <span id="dropSamplesText"></span>
@@ -2563,7 +2587,7 @@
         appearance: { auto: "Auto", light: "Light", dark: "Dark" },
         trial: {
           doneTitle: "Trial complete!",
-          doneText: "Those were sample words. Now bring in the words you actually need — type them, paste a list, or let any AI make one.",
+          doneText: "Those were sample words. Now bring in the words you actually need — pick a word book (CET-4/6, IELTS…), paste a list, or let AI make one.",
           importBtn: "Import my words",
           notYet: "No words imported yet — tap “Import my words”, or keep practicing with the samples for now."
         },
@@ -2583,6 +2607,13 @@
           backupCopied: "Backup of {n} words copied. Keep it somewhere safe (e.g. a note).",
           backupFailed: "Couldn't copy automatically. The backup is in the Bulk input box above: copy it manually.",
           backupEmpty: "The library is empty; nothing to back up."
+        },
+        wordbook: {
+          count: "Next {n} words", all: "All the rest",
+          info: "{n} words, most frequent first; {have} already in your library. Each import adds the next ones you don't have.",
+          allIn: "Every word of this book is already in your library.",
+          failed: "Couldn't load the word books. They need a connection the first time.",
+          wrongPair: "The word books are English → 中文. Switch the language pair in Settings first."
         },
         langToggle: { en: "EN", zh: "中" }
       },
@@ -2766,7 +2797,7 @@
         appearance: { auto: "自动", light: "浅色", dark: "深色" },
         trial: {
           doneTitle: "体验完成！",
-          doneText: "刚才是示例词。现在换成你真正要背的词吧：手动输入、粘贴词表，或者让 AI 帮你生成。",
+          doneText: "刚才是示例词。现在换成你真正要背的词吧：选一本词书（四六级、考研、雅思……）、粘贴词表，或者让 AI 帮你生成。",
           importBtn: "导入我的单词",
           notYet: "还没有导入单词。点「导入我的单词」继续，或者先用示例词练。"
         },
@@ -2786,6 +2817,13 @@
           backupCopied: "已复制 {n} 个词的备份，请存到安全的地方（比如备忘录）。",
           backupFailed: "无法自动复制，备份已放进上方「批量录入」框，请手动复制。",
           backupEmpty: "词库是空的，没有可备份的内容。"
+        },
+        wordbook: {
+          count: "接下来 {n} 个", all: "剩下全部",
+          info: "共 {n} 个词，按词频从常用到少用；你的词库里已有 {have} 个。每次导入都接着加你还没有的词。",
+          allIn: "这本词书的词都已经在你的词库里了。",
+          failed: "词书加载失败，第一次使用需要联网。",
+          wrongPair: "词书是 English → 中文 的，请先在设置里把语言对改过来。"
         },
         langToggle: { en: "EN", zh: "中" }
       }
@@ -2973,6 +3011,10 @@
       aiEnabled: document.getElementById("aiEnabled"),
       aiWeakNote: document.getElementById("aiWeakNote"),
       aiWordListRow: document.getElementById("aiWordListRow"),
+      bookSelect: document.getElementById("bookSelect"),
+      bookCount: document.getElementById("bookCount"),
+      bookInfo: document.getElementById("bookInfo"),
+      bookImportBtn: document.getElementById("bookImportBtn"),
       aiWordListInput: document.getElementById("aiWordListInput"),
       aiWordListBtn: document.getElementById("aiWordListBtn"),
       aiApiBlock: document.getElementById("aiApiBlock"),
@@ -6232,7 +6274,7 @@
       els.libraryModal.querySelector(".modal-card").scrollTop = 0;
       if (libraryTab === "list") renderCustomList();
       if (libraryTab === "print") { setPrintStatus(""); renderPrintPanel(); }
-      if (libraryTab === "add") { syncDropSamplesRow(); syncAiWordListUI(); }
+      if (libraryTab === "add") { syncDropSamplesRow(); syncAiWordListUI(); syncWordbookUI(); }
       // Don't pop the on-screen keyboard over the library on phones.
       if (libraryTab === "add" && (!window.matchMedia || !matchMedia("(pointer: coarse)").matches)) els.newEnglish.focus();
     }
@@ -6672,6 +6714,103 @@
       }
       setImportStatus(messages.join(" "), added || configParts.length || lastExamplesAdded ? "good" : "");
     });
+
+    // ---- Built-in word books (wordbooks/*.json from ECDICT, loaded on demand) ----
+    let wordbookIndex = null;
+    const wordbookCache = new Map();
+    let wordbookModule = null;
+
+    function loadWordbookModule() {
+      if (!wordbookModule) wordbookModule = import("./js/wordbooks.js").catch(error => { wordbookModule = null; throw error; });
+      return wordbookModule;
+    }
+
+    async function loadWordbookIndex() {
+      if (!wordbookIndex) {
+        const response = await fetch("./wordbooks/index.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        wordbookIndex = (await response.json()).books;
+      }
+      return wordbookIndex;
+    }
+
+    async function loadBook(id) {
+      if (!wordbookCache.has(id)) {
+        const response = await fetch(`./wordbooks/${encodeURIComponent(id)}.json`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        wordbookCache.set(id, (await response.json()).words);
+      }
+      return wordbookCache.get(id);
+    }
+
+    /** Lower-cased words that will still be in the library after this import (samples may be dropped). */
+    function libraryWordSet() {
+      const dropping = els.dropSamples.checked && !els.dropSamplesRow.hidden && sampleWords().length > 0;
+      return new Set(state.words.filter(word => !dropping || word.custom).map(word => word.en.toLowerCase()));
+    }
+
+    function bookPairOk() {
+      const { a, b } = state.settings.langPair;
+      return /^english$/i.test(a) && b === "中文";
+    }
+
+    async function syncWordbookUI() {
+      if (!els.bookSelect) return;
+      try {
+        const books = await loadWordbookIndex();
+        if (!els.bookSelect.options.length) {
+          els.bookSelect.innerHTML = books.map(book =>
+            `<option value="${escapeHtml(book.id)}">${escapeHtml(currentLang === "zh" ? book.zh : book.en)} · ${book.count}</option>`).join("");
+          els.bookCount.innerHTML = [20, 50, 100, 200, 500].map(n => `<option value="${n}">${t("wordbook.count", { n })}</option>`).join("")
+            + `<option value="0">${t("wordbook.all")}</option>`;
+          els.bookCount.value = "50";
+        }
+        const book = books.find(b => b.id === els.bookSelect.value) || books[0];
+        const words = await loadBook(book.id);
+        const mod = await loadWordbookModule();
+        const have = mod.bookProgress(words, libraryWordSet());
+        els.bookInfo.textContent = t("wordbook.info", { n: book.count, have });
+      } catch (error) {
+        els.bookInfo.textContent = t("wordbook.failed");
+      }
+    }
+
+    async function importFromBook() {
+      const id = els.bookSelect.value;
+      if (!id) return;
+      if (!bookPairOk() && state.words.some(word => word.custom)) {
+        setImportStatus(t("wordbook.wrongPair"), "bad");
+        return;
+      }
+      els.bookImportBtn.disabled = true;
+      try {
+        const [words, mod] = await Promise.all([loadBook(id), loadWordbookModule()]);
+        const count = Number(els.bookCount.value) || words.length;
+        const pairs = mod.nextFromBook(words, libraryWordSet(), count);
+        if (!pairs.length) {
+          setImportStatus(t("wordbook.allIn"), "good");
+          return;
+        }
+        // The books are English → Chinese; a library of samples only can switch over.
+        const configParts = bookPairOk() ? [] : applyImportConfig({ lang: { a: "English", b: "中文" } });
+        const added = addWords(pairs);
+        const messages = [t("ai.imported", { n: added })];
+        if (lastRemovedSamples) messages.push(t("ai.samplesRemoved", { n: lastRemovedSamples }));
+        if (configParts.length) messages.push(t("ai.config", { list: configParts.join(currentLang === "zh" ? "、" : ", ") }));
+        setImportStatus(messages.join(" "), "good");
+        syncDropSamplesRow();
+        syncWordbookUI();
+      } catch (error) {
+        setImportStatus(t("wordbook.failed"), "bad");
+      } finally {
+        els.bookImportBtn.disabled = false;
+      }
+    }
+
+    if (els.bookSelect) {
+      els.bookSelect.addEventListener("change", syncWordbookUI);
+      els.bookImportBtn.addEventListener("click", importFromBook);
+    }
 
     document.getElementById("copyAiPromptBtn").addEventListener("click", async () => {
       const prompt = buildAiPrompt();

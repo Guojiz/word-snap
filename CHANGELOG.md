@@ -17,6 +17,8 @@
 
 - **Daily goal and day streak** (`js/habit.js`): today's goal is the due words plus *New words per day* (Settings, default 10); a bar above the board shows what is left and about how many minutes, then **✓ Today's goal done**. The day streak (4 am cutoff) sits in the side panel; one missed day per week is bridged by a streak freeze. The old *Streak* stat is now *Combo*.
 
+- **Word books**: *Add words → From a word book* imports the next 20–all words of zhongkao, gaokao, CET-4, CET-6, kaoyan, TOEFL, IELTS or GRE (from ECDICT, MIT; most frequent first; short meanings). Built by `tools/build-wordbooks.mjs`, loaded on demand.
+
 ### Changed
 
 - Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).
@@ -24,7 +26,7 @@
 ### Fixed
 
 - Fewer false subject–verb agreement errors in sentence cards (contractions, modals, mis-tagged words such as *particulate*).
-- Service worker cache bumped to `word-snap-v49`; the downloaded AI model is kept across updates.
+- Service worker cache bumped to `word-snap-v50`; the downloaded AI model is kept across updates.
 
 ## 2026-10-06
 
