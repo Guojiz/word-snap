@@ -2060,6 +2060,11 @@
             <span data-en="New words per day (daily goal)" data-zh="每天新词数（每日目标）">每天新词数（每日目标）</span>
             <select id="dailyNewSelect"></select>
           </label>
+          <label id="reminderRow">
+            <span data-en="Daily reminder" data-zh="每日提醒">每日提醒</span>
+            <select id="reminderSelect"></select>
+          </label>
+          <p class="import-hint lang-pair-custom" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
           <label>
             <span data-en="Appearance" data-zh="外观">外观</span>
             <select id="colorModeSelect"></select>
@@ -2520,6 +2525,12 @@
           drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards",
           dailyNew: "{n} new words"
         },
+        reminder: {
+          off: "Off", at: "Every day at {time}",
+          body: "Today's words are waiting — a few minutes is enough.",
+          bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
+          denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
+        },
         today: {
           done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
           left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
@@ -2730,6 +2741,12 @@
           drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张",
           dailyNew: "{n} 个"
         },
+        reminder: {
+          off: "不提醒", at: "每天 {time}",
+          body: "今天的单词还没练，几分钟就好。",
+          bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
+          denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
+        },
         today: {
           done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
           left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
@@ -2919,6 +2936,7 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
+      reminder: "",
       langPair: { a: "English", b: "中文" },
       // On-device model (js/ai.js). Off until the learner downloads it in Settings.
       ai: { on: false, enabled: true }
@@ -2987,6 +3005,9 @@
       flowSelect: document.getElementById("flowSelect"),
       drillsSelect: document.getElementById("drillsSelect"),
       dailyNewSelect: document.getElementById("dailyNewSelect"),
+      reminderRow: document.getElementById("reminderRow"),
+      reminderSelect: document.getElementById("reminderSelect"),
+      reminderNote: document.getElementById("reminderNote"),
       todayBar: document.getElementById("todayBar"),
       dayStreak: document.getElementById("dayStreak"),
       drill: document.getElementById("drill"),
@@ -3195,6 +3216,8 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
+        // "HH:MM" (24 h) or "" for off. Used by the Android app only.
+        reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
         langPair: normalizeLangPair(raw.langPair),
         ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
@@ -3574,6 +3597,49 @@
         els.todayBar.classList.add("celebrate");
       }
       if (els.dayStreak) els.dayStreak.textContent = status.streak;
+      if (status.justDone) syncReminders();
+    }
+
+    // ---- Daily reminder (Android app: @capacitor/local-notifications) ----
+    // One notification a day for the next week at the chosen time, rebuilt on every
+    // start and when today's goal is done (today's is then dropped).
+    const REMINDER_IDS = [7100, 7101, 7102, 7103, 7104, 7105, 7106];
+
+    function notificationsPlugin() {
+      if (!isNativeApp()) return null;
+      const cap = window.Capacitor;
+      try {
+        return (cap.Plugins && cap.Plugins.LocalNotifications) || (cap.registerPlugin && cap.registerPlugin("LocalNotifications")) || null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function syncReminders({ ask = false } = {}) {
+      const plugin = notificationsPlugin();
+      if (!plugin) return true;
+      try {
+        await plugin.cancel({ notifications: REMINDER_IDS.map(id => ({ id })) });
+        const time = state.settings.reminder;
+        if (!time) return true;
+        let permission = await plugin.checkPermissions();
+        if (permission.display !== "granted" && ask) permission = await plugin.requestPermissions();
+        if (permission.display !== "granted") return false;
+        const [hour, minute] = time.split(":").map(Number);
+        const streak = WordSnapHabit.streak(habit);
+        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0] });
+        await plugin.schedule({
+          notifications: plan.map(item => ({
+            id: item.id,
+            title: "Word Snap",
+            body: streak ? t("reminder.bodyStreak", { n: streak }) : t("reminder.body"),
+            schedule: { at: new Date(item.at), allowWhileIdle: true }
+          }))
+        });
+        return true;
+      } catch (error) {
+        return false;
+      }
     }
 
     /** The card picked by mistake: mixed up, so it loses some stability (no review logged). */
@@ -6391,6 +6457,15 @@
         els.drillsSelect.innerHTML = [0, 1, 2, 3].map(n => `<option value="${n}">${t("settings.drills_" + n)}</option>`).join("");
         els.drillsSelect.value = String(state.settings.drills);
       }
+      if (els.reminderSelect) {
+        const native = isNativeApp();
+        els.reminderRow.hidden = !native;
+        els.reminderNote.hidden = native;
+        const times = ["", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+        if (state.settings.reminder && !times.includes(state.settings.reminder)) times.push(state.settings.reminder);
+        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
+        els.reminderSelect.value = state.settings.reminder;
+      }
       if (els.dailyNewSelect) {
         els.dailyNewSelect.innerHTML = [0, 5, 10, 15, 20, 30].map(n => `<option value="${n}">${t("settings.dailyNew", { n })}</option>`).join("");
         if (![0, 5, 10, 15, 20, 30].includes(state.settings.dailyNew)) {
@@ -6434,6 +6509,7 @@
         const idx = Number(select.value);
         if (LANG_PAIR_PRESETS[idx]) langPair = { ...LANG_PAIR_PRESETS[idx] };
       }
+      const previousReminder = state.settings.reminder;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
@@ -6453,6 +6529,7 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
+        reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
         ai: state.settings.ai
       });
@@ -6461,11 +6538,19 @@
         state.mode = els.modeSelect.value;
         els.modeBtn.textContent = t("stats.modeBtn", { label: modeLabel(state.mode) });
       }
+      const reminderChanged = nextSettings.reminder !== previousReminder;
       syncOptionsUI();
       saveWords();
       if (els.optionsStatus) {
         els.optionsStatus.textContent = t("feedback.optionsSaved");
         els.optionsStatus.className = "import-status good";
+      }
+      if (reminderChanged) {
+        syncReminders({ ask: Boolean(nextSettings.reminder) }).then(ok => {
+          if (ok || !els.optionsStatus) return;
+          els.optionsStatus.textContent = t("reminder.denied");
+          els.optionsStatus.className = "import-status bad";
+        });
       }
       renderStats();
     }
@@ -7055,6 +7140,7 @@
     applyTheme(themeIdx);
     updateColorModeUI();
     syncOptionsUI();
+    syncReminders(); // the app: reschedule the week's reminders on every start
     renderRound();
     if (!hasSeenIntro() && !savedState) openIntro();
   </script>

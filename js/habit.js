@@ -159,5 +159,25 @@
     };
   }
 
-  return { normalize, recordAnswer, settle, streak, today, freezeAvailable, dayKey, weekKey, DAY_MS };
+  /**
+   * Daily reminders for the next `days` days at hour:minute (local time), as
+   * [{ id, at }] with stable ids (base + day offset). Today's is left out when
+   * the goal is already done or the time has passed.
+   */
+  function reminderPlan(h, { now = Date.now(), hour = 20, minute = 0, days = 7, base = 7100 } = {}) {
+    const doneToday = h.days[dayKey(now)] === "done";
+    const plan = [];
+    for (let d = 0; d < days; d++) {
+      const at = new Date(now);
+      at.setDate(at.getDate() + d);
+      at.setHours(hour, minute, 0, 0);
+      const ts = at.getTime();
+      if (ts <= now) continue;
+      if (doneToday && dayKey(ts) === dayKey(now)) continue;
+      plan.push({ id: base + d, at: ts });
+    }
+    return plan;
+  }
+
+  return { normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, dayKey, weekKey, DAY_MS };
 });

@@ -87,6 +87,7 @@ The library is meant to keep growing; you don't need to clear it. Mastered words
 - **Today's goal**: clear the words that are due, and learn the day's new words (*Settings → New words per day*, default 10; fewer if your list has fewer new words left). The bar above the board says what is left and about how long it takes (from your own pace), and turns into **✓ Today's goal done** when it is met.
 - **Day streak**: days in a row with the goal done. Days change at 4 am, like the review schedule. The side panel shows it next to *Combo* (correct pairs in a row in this session).
 - **Streak freeze**: one missed day per week (Monday–Sunday) is bridged automatically; the bar says when it was used. A frozen day keeps the streak but does not add to it.
+- **Daily reminder** (Android app): *Settings → Daily reminder* sends one notification a day at the time you pick, and skips today once the goal is done. A web page cannot remind you.
 - The trial level does not count.
 
 ## Spelling and sentence cards
@@ -266,6 +267,7 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 - **今日目标**：把到期的词复习完，再学当天的新词（**设置 → 每天新词数**，默认 10 个；词库里新词不够就按剩下的算）。棋盘上方的横条会写还剩多少、大约几分钟（按你自己的速度估算），完成后变成 **✓ 今日完成**。
 - **连续天数**：连续完成目标的天数，和复习计划一样凌晨 4 点换日。侧栏里和「本局连对」（这次练习连续配对正确的次数）放在一起。
 - **免断签**：每周（周一到周日）自动补上一天没练的日子，横条上会提示用掉了。补上的那天保住连续天数，但不计入天数。
+- **每日提醒**（安卓 App）：**设置 → 每日提醒** 每天在选定的时间发一条通知，今天的目标完成后当天就不再提醒。网页版没法提醒。
 - 体验关不计入。
 
 ## 拼写卡和造句卡

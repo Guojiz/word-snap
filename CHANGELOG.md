@@ -19,6 +19,8 @@
 
 - **Word books**: *Add words → From a word book* imports the next 20–all words of zhongkao, gaokao, CET-4, CET-6, kaoyan, TOEFL, IELTS or GRE (from ECDICT, MIT; most frequent first; short meanings). Built by `tools/build-wordbooks.mjs`, loaded on demand.
 
+- **Android app (Capacitor)**: `package.json`, `capacitor.config.json` and the generated `android/` project; `npm run build:www` copies the site into `www/`, `npm run apk:debug` builds a debug APK. API calls go through CapacitorHttp (no CORS limits). **Daily reminder** (Settings, app only) schedules a week of local notifications and drops today's once the goal is done.
+
 ### Changed
 
 - Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).

@@ -80,3 +80,19 @@ test("normalize drops junk and keeps good state", () => {
   const round = H.normalize(JSON.parse(JSON.stringify(h)));
   assert.deepEqual(round, h);
 });
+
+test("reminders: the next days at the chosen time, not today once the goal is done", () => {
+  const h = H.normalize(null);
+  let plan = H.reminderPlan(h, { now: at(0, 12), hour: 20, minute: 30, days: 3 });
+  assert.equal(plan.length, 3);
+  assert.equal(new Date(plan[0].at).getHours(), 20);
+  assert.equal(new Date(plan[0].at).getMinutes(), 30);
+  assert.deepEqual(plan.map(p => p.id), [7100, 7101, 7102]);
+  // Past today's time: starts tomorrow.
+  plan = H.reminderPlan(h, { now: at(0, 21), hour: 20, minute: 0, days: 3 });
+  assert.equal(plan.length, 2);
+  assert.equal(plan[0].id, 7101);
+  finishDay(h, at(0, 12));
+  plan = H.reminderPlan(h, { now: at(0, 13), hour: 20, minute: 0, days: 3 });
+  assert.equal(plan[0].id, 7101, "no reminder today after the goal is done");
+});
