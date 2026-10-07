@@ -1,4 +1,4 @@
-const CACHE_NAME = "word-snap-v46";
+const CACHE_NAME = "word-snap-v47";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./js/engine.js",
   "./js/sentence.js",
   "./js/ai.js",
+  "./js/ai-api.js",
   "./js/ai-worker.js",
   "./manifest.webmanifest",
   "./apple-touch-icon.png",

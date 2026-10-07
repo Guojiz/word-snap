@@ -5,6 +5,9 @@
  *   0. Rules        js/sentence.js — grammar, spelling, target word, structure.
  *   1. Small model  WebLLM on WebGPU, weights downloaded once from Hugging Face.
  *   2. System model (later, in the packaged app) — same interface as createAI().
+ *   3. API key      js/ai-api.js — the learner's own key for a large model
+ *                   (createAI({ model: API_MODEL, createEngine })). Large models
+ *                   also get feedback (what is wrong / why / how to fix) and contrast.
  *
  * The model only does narrow jobs with JSON-schema output, never free grading:
  *   judgeMeaning  is the word used with this meaning, in a way that makes sense?
@@ -30,6 +33,9 @@ export const MODELS = [
 // Qwen2.5 1.5B wrote the most natural ideas and examples of the candidates.
 export const DEFAULT_MODEL = "qwen2.5-1.5b";
 
+/** The model entry for an API-key engine. strong: trusted for meaning feedback and contrast. */
+export const API_MODEL = { id: "api", name: "API", strong: true };
+
 export function modelById(id) {
   return MODELS.find(model => model.id === id) || MODELS.find(model => model.id === DEFAULT_MODEL);
 }
@@ -47,7 +53,7 @@ export async function detect(gpu = globalThis.navigator && globalThis.navigator.
 }
 
 export function modelIdFor(model, f16) {
-  return f16 ? model.f16 : model.f32;
+  return (f16 ? model.f16 : model.f32) || model.id;
 }
 
 // ---- prompts and parsers (pure, tested in Node) ----
@@ -118,6 +124,63 @@ export function examplePrompt(word, meaningZh) {
   ];
 }
 
+export const FEEDBACK_SCHEMA = {
+  type: "object",
+  properties: {
+    ok: { type: "boolean" },
+    where: { type: "string" },
+    why: { type: "string" },
+    fix: { type: "string" },
+    better: { type: "string" }
+  },
+  required: ["ok", "where", "why", "fix", "better"]
+};
+
+/** For strong (API) models: a full check like a teacher's, in three parts. grammarNote: what Harper found, if anything. */
+export function feedbackPrompt(word, meaningZh, sentence, grammarNote = "") {
+  return [
+    { role: "system", content: SYSTEM },
+    {
+      role: "user",
+      content:
+        `A Chinese student was asked to write an English sentence using "${word}" (meaning: ${meaningZh}).\n` +
+        `Student's sentence: "${sentence}"\n` +
+        (grammarNote ? `A grammar checker reported: ${grammarNote}\n` : "") +
+        "\nCheck grammar, spelling, word choice, and whether the word is used with the meaning above in a sentence that makes sense. " +
+        "Any correct word order is fine; do not ask for a different style.\n" +
+        "ok: true if the sentence is correct and uses the word with that meaning; false otherwise.\n" +
+        "where: if ok is false, the wrong part copied from the sentence; otherwise empty.\n" +
+        "why: if ok is false, one or two short sentences in Chinese explaining the mistake; otherwise empty.\n" +
+        "fix: if ok is false, the corrected English sentence, changed as little as possible; otherwise empty.\n" +
+        "better: a more natural English version if one clearly exists, otherwise empty."
+    }
+  ];
+}
+
+export const CONTRAST_SCHEMA = {
+  type: "object",
+  properties: {
+    diff: { type: "string" },
+    a_example: { type: "string" },
+    b_example: { type: "string" }
+  },
+  required: ["diff", "a_example", "b_example"]
+};
+
+/** For strong models: two words the student keeps mixing up. */
+export function contrastPrompt(a, aZh, b, bZh) {
+  return [
+    { role: "system", content: SYSTEM },
+    {
+      role: "user",
+      content:
+        `A student keeps confusing "${a}" (${aZh}) with "${b}" (${bZh}).\n` +
+        "diff: in Chinese, under 80 characters, how to tell them apart (meaning, use, or a memory trick from spelling or sound).\n" +
+        `a_example: one short English sentence using "${a}". b_example: one short English sentence using "${b}".`
+    }
+  ];
+}
+
 const HAN = /\p{Script=Han}/u;
 
 /** Qwen3 still emits an empty <think></think> with thinking off; some models wrap JSON in fences. */
@@ -171,6 +234,32 @@ export function parseExample(text) {
   return { en, zh };
 }
 
+function englishSentence(text, max = 200) {
+  const s = clip(text, max);
+  const words = s.split(/\s+/).filter(Boolean).length;
+  return words >= 3 && words <= 40 && !HAN.test(s) ? s : "";
+}
+
+/** → { ok, where, whyZh, fix, better } or null. A "wrong" verdict needs a Chinese reason. */
+export function parseFeedback(text) {
+  const value = parseJSON(text);
+  if (!value || typeof value.ok !== "boolean") return null;
+  const better = englishSentence(value.better);
+  if (value.ok) return { ok: true, where: "", whyZh: "", fix: "", better };
+  const whyZh = clip(value.why, 160);
+  if (!HAN.test(whyZh)) return null;
+  return { ok: false, where: clip(value.where, 80), whyZh, fix: englishSentence(value.fix), better };
+}
+
+/** → { diffZh, aEx, bEx } or null. */
+export function parseContrast(text) {
+  const value = parseJSON(text);
+  if (!value) return null;
+  const diffZh = clip(value.diff, 160);
+  if ((diffZh.match(/\p{Script=Han}/gu) || []).length < 5) return null;
+  return { diffZh, aEx: englishSentence(value.a_example), bEx: englishSentence(value.b_example) };
+}
+
 // ---- engine ----
 
 async function webllm() {
@@ -195,7 +284,7 @@ async function createWebEngine(modelId, onProgress) {
 
 /**
  * createAI({ model, f16, createEngine?, timeoutMs?, lib? })
- *   model        an entry of MODELS (or its id)
+ *   model        an entry of MODELS (or its id), or API_MODEL
  *   f16          from detect()
  *   createEngine (modelId, onProgress) → engine with chat.completions.create / interruptGenerate / unload
  *   lib          { hasModelInCache, deleteModelAllInfoInCache } (defaults to WebLLM)
@@ -221,7 +310,7 @@ export function createAI(options = {}) {
   }
 
   /** One request at a time; each gets its own timeout once it starts. */
-  function ask(messages, schema, parse) {
+  function ask(messages, schema, parse, maxTokens = 200) {
     const run = async () => {
       if (!engine) return null;
       let timer;
@@ -235,7 +324,7 @@ export function createAI(options = {}) {
         const reply = await engine.chat.completions.create({
           messages,
           temperature: 0,
-          max_tokens: 200,
+          max_tokens: maxTokens,
           response_format: { type: "json_object", schema: JSON.stringify(schema) },
           ...(model.thinking ? { extra_body: { enable_thinking: false } } : {})
         });
@@ -255,12 +344,16 @@ export function createAI(options = {}) {
   return {
     model,
     modelId,
+    strong: Boolean(model.strong),
     get ready() { return Boolean(engine); },
     get loading() { return Boolean(loading); },
     load,
     judgeMeaning: (word, meaningZh, sentence) => ask(meaningPrompt(word, meaningZh, sentence), MEANING_SCHEMA, parseMeaning),
     ideaZh: (word, meaningZh) => ask(ideaPrompt(word, meaningZh), IDEA_SCHEMA, parseIdea),
     example: (word, meaningZh) => ask(examplePrompt(word, meaningZh), EXAMPLE_SCHEMA, parseExample),
+    feedback: (word, meaningZh, sentence, grammarNote) =>
+      ask(feedbackPrompt(word, meaningZh, sentence, grammarNote), FEEDBACK_SCHEMA, parseFeedback, 400),
+    contrast: (a, aZh, b, bZh) => ask(contrastPrompt(a, aZh, b, bZh), CONTRAST_SCHEMA, parseContrast, 300),
     async isCached() {
       try { return await (await lib()).hasModelInCache(modelId); } catch { return false; }
     },
