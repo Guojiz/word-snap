@@ -1655,6 +1655,147 @@
       text-overflow: ellipsis;
     }
 
+    .drill {
+      margin: 0 0 22px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--panel-soft);
+      text-align: left;
+    }
+
+    .drill-kicker {
+      margin: 0 0 6px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .drill-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-title b {
+      color: var(--green);
+    }
+
+    .drill-prompt {
+      margin: 0 0 12px;
+      font-size: 17px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-prompt small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .drill textarea {
+      min-height: 84px;
+    }
+
+    .drill-result {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .drill-result p {
+      margin: 8px 0 0;
+    }
+
+    .drill-ok {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .drill-bad {
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .drill-muted {
+      color: var(--muted);
+    }
+
+    .drill-sentence {
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: var(--bg);
+      overflow-wrap: anywhere;
+    }
+
+    .drill-sentence mark {
+      color: var(--red);
+      background: transparent;
+      text-decoration: underline wavy var(--red);
+      text-underline-offset: 3px;
+    }
+
+    .drill-issues {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .drill-issues li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-issues li.minor {
+      color: var(--muted);
+    }
+
+    .drill-issues small {
+      flex-basis: 100%;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .drill-fix {
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 10px;
+      color: var(--blue);
+      background: var(--panel);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+    }
+
+    .drill-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-top: 14px;
+    }
+
+    .drill-actions .duo-button {
+      min-width: 120px;
+      height: 46px;
+    }
+
+    .drill-actions .link-button {
+      color: var(--blue);
+    }
+
+    .drill-actions #drillSkip {
+      margin-left: auto;
+      color: var(--muted);
+    }
+
     .review-list li.confusion-note {
       display: block;
       border-style: dashed;
@@ -1701,6 +1842,20 @@
           <div class="completion-badge">✓</div>
           <h2 id="completionTitle" data-en="Round complete" data-zh="这一轮结束">这一轮结束</h2>
           <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
+          <section class="drill" id="drill" hidden aria-live="polite">
+            <p class="drill-kicker" id="drillKicker"></p>
+            <h3 class="drill-title" id="drillTitle"></h3>
+            <p class="drill-prompt" id="drillPrompt"></p>
+            <input id="drillSpell" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" hidden />
+            <textarea id="drillSentence" rows="3" autocomplete="off" spellcheck="false" hidden></textarea>
+            <div class="drill-result" id="drillResult"></div>
+            <div class="drill-actions">
+              <button class="duo-button" type="button" id="drillSubmit"></button>
+              <button class="link-button" type="button" id="drillHint" data-en="I have no idea" data-zh="我没有思路">我没有思路</button>
+              <button class="link-button" type="button" id="drillWrongMeaning" hidden data-en="I used the wrong meaning" data-zh="我用错了意思">我用错了意思</button>
+              <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
+            </div>
+          </section>
           <p class="review-heading" id="reviewHeading"></p>
           <ul class="review-list" id="reviewList"></ul>
           <div class="completion-actions">
@@ -1802,6 +1957,10 @@
           <label>
             <span data-en="Practice mode" data-zh="练习模式">练习模式</span>
             <select id="modeSelect"></select>
+          </label>
+          <label>
+            <span data-en="Cards after each set (spelling / sentence)" data-zh="每组后的练习卡（拼写 / 造句）">每组后的练习卡（拼写 / 造句）</span>
+            <select id="drillsSelect"></select>
           </label>
           <label>
             <span data-en="Appearance" data-zh="外观">外观</span>
@@ -2179,7 +2338,34 @@
           blockClear: "Nothing is due right now — the next set brings new words.",
           confusedPairs: "Mixed up: {list}. They will appear side by side again."
         },
-        settings: { flow_endless: "Endless (recommended)", flow_levels: "Timed levels" },
+        settings: {
+          flow_endless: "Endless (recommended)", flow_levels: "Timed levels",
+          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards"
+        },
+        drill: {
+          kicker: "Practice {i}/{n} · {type}", type_spell: "Spelling", type_sentence: "Make a sentence",
+          check: "Check", next: "Next",
+          spellPrompt: "Type the word for this meaning.", spellPlaceholder: "Type the word",
+          spellRight: "Right!", spellWrong: "The answer is <b>{w}</b>. Type it once to remember it.", copyAgain: "Not quite — type <b>{w}</b> exactly.",
+          sentenceTitle: "Make a sentence with {w}",
+          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (ran, tubers…).",
+          sentencePlaceholder: "A sentence using {w}",
+          loadingEngine: "Loading the grammar checker (about 8 MB, only the first time; it then works offline)…",
+          checking: "Checking…",
+          engineFailed: "The grammar checker could not load. It needs a connection the first time — you can skip this card.",
+          sentenceOk: "Grammatical — nice sentence!",
+          checkMeaning: "Grammar is checked on your device; meaning is not. Make sure {w} means “{m}” here.",
+          notUsed: "The sentence doesn't use {w} yet (any form is fine).",
+          short: "Write at least 4 words.", onlyWord: "Write a whole sentence, not just the word.",
+          noVerb: "Tip: the sentence may be missing a verb.",
+          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}",
+          kind_Agreement: "Agreement", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
+          kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
+          kind_WordChoice: "Word choice", kind_Usage: "Usage", kind_Repetition: "Repeated word", kind_Regionalism: "British spelling (fine)",
+          kind_WordOrder: "Word order", kind_BoundaryError: "Spacing", kind_Eggcorn: "Word choice", kind_Malapropism: "Word choice",
+          kind_Nonstandard: "Nonstandard", kind_Style: "Style", kind_Readability: "Readability", kind_Redundancy: "Redundant",
+          kind_Formatting: "Formatting", kind_Enhancement: "Suggestion"
+        },
         install: {
           titleInstall: "Install Word Snap",
           textInstall: "Install to open from your home screen. Your words and progress stay on this device.",
@@ -2319,7 +2505,34 @@
           blockClear: "现在没有到期的词，下一组会学新词。",
           confusedPairs: "混淆过：{list}。之后它们会再次同时出现。"
         },
-        settings: { flow_endless: "无限练习（推荐）", flow_levels: "限时关卡" },
+        settings: {
+          flow_endless: "无限练习（推荐）", flow_levels: "限时关卡",
+          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张"
+        },
+        drill: {
+          kicker: "小练习 {i}/{n} · {type}", type_spell: "拼写", type_sentence: "造句",
+          check: "检查", next: "下一题",
+          spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
+          spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
+          sentenceTitle: "用 {w} 造一个英文句子",
+          sentenceRule: "语序不限，语法正确就行；任何词形都算（ran、tubers……）。",
+          sentencePlaceholder: "写一个用到 {w} 的句子",
+          loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
+          checking: "正在检查……",
+          engineFailed: "语法检查引擎加载失败。第一次使用需要联网下载，可以先跳过这题。",
+          sentenceOk: "语法正确，句子不错！",
+          checkMeaning: "语法在本机检查，意思检查不了：请确认这里的 {w} 是「{m}」的意思。",
+          notUsed: "句子里还没有用到 {w}（任何词形都可以）。",
+          short: "至少写 4 个词。", onlyWord: "请写一个完整的句子，不要只写这个词。",
+          noVerb: "提示：句子可能缺少谓语动词。",
+          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}",
+          kind_Agreement: "主谓一致", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
+          kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
+          kind_WordChoice: "用词", kind_Usage: "用法", kind_Repetition: "重复", kind_Regionalism: "英式拼写（没问题）",
+          kind_WordOrder: "语序", kind_BoundaryError: "空格", kind_Eggcorn: "用词", kind_Malapropism: "用词",
+          kind_Nonstandard: "不规范", kind_Style: "文风", kind_Readability: "可读性", kind_Redundancy: "冗余",
+          kind_Formatting: "格式", kind_Enhancement: "建议"
+        },
         install: {
           titleInstall: "安装 Word Snap",
           textInstall: "安装后可以从主屏幕直接打开，单词和练习进度仍然保存在这台设备里。",
@@ -2424,6 +2637,8 @@
       // "endless": the board keeps refilling, the engine picks every word, a short
       // summary every BLOCK_SIZE pairs. "levels": the older timed levels.
       flow: "endless",
+      // Spelling / sentence cards shown after each set (0–3).
+      drills: 2,
       levelDurationMs: 120000,
       roundSize: 30,
       adaptiveLevelTime: true,
@@ -2505,6 +2720,18 @@
       adaptiveLevelTime: document.getElementById("adaptiveLevelTime"),
       modeSelect: document.getElementById("modeSelect"),
       flowSelect: document.getElementById("flowSelect"),
+      drillsSelect: document.getElementById("drillsSelect"),
+      drill: document.getElementById("drill"),
+      drillKicker: document.getElementById("drillKicker"),
+      drillTitle: document.getElementById("drillTitle"),
+      drillPrompt: document.getElementById("drillPrompt"),
+      drillSpell: document.getElementById("drillSpell"),
+      drillSentence: document.getElementById("drillSentence"),
+      drillResult: document.getElementById("drillResult"),
+      drillSubmit: document.getElementById("drillSubmit"),
+      drillHint: document.getElementById("drillHint"),
+      drillWrongMeaning: document.getElementById("drillWrongMeaning"),
+      drillSkip: document.getElementById("drillSkip"),
       forecast: document.getElementById("forecast"),
       optionsStatus: document.getElementById("optionsStatus"),
       addOneStatus: document.getElementById("addOneStatus"),
@@ -2585,6 +2812,8 @@
       levelMisses: new Map(),
       // [word, word] pairs mixed up this level / set.
       levelConfusions: [],
+      // Ids of words answered this level / set (practice cards are picked from them).
+      blockWords: new Set(),
       // Wrong-guess words already stepped back once this level.
       levelDemoted: new Set(),
       levelMistakes: 0,
@@ -2650,6 +2879,7 @@
       if (refillMaxMs < refillMinMs) refillMaxMs = refillMinMs;
       return {
         flow: raw.flow === "levels" ? "levels" : "endless",
+        drills: Math.round(clampNumber(raw.drills, 0, 3, DEFAULT_SETTINGS.drills)),
         levelDurationMs: clampNumber(raw.levelDurationMs, 20000, 900000, DEFAULT_SETTINGS.levelDurationMs),
         roundSize: Math.round(clampNumber(raw.roundSize, 5, 200, DEFAULT_SETTINGS.roundSize)),
         adaptiveLevelTime: raw.adaptiveLevelTime !== false,
@@ -3331,6 +3561,7 @@
       els.completionBadge.textContent = "✓";
       els.main.scrollTop = 0;
       state.lastCompletion = { allDone: false, reason: "queue", trial: true };
+      stopDrills();
       renderCompletionCopy();
       renderStats();
     }
@@ -3785,6 +4016,8 @@
       state.unmatchedLeft = [];
       state.unmatchedRight = [];
       state.levelConfusions = [];
+      state.blockWords = new Set();
+      stopDrills();
       const endless = isEndless();
       const levelWords = buildWordQueue();
       state.sessionTotal = endless ? BLOCK_SIZE : levelWords.length;
@@ -4120,6 +4353,7 @@
       word.streak += 1;
       word.lastMs = elapsed;
       recordCorrect(word, elapsed);
+      state.blockWords.add(word.id);
 
       state.score += 1;
       state.streak += 1;
@@ -4249,6 +4483,7 @@
       // The first pick is the word being answered; the second was the wrong guess,
       // so it only loses some stability instead of counting as forgotten.
       recordWrong(firstWord);
+      state.blockWords.add(firstWord.id);
       if (!state.levelDemoted.has(secondWord.id)) {
         state.levelDemoted.add(secondWord.id);
         recordWrongPick(secondWord);
@@ -4344,6 +4579,7 @@
       if (trial) state.onboarding = "choose";
       state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
+      if (!trial) startDrills();
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
       saveWords();
@@ -4416,6 +4652,309 @@
           : "");
     }
 
+    // ---- Practice cards after a set: spelling and sentence making ----
+    // Both feed the schedule. Spelling: right = Good, wrong = Again (then type it
+    // once from the answer). Sentences are checked on this device (js/sentence.js);
+    // the first submission decides the grade — a pass counts as Easy (producing a
+    // word is stronger than recognising it), corrections afterwards are for learning.
+    const drill = { list: [], index: 0 };
+    let sentenceModule = null;
+    let sentenceModuleReady = false;
+
+    function loadSentenceModule() {
+      if (!sentenceModule) {
+        sentenceModule = import("./js/sentence.js")
+          .then(mod => mod.load().then(() => { sentenceModuleReady = true; return mod; }))
+          .catch(error => { sentenceModule = null; throw error; });
+      }
+      return sentenceModule;
+    }
+
+    function latinWord(word) {
+      return /^[A-Za-z][A-Za-z' .-]*$/.test(word.en);
+    }
+
+    function pickDrills() {
+      const n = state.settings.drills;
+      if (!n || isTrial()) return [];
+      const now = Date.now();
+      const missed = new Set(state.levelMisses.keys());
+      const answered = state.words.filter(word => state.blockWords.has(word.id) && word.srs && latinWord(word));
+      const spell = answered.slice().sort((a, b) => Number(missed.has(b.id)) - Number(missed.has(a.id)) || a.srs.S - b.srs.S);
+      const lastSentenceAt = word => Math.max(0, ...(word.sentences || []).map(x => x.at || 0));
+      // Sentences: words that are recognised but not yet well used — answered more than once,
+      // out of the short-term steps, stability around a few days. English side A only (the checker is English).
+      const sentence = /^english$/i.test(state.settings.langPair.a)
+        ? state.words
+          .filter(word => word.srs && latinWord(word) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
+          .sort((a, b) => Number(state.blockWords.has(b.id)) - Number(state.blockWords.has(a.id))
+            || Math.abs(Math.log(a.srs.S / 3)) - Math.abs(Math.log(b.srs.S / 3)))
+        : [];
+      const order = n === 1 ? ["sentence"] : ["spell", "sentence", "spell"];
+      const out = [], used = new Set();
+      const take = (type, pool) => {
+        const word = pool.find(w => !used.has(w.id));
+        if (!word) return;
+        used.add(word.id);
+        out.push({ type, word, attempts: 0, grade: null, pending: null, phase: "answer" });
+      };
+      order.forEach(type => { if (out.length < n) take(type, type === "spell" ? spell : sentence); });
+      while (out.length < n && spell.some(w => !used.has(w.id))) take("spell", spell);
+      return out;
+    }
+
+    function startDrills() {
+      drill.list = pickDrills();
+      drill.index = 0;
+      renderDrill();
+    }
+
+    function stopDrills() {
+      commitDrill(drill.list[drill.index]);
+      drill.list = [];
+      drill.index = 0;
+      els.drill.hidden = true;
+    }
+
+    function wordForms(word) {
+      const w = word.toLowerCase();
+      const forms = new Set([w, w + "s", w + "es", w + "ed", w + "d", w + "ing", w + "er", w + "est", w + "ly"]);
+      if (w.endsWith("y")) { forms.add(w.slice(0, -1) + "ies"); forms.add(w.slice(0, -1) + "ied"); }
+      if (w.endsWith("e")) forms.add(w.slice(0, -1) + "ing");
+      if (/[^aeiou][aeiou][bdgklmnprt]$/.test(w)) { forms.add(w + w.slice(-1) + "ed"); forms.add(w + w.slice(-1) + "ing"); }
+      return forms;
+    }
+
+    /** The example sentence with the word blanked out, or null if the word can't be found in it. */
+    function blankedExample(word) {
+      if (!word.ex) return null;
+      const ex = word.ex, target = word.en.toLowerCase();
+      if (/\s/.test(target)) {
+        const at = ex.toLowerCase().indexOf(target);
+        return at < 0 ? null : { text: `${ex.slice(0, at)}____${ex.slice(at + target.length)}`, form: ex.slice(at, at + target.length) };
+      }
+      const parts = ex.split(/([A-Za-z'-]+)/);
+      const forms = wordForms(target);
+      const index = parts.findIndex(part => forms.has(part.toLowerCase()));
+      if (index < 0) return null;
+      const form = parts[index];
+      parts[index] = "____";
+      return { text: parts.join(""), form };
+    }
+
+    function focusDrill(input) {
+      // On phones the keyboard would cover the card before it is read.
+      if (window.matchMedia && matchMedia("(pointer: coarse)").matches) return;
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function renderDrill() {
+      const card = drill.list[drill.index];
+      els.drill.hidden = !card;
+      if (!card) return;
+      els.drillKicker.textContent = t("drill.kicker", { i: drill.index + 1, n: drill.list.length, type: t("drill.type_" + card.type) });
+      els.drillResult.innerHTML = "";
+      els.drillWrongMeaning.hidden = true;
+      els.drillSubmit.disabled = false;
+      els.drillSubmit.textContent = t("drill.check");
+      if (card.type === "spell") {
+        card.blank = blankedExample(card.word);
+        els.drillTitle.textContent = card.word.zh;
+        els.drillPrompt.innerHTML = card.blank
+          ? `${escapeHtml(card.blank.text)}${card.word.exZh ? `<small>${escapeHtml(card.word.exZh)}</small>` : ""}`
+          : escapeHtml(t("drill.spellPrompt"));
+        els.drillSpell.hidden = false;
+        els.drillSentence.hidden = true;
+        els.drillHint.hidden = true;
+        els.drillSpell.value = "";
+        els.drillSpell.placeholder = t("drill.spellPlaceholder");
+        focusDrill(els.drillSpell);
+      } else {
+        els.drillTitle.innerHTML = t("drill.sentenceTitle", { w: `<b>${escapeHtml(card.word.en)}</b>` });
+        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t("drill.sentenceRule"))}</small>`;
+        els.drillSpell.hidden = true;
+        els.drillSentence.hidden = false;
+        els.drillHint.hidden = false;
+        els.drillSentence.value = "";
+        els.drillSentence.placeholder = t("drill.sentencePlaceholder", { w: card.word.en });
+        focusDrill(els.drillSentence);
+        loadSentenceModule().catch(() => {}); // start the download while the learner thinks
+      }
+    }
+
+    /** Record the card's grade once. */
+    function gradeDrill(card, grade) {
+      if (!card || card.grade != null) return;
+      card.grade = grade;
+      engine.recordAnswer(card.word, grade, Date.now(), { kind: card.type });
+      syncMastered(card.word);
+      saveWords();
+    }
+
+    /** A sentence grade waits until the card is left, so "I used the wrong meaning" can still change it. */
+    function commitDrill(card) {
+      if (card && card.pending != null) gradeDrill(card, card.pending);
+    }
+
+    function nextDrill() {
+      commitDrill(drill.list[drill.index]);
+      drill.index += 1;
+      renderDrill();
+      if (els.drill.hidden) els.continueBtn.focus();
+      renderStats();
+    }
+
+    function normalizeAnswer(text) {
+      return String(text).trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
+    }
+
+    function spellAccepted(card, value) {
+      const answer = normalizeAnswer(value);
+      if (!answer) return false;
+      const accepted = [card.word.en, card.blank && card.blank.form].filter(Boolean).map(normalizeAnswer);
+      // Another library word with the same meaning is right too (synonyms).
+      state.words.forEach(word => { if (word !== card.word && sameText(word.zh, card.word.zh)) accepted.push(normalizeAnswer(word.en)); });
+      return accepted.includes(answer);
+    }
+
+    function submitSpell(card) {
+      const value = els.drillSpell.value;
+      if (card.phase === "done") return nextDrill();
+      if (!value.trim()) return;
+      if (card.phase === "copy") {
+        if ([card.word.en, card.blank && card.blank.form].filter(Boolean).some(x => normalizeAnswer(x) === normalizeAnswer(value))) return nextDrill();
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.copyAgain", { w: escapeHtml(card.word.en) })}</p>`;
+        return;
+      }
+      const right = spellAccepted(card, value);
+      gradeDrill(card, right ? WordSnapEngine.GRADES.GOOD : WordSnapEngine.GRADES.AGAIN);
+      if (right) {
+        card.phase = "done";
+        els.drillResult.innerHTML = `<p class="drill-ok">${t("drill.spellRight")}</p>`;
+        els.drillSubmit.textContent = t("drill.next");
+        els.drillSubmit.focus();
+      } else {
+        card.phase = "copy";
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.spellWrong", { w: escapeHtml(card.word.en) })}</p>`;
+        els.drillSpell.value = "";
+        els.drillSpell.placeholder = card.word.en;
+        els.drillSpell.focus();
+      }
+    }
+
+    function kindLabel(kind) {
+      const label = t("drill.kind_" + kind);
+      return label === "drill.kind_" + kind ? kind : label;
+    }
+
+    function renderSentenceResult(card) {
+      const { result, text } = card;
+      const parts = [];
+      if (result.ok) {
+        parts.push(`<p class="drill-ok">${t("drill.sentenceOk")}</p>`);
+        parts.push(`<p class="drill-muted">${t("drill.checkMeaning", { w: escapeHtml(card.word.en), m: escapeHtml(card.word.zh) })}</p>`);
+      } else {
+        // The sentence with the problem spots underlined.
+        let html = "", at = 0;
+        result.issues.filter(issue => !issue.minor).forEach(issue => {
+          if (issue.start < at) return;
+          html += escapeHtml(text.slice(at, issue.start)) + `<mark>${escapeHtml(text.slice(issue.start, issue.end))}</mark>`;
+          at = issue.end;
+        });
+        html += escapeHtml(text.slice(at));
+        parts.push(`<p class="drill-sentence">${html}</p>`);
+        if (!result.target.found) parts.push(`<p class="drill-bad">${t("drill.notUsed", { w: escapeHtml(card.word.en) })}</p>`);
+        if (result.structure.includes("onlyWord")) parts.push(`<p class="drill-bad">${t("drill.onlyWord")}</p>`);
+        else if (result.structure.includes("short")) parts.push(`<p class="drill-bad">${t("drill.short")}</p>`);
+      }
+      const listed = result.issues.filter(issue => !result.ok || issue.minor);
+      if (listed.length) {
+        parts.push(`<ul class="drill-issues">${listed.map((issue, i) => `<li${issue.minor ? ' class="minor"' : ""}><b>${escapeHtml(kindLabel(issue.kind))}</b> ${escapeHtml(issue.problem)}${issue.suggestions.length ? ` → ${issue.suggestions.map(sug =>
+          `<button class="drill-fix" type="button" data-issue="${result.issues.indexOf(issue)}" data-fix="${escapeHtml(sug)}">${escapeHtml(sug)}</button>`).join(" ")}` : ""}<small>${escapeHtml(issue.message)}</small></li>`).join("")}</ul>`);
+      }
+      if (result.structure.includes("noVerb") && !result.ok) parts.push(`<p class="drill-muted">${t("drill.noVerb")}</p>`);
+      els.drillResult.innerHTML = parts.join("");
+    }
+
+    async function submitSentence(card) {
+      if (card.phase === "done") return nextDrill();
+      const text = els.drillSentence.value.trim();
+      if (!text) return;
+      els.drillSubmit.disabled = true;
+      els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
+      let mod;
+      try {
+        mod = await loadSentenceModule();
+      } catch (error) {
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+        els.drillSubmit.disabled = false;
+        return;
+      }
+      const result = await mod.checkSentence(card.word.en, text);
+      if (drill.list[drill.index] !== card) return; // moved on while checking
+      els.drillSubmit.disabled = false;
+      card.attempts += 1;
+      card.result = result;
+      card.text = text;
+      if (card.attempts === 1) {
+        const { AGAIN, HARD, EASY } = WordSnapEngine.GRADES;
+        card.pending = result.ok ? EASY : !result.target.found ? AGAIN : HARD;
+      }
+      renderSentenceResult(card);
+      if (result.ok) {
+        card.phase = "done";
+        card.word.sentences = [...(card.word.sentences || []), { text, at: Date.now(), ok: true }].slice(-10);
+        saveWords();
+        els.drillSubmit.textContent = t("drill.next");
+        els.drillWrongMeaning.hidden = false;
+        els.drillHint.hidden = true;
+      }
+    }
+
+    els.drillSubmit.addEventListener("click", () => {
+      const card = drill.list[drill.index];
+      if (!card) return;
+      if (card.type === "spell") submitSpell(card);
+      else submitSentence(card);
+    });
+    els.drillSkip.addEventListener("click", nextDrill);
+    els.drillWrongMeaning.addEventListener("click", () => {
+      const card = drill.list[drill.index];
+      if (!card) return;
+      card.pending = WordSnapEngine.GRADES.AGAIN;
+      if (card.word.sentences && card.word.sentences.length) card.word.sentences[card.word.sentences.length - 1].ok = false;
+      saveWords();
+      nextDrill();
+    });
+    els.drillHint.addEventListener("click", async () => {
+      const card = drill.list[drill.index];
+      if (!card || card.type !== "sentence") return;
+      try {
+        const mod = await loadSentenceModule();
+        const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
+        els.drillResult.innerHTML = `<p class="drill-muted">${hint.kind === "idea"
+          ? t("drill.idea", { text: escapeHtml(hint.text), w: escapeHtml(card.word.en) })
+          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`;
+      } catch (error) {
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+      }
+    });
+    els.drillResult.addEventListener("click", event => {
+      const button = event.target.closest("[data-fix]");
+      const card = drill.list[drill.index];
+      if (!button || !card || !card.result) return;
+      const issue = card.result.issues[Number(button.dataset.issue)];
+      if (!issue) return;
+      els.drillSentence.value = card.text.slice(0, issue.start) + button.dataset.fix + card.text.slice(issue.end);
+      els.drillSentence.focus();
+    });
+    els.drillSpell.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
+    });
+    els.drillSentence.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
+    });
+
     function showEmptyLibraryPrompt() {
       clearLevelTimers();
       state.halfDeck = [];
@@ -4436,6 +4975,7 @@
       els.completionText.textContent = t("lesson.emptyText");
       els.continueBtn.textContent = t("lesson.emptyAddBtn");
       els.focusPairsBtn.hidden = true;
+      stopDrills();
       els.feedback.className = "feedback";
       els.feedback.textContent = t("feedback.emptyLib");
       renderStats();
@@ -4901,6 +5441,10 @@
           .join("");
         els.flowSelect.value = state.settings.flow;
       }
+      if (els.drillsSelect) {
+        els.drillsSelect.innerHTML = [0, 1, 2, 3].map(n => `<option value="${n}">${t("settings.drills_" + n)}</option>`).join("");
+        els.drillsSelect.value = String(state.settings.drills);
+      }
       // Level length and timer only matter for timed levels.
       els.settingsModal.querySelectorAll("[data-levels-only]").forEach(el => { el.hidden = state.settings.flow !== "levels"; });
       els.levelSeconds.value = Math.round(state.settings.levelDurationMs / 1000);
@@ -4938,6 +5482,7 @@
       }
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
+        drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
         levelDurationMs: Number(els.levelSeconds.value) * 1000,
         roundSize: Number(els.roundSize.value),
         adaptiveLevelTime: els.adaptiveLevelTime ? els.adaptiveLevelTime.checked : true,
@@ -5360,6 +5905,7 @@
         if (event.key === "Escape") { closeLibrary(); closeSettings(); }
         return;
       }
+      if (event.target && event.target.closest && event.target.closest("#drill")) return;
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
         if (event.target !== els.continueBtn) {
           event.preventDefault();

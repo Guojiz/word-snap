@@ -1,9 +1,10 @@
-const CACHE_NAME = "word-snap-v41";
+const CACHE_NAME = "word-snap-v42";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./vocabulary-match.html",
   "./js/engine.js",
+  "./js/sentence.js",
   "./manifest.webmanifest",
   "./apple-touch-icon.png",
   "./icon-192.png",
@@ -50,6 +51,8 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(cached => {
       if (cached) return cached;
       return fetch(event.request).then(response => {
+        // Grammar libraries (vendor/) are cached here on first use; failed probes are not.
+        if (!response.ok) return response;
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         return response;
