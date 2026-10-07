@@ -24,7 +24,7 @@
 - **On-device Qwen3.5 4B in the Android app**: a Capacitor plugin (`LlmPlugin.java` + JNI `llm_jni.cpp`) runs MNN's prebuilt LLM engine (3.6.1, arm64); the model downloads once from ModelScope with resume and progress. `js/ai-native.js` wraps it as the same engine as the API key, so sentence feedback, contrast, examples and word lists all work offline in any language pair. Only offered on phones with 12 GB of memory or more.
 
 - **Focus mode** (automatic): after three answers in a row the navigation, today bar and title go away and the board glides to the centre of the screen, with a soft vignette; it returns after 10 s idle, at the end of a set, on any window, Esc, the *Exit focus* button or pointing at the edges.
-- **Effects** (`js/fx.js`): sparks on every match, a combo badge from 3 in a row that levels up at 5/10/20/50 with a shockwave, confetti for today's goal; off in Settings or with reduced motion.
+- **Motion** (`js/fx.js`, Duolingo-style): progress bar with a highlight band, springy growth and a glint per match; a streak label above it from 3 in a row, with the bar turning gold / fire / violet at 5 / 10 / 20 and a star burst on milestones; a pop and a soft ripple on matched cards; set summary tiles (accuracy, time, best streak) that pop in and count up; confetti for today's goal; vibration on answers. Off in Settings or with reduced motion.
 
 ### Changed
 

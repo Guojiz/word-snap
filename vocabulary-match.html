@@ -290,73 +290,89 @@
       pointer-events: none;
     }
 
-    .fx-spark,
-    .fx-ring,
+    .fx-ripple,
+    .fx-star,
     .fx-confetti {
       position: absolute;
       will-change: transform, opacity;
     }
 
-    .fx-spark {
-      border-radius: 50%;
-      box-shadow: 0 0 6px currentColor;
+    .fx-ripple {
+      border: 3px solid;
+      box-sizing: border-box;
     }
 
-    .fx-ring {
-      border: 3px solid;
-      border-radius: 50%;
+    .fx-star {
+      font-size: 16px;
+      line-height: 1;
     }
 
     .fx-confetti {
       border-radius: 2px;
     }
 
-    #practiceView {
-      position: relative;
+    /* Set summary: Duolingo-style stat tiles that pop in one after another. */
+    .completion.show .completion-badge {
+      animation: badge-pop 650ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
-    .fx-combo {
-      position: absolute;
-      z-index: 3;
-      pointer-events: none;
-      padding: 4px 14px;
-      border-radius: 999px;
+    @keyframes badge-pop {
+      0% { transform: scale(0.3) rotate(-12deg); opacity: 0; }
+      60% { transform: scale(1.12) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    .completion-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 8px;
+    }
+
+    .stat-tile {
+      border: 2px solid var(--tile);
+      border-radius: 16px;
+      background: var(--tile);
+      overflow: hidden;
+      animation: tile-in 520ms cubic-bezier(.34, 1.56, .64, 1) both;
+    }
+
+    .stat-tile:nth-child(2) { animation-delay: 120ms; }
+    .stat-tile:nth-child(3) { animation-delay: 240ms; }
+
+    .stat-tile b {
+      display: block;
+      padding: 4px 6px 5px;
       color: #fff;
-      background: var(--green);
-      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      opacity: 0;
+      font-size: 12px;
+      font-weight: 1000;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
-    .fx-combo[data-tier="warm"] {
-      background: linear-gradient(135deg, #ffc800, #58cc02);
+    .stat-tile span {
+      display: block;
+      padding: 10px 4px 12px;
+      border-radius: 13px 13px 14px 14px;
+      color: var(--tile);
+      background: var(--bg);
+      font-size: 24px;
+      font-weight: 1000;
     }
 
-    .fx-combo[data-tier="fire"] {
-      background: linear-gradient(135deg, #ff4b4b, #ff9600 55%, #ffc800);
-      box-shadow: 0 0 18px rgba(255, 150, 0, 0.6), 0 4px 0 rgba(0, 0, 0, 0.15);
-      font-size: 23px;
+    /* Fixed colours (not the rotating theme), so each tile always means the same thing. */
+    .stat-tile.accuracy { --tile: #58cc02; }
+    .stat-tile.time { --tile: #1cb0f6; }
+    .stat-tile.combo { --tile: #ff9600; }
+
+    @keyframes tile-in {
+      from { transform: translateY(14px) scale(0.85); opacity: 0; }
+      to { transform: none; opacity: 1; }
     }
 
-    .fx-combo[data-tier="blaze"] {
-      background: linear-gradient(135deg, #ce82ff, #ff86d0 50%, #1cb0f6);
-      box-shadow: 0 0 24px rgba(206, 130, 255, 0.7), 0 4px 0 rgba(0, 0, 0, 0.15);
-      font-size: 26px;
-    }
-
-    .fx-combo[data-tier="legend"] {
-      background: linear-gradient(90deg, #ff4b4b, #ffc800, #58cc02, #1cb0f6, #ce82ff, #ff4b4b);
-      background-size: 200% 100%;
-      animation: fx-legend 1.2s linear infinite;
-      box-shadow: 0 0 30px rgba(255, 200, 0, 0.75), 0 4px 0 rgba(0, 0, 0, 0.15);
-      font-size: 28px;
-    }
-
-    @keyframes fx-legend {
-      to { background-position: 200% 0; }
+    @media (prefers-reduced-motion: reduce) {
+      .stat-tile, .completion.show .completion-badge, .match-card.correct { animation: none; }
+      .progress-fill { transition: none; }
     }
 
     /* Focus mode: a soft vignette draws the eye to the board. */
@@ -470,13 +486,93 @@
       background: var(--track);
     }
 
+    .progress-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    /* Room above the bar for the streak label, so it never covers the navigation. */
+    .lesson-top {
+      padding-top: 22px;
+    }
+
+    /* Duolingo-style bar: a highlight band, a springy fill, a glint on every step,
+       and a streak colour (gold at 5, fire at 10, violet at 20). */
     .progress-fill {
+      position: relative;
       width: 0%;
+      min-width: 16px;
       height: 100%;
       border-radius: inherit;
       background: var(--green);
-      transition: width 260ms var(--ease);
+      overflow: hidden;
+      transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
     }
+
+    .progress-fill::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 3px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    .progress-fill::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+    }
+
+    .progress-fill.glint::before {
+      animation: progress-glint 700ms ease-out;
+    }
+
+    @keyframes progress-glint {
+      to { transform: translateX(120%); }
+    }
+
+    .progress[data-tier="gold"] .progress-fill {
+      background: linear-gradient(90deg, #ffc800, #ff9600);
+    }
+
+    .progress[data-tier="fire"] .progress-fill {
+      background: linear-gradient(90deg, #ff9600, #ff4b4b);
+    }
+
+    .progress[data-tier="blaze"] .progress-fill {
+      background: linear-gradient(90deg, #1cb0f6, #ce82ff 60%, #ff86d0);
+    }
+
+    .combo-label {
+      position: absolute;
+      left: 2px;
+      bottom: calc(100% + 5px);
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 1000;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transform-origin: left center;
+      opacity: 0;
+      transform: translateY(6px) scale(0.8);
+      transition: opacity 250ms ease, transform 350ms cubic-bezier(.34, 1.56, .64, 1), color 300ms ease;
+      pointer-events: none;
+    }
+
+    .combo-label.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .combo-label[data-tier="gold"] { color: #ff9600; }
+    .combo-label[data-tier="fire"] { color: #ff4b4b; }
+    .combo-label[data-tier="blaze"] { color: #ce82ff; }
 
     .top-count {
       min-width: 68px;
@@ -563,7 +659,7 @@
       color: var(--correct-ink);
       background: var(--correct-bg);
       box-shadow: 0 4px 0 var(--correct-shadow);
-      animation: correctPulse 300ms ease;
+      animation: correctPulse 420ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
     .match-card.replacing {
@@ -1382,8 +1478,9 @@
     }
 
     @keyframes correctPulse {
-      0%, 100% { filter: brightness(1); }
-      45% { filter: brightness(1.45); }
+      0% { transform: scale(1); filter: brightness(1); }
+      40% { transform: scale(1.045); filter: brightness(1.25); }
+      100% { transform: scale(1); filter: brightness(1); }
     }
 
     @keyframes cardEnter {
@@ -2076,7 +2173,10 @@
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
         <div class="lesson-top">
           <button class="icon-button" type="button" id="quitBtn" aria-label="重新开始" data-en-aria="Start over" data-zh-aria="重新开始">×</button>
-          <div class="progress" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-wrap">
+            <div class="combo-label" id="comboLabel" aria-live="polite"></div>
+            <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
           <div class="top-count" id="topCount">10</div>
           <div class="today-bar" id="todayBar" hidden></div>
         </div>
@@ -2091,6 +2191,7 @@
           <div class="completion-badge">✓</div>
           <h2 id="completionTitle" data-en="Round complete" data-zh="这一轮结束">这一轮结束</h2>
           <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
+          <div class="completion-stats" id="completionStats" hidden></div>
           <section class="drill" id="drill" hidden aria-live="polite">
             <p class="drill-kicker" id="drillKicker"></p>
             <h3 class="drill-title" id="drillTitle"></h3>
@@ -2244,7 +2345,7 @@
         </label>
         <label class="check-row">
           <input id="effectsOn" type="checkbox" />
-          <span data-en="Effects: sparks, combo badge, confetti" data-zh="动画特效：火花、连对徽章、彩纸">动画特效：火花、连对徽章、彩纸</span>
+          <span data-en="Effects and vibration: streak bar, ripples, confetti" data-zh="动画特效和震动：连对进度条、光晕、彩纸">动画特效和震动：连对进度条、光晕、彩纸</span>
         </label>
         <label class="check-row">
           <input id="focusMode" type="checkbox" />
@@ -2698,7 +2799,8 @@
           bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
-        fx: { combo: "×{n} combo" },
+        fx: { combo: "{n} in a row" },
+        summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak" },
         today: {
           done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
           left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
@@ -2918,7 +3020,8 @@
           bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
-        fx: { combo: "连对 ×{n}" },
+        fx: { combo: "连对 {n} 次" },
+        summary: { accuracy: "正确率", time: "用时", combo: "最高连对" },
         today: {
           done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
           left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
@@ -3150,6 +3253,9 @@
 
     const els = {
       progressFill: document.getElementById("progressFill"),
+      progressBar: document.getElementById("progressBar"),
+      comboLabel: document.getElementById("comboLabel"),
+      completionStats: document.getElementById("completionStats"),
       topCount: document.getElementById("topCount"),
       roundLabel: document.getElementById("roundLabel"),
       matchGrid: document.getElementById("matchGrid"),
@@ -4477,6 +4583,56 @@
         || els.introModal.classList.contains("open");
     }
 
+    // ---- Streak label and progress bar (Duolingo-style) ----
+    // From 3 correct in a row a label above the bar counts the streak; the bar turns
+    // gold at 5, fire at 10, violet at 20; milestones pop with a few stars.
+    function updateCombo(streak) {
+      if (!els.comboLabel) return;
+      const tier = WordSnapFx.tierFor(streak);
+      els.progressBar.dataset.tier = streak >= 5 ? tier.name : "";
+      if (streak < 3) {
+        els.comboLabel.classList.remove("show");
+        return;
+      }
+      els.comboLabel.dataset.tier = tier.name;
+      els.comboLabel.textContent = t("fx.combo", { n: streak });
+      const wasShown = els.comboLabel.classList.contains("show");
+      els.comboLabel.classList.add("show");
+      if (WordSnapFx.isMilestone(streak)) {
+        WordSnapFx.pop(els.comboLabel, 1.3);
+        WordSnapFx.burst(els.comboLabel, streak);
+      } else if (wasShown) {
+        WordSnapFx.pop(els.comboLabel, 1.1);
+      }
+    }
+
+    function glintProgress() {
+      if (!WordSnapFx.enabled()) return;
+      els.progressFill.classList.remove("glint");
+      void els.progressFill.offsetWidth; // restart the sweep
+      els.progressFill.classList.add("glint");
+    }
+
+    /** Accuracy, time and best streak of the set, as tiles that pop in and count up. */
+    function renderCompletionStats() {
+      const box = els.completionStats;
+      if (!box) return;
+      const correct = state.completedThisRun || 0;
+      const wrong = state.levelMistakes || 0;
+      if (!correct) { box.hidden = true; return; }
+      const accuracy = Math.round(correct / (correct + wrong) * 100);
+      box.hidden = false;
+      box.innerHTML = [
+        ["accuracy", t("summary.accuracy")],
+        ["time", t("summary.time")],
+        ["combo", t("summary.combo")]
+      ].map(([kind, label]) => `<div class="stat-tile ${kind}"><b>${escapeHtml(label)}</b><span data-stat="${kind}"></span></div>`).join("");
+      const [accEl, timeEl, comboEl] = box.querySelectorAll("[data-stat]");
+      WordSnapFx.countUp(accEl, accuracy, n => `${n}%`, { delay: 150 });
+      WordSnapFx.countUp(timeEl, Math.round((state.lastLevelActiveMs || 0) / 1000), n => WordSnapFx.clock(n * 1000), { delay: 270 });
+      WordSnapFx.countUp(comboEl, state.levelBestStreak || 0, String, { delay: 390 });
+    }
+
     // ---- Focus mode (automatic) ----
     // After a few answers in a row everything but the board goes away (navigation,
     // today bar, title) and the board glides to the middle of the screen. It comes
@@ -4700,7 +4856,9 @@
       state.levelMisses = new Map();
       state.levelDemoted = new Set();
       state.levelMistakes = 0;
+      state.levelBestStreak = 0;
       state.lastCompletion = null;
+      updateCombo(0);
 
       if (!state.words.length) {
         showEmptyLibraryPrompt();
@@ -5066,8 +5224,11 @@
       first.card.classList.remove("selected");
       first.card.classList.add("correct");
       second.card.classList.add("correct");
-      WordSnapFx.sparks([first.card, second.card], state.streak);
-      WordSnapFx.combo(state.streak, els.matchGrid, t("fx.combo", { n: state.streak }));
+      state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.streak);
+      WordSnapFx.ripple([first.card, second.card], WordSnapFx.tierFor(state.streak).colors[0]);
+      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
+      glintProgress();
+      updateCombo(state.streak);
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
       saveWords();
@@ -5204,6 +5365,8 @@
       state.mistakes += 1;
       state.streak = 0;
       playMistakeTone();
+      WordSnapFx.haptic("wrong");
+      updateCombo(0);
       state.selected = null;
 
       if (first.card) {
@@ -5269,6 +5432,7 @@
       // Close the engine's block (rewards the push policy with memory gained per
       // minute of actual play — paused time is already shifted out of levelStartedAt).
       const activeMs = Math.max(0, (state.lastPairAt || performance.now()) - state.levelStartedAt);
+      state.lastLevelActiveMs = activeMs;
       state.lastBlock = engine.endBlock(Date.now(), activeMs) || null;
       scheduleEngineFit();
       // Each finished level rotates the color skin.
@@ -5276,7 +5440,6 @@
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "✓";
-      WordSnapFx.glow(els.completionBadge);
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
       const trial = isTrial();
@@ -5311,11 +5474,13 @@
           state.trialLibraryVisited ? t("trial.notYet") : ""
         ].filter(Boolean).join(" ");
         els.continueBtn.textContent = t("trial.importBtn");
+        if (els.completionStats) els.completionStats.hidden = true;
         renderReviewList();
         return;
       }
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.focusPairsBtn.hidden = !(reason === "block" && confusedWords().length >= 2);
+      renderCompletionStats();
       if (reason === "block") {
         const block = state.lastBlock || {};
         const dueToday = engine.forecast(state.words, 1)[0];

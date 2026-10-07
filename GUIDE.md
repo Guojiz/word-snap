@@ -85,7 +85,7 @@ The library is meant to keep growing; you don't need to clear it. Mastered words
 ## Focus mode and effects
 
 - **Focus mode** (automatic, on by default): after three answers in a row, navigation, today's bar and the title go away, the board glides to the middle of the screen, and a soft vignette frames it. It comes back after 10 seconds without a pick, at the end of a set, when a window opens, with **Esc**, the *Exit focus* button, or by pointing at the top or left edge. *Settings → Focus mode* turns it off.
-- **Effects**: sparks fly out of every matched pair; from 3 correct in a row a combo badge counts the streak and changes colour at 5, 10, 20 and 50 (with a shockwave on each); confetti when today's goal is done. *Settings → Effects* turns them off, and they never run when the system asks for reduced motion.
+- **Motion, Duolingo-style**: the progress bar has a highlight band, grows with a little spring and glints on every match. From 3 correct in a row a label above it counts the streak ("5 in a row"), and the bar turns gold at 5, fire at 10 and violet at 20; milestones pop with a few stars. A matched pair pops and a soft ring spreads from each card; buttons and cards press down like keys. The set summary has three tiles — accuracy, time, best streak — that pop in one after another and count up. Confetti when today's goal is done, and a short vibration on answers where the phone supports it. *Settings → Effects and vibration* turns them off; with reduced motion nothing animates.
 
 ## Daily goal and streak
 
@@ -274,7 +274,7 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 ## 专注模式和特效
 
 - **专注模式**（自动，默认开启）：连续答对或答错三题后，导航、今日横条和标题会收起，棋盘平滑地移到屏幕正中间，四周加一圈柔和的暗角。停下 10 秒不点、一组结束、打开任何窗口、按 **Esc**、点「退出专注」或者把鼠标移到顶部或左边，界面就会回来。**设置 → 专注模式** 可以关掉。
-- **特效**：每配对成功一组都会迸出火花；连对 3 个起出现「连对 ×n」徽章，到 5、10、20、50 时换颜色并放出冲击波；完成今日目标时撒彩纸。**设置 → 动画特效** 可以关掉；系统开了「减少动态效果」时一律不播放。
+- **动效（参考多邻国）**：进度条带高光，每走一步都有弹性和一道闪光。连对 3 次起，进度条上方出现「连对 n 次」，到 5 次变金色、10 次变火焰色、20 次变紫色，到这些节点时标签弹一下并迸出几颗星。配对成功的两张卡轻轻弹起，外圈散开一圈光晕；按钮和卡片按下去像实体按键。一组结束时，「正确率、用时、最高连对」三张卡片依次弹出，数字往上数。完成今日目标时撒彩纸；手机上答题有轻微震动。**设置 → 动画特效和震动** 可以关掉；系统开了「减少动态效果」时一律不播放。
 
 ## 每日目标和连续天数
 

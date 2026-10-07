@@ -38,4 +38,6 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- A short vibration on answers (Settings → Effects and vibration). -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

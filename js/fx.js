@@ -1,11 +1,14 @@
 /*
- * Word Snap visual effects: sparks on a correct match, a combo badge for a
- * streak of correct matches (bigger at 5 / 10 / 20 / 50), a shockwave on the
- * milestones and confetti when today's goal is done.
- *
+ * Word Snap motion, in the spirit of Duolingo's: quiet on every answer, bigger
+ * only when it means something.
+ *   ripple     a soft ring around each matched card (every correct match)
+ *   burst      a few stars out of an element (streak milestones 5 / 10 / 20 / 50)
+ *   countUp    a number that counts up (set summary)
+ *   confetti   today's goal done
+ *   haptic     a short vibration where the device has one
  * Everything is drawn in one fixed layer that ignores the pointer, animated with
- * the Web Animations API, and removed when done. Nothing runs when the system asks
- * for reduced motion or the learner turns effects off (enabled()).
+ * the Web Animations API and removed when done. Nothing runs when the system asks
+ * for reduced motion or the learner turns effects off.
  *
  * Classic script: window.WordSnapFx in the page; module.exports for Node tests.
  */
@@ -16,37 +19,44 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function (doc, win) {
   "use strict";
 
+  /** Streak tiers: the progress bar and its label change colour at these lengths. */
   const TIERS = [
-    { at: 50, name: "legend", colors: ["#ff4b4b", "#ffc800", "#58cc02", "#1cb0f6", "#ce82ff"] },
     { at: 20, name: "blaze", colors: ["#ce82ff", "#ff86d0", "#1cb0f6"] },
-    { at: 10, name: "fire", colors: ["#ff9600", "#ffc800", "#ff4b4b"] },
-    { at: 5, name: "warm", colors: ["#ffc800", "#58cc02"] },
+    { at: 10, name: "fire", colors: ["#ff9600", "#ff4b4b", "#ffc800"] },
+    { at: 5, name: "gold", colors: ["#ffc800", "#ff9600"] },
     { at: 0, name: "base", colors: ["#58cc02", "#89e219"] }
   ];
   const MILESTONES = [5, 10, 20, 50, 100];
+  const SPRING = "cubic-bezier(.34, 1.56, .64, 1)";
 
-  /** Combo tier for a streak length (pure, tested). */
   function tierFor(streak) {
     return TIERS.find(tier => streak >= tier.at);
   }
 
-  /** Whether this streak length gets a shockwave (pure, tested). */
   function isMilestone(streak) {
     return MILESTONES.includes(streak) || (streak > 100 && streak % 50 === 0);
   }
 
+  /** "m:ss" for a duration in ms (pure, tested). */
+  function clock(ms) {
+    const total = Math.max(0, Math.round(ms / 1000));
+    return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+  }
+
   let on = true;
   let layer = null;
-  let badge = null;
-  let badgeTimer = null;
 
-  function enabled() {
-    if (!on || !doc || !win) return false;
+  function motionOk() {
+    if (!doc || !win) return false;
     try {
       return !(win.matchMedia && win.matchMedia("(prefers-reduced-motion: reduce)").matches);
     } catch {
       return true;
     }
+  }
+
+  function enabled() {
+    return on && motionOk();
   }
 
   function setEnabled(value) {
@@ -64,23 +74,6 @@
     return layer;
   }
 
-  function centerOf(el) {
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  }
-
-  function piece(cls, x, y, color, size) {
-    const el = doc.createElement("span");
-    el.className = cls;
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
-    el.style.width = el.style.height = `${size}px`;
-    el.style.background = color;
-    el.style.color = color; // the spark's glow
-    getLayer().appendChild(el);
-    return el;
-  }
-
   function play(el, keyframes, options) {
     if (!el.animate) { el.remove(); return; }
     const animation = el.animate(keyframes, { fill: "forwards", ...options });
@@ -88,67 +81,72 @@
     animation.oncancel = () => el.remove();
   }
 
-  /** Sparks flying out of each matched card; more and more colourful with the streak. */
-  function sparks(cards, streak = 1) {
+  /** A soft ring that grows out of each card's outline and fades. */
+  function ripple(cards, color = "#58cc02") {
     if (!enabled()) return;
-    const tier = tierFor(streak);
-    const count = Math.min(18, 8 + Math.floor(streak / 3));
     for (const card of cards) {
       if (!card || !card.getBoundingClientRect) continue;
-      const { x, y } = centerOf(card);
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
-        const dist = 34 + Math.random() * (30 + Math.min(streak, 20) * 2);
-        const size = 4 + Math.random() * 4;
-        const el = piece("fx-spark", x, y, tier.colors[i % tier.colors.length], size);
-        play(el, [
-          { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
-          { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0.2)`, opacity: 0 }
-        ], { duration: 520 + Math.random() * 200, easing: "cubic-bezier(.2,.7,.3,1)" });
-      }
+      const r = card.getBoundingClientRect();
+      const ring = doc.createElement("span");
+      ring.className = "fx-ripple";
+      Object.assign(ring.style, {
+        left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`,
+        borderColor: color, borderRadius: win.getComputedStyle(card).borderRadius
+      });
+      getLayer().appendChild(ring);
+      play(ring, [
+        { transform: "scale(1)", opacity: 0.55 },
+        { transform: "scale(1.12, 1.35)", opacity: 0 }
+      ], { duration: 480, easing: "cubic-bezier(.2,.7,.3,1)" });
     }
   }
 
-  /** "×n" badge over the board for a streak of 3 or more; a shockwave on milestones. */
-  function combo(streak, anchor, label) {
-    if (!enabled() || streak < 3 || !anchor) return;
+  /** A few small stars out of an element (a streak milestone). */
+  function burst(el, streak = 5) {
+    if (!enabled() || !el || !el.getBoundingClientRect) return;
     const tier = tierFor(streak);
-    // The badge lives next to the board (not in the fixed layer), so it moves with
-    // it — e.g. while focus mode glides the board to the middle of the screen.
-    const host = anchor.offsetParent || anchor.parentElement;
-    if (!badge || badge.parentElement !== host) {
-      if (badge) badge.remove();
-      badge = doc.createElement("div");
-      badge.className = "fx-combo";
-      badge.setAttribute("aria-hidden", "true");
-      host.appendChild(badge);
+    const r = el.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.3;
+      const dist = 28 + Math.random() * 26;
+      const star = doc.createElement("span");
+      star.className = "fx-star";
+      star.textContent = "✦";
+      Object.assign(star.style, { left: `${x}px`, top: `${y}px`, color: tier.colors[i % tier.colors.length] });
+      getLayer().appendChild(star);
+      play(star, [
+        { transform: "translate(-50%, -50%) scale(0.3) rotate(0deg)", opacity: 0 },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * dist * 0.6}px), calc(-50% + ${Math.sin(angle) * dist * 0.6}px)) scale(1.1) rotate(60deg)`, opacity: 1, offset: 0.35 },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0.4) rotate(120deg)`, opacity: 0 }
+      ], { duration: 700, easing: "ease-out" });
     }
-    badge.style.left = `${anchor.offsetLeft + anchor.offsetWidth / 2}px`;
-    badge.style.top = `${anchor.offsetTop - 6}px`;
-    badge.dataset.tier = tier.name;
-    badge.textContent = label || `×${streak}`;
-    if (badge.animate) {
-      badge.animate([
-        { transform: "translate(-50%, -100%) scale(0.6)", opacity: 0 },
-        { transform: "translate(-50%, -100%) scale(1.25)", opacity: 1, offset: 0.35 },
-        { transform: "translate(-50%, -100%) scale(1)", opacity: 1 }
-      ], { duration: 360, easing: "ease-out", fill: "forwards" });
-    }
-    clearTimeout(badgeTimer);
-    badgeTimer = setTimeout(() => {
-      if (badge && badge.animate) badge.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" });
-    }, 1400);
-    if (isMilestone(streak)) shockwave(anchor, tier);
   }
 
-  function shockwave(anchor, tier) {
-    const { x, y } = centerOf(anchor);
-    const ring = piece("fx-ring", x, y, "transparent", 40);
-    ring.style.borderColor = tier.colors[0];
-    play(ring, [
-      { transform: "translate(-50%, -50%) scale(0.4)", opacity: 0.9 },
-      { transform: "translate(-50%, -50%) scale(14)", opacity: 0 }
-    ], { duration: 800, easing: "cubic-bezier(.1,.6,.3,1)" });
+  /** A spring "pop" on an element (label, badge, tile). */
+  function pop(el, scale = 1.18) {
+    if (!enabled() || !el || !el.animate) return;
+    el.animate([
+      { transform: "scale(1)" },
+      { transform: `scale(${scale})`, offset: 0.4 },
+      { transform: "scale(1)" }
+    ], { duration: 420, easing: SPRING });
+  }
+
+  /** Counts el's text up to `to` (formatted by fmt) over `ms`, after `delay`. */
+  function countUp(el, to, fmt = String, { ms = 700, delay = 0 } = {}) {
+    if (!el) return;
+    if (!enabled() || !win.requestAnimationFrame) { el.textContent = fmt(to); return; }
+    el.textContent = fmt(0);
+    const start = performance.now() + delay;
+    const step = now => {
+      const t = Math.min(1, Math.max(0, (now - start) / ms));
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = fmt(Math.round(to * eased));
+      if (t < 1) win.requestAnimationFrame(step);
+    };
+    win.requestAnimationFrame(step);
   }
 
   /** Confetti from the top of the screen (today's goal done). */
@@ -156,11 +154,15 @@
     if (!enabled()) return;
     const width = win.innerWidth || 400;
     const height = win.innerHeight || 700;
-    const colors = TIERS[0].colors;
+    const colors = ["#ff4b4b", "#ffc800", "#58cc02", "#1cb0f6", "#ce82ff"];
     for (let i = 0; i < amount; i++) {
-      const x = Math.random() * width;
-      const el = piece("fx-confetti", x, -20, colors[i % colors.length], 8);
-      el.style.height = `${5 + Math.random() * 8}px`;
+      const el = doc.createElement("span");
+      el.className = "fx-confetti";
+      Object.assign(el.style, {
+        left: `${Math.random() * width}px`, top: "-20px", width: "8px",
+        height: `${5 + Math.random() * 8}px`, background: colors[i % colors.length]
+      });
+      getLayer().appendChild(el);
       const drift = (Math.random() - 0.5) * 240;
       const spin = (Math.random() - 0.5) * 1080;
       play(el, [
@@ -170,14 +172,13 @@
     }
   }
 
-  /** A soft glow around an element (e.g. the finished set's badge). */
-  function glow(el, color = "#58cc02") {
-    if (!enabled() || !el || !el.animate) return;
-    el.animate([
-      { boxShadow: `0 0 0 0 ${color}` },
-      { boxShadow: `0 0 0 18px transparent` }
-    ], { duration: 900, easing: "ease-out" });
+  /** A short vibration (correct: a tap; wrong: a double buzz). Off with effects. */
+  function haptic(kind = "tap") {
+    if (!on || !win || !win.navigator || typeof win.navigator.vibrate !== "function") return;
+    try {
+      win.navigator.vibrate(kind === "wrong" ? [18, 40, 18] : kind === "milestone" ? [12, 30, 12, 30, 24] : 8);
+    } catch { /* not allowed here */ }
   }
 
-  return { sparks, combo, confetti, glow, setEnabled, enabled, tierFor, isMilestone };
+  return { ripple, burst, pop, countUp, confetti, haptic, setEnabled, enabled, tierFor, isMilestone, clock, SPRING };
 });
