@@ -68,3 +68,13 @@ test("hints: the translated example, or frames by part of speech", async () => {
   assert.match((await hintFor("notorious")).text, /very notorious/);
   assert.match((await hintFor("tuber")).text, /The tuber/);
 });
+
+test("an -ing form or participle with no helping verb fails", async () => {
+  const r = await checkSentence("sway", "I swaying on the swing");
+  assert.equal(r.ok, false);
+  assert.deepEqual(r.issues.find(i => i.kind === "MissingVerb").suggestions, ["am swaying", "swayed"]);
+  assert.equal((await checkSentence("eat", "He eaten the cake every day.")).ok, false);
+  for (const text of ["I am swaying on the swing.", "I like swaying on the swing.", "Swaying in the wind, the trees looked alive.", "The crowd was swayed by his speech."]) {
+    assert.equal((await checkSentence("sway", text)).ok, true, text);
+  }
+});

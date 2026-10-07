@@ -184,6 +184,43 @@ function agreementIssues(nlp, text) {
 }
 
 /**
+ * "I swaying on the swing", "He eaten the cake": an -ing form or past participle right after
+ * the subject, with no verb anywhere that could carry the sentence. Harper misses these.
+ */
+function missingAuxiliaryIssues(nlp, text) {
+  const list = nlp(text).json({ offset: true }).flatMap(sentence => sentence.terms);
+  const finite = list.some(term => term.tags.includes("Verb") && (
+    term.tags.some(tag => tag === "Auxiliary" || tag === "Copula" || tag === "Modal") ||
+    !term.tags.some(tag => tag === "Gerund" || tag === "Participle")));
+  if (finite) return [];
+  for (let i = 1; i < list.length; i++) {
+    const term = list[i], before = list[i - 1];
+    if (!term.tags.includes("Verb") || !before.tags.includes("Noun") || !term.offset) continue;
+    const subject = (before.normal || before.text).toLowerCase();
+    const plural = before.tags.includes("Plural") || ["we", "you", "they"].includes(subject);
+    const word = term.text;
+    let suggestions;
+    if (term.tags.includes("Gerund")) {
+      const be = subject === "i" ? "am" : plural ? "are" : "is";
+      const past = nlp(term.normal).verbs().toPastTense().text();
+      suggestions = [`${be} ${word}`, past && past !== term.normal ? past : ""].filter(Boolean);
+    } else if (term.tags.includes("Participle")) {
+      suggestions = [`${plural || subject === "i" ? "have" : "has"} ${word}`];
+    } else continue;
+    return [{
+      start: term.offset.start,
+      end: term.offset.start + term.offset.length,
+      kind: "MissingVerb",
+      problem: word,
+      message: `“${word}” can't be the main verb on its own; add a helping verb (e.g. “${suggestions[0]}”).`,
+      suggestions,
+      minor: false
+    }];
+  }
+  return [];
+}
+
+/**
  * Check a learner's sentence for `target`.
  * Returns { ok, target:{found,form,start,end}, issues:[{start,end,kind,problem,message,suggestions,minor}], structure:[codes] }
  * structure codes: "short" (< 4 words), "onlyWord" — and "noVerb", which is only a tip.
@@ -223,6 +260,9 @@ export async function checkSentence(target, text) {
     for (const extra of agreementIssues(nlp, sentence)) {
       if (!issues.some(issue => issue.start < extra.end && extra.start < issue.end)) issues.push(extra);
     }
+  }
+  for (const extra of missingAuxiliaryIssues(nlp, sentence)) {
+    if (!issues.some(issue => issue.start < extra.end && extra.start < issue.end)) issues.push(extra);
   }
   issues.sort((a, b) => a.start - b.start);
   // "noVerb" is only a tip: the tagger sometimes reads a verb as a noun ("my sister and I walk").
