@@ -254,31 +254,31 @@
       margin-bottom: 54px;
     }
 
-    /* Focus mode: everything but the board fades out. Space is kept, so no card moves under a finger. */
+    /* Focus mode: everything but the board goes away and the board glides to the
+       middle of the screen (js: enterFocus / exitFocus animate the move). */
+    body.focus-mode .rail,
+    body.focus-mode .mobile-nav,
+    body.focus-mode .today-bar,
+    body.focus-mode .prompt-kicker,
+    body.focus-mode #practiceView > h1 {
+      display: none;
+    }
+
+    body.focus-mode .app {
+      grid-template-columns: 1fr;
+    }
+
     .rail > *,
     .mobile-nav,
     .today-bar,
     .prompt-kicker,
     #practiceView > h1 {
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      animation: focus-back 0.4s ease;
     }
 
-    body.focus-mode .rail > *,
-    body.focus-mode .mobile-nav,
-    body.focus-mode .today-bar,
-    body.focus-mode .prompt-kicker,
-    body.focus-mode #practiceView > h1 {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .rail {
-      transition: border-color 0.4s ease;
-    }
-
-    body.focus-mode .rail {
-      border-right-color: transparent;
+    @keyframes focus-back {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* Effects layer (js/fx.js): sparks, combo badge, shockwave, confetti. */
@@ -311,8 +311,14 @@
       border-radius: 2px;
     }
 
+    #practiceView {
+      position: relative;
+    }
+
     .fx-combo {
       position: absolute;
+      z-index: 3;
+      pointer-events: none;
       padding: 4px 14px;
       border-radius: 999px;
       color: #fff;
@@ -400,6 +406,7 @@
     @media (prefers-reduced-motion: reduce) {
       .rail > *, .mobile-nav, .today-bar, .prompt-kicker, #practiceView > h1, .focus-exit {
         transition: none;
+        animation: none;
       }
     }
 
@@ -4167,7 +4174,7 @@
       clearLevelTimers();
       clearSelection();
       state.levelEndsAt = 0;
-      exitFocus();
+      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "✓";
@@ -4471,10 +4478,11 @@
     }
 
     // ---- Focus mode (automatic) ----
-    // After a few answers in a row everything but the board fades out (navigation,
-    // today bar, title). It comes back after a pause without a pick, at the end of a
-    // set, when a window opens, with Esc, the "Exit focus" button, or pointing at the
-    // top or left edge. Settings can turn it off.
+    // After a few answers in a row everything but the board goes away (navigation,
+    // today bar, title) and the board glides to the middle of the screen. It comes
+    // back after a pause without a pick, at the end of a set, when a window opens,
+    // with Esc, the "Exit focus" button, or pointing at the top or left edge.
+    // Settings can turn it off.
     const FOCUS_AFTER_ANSWERS = 3;
     const FOCUS_IDLE_MS = 10000;
     let focusAnswers = 0;
@@ -4490,19 +4498,65 @@
       clearTimeout(focusIdleTimer);
       if (answered) focusAnswers += 1;
       const playing = !els.completionView.classList.contains("show") && !shouldPauseLevel();
-      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS) document.body.classList.add("focus-mode");
+      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS) enterFocus();
       focusIdleTimer = setTimeout(exitFocus, FOCUS_IDLE_MS);
     }
 
-    function exitFocus() {
+    const lessonEl = document.querySelector(".lesson");
+    const lessonTopEl = document.querySelector(".lesson-top");
+
+    function reducedMotion() {
+      return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+
+    /** Vertical shift that puts the progress bar + board in the middle of the screen (layout without transform). */
+    function focusOffset() {
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = "";
+      const top = lessonTopEl.getBoundingClientRect().top;
+      const bottom = els.matchGrid.getBoundingClientRect().bottom;
+      return Math.max(0, Math.round(window.innerHeight / 2 - (top + bottom) / 2));
+    }
+
+    /** FLIP: start where the board was, then glide to `transform`. */
+    function glideLesson(from, transform) {
+      const to = els.matchGrid.getBoundingClientRect();
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = `translate(${Math.round(from.left - to.left)}px, ${Math.round(from.top - to.top)}px)`;
+      void lessonEl.offsetWidth;
+      if (!reducedMotion()) lessonEl.style.transition = "transform 0.5s cubic-bezier(.2, .8, .2, 1)";
+      lessonEl.style.transform = transform;
+    }
+
+    function enterFocus() {
+      const from = els.matchGrid.getBoundingClientRect();
+      document.body.classList.add("focus-mode");
+      const dy = focusOffset();
+      glideLesson(from, dy ? `translateY(${dy}px)` : "");
+    }
+
+    /** instant: no glide (a window or the set summary is about to cover the board). */
+    function exitFocus(options) {
       clearTimeout(focusIdleTimer);
       focusAnswers = 0;
+      if (!focusOn()) return;
+      const from = els.matchGrid.getBoundingClientRect();
       document.body.classList.remove("focus-mode");
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = "";
+      if (options && options.instant === true) return;
+      glideLesson(from, "");
     }
+
+    window.addEventListener("resize", () => {
+      if (!focusOn()) return;
+      const dy = focusOffset();
+      lessonEl.style.transform = dy ? `translateY(${dy}px)` : "";
+    });
 
     /** Freeze the countdown while the library is open or the tab/app is in the background. */
     function pauseLevel() {
-      exitFocus();
+      exitFocus({ instant: true });
       const boardLive = state.levelEndsAt > 0 || (isEndless() && !els.completionView.classList.contains("show"));
       if (state.pausedAt || !boardLive) return;
       state.pausedAt = performance.now();
@@ -5204,7 +5258,7 @@
     }
 
     function showCompletion(allDone, reason = "queue") {
-      exitFocus();
+      exitFocus({ instant: true });
       stopLevelCountdown();
       clearLevelTimers();
       clearSelection();
@@ -6237,7 +6291,7 @@
       state.levelMisses = new Map();
       state.lastCompletion = null;
       renderReviewList();
-      exitFocus();
+      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "+";
@@ -7303,7 +7357,7 @@
       renderRound();
     });
 
-    els.focusExitBtn.addEventListener("click", exitFocus);
+    els.focusExitBtn.addEventListener("click", () => exitFocus());
     // Pointing at the navigation (top or left edge) brings it back; mouse only, not touch.
     document.addEventListener("pointermove", event => {
       if (focusOn() && event.pointerType === "mouse" && (event.clientX < 110 || event.clientY < 60)) exitFocus();

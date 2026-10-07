@@ -113,14 +113,18 @@
   function combo(streak, anchor, label) {
     if (!enabled() || streak < 3 || !anchor) return;
     const tier = tierFor(streak);
-    if (!badge || !badge.isConnected) {
+    // The badge lives next to the board (not in the fixed layer), so it moves with
+    // it — e.g. while focus mode glides the board to the middle of the screen.
+    const host = anchor.offsetParent || anchor.parentElement;
+    if (!badge || badge.parentElement !== host) {
+      if (badge) badge.remove();
       badge = doc.createElement("div");
       badge.className = "fx-combo";
-      getLayer().appendChild(badge);
+      badge.setAttribute("aria-hidden", "true");
+      host.appendChild(badge);
     }
-    const r = anchor.getBoundingClientRect();
-    badge.style.left = `${r.left + r.width / 2}px`;
-    badge.style.top = `${r.top - 6}px`;
+    badge.style.left = `${anchor.offsetLeft + anchor.offsetWidth / 2}px`;
+    badge.style.top = `${anchor.offsetTop - 6}px`;
     badge.dataset.tier = tier.name;
     badge.textContent = label || `×${streak}`;
     if (badge.animate) {
