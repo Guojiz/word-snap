@@ -135,10 +135,22 @@ function agreementIssues(nlp, text) {
     if (/ing$/.test(main.normal)) return;
     const subject = verb.subjects();
     const subjectText = subject.text().trim();
-    if (!subjectText || PRONOUNS.has(subjectText.toLowerCase())) return;
+    // "I'd like", "She'll go": a pronoun with a contracted auxiliary.
+    if (!subjectText || PRONOUNS.has(subjectText.toLowerCase().replace(/['’](d|ll|ve|re|m|s)$/, ""))) return;
+    // "would/can/will + bare verb" is never an agreement error.
+    if (json.terms.some(term => term.tags.includes("Modal") || term.tags.includes("Auxiliary"))) return;
     // Only when the subject is the noun phrase the sentence starts with.
     const sentenceText = verb.sentences().text().trim().toLowerCase();
     if (!sentenceText.startsWith(subjectText.toLowerCase())) return;
+    // …and no other verb sits between the subject and this one: otherwise the tagger has
+    // probably taken a later word for a verb ("The air … is full of particulate pollution").
+    const verbStart = main.offset ? main.offset.start : -1;
+    const between = doc.terms().json({ offset: true }).filter(t => {
+      const term = t.terms[0];
+      return term.offset && term.offset.start < verbStart && term.tags.includes("Verb") &&
+        !subject.has(term.text);
+    });
+    if (between.length) return;
     const nouns = subject.nouns();
     if (!nouns.found) return;
     // "Two hours is a long time", "Ten dollars is enough": amounts take a singular verb.

@@ -29,6 +29,17 @@ test("agreement across a prepositional phrase is caught", async () => {
   assert.equal((await checkSentence("sway", "The lanterns on the bridge sway gently above the crowd.")).ok, true);
 });
 
+test("contractions and modals are not agreement errors", async () => {
+  for (const text of ["I'd like to eat a banana.", "She'll eat a banana after lunch.", "The children can eat a banana each."]) {
+    const r = await checkSentence("banana", text);
+    assert.equal(r.ok, true, `${text} ${JSON.stringify(r.issues)}`);
+  }
+  for (const text of ["The air in the city is full of particulate pollution."]) {
+    const r = await checkSentence("particulate", text);
+    assert.equal(r.ok, true, `${text} ${JSON.stringify(r.issues)}`);
+  }
+});
+
 test("the target word must be used", async () => {
   const r = await checkSentence("furor", "The decision made people very angry.");
   assert.equal(r.ok, false);
