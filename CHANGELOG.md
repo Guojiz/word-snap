@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-10-07
+
+### Added
+
+- **Endless practice is the default.** The board keeps refilling from the review engine; a summary appears every 25 pairs (× ends a set early). Timed levels moved to *Settings → How to practice*.
+- **Personal review engine** (`js/engine.js`): FSRS-6 memory model with three multipliers fitted to each learner's own answer log on the device; automatic grades from right/wrong and reaction-time percentiles (no self-rating); short learning steps counted in pairs; a Thompson-sampling bandit tunes target retention and new-word pace per learner. `tools/simulate.js` compares it with the old boxes and fixed FSRS weights.
+- **Mixed-up pairs**: confused pairs and look-alike words from your list share the board; the set summary lists them and can drill just those pairs.
+- **7-day review forecast** and "Due now / Tomorrow / In n days" labels in *My words*.
+- **Example sentences**: import as `word,meaning | example | translation` or as 3rd/4th spreadsheet columns; re-importing an existing word adds the example and keeps progress; the AI prompt asks for examples; examples appear in the library and the backup.
+- **Spelling and sentence cards** after each set (0–3, default 2). The sentence check runs on the device (Harper WebAssembly + compromise): any grammatical word order and any word form passes, suggestions apply in one tap, only the first submission sets the grade, and passed sentences are saved. *I have no idea* gives the translated example or sentence frames. Spelling blanks the example, accepts synonyms from your list, asks you to copy the answer on a miss, and updates the schedule.
+- **On-device AI (optional, off by default)**: on WebGPU devices, *Settings → On-device AI* downloads Qwen2.5 1.5B (~870 MB, once) via WebLLM. It suggests a Chinese situation for *I have no idea* and writes example sentences for words without one (each must pass the grammar check). It does not judge meaning: no model up to 1.7B was reliable on `tools/ai-eval.html`. 8-second limit; any failure falls back to the rules.
+
+### Changed
+
+- Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).
+
+### Fixed
+
+- Fewer false subject–verb agreement errors in sentence cards (contractions, modals, mis-tagged words such as *particulate*).
+- Service worker cache bumped to `word-snap-v45`; the downloaded AI model is kept across updates.
+
 ## 2026-10-06
 
 ### Added

@@ -12,7 +12,7 @@
   <a href="https://guojiz.github.io/word-snap/"><strong>Open the official app →</strong></a>
 </p>
 
-A bilingual vocabulary matching app with immediate feedback, custom word lists, adaptive review, and PWA installation.
+A bilingual vocabulary matching app with immediate feedback, custom word lists, a personal review engine, on-device sentence checking, and PWA installation. Free, no account, works offline.
 
 This repository holds the app's full source. The `main` branch is deployed with GitHub Pages to the official site. Feature details, review logic, import format and data notes: [GUIDE.md](GUIDE.md).
 
@@ -41,7 +41,10 @@ Word Snap is a short practice loop, not a course platform.
 - **Bilingual matching** — pair a word with its meaning, then keep going.
 - **Immediate feedback** — see the miss as soon as it happens.
 - **Your list** — practice the vocabulary you actually need.
-- **Adaptive review** — come back to the items that did not stick.
+- **Endless practice** — the board keeps refilling; timed levels are optional.
+- **Personal review engine** — an FSRS-family memory model fitted to you on your device, graded automatically from your answers and speed.
+- **Spelling and sentence cards** — grammar checked on your device; any correct word order passes.
+- **Optional on-device AI** — a small browser model suggests ideas and example sentences; nothing leaves the device.
 - **PWA** — optional install; the website remains the source of truth.
 
 ## Start
@@ -71,7 +74,7 @@ MIT. See [LICENSE](LICENSE).
   <a href="https://guojiz.github.io/word-snap/"><strong>打开官网应用 →</strong></a>
 </p>
 
-支持即时反馈、自定义词表、自适应复习和 PWA 安装的双语单词匹配应用。
+支持即时反馈、自定义词表、个人复习引擎、本机造句检查和 PWA 安装的双语单词匹配应用。免费、不用账号、可离线。
 
 本仓库是应用的完整源码，`main` 分支通过 GitHub Pages 部署到官网。功能细节、复习逻辑、导入格式和数据说明见 [GUIDE.md](GUIDE.md)。
 
@@ -100,7 +103,10 @@ Word Snap 是短练习闭环，不是课程平台。
 - **双语配对** — 把词和释义对上，然后继续。
 - **即时反馈** — 错了立刻看见。
 - **自己的词表** — 练真正需要的词。
-- **自适应复习** — 回到还没记住的条目。
+- **无限练习** — 棋盘一直补词，限时关卡可选。
+- **个人复习引擎** — FSRS 一族的记忆模型，在你的设备上按你拟合，根据对错和速度自动评级。
+- **拼写卡和造句卡** — 语法在本机检查，任何正确的语序都算对。
+- **可选的端侧 AI** — 浏览器里的小模型给思路、补例句，内容不出设备。
 - **PWA** — 可选用；官网始终是正式入口。
 
 ## 开始
