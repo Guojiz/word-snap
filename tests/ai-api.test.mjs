@@ -114,18 +114,18 @@ test("createAI with an API engine: strong, feedback in three parts, contrast", a
   const fb = await ai.feedback("particulate", "颗粒物（空气中）", "The water is full of particulate matter.");
   assert.equal(fb.ok, false);
   assert.equal(fb.where, "water");
-  assert.match(fb.whyZh, /空气/);
+  assert.match(fb.why, /空气/);
   assert.equal(fb.fix, "The air is full of particulate matter.");
   assert.equal(log[0].body.max_tokens, 400);
   const c = await ai.contrast("furor", "骚动", "floor", "地板");
-  assert.match(c.diffZh, /地板/);
+  assert.match(c.diff, /地板/);
   assert.equal(c.aEx, "The news caused a furor.");
 });
 
 test("parsers: feedback without a Chinese reason is not trusted; ok keeps the better version", () => {
   assert.equal(parseFeedback(JSON.stringify({ ok: false, where: "x", why: "wrong", fix: "", better: "" })), null);
   assert.deepEqual(parseFeedback(JSON.stringify({ ok: true, where: "", why: "", fix: "", better: "The lanterns swayed above the street." })),
-    { ok: true, where: "", whyZh: "", fix: "", better: "The lanterns swayed above the street." });
+    { ok: true, where: "", why: "", fix: "", better: "The lanterns swayed above the street." });
   assert.equal(parseFeedback(JSON.stringify({ ok: true, better: "很好" })).better, "");
   assert.equal(parseContrast(JSON.stringify({ diff: "不同" })), null);
   assert.match(feedbackPrompt("sway", "摇摆", "Trees sway.", "sways → sway")[1].content, /grammar checker reported: sways → sway/);

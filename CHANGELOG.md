@@ -13,6 +13,7 @@
 - **On-device AI (optional, off by default)**: on WebGPU devices, *Settings → On-device AI* downloads Qwen2.5 1.5B (~870 MB, once) via WebLLM. It suggests a Chinese situation for *I have no idea* and writes example sentences for words without one (each must pass the grammar check). It does not judge meaning: no model up to 1.7B was reliable on `tools/ai-eval.html`. 8-second limit; any failure falls back to the rules.
 
 - **AI with your own API key (optional)**: *Settings → AI → Your own API key* (`js/ai-api.js`) supports DeepSeek, Qwen, Kimi, GLM, SiliconFlow, OpenAI, Claude, OpenRouter and any OpenAI-compatible server. Sentence cards then also check meaning and explain mistakes in three parts (where / why / fix, fix applies in one tap; a wrong meaning counts as Again), mixed-up pairs get an *AI* explanation, and up to 10 examples per set are written. The key is stored apart from the word library and never exported; CORS failures say to try another provider or the app.
+- **AI in any language pair**: prompts take the app's pair (study A, explanations in B); with a key, sentence cards also work for non-English words (the model checks grammar and meaning). **Make a list with AI** in *Add words* writes a list with examples in the import format, switching the language pair when asked. A **Use AI features** switch turns all AI off; devices under 8 GB do not offer the on-device model.
 
 ### Changed
 
@@ -21,7 +22,7 @@
 ### Fixed
 
 - Fewer false subject–verb agreement errors in sentence cards (contractions, modals, mis-tagged words such as *particulate*).
-- Service worker cache bumped to `word-snap-v47`; the downloaded AI model is kept across updates.
+- Service worker cache bumped to `word-snap-v48`; the downloaded AI model is kept across updates.
 
 ## 2026-10-06
 

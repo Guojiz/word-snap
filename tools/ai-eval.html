@@ -65,7 +65,7 @@ async function run() {
   // Ideas and examples, eyeballed.
   const samples = [];
   for (const item of items.filter((_, i) => i % 12 === 0)) {
-    samples.push({ word: item.word, idea: await ai.ideaZh(item.word, item.meaning), example: await ai.example(item.word, item.meaning) });
+    samples.push({ word: item.word, idea: await ai.idea(item.word, item.meaning), example: await ai.example(item.word, item.meaning) });
   }
   const correct = results.filter(r => r.got === r.ok).length;
   const caught = results.filter(r => !r.ok && r.got === false).length;

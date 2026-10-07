@@ -96,18 +96,21 @@ After each set of 25 pairs, the summary can show up to three short cards (Settin
 The **On-device model** part of *Settings → AI (optional)* appears only on devices with WebGPU (recent desktop Chrome/Edge, Android Chrome, Safari on iOS 26+). It is off by default.
 
 - **Download and turn on** fetches a small model (Qwen2.5 1.5B, about 870 MB) once from Hugging Face through WebLLM; progress is shown, an interrupted download can be continued, and **Delete** frees the storage. Afterwards it works offline.
+- Devices that report under 8 GB of memory do not offer it (a hint suggests an API key instead), and it is offered for English → Chinese only.
 - What it does: suggests a Chinese situation when you press *I have no idea* on a sentence card, and writes example sentences for words in the current set that have none. Each AI example must pass the grammar check and contain the word before it is saved; the library marks it as AI-generated.
 - What it does **not** do: judge whether a sentence uses the word with the right meaning. We tested models up to 1.7B on 60 labelled sentences (`tools/ai-eval.html`) and none was reliable enough, so the sentence card asks you to check the meaning yourself.
 - Every request has an 8-second limit; on any failure the app falls back silently to the rule-based check.
 
 ## AI with your own API key (optional)
 
-**Settings → AI (optional) → Your own API key** works on every device (no WebGPU needed) for English–Chinese words.
+**Settings → AI (optional) → Your own API key** works on every device (no WebGPU needed) and for **any language pair**: explanations are written in side B (the meaning side). The **Use AI features** switch at the top turns every AI feature off at once.
 
 - Pick a provider (DeepSeek, Qwen, Kimi, GLM, SiliconFlow, OpenAI, Claude, OpenRouter, or any OpenAI-compatible server such as a local Ollama), paste a key, and press **Save and test**. Model and base URL can stay empty to use the provider's defaults.
 - With a key on, **sentence cards get a full check**: grammar still comes from the on-device checker, and the model adds whether the meaning is right — *where* the mistake is, *why* (in Chinese) and *how to fix it* (one tap to use the fix). A grammatical sentence with the wrong meaning (e.g. *water* where the word means particles in the air) stays open and counts as Again; a correct one shows a more natural version if there is one.
 - **Mixed-up pairs** in the set summary get an *AI* button that explains the difference with an example for each word.
-- Example sentences are filled for up to 10 words per set (instead of 3), each still checked by the grammar checker.
+- Example sentences are filled for up to 10 words per set (instead of 3); English ones are still checked by the grammar checker.
+- **Other languages than English**: sentence cards also appear (the grammar checker is English-only, so the model checks grammar and meaning); without a key they stay English-only.
+- **Make a list with AI** (Library → Add words): describe what you want (“IELTS verbs, 30”, “日语 N3 常用词”, “Spanish food words”). The list, with examples, lands in the bulk box in the import format — check it and tap *Bulk add*. If the request names another language, the list switches the language pair too.
 - The key is stored only on this device, under its own storage key: it is never in backups or exports. What you write on sentence cards is sent to the provider you chose, billed to your key. **Pause** keeps the key; **Remove key** deletes it.
 - Browsers block some providers (CORS); the message says so. In the Android app every provider works.
 - If both are on, the API key is used first and the on-device model is the fallback.
@@ -261,18 +264,21 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 **设置 → AI（可选）** 里的「端侧模型」只在支持 WebGPU 的设备上出现（较新的桌面 Chrome/Edge、Android Chrome、iOS 26 及以上的 Safari），默认关闭。
 
 - **下载并开启**：通过 WebLLM 从 Hugging Face 下载一个小模型（Qwen2.5 1.5B，约 870MB），只需一次；显示进度，中断后可以继续下载，**删除模型**可释放空间。下载完之后离线可用。
+- 内存低于 8GB 的设备不提供（会提示改用 API Key），而且只用于英语→中文。
 - 它做什么：造句卡点「我没有思路」时给一句中文情景；为当前这一组里没有例句的词补例句。AI 例句必须通过语法检查、并且确实用到这个词，才会保存，词库里会标明是 AI 生成。
 - 它**不**做什么：判断句子里这个词的意思用得对不对。我们用 60 条标注句子（`tools/ai-eval.html`）测试了 1.7B 以内的模型，没有一个足够可靠，所以造句卡会提醒你自己对照释义。
 - 每次请求限时 8 秒，出任何问题都会静默回退到规则检查。
 
 ## 用自己的 API Key（可选）
 
-**设置 → AI（可选）→ 用自己的 API Key** 在所有设备上可用（不需要 WebGPU），适用于英语—中文词表。
+**设置 → AI（可选）→ 用自己的 API Key** 在所有设备上可用（不需要 WebGPU），**任何语言对都可以**：讲解用 B 侧（释义那一侧）的语言写。最上面的**使用 AI 功能**开关可以一次关掉所有 AI 功能。
 
 - 选服务商（DeepSeek、通义千问、Kimi、智谱 GLM、硅基流动、OpenAI、Claude、OpenRouter，或任何 OpenAI 兼容接口，比如本地 Ollama），粘贴 Key，点**保存并测试**。模型和接口地址留空就用服务商的默认值。
 - 开启后，**造句卡会得到完整批改**：语法仍由本机检查器判断，模型补上意思是否正确——**错在哪**、**为什么**（中文）、**怎么改**（点一下就能用改好的句子）。语法对但意思错的句子（比如把指空气中颗粒物的词用在 water 上）不会通过，记为 Again；意思也对时，如果有更地道的说法会一并给出。
 - 每组小结里的**混淆对**多了一个「AI 辨析」按钮，讲清两个词的区别，并各给一个例句。
-- 每组最多为 10 个词补例句（原来是 3 个），每句仍要通过语法检查。
+- 每组最多为 10 个词补例句（原来是 3 个），英语例句仍要通过语法检查。
+- **英语以外的语言**也会出造句卡（语法检查器只支持英语，所以语法和意思都由模型检查）；没有 Key 时仍只限英语。
+- **用 AI 生成词表**（词库 → 添加单词）：写下想背什么（「雅思高频动词 30 个」「日语 N3 常用词」「西班牙语食物词汇」），带例句的词表会按导入格式放进批量录入框，检查后点「批量添加」。需求里提到别的语言时，语言对也会一起切换。
 - Key 只保存在这台设备上，单独存放，不会进备份和导出。造句卡里写的内容会发给你选的服务商，费用从你的 Key 扣。**暂停使用**会保留 Key，**清除 Key** 会删除它。
 - 浏览器会拦截部分服务商（CORS），界面会提示；安卓 App 里所有服务商都能用。
 - 两种都开启时，优先用 API Key，端侧模型作为备用。

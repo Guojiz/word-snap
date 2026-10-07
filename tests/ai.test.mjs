@@ -38,8 +38,8 @@ test("parsers accept good JSON and reject everything else", () => {
   assert.equal(parseIdea('{"idea":"城市的空气里有很多颗粒物。"}'), "城市的空气里有很多颗粒物。");
   assert.equal(parseIdea('{"idea":"The air is dirty."}'), null);
   assert.equal(parseIdea('{"idea":"垃圾"}'), null, "a bare word is not an idea");
-  assert.deepEqual(parseExample('{"en":"The air in the city was full of particulate matter.","zh":"城市的空气里满是颗粒物。"}'),
-    { en: "The air in the city was full of particulate matter.", zh: "城市的空气里满是颗粒物。" });
+  assert.deepEqual(parseExample('{"sentence":"The air in the city was full of particulate matter.","translation":"城市的空气里满是颗粒物。"}'),
+    { text: "The air in the city was full of particulate matter.", tr: "城市的空气里满是颗粒物。" });
   assert.equal(parseExample('{"en":"Particulate.","zh":"颗粒"}'), null);
 });
 
@@ -68,7 +68,7 @@ test("a slow model times out to null and is interrupted", async () => {
   const engine = fakeEngine(() => new Promise(() => {}));
   const ai = aiWith(engine, { timeoutMs: 30 });
   await ai.load();
-  assert.equal(await ai.ideaZh("sway", "摇摆"), null);
+  assert.equal(await ai.idea("sway", "摇摆"), null);
   assert.equal(engine.interrupted, 1);
 });
 
@@ -90,7 +90,7 @@ test("requests run one at a time", async () => {
     return '{"idea":"风中的树在摇摆。"}';
   }));
   await ai.load();
-  const ideas = await Promise.all([ai.ideaZh("sway", "摇摆"), ai.ideaZh("sway", "摇摆"), ai.ideaZh("sway", "摇摆")]);
+  const ideas = await Promise.all([ai.idea("sway", "摇摆"), ai.idea("sway", "摇摆"), ai.idea("sway", "摇摆")]);
   assert.deepEqual(ideas, ["风中的树在摇摆。", "风中的树在摇摆。", "风中的树在摇摆。"]);
   assert.equal(most, 1);
 });

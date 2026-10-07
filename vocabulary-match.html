@@ -1610,6 +1610,10 @@
       accent-color: var(--green);
     }
 
+    .ai-wordlist {
+      margin-bottom: 14px;
+    }
+
     .ai-section h3 {
       margin: 14px 0 6px;
       font-size: 16px;
@@ -2062,6 +2066,10 @@
 
       <section class="modal-section ai-section" id="aiSection" aria-labelledby="aiTitle" hidden>
         <h2 id="aiTitle" data-en="AI (optional)" data-zh="AI（可选）">AI（可选）</h2>
+        <label class="check-row">
+          <input id="aiEnabled" type="checkbox" />
+          <span data-en="Use AI features" data-zh="使用 AI 功能">使用 AI 功能</span>
+        </label>
         <div id="aiApiBlock">
           <h3 data-en="Your own API key" data-zh="用自己的 API Key">用自己的 API Key</h3>
           <p id="aiApiAbout"></p>
@@ -2091,6 +2099,7 @@
             <a class="link-button" id="aiApiKeyLink" target="_blank" rel="noopener" data-en="Get a key" data-zh="获取 Key">获取 Key</a>
           </div>
         </div>
+        <p class="import-hint" id="aiWeakNote" hidden data-en="This device is not powerful enough for an on-device model; use an API key instead." data-zh="这台设备性能不够跑端侧模型，可以改用 API Key。">这台设备性能不够跑端侧模型，可以改用 API Key。</p>
         <div id="aiLocalBlock" hidden>
           <h3 data-en="On-device model" data-zh="端侧模型">端侧模型</h3>
           <p id="aiAbout"></p>
@@ -2166,6 +2175,15 @@
       </section>
 
       <section class="modal-section" data-tab-panel="add">
+        <div class="ai-wordlist" id="aiWordListRow" hidden>
+          <label>
+            <span data-en="Make a list with AI" data-zh="用 AI 生成词表">用 AI 生成词表</span>
+            <input id="aiWordListInput" type="text" autocomplete="off" placeholder="雅思高频动词 30 个 / 日语 N3 常用词 / 初二 Unit 1–3" data-en-ph="IELTS verbs, 30 / Japanese N3 words / Spanish food words" data-zh-ph="雅思高频动词 30 个 / 日语 N3 常用词 / 初二 Unit 1–3" />
+          </label>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="aiWordListBtn" data-en="Generate with AI" data-zh="AI 生成">AI 生成</button>
+          </div>
+        </div>
         <label>
           <span data-en="Bulk input" data-zh="批量录入">批量录入</span>
           <textarea id="bulkInput" placeholder="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织" data-en-ph="One per line: literature,文学&#10;Or: UNESCO = 联合国教科文组织" data-zh-ph="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织"></textarea>
@@ -2442,7 +2460,7 @@
           on: "On. The model is on this device.", offCached: "Off. The model is still on this device ({mb} MB).", off: "Off.",
           failed: "The model could not be downloaded or started. You can try again; everything else keeps working without it.",
           deleted: "Model deleted, storage freed.", confirmDelete: "Delete the downloaded model (~{mb} MB)? You can download it again later.",
-          apiAbout: "With a key from an AI provider, sentence cards get a full check — where the mistake is, why, and how to fix it, meaning included — mixed-up pairs get explained, and words get example sentences. The key stays on this device (never in backups or exports); what you write on sentence cards is sent to the provider you choose, and it bills your key.",
+          apiAbout: "With a key from an AI provider, sentence cards get a full check — where the mistake is, why, and how to fix it, meaning included — mixed-up pairs get explained, words get example sentences, and Add words can make a whole list — in any language pair. The key stays on this device (never in backups or exports); what you write on sentence cards is sent to the provider you choose, and it bills your key.",
           apiDefault: "Default: {v}", apiTesting: "Testing the key…",
           apiOk: "Connected to {name}. AI is on.", apiOn: "On: {name} · {model}", apiPaused: "Saved but paused.", apiNone: "No key yet.",
           apiNeedKey: "Paste an API key first.", apiNeedCustom: "A custom provider needs a base URL (http…) and a model name.",
@@ -2472,6 +2490,10 @@
           aiChecking: "AI is checking the meaning…", aiMeaningOk: "AI checked: the meaning is right too.",
           aiMeaningBad: "Grammatical, but the meaning is off.", aiWhere: "Where", aiWhy: "Why", aiFix: "Fix",
           aiBetter: "More natural", aiUse: "Use this",
+          aiWrong: "Not quite yet — here is the AI's check.",
+          aiUnavailable: "AI could not check this sentence right now. Try again, or skip this card.",
+          sentenceRuleAi: "Any word order and any form of the word is fine; AI checks grammar and meaning.",
+          noIdea: "No example for this word yet — skip the card if nothing comes to mind.",
           idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
           kind_Agreement: "Agreement", kind_MissingVerb: "Missing verb", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
           kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
@@ -2502,6 +2524,10 @@
           copyFailed: "Couldn't copy automatically. The prompt is in the box above: copy it manually, then clear the box.",
           nothing: "Nothing recognised. Paste the AI's answer (one “word,meaning” per line).",
           imported: "Added {n} words.", dupOnly: "No new words (already in the library).",
+          listNeedRequest: "Say what you want to learn first, e.g. “IELTS verbs, 30”.",
+          listMaking: "AI is writing the list… (up to a minute)",
+          listFailed: "AI could not make the list. Check the API key in Settings, or try a shorter request.",
+          listReady: "{n} words are in the box below. Check them, then tap Bulk add.",
           examplesAdded: "Added example sentences to {n} words already in the library.",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
@@ -2631,7 +2657,7 @@
           on: "已开启，模型已保存在这台设备上。", offCached: "已关闭，模型仍保存在这台设备上（{mb}MB）。", off: "未开启。",
           failed: "模型下载或启动失败。可以再试一次；不开 AI 其他功能都照常可用。",
           deleted: "模型已删除，存储空间已释放。", confirmDelete: "删除已下载的模型（约 {mb}MB）？以后可以重新下载。",
-          apiAbout: "填入 AI 服务商的 Key 后：造句卡会得到完整批改（错在哪、为什么、怎么改，意思也一起查），混淆的词会得到辨析，还会给单词补例句。Key 只存在这台设备上（不进备份和导出）；你在造句卡里写的内容会发给你选的服务商，费用从你的 Key 扣。",
+          apiAbout: "填入 AI 服务商的 Key 后：造句卡会得到完整批改（错在哪、为什么、怎么改，意思也一起查），混淆的词会得到辨析，还会给单词补例句，「添加单词」里还能直接生成词表——任何语言对都可以。Key 只存在这台设备上（不进备份和导出）；你在造句卡里写的内容会发给你选的服务商，费用从你的 Key 扣。",
           apiDefault: "默认：{v}", apiTesting: "正在测试 Key……",
           apiOk: "已连接 {name}，AI 已开启。", apiOn: "已开启：{name} · {model}", apiPaused: "已保存，暂停使用中。", apiNone: "还没有填 Key。",
           apiNeedKey: "请先粘贴 API Key。", apiNeedCustom: "自定义服务商需要填接口地址（http 开头）和模型名。",
@@ -2647,7 +2673,7 @@
           check: "检查", next: "下一题",
           spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
           spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
-          sentenceTitle: "用 {w} 造一个英文句子",
+          sentenceTitle: "用 {w} 造一个句子",
           sentenceRule: "语序不限，语法正确就行；任何词形都算（ran、tubers……）。",
           sentencePlaceholder: "写一个用到 {w} 的句子",
           loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
@@ -2661,6 +2687,10 @@
           aiChecking: "AI 正在检查意思……", aiMeaningOk: "AI 已检查：意思也对。",
           aiMeaningBad: "语法没问题，但意思不对。", aiWhere: "错在哪", aiWhy: "为什么", aiFix: "怎么改",
           aiBetter: "更地道的说法", aiUse: "用这句",
+          aiWrong: "还不太对，看看 AI 的批改：",
+          aiUnavailable: "AI 暂时没能检查这句话。可以再试一次，或者跳过这张卡。",
+          sentenceRuleAi: "语序不限，任何词形都算；AI 会检查语法和意思。",
+          noIdea: "这个词还没有例句，实在没思路就跳过这张卡。",
           idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
           kind_Agreement: "主谓一致", kind_MissingVerb: "缺少谓语", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
           kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
@@ -2691,6 +2721,10 @@
           copyFailed: "无法自动复制，提示词已放进上面的输入框，请手动复制后再清空输入框。",
           nothing: "没有识别到内容。请粘贴 AI 的回答（每行一个“单词,释义”）。",
           imported: "已添加 {n} 个单词。", dupOnly: "没有新增单词（都已在词库里）。",
+          listNeedRequest: "先写想背什么，比如「雅思高频动词 30 个」。",
+          listMaking: "AI 正在生成词表……（最多一分钟左右）",
+          listFailed: "AI 没能生成词表。请检查设置里的 API Key，或者把需求写短一点。",
+          listReady: "{n} 个词已经放进下面的输入框，检查一下再点「批量添加」。",
           examplesAdded: "已为词库里已有的 {n} 个词补上例句。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
@@ -2794,7 +2828,7 @@
       streakTones: true,
       langPair: { a: "English", b: "中文" },
       // On-device model (js/ai.js). Off until the learner downloads it in Settings.
-      ai: { on: false }
+      ai: { on: false, enabled: true }
     };
     const LANG_PAIR_PRESETS = [
       { a: "English", b: "中文" },
@@ -2878,6 +2912,11 @@
       aiStatus: document.getElementById("aiStatus"),
       aiToggleBtn: document.getElementById("aiToggleBtn"),
       aiDeleteBtn: document.getElementById("aiDeleteBtn"),
+      aiEnabled: document.getElementById("aiEnabled"),
+      aiWeakNote: document.getElementById("aiWeakNote"),
+      aiWordListRow: document.getElementById("aiWordListRow"),
+      aiWordListInput: document.getElementById("aiWordListInput"),
+      aiWordListBtn: document.getElementById("aiWordListBtn"),
       aiApiBlock: document.getElementById("aiApiBlock"),
       aiLocalBlock: document.getElementById("aiLocalBlock"),
       aiApiAbout: document.getElementById("aiApiAbout"),
@@ -3056,7 +3095,7 @@
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
         langPair: normalizeLangPair(raw.langPair),
-        ai: { on: Boolean(raw.ai && raw.ai.on === true) }
+        ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
     }
 
@@ -4811,13 +4850,13 @@
         + (pairs.length
           ? `<li class="confusion-note">${t("timeouts.confusedPairs", { list: pairs.map(([a, b]) => `${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}`).join(currentLang === "zh" ? "；" : "; ") })}</li>`
           : "")
-        + (aiApiOn() && aiLanguageOk() && !isTrial()
-          ? pairs.filter(([a, b]) => latinWord(a) && latinWord(b)).map(([a, b]) => contrastItem(a, b)).join("")
+        + (aiApiOn() && !isTrial()
+          ? pairs.map(([a, b]) => contrastItem(a, b)).join("")
           : "");
     }
 
     // AI explanations of mixed-up pairs (API key only), kept for this visit.
-    const aiContrasts = new Map(); // "idA|idB" → { diffZh, aEx, bEx } | "loading" | "failed"
+    const aiContrasts = new Map(); // "idA|idB" → { diff, aEx, bEx } | "loading" | "failed"
 
     function contrastItem(a, b) {
       const key = `${a.id}|${b.id}`;
@@ -4827,7 +4866,7 @@
           + (found === "failed" ? ` <span class="drill-muted">${t("timeouts.contrastFailed")}</span>` : "") + "</li>";
       }
       if (found === "loading") return `<li class="ai-contrast drill-muted">${t("timeouts.contrastLoading")}</li>`;
-      return `<li class="ai-contrast"><p><b>${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}</b></p><p>${escapeHtml(found.diffZh)}</p>`
+      return `<li class="ai-contrast"><p><b>${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}</b></p><p>${escapeHtml(found.diff)}</p>`
         + (found.aEx ? `<p class="drill-muted">${escapeHtml(found.aEx)}</p>` : "")
         + (found.bEx ? `<p class="drill-muted">${escapeHtml(found.bEx)}</p>` : "") + "</li>";
     }
@@ -4839,7 +4878,7 @@
       aiContrasts.set(key, "loading");
       renderReviewList();
       const ai = await aiReady();
-      const result = ai && ai.strong ? await ai.contrast(a.en, a.zh, b.en, b.zh) : null;
+      const result = ai && ai.strong ? await ai.contrast(a.en, a.zh, b.en, b.zh, aiLang()) : null;
       aiContrasts.set(key, result || "failed");
       renderReviewList();
     }
@@ -4867,9 +4906,39 @@
       return aiModule;
     }
 
-    function aiLanguageOk() {
-      const { a, b } = state.settings.langPair;
-      return /^(english|英语|英文)$/i.test(a) && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    /** The small on-device models were only tested for English → Chinese. API models take any pair. */
+    function localLanguageOk() {
+      const { b } = state.settings.langPair;
+      return targetIsEnglish() && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    }
+
+    /** Side A is English: the on-device grammar checker (Harper) applies. */
+    function targetIsEnglish() {
+      return /^(english|英语|英文)$/i.test(state.settings.langPair.a);
+    }
+
+    /** The language pair for AI prompts: study A, explain in B. */
+    function aiLang() {
+      return { a: state.settings.langPair.a, b: state.settings.langPair.b };
+    }
+
+    function aiEnabled() {
+      return state.settings.ai.enabled !== false;
+    }
+
+    /** Below 8 GB (Chrome reports at most 8) an on-device model is too slow to be worth it. */
+    function weakDevice() {
+      return typeof navigator.deviceMemory === "number" && navigator.deviceMemory < 8;
+    }
+
+    /** Whether the text uses the word (or a form of it: comí for comer, 食べた for 食べる). */
+    function usesWord(text, word) {
+      const t1 = String(text).toLowerCase(), w = String(word).toLowerCase().trim();
+      if (!w) return false;
+      if (t1.includes(w)) return true;
+      const cjk = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(w);
+      const stem = cjk ? (w.length >= 3 ? w.slice(0, -1) : w) : (w.length >= 5 ? w.slice(0, -2) : w);
+      return t1.includes(stem);
     }
 
     /** Checks WebGPU and whether the model is already on this device. Runs once. */
@@ -4877,6 +4946,7 @@
       if (!aiInitPromise) {
         aiInitPromise = (async () => {
           if (!("gpu" in navigator)) { aiState.support = { webgpu: false }; return; }
+          if (weakDevice()) { aiState.support = { webgpu: false, weak: true }; return; }
           const mod = await loadAiModule();
           aiState.support = await mod.detect();
           if (!aiState.support.webgpu) return;
@@ -4884,7 +4954,7 @@
           aiState.cached = await aiState.ai.isCached();
           if (state.settings.ai.on && !aiState.cached) {
             // The browser evicted the model (or it was never finished): ask again in Settings.
-            state.settings.ai = { on: false };
+            state.settings.ai = { ...state.settings.ai, on: false };
             saveWords();
           }
         })().catch(() => { aiState.support = { webgpu: false }; });
@@ -4894,12 +4964,16 @@
 
     function syncAiUI() {
       if (!els.aiSection) return;
-      els.aiSection.hidden = !aiLanguageOk();
-      if (els.aiSection.hidden) return;
-      syncAiApiUI();
+      els.aiSection.hidden = false;
+      const enabled = aiEnabled();
+      els.aiEnabled.checked = enabled;
+      els.aiApiBlock.hidden = !enabled;
+      syncAiWordListUI();
+      if (enabled) syncAiApiUI();
       const ai = aiState.ai;
-      els.aiLocalBlock.hidden = !ai;
-      if (!ai) return;
+      els.aiWeakNote.hidden = !enabled || !(aiState.support && aiState.support.weak);
+      els.aiLocalBlock.hidden = !enabled || !ai || !localLanguageOk();
+      if (els.aiLocalBlock.hidden) return;
       const mb = ai.model.downloadMB;
       els.aiAbout.textContent = t("aiSettings.about", { name: ai.model.name, mb });
       const on = state.settings.ai.on;
@@ -4930,7 +5004,7 @@
       if (!ai || aiState.busy) return;
       aiState.message = "";
       if (state.settings.ai.on) {
-        state.settings.ai = { on: false };
+        state.settings.ai = { ...state.settings.ai, on: false };
         saveWords();
         await ai.unload();
         syncAiUI();
@@ -4947,7 +5021,7 @@
         });
         aiState.cached = true;
         aiState.progress = 1;
-        state.settings.ai = { on: true };
+        state.settings.ai = { ...state.settings.ai, on: true };
         saveWords();
       } catch (error) {
         aiState.message = t("aiSettings.failed");
@@ -4973,7 +5047,7 @@
       aiState.progress = 0;
       aiState.message = aiState.cached ? t("aiSettings.failed") : t("aiSettings.deleted");
       aiState.messageKind = aiState.cached ? "bad" : "good";
-      state.settings.ai = { on: false };
+      state.settings.ai = { ...state.settings.ai, on: false };
       saveWords();
       syncAiUI();
     }
@@ -5011,12 +5085,12 @@
 
     /** Cheap, synchronous: is a key saved and switched on? */
     function aiApiOn() {
-      return Boolean(aiApiConfig && aiApiConfig.on === true && aiApiConfig.key);
+      return aiEnabled() && Boolean(aiApiConfig && aiApiConfig.on === true && aiApiConfig.key);
     }
 
     /** Whether any AI is meant to run (API key on, or the on-device model on). */
     function aiWanted() {
-      return aiApiOn() || state.settings.ai.on;
+      return aiApiOn() || (aiEnabled() && state.settings.ai.on && localLanguageOk());
     }
 
     /** The API-backed AI, or null when no key is on. Never throws. */
@@ -5148,12 +5222,43 @@
       syncAiUI();
     }
 
+    function syncAiWordListUI() {
+      if (els.aiWordListRow) els.aiWordListRow.hidden = !aiApiOn();
+    }
+
+    /** "Make a list with AI": writes the list into the bulk box in the import format; the learner checks it and taps Bulk add. */
+    async function aiMakeWordList() {
+      const request = els.aiWordListInput.value.trim();
+      if (!request) {
+        setImportStatus(t("ai.listNeedRequest"), "bad");
+        els.aiWordListInput.focus();
+        return;
+      }
+      els.aiWordListBtn.disabled = true;
+      setImportStatus(t("ai.listMaking"), "");
+      try {
+        const ai = await aiApiReady();
+        const list = ai ? await ai.wordList(request, aiLang(), 60) : null;
+        if (!list) {
+          setImportStatus(t("ai.listFailed"), "bad");
+          return;
+        }
+        const mod = await loadAiModule();
+        els.bulkInput.value = mod.wordListToImport(list);
+        setImportStatus(t("ai.listReady", { n: list.items.length }), "good");
+      } catch (error) {
+        setImportStatus(t("ai.listFailed"), "bad");
+      } finally {
+        els.aiWordListBtn.disabled = false;
+      }
+    }
+
     /** The model, started if it is on and already downloaded; null otherwise. Never downloads. */
     async function aiReady() {
-      if (!aiLanguageOk() || isTrial()) return null;
+      if (!aiEnabled() || isTrial()) return null;
       const api = await aiApiReady();
       if (api) return api;
-      if (!state.settings.ai.on) return null;
+      if (!state.settings.ai.on || !localLanguageOk()) return null;
       await aiInit();
       const ai = aiState.ai;
       if (!ai || !aiState.cached || !state.settings.ai.on) return null;
@@ -5171,12 +5276,18 @@
       try {
         ai = ai || await aiReady();
         if (!ai) return null;
-        mod = mod || await loadSentenceModule();
-        const example = await ai.example(word.en, word.zh);
-        if (!example || !example.zh || word.ex) return null;
-        const check = await mod.checkSentence(word.en, example.en);
-        if (!check.ok || !check.target.found) return null;
-        setExample(word, example.en, example.zh, true);
+        const english = targetIsEnglish();
+        if (!english && !ai.strong) return null;
+        const example = await ai.example(word.en, word.zh, aiLang());
+        if (!example || !example.tr || word.ex) return null;
+        if (english) {
+          mod = mod || await loadSentenceModule();
+          const check = await mod.checkSentence(word.en, example.text);
+          if (!check.ok || !check.target.found) return null;
+        } else if (!usesWord(example.text, word.en)) {
+          return null;
+        }
+        setExample(word, example.text, example.tr, true);
         saveWords();
         return example;
       } catch (error) {
@@ -5192,9 +5303,11 @@
       try {
         const ai = await aiReady();
         if (!ai) return;
-        const mod = await loadSentenceModule();
+        const english = targetIsEnglish();
+        if (!english && !ai.strong) return;
+        const mod = english ? await loadSentenceModule() : null;
         const limit = ai.strong ? 10 : 3;
-        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && latinWord(word)).slice(0, limit);
+        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && (!english || latinWord(word))).slice(0, limit);
         for (const word of words) {
           await aiExampleFor(word, ai, mod);
         }
@@ -5232,9 +5345,11 @@
       const lastSentenceAt = word => Math.max(0, ...(word.sentences || []).map(x => x.at || 0));
       // Sentences: words that are recognised but not yet well used — answered more than once,
       // out of the short-term steps, stability around a few days. English side A only (the checker is English).
-      const sentence = /^english$/i.test(state.settings.langPair.a)
+      // Other languages: only with an API key, which then checks the whole sentence.
+      const english = targetIsEnglish();
+      const sentence = english || aiApiOn()
         ? state.words
-          .filter(word => word.srs && latinWord(word) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
+          .filter(word => word.srs && (!english || latinWord(word)) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
           .sort((a, b) => Number(state.blockWords.has(b.id)) - Number(state.blockWords.has(a.id))
             || Math.abs(Math.log(a.srs.S / 3)) - Math.abs(Math.log(b.srs.S / 3)))
         : [];
@@ -5321,7 +5436,7 @@
         focusDrill(els.drillSpell);
       } else {
         els.drillTitle.innerHTML = t("drill.sentenceTitle", { w: `<b>${escapeHtml(card.word.en)}</b>` });
-        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t("drill.sentenceRule"))}</small>`;
+        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t(targetIsEnglish() ? "drill.sentenceRule" : "drill.sentenceRuleAi"))}</small>`;
         els.drillSpell.hidden = true;
         els.drillSentence.hidden = false;
         els.drillHint.hidden = false;
@@ -5408,7 +5523,7 @@
     function aiFeedbackHtml(feedback) {
       const rows = [];
       if (feedback.where) rows.push(`<p><b>${t("drill.aiWhere")}</b>${escapeHtml(feedback.where)}</p>`);
-      if (feedback.whyZh) rows.push(`<p><b>${t("drill.aiWhy")}</b>${escapeHtml(feedback.whyZh)}</p>`);
+      if (feedback.why) rows.push(`<p><b>${t("drill.aiWhy")}</b>${escapeHtml(feedback.why)}</p>`);
       if (feedback.fix) rows.push(`<p><b>${t("drill.aiFix")}</b>${escapeHtml(feedback.fix)} <button class="drill-fix" type="button" data-fill="${escapeHtml(feedback.fix)}">${t("drill.aiUse")}</button></p>`);
       return rows.length ? `<div class="drill-ai">${rows.join("")}</div>` : "";
     }
@@ -5416,9 +5531,9 @@
     function renderSentenceResult(card) {
       const { result, text, feedback } = card;
       const parts = [];
-      if (result.ok && feedback && !feedback.ok) {
+      if (feedback && !feedback.ok && (result.ok || result.aiOnly)) {
         parts.push(`<p class="drill-sentence">${markQuote(text, feedback.where)}</p>`);
-        parts.push(`<p class="drill-bad">${t("drill.aiMeaningBad")}</p>`);
+        parts.push(`<p class="drill-bad">${t(result.aiOnly ? "drill.aiWrong" : "drill.aiMeaningBad")}</p>`);
         parts.push(aiFeedbackHtml(feedback));
       } else if (result.ok) {
         parts.push(`<p class="drill-ok">${t("drill.sentenceOk")}</p>`);
@@ -5448,7 +5563,7 @@
           `<button class="drill-fix" type="button" data-issue="${result.issues.indexOf(issue)}" data-fix="${escapeHtml(sug)}">${escapeHtml(sug)}</button>`).join(" ")}` : ""}<small>${escapeHtml(issue.message)}</small></li>`).join("")}</ul>`);
       }
       if (result.structure.includes("noVerb") && !result.ok) parts.push(`<p class="drill-muted">${t("drill.noVerb")}</p>`);
-      if (!result.ok && feedback && !feedback.ok) parts.push(aiFeedbackHtml(feedback));
+      if (!result.ok && !result.aiOnly && feedback && !feedback.ok) parts.push(aiFeedbackHtml(feedback));
       els.drillResult.innerHTML = parts.join("");
     }
 
@@ -5457,30 +5572,43 @@
       const text = els.drillSentence.value.trim();
       if (!text) return;
       els.drillSubmit.disabled = true;
-      els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
-      let mod;
-      try {
-        mod = await loadSentenceModule();
-      } catch (error) {
-        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
-        els.drillSubmit.disabled = false;
-        return;
+      // English: the on-device checker decides grammar. Other languages: the API model checks everything.
+      const english = targetIsEnglish();
+      let result = null;
+      if (english) {
+        els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
+        let mod;
+        try {
+          mod = await loadSentenceModule();
+        } catch (error) {
+          els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+          els.drillSubmit.disabled = false;
+          return;
+        }
+        result = await mod.checkSentence(card.word.en, text);
+        if (drill.list[drill.index] !== card) return; // moved on while checking
       }
-      const result = await mod.checkSentence(card.word.en, text);
-      if (drill.list[drill.index] !== card) return; // moved on while checking
       // A strong model (API key) also checks the meaning and explains mistakes.
       // Grammar stays the checker's call; the model adds where / why / fix.
       let feedback = null;
-      const ai = result.target.found && !result.structure.includes("onlyWord") ? await aiReady() : null;
+      const ai = !english || (result.target.found && !result.structure.includes("onlyWord")) ? await aiReady() : null;
       if (ai && ai.strong) {
         els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.aiChecking")}</p>`;
-        const note = result.issues.filter(issue => !issue.minor)
+        const note = english ? result.issues.filter(issue => !issue.minor)
           .map(issue => `${text.slice(issue.start, issue.end)}: ${issue.message}${issue.suggestions.length ? ` → ${issue.suggestions.join(" / ")}` : ""}`)
-          .join("; ");
-        feedback = await ai.feedback(card.word.en, card.word.zh, text, note);
+          .join("; ") : "";
+        feedback = await ai.feedback(card.word.en, card.word.zh, text, note, aiLang());
         if (drill.list[drill.index] !== card) return;
       }
       els.drillSubmit.disabled = false;
+      if (!english) {
+        if (!feedback) {
+          // No grade without a check; the card can be skipped.
+          els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.aiUnavailable")}</p>`;
+          return;
+        }
+        result = { ok: feedback.ok, aiOnly: true, issues: [], structure: [], target: { found: true } };
+      }
       card.attempts += 1;
       card.result = result;
       card.text = text;
@@ -5529,9 +5657,16 @@
           const idea = await aiExampleFor(card.word);
           if (drill.list[drill.index] !== card) return;
           if (idea) {
-            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.zh), w: escapeHtml(card.word.en) })}</p>`;
+            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.tr), w: escapeHtml(card.word.en) })}</p>`;
             return;
           }
+        }
+        if (!targetIsEnglish()) {
+          // Sentence frames exist for English only.
+          els.drillResult.innerHTML = `<p class="drill-muted">${card.word.exZh
+            ? t("drill.idea", { text: escapeHtml(card.word.exZh), w: escapeHtml(card.word.en) })
+            : t("drill.noIdea")}</p>`;
+          return;
         }
         const mod = await loadSentenceModule();
         const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
@@ -5559,6 +5694,22 @@
     });
     if (els.aiToggleBtn) els.aiToggleBtn.addEventListener("click", aiToggle);
     if (els.aiDeleteBtn) els.aiDeleteBtn.addEventListener("click", aiDelete);
+    if (els.aiEnabled) {
+      els.aiEnabled.addEventListener("change", async () => {
+        state.settings.ai = { ...state.settings.ai, enabled: els.aiEnabled.checked };
+        saveWords();
+        // Off frees the on-device model's memory right away.
+        if (!els.aiEnabled.checked && aiState.ai) await aiState.ai.unload();
+        syncAiUI();
+        renderReviewList();
+      });
+    }
+    if (els.aiWordListBtn) {
+      els.aiWordListBtn.addEventListener("click", aiMakeWordList);
+      els.aiWordListInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); aiMakeWordList(); }
+      });
+    }
     if (els.aiApiBlock) {
       els.aiApiSaveBtn.addEventListener("click", aiApiSave);
       els.aiApiToggleBtn.addEventListener("click", aiApiToggle);
@@ -5952,7 +6103,7 @@
       els.libraryModal.querySelector(".modal-card").scrollTop = 0;
       if (libraryTab === "list") renderCustomList();
       if (libraryTab === "print") { setPrintStatus(""); renderPrintPanel(); }
-      if (libraryTab === "add") syncDropSamplesRow();
+      if (libraryTab === "add") { syncDropSamplesRow(); syncAiWordListUI(); }
       // Don't pop the on-screen keyboard over the library on phones.
       if (libraryTab === "add" && (!window.matchMedia || !matchMedia("(pointer: coarse)").matches)) els.newEnglish.focus();
     }
