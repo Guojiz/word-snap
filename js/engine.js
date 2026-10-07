@@ -307,7 +307,7 @@
       word.srs = null;
       return word;
     }
-    const BOX_S = [0.02, 0.15, 1, 2, 5, 20];
+    const BOX_S = [0.02, 0.15, 1, 2, 5, 25]; // box 5 stays "mastered" (S ≥ 21)
     const box = clamp(Math.round(isNum(word.box) ? word.box : 0), 0, 5);
     const S = BOX_S[box];
     const total = (word.seen || 0) + (word.mistakes || 0);
@@ -572,12 +572,16 @@
       return chosen;
     }
 
-    /** Close the current block: reward the bandit arm used, pick the next arm. Returns the block summary. */
-    function endBlock(now = Date.now()) {
+    /**
+     * Close the current block: reward the bandit arm used, pick the next arm.
+     * `activeMs` is the time actually spent playing (pauses excluded), when known.
+     * Returns the block summary.
+     */
+    function endBlock(now = Date.now(), activeMs) {
       const block = state.block;
       state.block = null;
       if (!block || block.pairs < 5) return block;
-      const minutes = Math.max(1, (now - block.startAt) / MIN_MS);
+      const minutes = Math.max(0.5, (activeMs > 0 ? activeMs : now - block.startAt) / MIN_MS);
       const reward = block.gain / minutes - 0.05 * Math.max(0, block.maxMissRun - 2);
       const bandit = state.bandit;
       const a = bandit.arms[bandit.cur];
@@ -632,8 +636,9 @@
       return counts;
     }
 
+    /** Plain JSON-safe state for saving (saved on every match, so no deep copy). */
     function serialize() {
-      return JSON.parse(JSON.stringify(state));
+      return state;
     }
 
     return {
