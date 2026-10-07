@@ -1,10 +1,12 @@
-const CACHE_NAME = "word-snap-v42";
+const CACHE_NAME = "word-snap-v45";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./vocabulary-match.html",
   "./js/engine.js",
   "./js/sentence.js",
+  "./js/ai.js",
+  "./js/ai-worker.js",
   "./manifest.webmanifest",
   "./apple-touch-icon.png",
   "./icon-192.png",
@@ -23,7 +25,8 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+      // Only our own old versions: the on-device AI keeps its model in "webllm/…" caches.
+      .then(keys => Promise.all(keys.filter(key => key.startsWith("word-snap-") && key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });

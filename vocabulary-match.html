@@ -1604,6 +1604,22 @@
       grid-column: 1 / -1;
     }
 
+    .ai-section progress {
+      width: 100%;
+      height: 10px;
+      accent-color: var(--green);
+    }
+
+    .ai-tag {
+      margin-left: 4px;
+      padding: 0 5px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--dim);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
     .forecast {
       margin-bottom: 14px;
       border: 2px solid var(--line);
@@ -2011,6 +2027,17 @@
         <p class="import-status" id="optionsStatus" role="status" aria-live="polite"></p>
       </section>
 
+      <section class="modal-section ai-section" id="aiSection" aria-labelledby="aiTitle" hidden>
+        <h2 id="aiTitle" data-en="On-device AI (optional)" data-zh="端侧 AI（可选）">端侧 AI（可选）</h2>
+        <p id="aiAbout"></p>
+        <progress id="aiProgress" max="1" value="0" hidden></progress>
+        <p class="import-status" id="aiStatus" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="duo-button" type="button" id="aiToggleBtn"></button>
+          <button class="small-button" type="button" id="aiDeleteBtn" data-en="Delete model" data-zh="删除模型" hidden>删除模型</button>
+        </div>
+      </section>
+
       <section class="modal-section danger-zone" aria-labelledby="resetTitle">
         <h2 id="resetTitle" data-en="Reset learning progress" data-zh="重置学习进度">重置学习进度</h2>
         <p data-en="Puts every word back to “new” and clears the score. Your word list is kept. This cannot be undone." data-zh="把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。">把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。</p>
@@ -2276,7 +2303,7 @@
           emptyListA: "No words yet", emptyListB: "Add some above",
           dueNow: "Due now", dueToday: "Later today", dueTomorrow: "Tomorrow", dueInDays: "In {n} days",
           forecastTitle: "Reviews in the next 7 days", dayToday: "Today", dayTomorrow: "Tmrw",
-          mySentences: "My sentences: ",
+          mySentences: "My sentences: ", aiExample: "Written by the on-device AI and checked for grammar",
           langPairLabel: "Language pair", custom: "Custom", sideA: "Side A", sideB: "Side B",
           stage_all: "All", stage_learning: "Learning", stage_review: "In review", stage_new: "New", stage_mastered: "Mastered",
           groupHint_learning: "come up first", groupHint_review: "spaced review", groupHint_new: "join practice in this order", groupHint_mastered: "occasional spot checks",
@@ -2342,6 +2369,14 @@
           flow_endless: "Endless (recommended)", flow_levels: "Timed levels",
           drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards"
         },
+        aiSettings: {
+          about: "Runs a small language model ({name}) on this device: when you have no idea for a sentence card it suggests a situation in Chinese, and it writes example sentences for words that have none (each one passes the grammar check first). Free, no account, nothing you write leaves the device. It needs English–Chinese words and a download of about {mb} MB, once.",
+          enable: "Download and turn on (~{mb} MB)", resume: "Continue download (~{mb} MB)", turnOn: "Turn on", turnOff: "Turn off",
+          downloading: "Downloading… {pct}% — keep this page open. It works offline afterwards.", loading: "Starting the model…",
+          on: "On. The model is on this device.", offCached: "Off. The model is still on this device ({mb} MB).", off: "Off.",
+          failed: "The model could not be downloaded or started. You can try again; everything else keeps working without it.",
+          deleted: "Model deleted, storage freed.", confirmDelete: "Delete the downloaded model (~{mb} MB)? You can download it again later."
+        },
         drill: {
           kicker: "Practice {i}/{n} · {type}", type_spell: "Spelling", type_sentence: "Make a sentence",
           check: "Check", next: "Next",
@@ -2358,7 +2393,7 @@
           notUsed: "The sentence doesn't use {w} yet (any form is fine).",
           short: "Write at least 4 words.", onlyWord: "Write a whole sentence, not just the word.",
           noVerb: "Tip: the sentence may be missing a verb.",
-          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}",
+          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
           kind_Agreement: "Agreement", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
           kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
           kind_WordChoice: "Word choice", kind_Usage: "Usage", kind_Repetition: "Repeated word", kind_Regionalism: "British spelling (fine)",
@@ -2443,7 +2478,7 @@
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
           dueNow: "待复习", dueToday: "今天稍后", dueTomorrow: "明天", dueInDays: "{n} 天后",
           forecastTitle: "未来 7 天复习量", dayToday: "今天", dayTomorrow: "明天",
-          mySentences: "我的例句：",
+          mySentences: "我的例句：", aiExample: "由端侧 AI 生成，已通过语法检查",
           langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
           stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
           groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
@@ -2509,6 +2544,14 @@
           flow_endless: "无限练习（推荐）", flow_levels: "限时关卡",
           drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张"
         },
+        aiSettings: {
+          about: "在这台设备上运行一个小语言模型（{name}）：造句卡没有思路时，给你一句中文情景；没有例句的词，自动补上例句（每句都先过语法检查）。免费，不用账号，你写的内容不会离开这台设备。需要词库是英文–中文，并下载约 {mb}MB，只需一次。",
+          enable: "下载并开启（约 {mb}MB）", resume: "继续下载（约 {mb}MB）", turnOn: "开启", turnOff: "关闭",
+          downloading: "正在下载…… {pct}%，请不要关闭页面。下载完之后可以离线使用。", loading: "正在启动模型……",
+          on: "已开启，模型已保存在这台设备上。", offCached: "已关闭，模型仍保存在这台设备上（{mb}MB）。", off: "未开启。",
+          failed: "模型下载或启动失败。可以再试一次；不开 AI 其他功能都照常可用。",
+          deleted: "模型已删除，存储空间已释放。", confirmDelete: "删除已下载的模型（约 {mb}MB）？以后可以重新下载。"
+        },
         drill: {
           kicker: "小练习 {i}/{n} · {type}", type_spell: "拼写", type_sentence: "造句",
           check: "检查", next: "下一题",
@@ -2525,7 +2568,7 @@
           notUsed: "句子里还没有用到 {w}（任何词形都可以）。",
           short: "至少写 4 个词。", onlyWord: "请写一个完整的句子，不要只写这个词。",
           noVerb: "提示：句子可能缺少谓语动词。",
-          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}",
+          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
           kind_Agreement: "主谓一致", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
           kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
           kind_WordChoice: "用词", kind_Usage: "用法", kind_Repetition: "重复", kind_Regionalism: "英式拼写（没问题）",
@@ -2656,7 +2699,9 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
-      langPair: { a: "English", b: "中文" }
+      langPair: { a: "English", b: "中文" },
+      // On-device model (js/ai.js). Off until the learner downloads it in Settings.
+      ai: { on: false }
     };
     const LANG_PAIR_PRESETS = [
       { a: "English", b: "中文" },
@@ -2734,6 +2779,12 @@
       drillSkip: document.getElementById("drillSkip"),
       forecast: document.getElementById("forecast"),
       optionsStatus: document.getElementById("optionsStatus"),
+      aiSection: document.getElementById("aiSection"),
+      aiAbout: document.getElementById("aiAbout"),
+      aiProgress: document.getElementById("aiProgress"),
+      aiStatus: document.getElementById("aiStatus"),
+      aiToggleBtn: document.getElementById("aiToggleBtn"),
+      aiDeleteBtn: document.getElementById("aiDeleteBtn"),
       addOneStatus: document.getElementById("addOneStatus"),
       reviewHeading: document.getElementById("reviewHeading"),
       reviewList: document.getElementById("reviewList"),
@@ -2839,16 +2890,20 @@
         draws: 0,
         lastDrawRound: 0
       };
-      setExample(word, extra && extra.ex, extra && extra.exZh);
+      setExample(word, extra && extra.ex, extra && extra.exZh, extra && extra.exAi === true);
       return word;
     }
 
-    /** Optional example sentence (side A) and its translation (side B). Only stored when present. */
-    function setExample(word, ex, exZh) {
+    /**
+     * Optional example sentence (side A) and its translation (side B). Only stored when present.
+     * `ai` marks one written by the on-device model, so the library can say so.
+     */
+    function setExample(word, ex, exZh, ai) {
       ex = typeof ex === "string" ? ex.trim().slice(0, 300) : "";
       exZh = typeof exZh === "string" ? exZh.trim().slice(0, 300) : "";
       if (ex) word.ex = ex; else delete word.ex;
       if (ex && exZh) word.exZh = exZh; else delete word.exZh;
+      if (ex && ai) word.exAi = true; else delete word.exAi;
     }
 
     function readSavedState() {
@@ -2895,7 +2950,8 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
-        langPair: normalizeLangPair(raw.langPair)
+        langPair: normalizeLangPair(raw.langPair),
+        ai: { on: Boolean(raw.ai && raw.ai.on === true) }
       };
     }
 
@@ -3600,7 +3656,7 @@
     function exampleLine(word) {
       const own = (word.sentences || []).filter(x => x.ok).map(x => x.text);
       return [
-        word.ex ? `<span class="cr-ex">${escapeHtml(word.ex)}${word.exZh ? ` <small>${escapeHtml(word.exZh)}</small>` : ""}</span>` : "",
+        word.ex ? `<span class="cr-ex">${escapeHtml(word.ex)}${word.exZh ? ` <small>${escapeHtml(word.exZh)}</small>` : ""}${word.exAi ? `<span class="ai-tag" title="${escapeHtml(t("library.aiExample"))}">AI</span>` : ""}</span>` : "",
         own.length ? `<span class="cr-ex cr-own">${t("library.mySentences")}${escapeHtml(own.slice(-2).join(" · "))}</span>` : ""
       ].join("");
     }
@@ -4657,6 +4713,181 @@
     // once from the answer). Sentences are checked on this device (js/sentence.js);
     // the first submission decides the grade — a pass counts as Easy (producing a
     // word is stronger than recognising it), corrections afterwards are for learning.
+    // ---- On-device AI (optional, js/ai.js) ----
+    // A small WebGPU model, downloaded only when the learner asks for it in Settings.
+    // It suggests a Chinese idea on sentence cards and writes example sentences for
+    // words without one; every example must pass the grammar check before it is kept.
+    // It never grades: the model eval found no small model that judges meaning reliably.
+    // Any failure or timeout falls back to the rules layer silently.
+    const aiState = { support: null, ai: null, busy: false, progress: 0, cached: false, message: "", messageKind: "" };
+    let aiModule = null;
+    let aiInitPromise = null;
+
+    function loadAiModule() {
+      if (!aiModule) aiModule = import("./js/ai.js").catch(error => { aiModule = null; throw error; });
+      return aiModule;
+    }
+
+    function aiLanguageOk() {
+      const { a, b } = state.settings.langPair;
+      return /^(english|英语|英文)$/i.test(a) && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    }
+
+    /** Checks WebGPU and whether the model is already on this device. Runs once. */
+    function aiInit() {
+      if (!aiInitPromise) {
+        aiInitPromise = (async () => {
+          if (!("gpu" in navigator)) { aiState.support = { webgpu: false }; return; }
+          const mod = await loadAiModule();
+          aiState.support = await mod.detect();
+          if (!aiState.support.webgpu) return;
+          aiState.ai = mod.createAI({ model: mod.DEFAULT_MODEL, f16: aiState.support.f16 });
+          aiState.cached = await aiState.ai.isCached();
+          if (state.settings.ai.on && !aiState.cached) {
+            // The browser evicted the model (or it was never finished): ask again in Settings.
+            state.settings.ai = { on: false };
+            saveWords();
+          }
+        })().catch(() => { aiState.support = { webgpu: false }; });
+      }
+      return aiInitPromise;
+    }
+
+    function syncAiUI() {
+      if (!els.aiSection) return;
+      const ai = aiState.ai;
+      els.aiSection.hidden = !ai || !aiLanguageOk();
+      if (els.aiSection.hidden) return;
+      const mb = ai.model.downloadMB;
+      els.aiAbout.textContent = t("aiSettings.about", { name: ai.model.name, mb });
+      const on = state.settings.ai.on;
+      els.aiProgress.hidden = !aiState.busy;
+      els.aiProgress.value = aiState.progress;
+      els.aiToggleBtn.disabled = aiState.busy;
+      els.aiToggleBtn.textContent = on ? t("aiSettings.turnOff")
+        : aiState.cached ? t("aiSettings.turnOn")
+          : aiState.progress > 0 ? t("aiSettings.resume", { mb }) : t("aiSettings.enable", { mb });
+      els.aiDeleteBtn.hidden = !aiState.cached || aiState.busy;
+      let message = aiState.message, kind = aiState.messageKind;
+      if (aiState.busy) {
+        message = aiState.progress < 1 && !aiState.cached
+          ? t("aiSettings.downloading", { pct: Math.floor(aiState.progress * 100) })
+          : t("aiSettings.loading");
+        kind = "";
+      } else if (!message) {
+        message = on ? t("aiSettings.on") : aiState.cached ? t("aiSettings.offCached", { mb }) : t("aiSettings.off");
+      }
+      els.aiStatus.textContent = message;
+      els.aiStatus.className = `import-status${kind ? " " + kind : ""}`;
+    }
+
+    async function aiToggle() {
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || aiState.busy) return;
+      aiState.message = "";
+      if (state.settings.ai.on) {
+        state.settings.ai = { on: false };
+        saveWords();
+        await ai.unload();
+        syncAiUI();
+        return;
+      }
+      aiState.busy = true;
+      syncAiUI();
+      try {
+        // Ask the browser not to evict hundreds of MB of weights under storage pressure.
+        if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+        await ai.load(report => {
+          aiState.progress = Math.max(aiState.progress, Number(report.progress) || 0);
+          syncAiUI();
+        });
+        aiState.cached = true;
+        aiState.progress = 1;
+        state.settings.ai = { on: true };
+        saveWords();
+      } catch (error) {
+        aiState.message = t("aiSettings.failed");
+        aiState.messageKind = "bad";
+      } finally {
+        aiState.busy = false;
+        syncAiUI();
+      }
+    }
+
+    async function aiDelete() {
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || aiState.busy) return;
+      if (!confirm(t("aiSettings.confirmDelete", { mb: ai.model.downloadMB }))) return;
+      aiState.busy = true;
+      syncAiUI();
+      try {
+        await ai.remove();
+      } catch (error) { /* deleting what is not there is fine */ }
+      aiState.cached = await ai.isCached();
+      aiState.busy = false;
+      aiState.progress = 0;
+      aiState.message = aiState.cached ? t("aiSettings.failed") : t("aiSettings.deleted");
+      aiState.messageKind = aiState.cached ? "bad" : "good";
+      state.settings.ai = { on: false };
+      saveWords();
+      syncAiUI();
+    }
+
+    /** The model, started if it is on and already downloaded; null otherwise. Never downloads. */
+    async function aiReady() {
+      if (!state.settings.ai.on || !aiLanguageOk() || isTrial()) return null;
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || !aiState.cached || !state.settings.ai.on) return null;
+      if (!ai.ready) {
+        try { await ai.load(); } catch (error) { return null; }
+      }
+      return ai;
+    }
+
+    /**
+     * A model-written example for `word` that uses it and passes the grammar check,
+     * stored as the word's example (marked AI). → { en, zh } or null.
+     */
+    async function aiExampleFor(word, ai, mod) {
+      try {
+        ai = ai || await aiReady();
+        if (!ai) return null;
+        mod = mod || await loadSentenceModule();
+        const example = await ai.example(word.en, word.zh);
+        if (!example || !example.zh || word.ex) return null;
+        const check = await mod.checkSentence(word.en, example.en);
+        if (!check.ok || !check.target.found) return null;
+        setExample(word, example.en, example.zh, true);
+        saveWords();
+        return example;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    let aiFilling = false;
+    /** Writes example sentences for up to `limit` words of this set that have none. */
+    async function aiFillExamples(limit = 3) {
+      if (aiFilling) return;
+      aiFilling = true;
+      try {
+        const ai = await aiReady();
+        if (!ai) return;
+        const mod = await loadSentenceModule();
+        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && latinWord(word)).slice(0, limit);
+        for (const word of words) {
+          await aiExampleFor(word, ai, mod);
+        }
+      } catch (error) {
+        // Rules layer only; nothing to show.
+      } finally {
+        aiFilling = false;
+      }
+    }
+
     const drill = { list: [], index: 0 };
     let sentenceModule = null;
     let sentenceModuleReady = false;
@@ -4707,6 +4938,8 @@
       drill.list = pickDrills();
       drill.index = 0;
       renderDrill();
+      // Background: examples for this set's words feed the next spelling cards.
+      if (state.settings.ai.on) aiFillExamples();
     }
 
     function stopDrills() {
@@ -4930,6 +5163,17 @@
       const card = drill.list[drill.index];
       if (!card || card.type !== "sentence") return;
       try {
+        if (!card.word.exZh && state.settings.ai.on) {
+          els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.thinking")}</p>`;
+          // The idea is the translation of a model-written example that passed the grammar
+          // check (the model's free-form ideas were too thin); the example is kept for later cards.
+          const idea = await aiExampleFor(card.word);
+          if (drill.list[drill.index] !== card) return;
+          if (idea) {
+            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.zh), w: escapeHtml(card.word.en) })}</p>`;
+            return;
+          }
+        }
         const mod = await loadSentenceModule();
         const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
         els.drillResult.innerHTML = `<p class="drill-muted">${hint.kind === "idea"
@@ -4948,6 +5192,8 @@
       els.drillSentence.value = card.text.slice(0, issue.start) + button.dataset.fix + card.text.slice(issue.end);
       els.drillSentence.focus();
     });
+    if (els.aiToggleBtn) els.aiToggleBtn.addEventListener("click", aiToggle);
+    if (els.aiDeleteBtn) els.aiDeleteBtn.addEventListener("click", aiDelete);
     els.drillSpell.addEventListener("keydown", event => {
       if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
     });
@@ -5356,6 +5602,7 @@
       pauseLevel();
       if (els.optionsStatus) els.optionsStatus.textContent = "";
       syncOptionsUI();
+      aiInit().then(syncAiUI);
     }
 
     function closeSettings() {
@@ -5467,6 +5714,7 @@
       els.recycleMastered.checked = state.settings.recycleMastered;
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
       syncLangPairUI();
+      syncAiUI();
     }
 
     function saveOptionsFromUI() {
@@ -5498,7 +5746,8 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
-        langPair
+        langPair,
+        ai: state.settings.ai
       });
       state.settings = nextSettings;
       if (els.modeSelect && ["adaptive", "weak", "all"].includes(els.modeSelect.value)) {
