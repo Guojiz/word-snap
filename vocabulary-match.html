@@ -254,6 +254,155 @@
       margin-bottom: 54px;
     }
 
+    /* Focus mode: everything but the board fades out. Space is kept, so no card moves under a finger. */
+    .rail > *,
+    .mobile-nav,
+    .today-bar,
+    .prompt-kicker,
+    #practiceView > h1 {
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    body.focus-mode .rail > *,
+    body.focus-mode .mobile-nav,
+    body.focus-mode .today-bar,
+    body.focus-mode .prompt-kicker,
+    body.focus-mode #practiceView > h1 {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .rail {
+      transition: border-color 0.4s ease;
+    }
+
+    body.focus-mode .rail {
+      border-right-color: transparent;
+    }
+
+    /* Effects layer (js/fx.js): sparks, combo badge, shockwave, confetti. */
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .fx-spark,
+    .fx-ring,
+    .fx-confetti {
+      position: absolute;
+      will-change: transform, opacity;
+    }
+
+    .fx-spark {
+      border-radius: 50%;
+      box-shadow: 0 0 6px currentColor;
+    }
+
+    .fx-ring {
+      border: 3px solid;
+      border-radius: 50%;
+    }
+
+    .fx-confetti {
+      border-radius: 2px;
+    }
+
+    .fx-combo {
+      position: absolute;
+      padding: 4px 14px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      opacity: 0;
+    }
+
+    .fx-combo[data-tier="warm"] {
+      background: linear-gradient(135deg, #ffc800, #58cc02);
+    }
+
+    .fx-combo[data-tier="fire"] {
+      background: linear-gradient(135deg, #ff4b4b, #ff9600 55%, #ffc800);
+      box-shadow: 0 0 18px rgba(255, 150, 0, 0.6), 0 4px 0 rgba(0, 0, 0, 0.15);
+      font-size: 23px;
+    }
+
+    .fx-combo[data-tier="blaze"] {
+      background: linear-gradient(135deg, #ce82ff, #ff86d0 50%, #1cb0f6);
+      box-shadow: 0 0 24px rgba(206, 130, 255, 0.7), 0 4px 0 rgba(0, 0, 0, 0.15);
+      font-size: 26px;
+    }
+
+    .fx-combo[data-tier="legend"] {
+      background: linear-gradient(90deg, #ff4b4b, #ffc800, #58cc02, #1cb0f6, #ce82ff, #ff4b4b);
+      background-size: 200% 100%;
+      animation: fx-legend 1.2s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 0, 0.75), 0 4px 0 rgba(0, 0, 0, 0.15);
+      font-size: 28px;
+    }
+
+    @keyframes fx-legend {
+      to { background-position: 200% 0; }
+    }
+
+    /* Focus mode: a soft vignette draws the eye to the board. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(0, 0, 0, 0.18) 100%);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    body.focus-mode::after {
+      opacity: 1;
+    }
+
+    body.focus-mode .progress-fill {
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    .focus-exit {
+      position: fixed;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 5;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 14px;
+      color: var(--muted);
+      background: var(--bg);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      cursor: pointer;
+    }
+
+    body.focus-mode .focus-exit {
+      opacity: 0.75;
+      visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rail > *, .mobile-nav, .today-bar, .prompt-kicker, #practiceView > h1, .focus-exit {
+        transition: none;
+      }
+    }
+
     .today-bar {
       grid-column: 1 / -1;
       border: 2px solid var(--line);
@@ -2086,6 +2235,14 @@
           <input id="streakTones" type="checkbox" />
           <span data-en="Piano notes for a streak of correct matches" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
         </label>
+        <label class="check-row">
+          <input id="effectsOn" type="checkbox" />
+          <span data-en="Effects: sparks, combo badge, confetti" data-zh="动画特效：火花、连对徽章、彩纸">动画特效：火花、连对徽章、彩纸</span>
+        </label>
+        <label class="check-row">
+          <input id="focusMode" type="checkbox" />
+          <span data-en="Focus mode: hide everything but the board while you are matching (automatic)" data-zh="专注模式：连续答题时自动隐藏棋盘以外的界面">专注模式：连续答题时自动隐藏棋盘以外的界面</span>
+        </label>
         <details class="advanced">
           <summary data-en="Advanced" data-zh="高级选项">高级选项</summary>
           <div class="option-grid">
@@ -2337,8 +2494,10 @@
     </div>
   </div>
 
+  <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus · Esc" data-zh="退出专注 · Esc">退出专注 · Esc</button>
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
+  <script src="./js/fx.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
@@ -2532,6 +2691,7 @@
           bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
+        fx: { combo: "×{n} combo" },
         today: {
           done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
           left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
@@ -2751,6 +2911,7 @@
           bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
+        fx: { combo: "连对 ×{n}" },
         today: {
           done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
           left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
@@ -2943,6 +3104,8 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
+      focus: true,
+      effects: true,
       reminder: "",
       langPair: { a: "English", b: "中文" },
       // On-device model (js/ai.js). Off until the learner downloads it in Settings.
@@ -3066,6 +3229,9 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
+      focusMode: document.getElementById("focusMode"),
+      effectsOn: document.getElementById("effectsOn"),
+      focusExitBtn: document.getElementById("focusExitBtn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
       focusPairsBtn: document.getElementById("focusPairsBtn"),
@@ -3224,6 +3390,8 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
+        focus: raw.focus !== false,
+        effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
         reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
         langPair: normalizeLangPair(raw.langPair),
@@ -3584,6 +3752,7 @@
       if (status.justDone) {
         habitCelebrate = true;
         saveWords();
+        WordSnapFx.confetti();
       }
       const streakText = status.streak ? t("today.streak", { n: status.streak }) : "";
       let html;
@@ -3998,6 +4167,7 @@
       clearLevelTimers();
       clearSelection();
       state.levelEndsAt = 0;
+      exitFocus();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "✓";
@@ -4300,8 +4470,39 @@
         || els.introModal.classList.contains("open");
     }
 
+    // ---- Focus mode (automatic) ----
+    // After a few answers in a row everything but the board fades out (navigation,
+    // today bar, title). It comes back after a pause without a pick, at the end of a
+    // set, when a window opens, with Esc, the "Exit focus" button, or pointing at the
+    // top or left edge. Settings can turn it off.
+    const FOCUS_AFTER_ANSWERS = 3;
+    const FOCUS_IDLE_MS = 10000;
+    let focusAnswers = 0;
+    let focusIdleTimer = null;
+
+    function focusOn() {
+      return document.body.classList.contains("focus-mode");
+    }
+
+    /** A pick (answered = false) or an answer on the board. */
+    function focusActivity(answered) {
+      if (state.settings.focus === false) return;
+      clearTimeout(focusIdleTimer);
+      if (answered) focusAnswers += 1;
+      const playing = !els.completionView.classList.contains("show") && !shouldPauseLevel();
+      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS) document.body.classList.add("focus-mode");
+      focusIdleTimer = setTimeout(exitFocus, FOCUS_IDLE_MS);
+    }
+
+    function exitFocus() {
+      clearTimeout(focusIdleTimer);
+      focusAnswers = 0;
+      document.body.classList.remove("focus-mode");
+    }
+
     /** Freeze the countdown while the library is open or the tab/app is in the background. */
     function pauseLevel() {
+      exitFocus();
       const boardLive = state.levelEndsAt > 0 || (isEndless() && !els.completionView.classList.contains("show"));
       if (state.pausedAt || !boardLive) return;
       state.pausedAt = performance.now();
@@ -4699,6 +4900,7 @@
       // Only the pair that is mid-clear is inert; every other card stays clickable
       // so a tap during the vanish animation is not lost.
       if (state.locked || card.disabled || card.classList.contains("correct") || isLevelOver()) return;
+      focusActivity(false);
       clearWrong();
       // DOM may have been recreated by refill — rebind instead of dropping selection.
       if (state.selected && !rebindSelection()) {
@@ -4782,6 +4984,7 @@
 
     function markCorrect(first, second) {
       if (isLevelOver()) return;
+      focusActivity(true);
       // Credit the word whose answer-side (right column) card was picked.
       const rightSel = first.side === "right" ? first : second;
       const word = slotWord(rightSel) || slotWord(first);
@@ -4809,6 +5012,8 @@
       first.card.classList.remove("selected");
       first.card.classList.add("correct");
       second.card.classList.add("correct");
+      WordSnapFx.sparks([first.card, second.card], state.streak);
+      WordSnapFx.combo(state.streak, els.matchGrid, t("fx.combo", { n: state.streak }));
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
       saveWords();
@@ -4915,6 +5120,7 @@
 
     function markWrong(first, second) {
       if (isLevelOver()) return;
+      focusActivity(true);
       const firstWord = slotWord(first);
       const secondWord = slotWord(second);
       if (!firstWord || !secondWord) return;
@@ -4998,6 +5204,7 @@
     }
 
     function showCompletion(allDone, reason = "queue") {
+      exitFocus();
       stopLevelCountdown();
       clearLevelTimers();
       clearSelection();
@@ -5015,6 +5222,7 @@
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "✓";
+      WordSnapFx.glow(els.completionBadge);
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
       const trial = isTrial();
@@ -6029,6 +6237,7 @@
       state.levelMisses = new Map();
       state.lastCompletion = null;
       renderReviewList();
+      exitFocus();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       els.completionBadge.textContent = "+";
@@ -6546,6 +6755,9 @@
       els.pauseRefillWhileSelected.checked = state.settings.pauseRefillWhileSelected;
       els.recycleMastered.checked = state.settings.recycleMastered;
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
+      if (els.focusMode) els.focusMode.checked = state.settings.focus !== false;
+      if (els.effectsOn) els.effectsOn.checked = state.settings.effects !== false;
+      WordSnapFx.setEnabled(state.settings.effects !== false);
       syncLangPairUI();
       syncAiUI();
     }
@@ -6581,6 +6793,8 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
+        focus: els.focusMode ? els.focusMode.checked : true,
+        effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
         ai: state.settings.ai
@@ -7089,7 +7303,17 @@
       renderRound();
     });
 
+    els.focusExitBtn.addEventListener("click", exitFocus);
+    // Pointing at the navigation (top or left edge) brings it back; mouse only, not touch.
+    document.addEventListener("pointermove", event => {
+      if (focusOn() && event.pointerType === "mouse" && (event.clientX < 110 || event.clientY < 60)) exitFocus();
+    });
+
     document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && focusOn()) {
+        exitFocus();
+        return;
+      }
       if (els.introModal.classList.contains("open")) {
         if (event.key === "Escape" || event.key === "Enter") {
           event.preventDefault();
