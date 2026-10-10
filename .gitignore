@@ -15,3 +15,9 @@ android/app/.cxx/
 dist/
 .impeccable/live/
 .impeccable/config.local.json
+# impeccable working files: the direction contract and sketches must not be served by Pages (.nojekyll)
+.impeccable/surfaces/
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/review/
+.impeccable/build/

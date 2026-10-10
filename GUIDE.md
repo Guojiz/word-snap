@@ -82,10 +82,10 @@ A word counts as **new** until you have answered it once (right or wrong); just 
 
 The library is meant to keep growing; you don't need to clear it. Mastered words simply come up rarely.
 
-## Focus mode and effects
+## Focus mode, judgements and effects
 
-- **Focus mode** (automatic, on by default): after three answers in a row, navigation, today's bar and the title go away, the board glides to the middle of the screen, and a soft vignette frames it. It comes back after 10 seconds without a pick, at the end of a set, when a window opens, with **Esc**, the *Exit focus* button, or by pointing at the top or left edge. *Settings → Focus mode* turns it off.
-- **Motion, Duolingo-style**: the progress bar has a highlight band, grows with a little spring and glints on every match. From 3 correct in a row a label above it counts the streak ("5 in a row"), and the bar turns gold at 5, fire at 10 and violet at 20; milestones pop with a few stars. A matched pair pops and a soft ring spreads from each card; buttons and cards press down like keys. The set summary has three tiles — accuracy, time, best streak — that pop in one after another and count up. Confetti when today's goal is done, and a short vibration on answers where the phone supports it. *Settings → Effects and vibration* turns them off; with reduced motion nothing animates.
+- **Focus mode** (automatic, on by default): after three answers in a row, navigation, today's line and the title go away, the board glides to the middle of the screen, and a soft vignette frames it. It comes back after 10 seconds without a pick, at the end of a set, when a window opens, with **Esc**, the *Exit focus* button, or by pointing at the top or left edge. *Settings → Focus mode* turns it off.
+- **Judgements, rhythm-game style**: every match shows PERFECT / GREAT / GOOD above the pair (a miss shows MISS), with your time — taken from the engine's own grade, which compares your reaction time with your usual pace. The progress bar is a lane with beat ticks that fills with one segment per match in its judgement colour; from 3 correct in a row the combo count rolls at the lane's right end, and milestones (5 / 10 / 20 / 50) pop with a few stars. A set ends with **CLEAR** (or **FULL COMBO** with no mistakes, **TIME UP** when a timed level runs out) and the counts of PERFECT / GREAT / GOOD / MISS, max combo, accuracy and time. Colours keep one meaning: violet = selected, teal = correct / GREAT, gold = PERFECT only, rose = wrong / MISS. Confetti when today's goal is done, a short vibration on answers in the app. *Settings → Effects and vibration* turns the motion off (judgements still show); with reduced motion nothing animates.
 
 ## Daily goal and streak
 
@@ -271,10 +271,10 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 
 一个词在你第一次作答（答对或答错）之前都算「新词」；只是出现在棋盘上不算。新词**先学你自己的词**（按添加顺序），示例词排在后面。词库是越积越多的，不需要清空；已掌握的词只是很少出现。
 
-## 专注模式和特效
+## 专注模式、判定和动效
 
 - **专注模式**（自动，默认开启）：连续答对或答错三题后，导航、今日横条和标题会收起，棋盘平滑地移到屏幕正中间，四周加一圈柔和的暗角。停下 10 秒不点、一组结束、打开任何窗口、按 **Esc**、点「退出专注」或者把鼠标移到顶部或左边，界面就会回来。**设置 → 专注模式** 可以关掉。
-- **动效（参考多邻国）**：进度条带高光，每走一步都有弹性和一道闪光。连对 3 次起，进度条上方出现「连对 n 次」，到 5 次变金色、10 次变火焰色、20 次变紫色，到这些节点时标签弹一下并迸出几颗星。配对成功的两张卡轻轻弹起，外圈散开一圈光晕；按钮和卡片按下去像实体按键。一组结束时，「正确率、用时、最高连对」三张卡片依次弹出，数字往上数。完成今日目标时撒彩纸；手机上答题有轻微震动。**设置 → 动画特效和震动** 可以关掉；系统开了「减少动态效果」时一律不播放。
+- **音游判定**：每次配对，在这对卡上方弹出 PERFECT / GREAT / GOOD（配错是 MISS），旁边是你这次的用时。判定来自复习引擎自己的评级：拿你的反应时间和你平时的速度比。进度条是一条带节拍刻度的轨道，每配对一组就多一段，颜色就是那次的判定色；连对 3 次起，连击数在轨道右端逐位滚动，到 5、10、20、50 时弹一下并迸出几颗星。一组结束是 **CLEAR**（全对是 **FULL COMBO**，限时关超时是 **TIME UP**），下面是 PERFECT / GREAT / GOOD / MISS 的次数、最大连击、正确率和用时。每种颜色只表示一件事：紫色 = 选中，青色 = 答对 / GREAT，金色只表示 PERFECT，玫红 = 答错 / MISS。完成今日目标时撒彩纸；App 里答题有轻微震动。**设置 → 动画特效和震动** 可以关掉动画（判定字照常显示）；系统开了「减少动态效果」时一律不播放。
 
 ## 每日目标和连续天数
 

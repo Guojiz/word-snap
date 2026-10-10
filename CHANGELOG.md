@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **New look: the rhythm-game stage** (replaces the borrowed Duolingo palette and 3D buttons; see DESIGN.md). Indigo stage at night, lavender by day; one fixed palette (no per-set skin rotation) where each colour has one meaning — violet selected, teal correct / GREAT, gold PERFECT only, rose wrong / MISS, indigo-ink buttons; text colours meet 4.5:1; Saira Condensed (OFL, bundled) for numbers and judgements; drawn SVG icons instead of emoji; new app icon.
+- **Every match is judged** PERFECT / GREAT / GOOD / MISS from the engine's reaction-time grade; the progress bar is a lane filled with each match's judgement colour; the set ends with CLEAR / FULL COMBO / TIME UP and the judgement counts, max combo, accuracy and time.
+- **Phones**: navigation moved to the bottom (thumb zone); today's remaining words as the big number.
+- **Settings** grouped into Learning plan / Pace / Feedback and look (+ AI); colliding and technical names rewritten; GitHub link moved into Settings.
+
+### Fixed
+
+- From an /impeccable critique (25/40) and simulated-learner tests: dialogs move focus in, keep the page behind inert and return focus; visible keyboard focus; screen-reader announcements and `aria-pressed` on cards; Enter no longer hijacked on the summary and intro; a wrong match highlights the right partner; deleting a word can be undone; rules-only sentence checks no longer praise; the last practice card says "Done"; 44 px close buttons; reduced motion covers every animation.
+
 ## 2026-10-07
 
 ### Added
