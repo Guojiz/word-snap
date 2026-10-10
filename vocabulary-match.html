@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#131f24" />
+  <meta name="theme-color" content="#1a1745" />
   <meta name="color-scheme" content="dark light" />
   <script>
     (function () {
@@ -23,60 +23,99 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <style>
+    @font-face {
+      font-family: "Saira Condensed";
+      font-weight: 700;
+      font-display: swap;
+      src: url("./vendor/fonts/saira-condensed-700.woff2") format("woff2");
+    }
+
+    @font-face {
+      font-family: "Saira Condensed";
+      font-weight: 800;
+      font-display: swap;
+      src: url("./vendor/fonts/saira-condensed-800.woff2") format("woff2");
+    }
+
+    /* Stage (dark): an indigo rhythm-game stage. Day (light): lavender.
+       Violet (--blue) is for the selected card and focus only; teal = correct (GREAT),
+       gold = PERFECT, rose = MISS / wrong; buttons are indigo ink (--primary).
+       *-ink variants are the same hues dark/light enough for text (≥ 4.5:1). */
     :root {
-      --bg: #131f24;
-      --panel: #202f36;
-      --panel-2: #1a2a30;
-      --line: #37464f;
-      --line-strong: #52656d;
-      --text: #f1f7fb;
-      --muted: #8fa5af;
-      --dim: #52656d;
-      --green: #58cc02;
-      --green-dark: #46a302;
-      --blue: #1cb0f6;
-      --blue-deep: #1899d6;
-      --red: #ff4b4b;
-      --red-deep: #ea2b2b;
-      --yellow: #ffc800;
-      --panel-soft: #17282e;
-      --track: #283940;
-      --card-shadow: #26363d;
-      --selected-bg: #14394a;
-      --selected-ink: #ddf4ff;
-      --selected-shadow: #0e719d;
-      --correct-bg: #183d22;
-      --correct-ink: #eaffdf;
-      --correct-shadow: #2d7f12;
-      --wrong-bg: #461f22;
-      --wrong-ink: #ffe8e8;
-      --wrong-shadow: #9d2828;
-      --on-accent: #102015;
+      --bg: #1a1745;
+      --panel: #262158;
+      --panel-2: #201c4f;
+      --line: #39337a;
+      --line-strong: #5a52a3;
+      --text: #f3f1ff;
+      --muted: #b8b2e8;
+      --dim: #9690d6;
+      --green: #18c6b5;
+      --green-dark: #0e9c8f;
+      --green-ink: #5ef0e2;
+      --blue: #7c5cff;
+      --blue-deep: #6545e6;
+      --blue-ink: #b9a8ff;
+      --red: #ff5c8a;
+      --red-deep: #c9285a;
+      --red-ink: #ff8fb0;
+      --yellow: #ffc933;
+      --yellow-ink: #ffd666;
+      --primary: #c9c1ff;
+      --primary-dark: #a99cff;
+      --on-primary: #1a1745;
+      --panel-soft: #211d51;
+      --track: #2e2968;
+      --card-shadow: rgba(5, 3, 30, .55);
+      --selected-bg: #2e2580;
+      --selected-ink: #f3f1ff;
+      --selected-shadow: rgba(5, 3, 30, .55);
+      --correct-bg: #123e4a;
+      --correct-ink: #dffcf8;
+      --correct-shadow: rgba(5, 3, 30, .55);
+      --wrong-bg: #4a1a3a;
+      --wrong-ink: #ffe4ec;
+      --wrong-shadow: rgba(5, 3, 30, .55);
+      --on-accent: #1a1745;
       --warn-ink: #2b1800;
-      --warn-shadow: #d99f00;
-      --weak-wrong: #ff9a9a;
-      --scrim: rgba(10, 18, 21, .72);
-      --hover-soft: #20343b;
-      --radius: 12px;
+      --warn-shadow: rgba(255, 201, 51, .4);
+      --weak-wrong: #ff8fb0;
+      --scrim: rgba(8, 6, 32, .72);
+      --hover-soft: #2c2766;
+      --radius: 14px;
       --ease: cubic-bezier(.2, .8, .2, 1);
       --theme-shift: 420ms;
+      --num-font: "Saira Condensed", "Arial Narrow", sans-serif;
     }
 
     :root[data-color-mode="light"] {
       color-scheme: light;
-      --bg: #f4f7f9;
+      --bg: #f5f3ff;
       --panel: #ffffff;
-      --panel-2: #eef3f6;
-      --line: #d5dee4;
-      --line-strong: #b3c1ca;
-      --text: #1b2a31;
-      --muted: #5d727d;
-      --dim: #9fb0b9;
-      --panel-soft: #f7fafb;
-      --track: #e3eaee;
-      --card-shadow: #d5dee4;
-      --scrim: rgba(10, 18, 21, .45);
-      --hover-soft: #f0f5f7;
+      --panel-2: #ece8ff;
+      --line: #dcd6fb;
+      --line-strong: #b7aeef;
+      --text: #1d1a4a;
+      --muted: #514b88;
+      --dim: #6c66a6;
+      --green-ink: #0a7a70;
+      --blue-ink: #5a3fe0;
+      --red-ink: #c0245a;
+      --yellow-ink: #8a5a00;
+      --primary: #2b2470;
+      --primary-dark: #1d1856;
+      --on-primary: #ffffff;
+      --panel-soft: #faf9ff;
+      --track: #e4e0ff;
+      --card-shadow: rgba(36, 32, 90, .16);
+      --selected-bg: #efeaff;
+      --selected-ink: #2b1d8f;
+      --correct-bg: #e3faf7;
+      --correct-ink: #075e56;
+      --wrong-bg: #ffe9f0;
+      --wrong-ink: #8c1840;
+      --scrim: rgba(29, 26, 74, .45);
+      --hover-soft: #f1eeff;
     }
     :root[data-color-mode="dark"] { color-scheme: dark; }
 
@@ -93,8 +132,8 @@
       font-weight: 800;
       color: var(--muted);
     }
-    .import-status.good { color: var(--green); }
-    .import-status.bad { color: var(--red); }
+    .import-status.good { color: var(--green-ink); }
+    .import-status.bad { color: var(--red-ink); }
 
     body,
     .rail,
@@ -131,7 +170,7 @@
       margin: 0;
       color: var(--text);
       background: var(--bg);
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
       letter-spacing: 0;
     }
 
@@ -167,11 +206,11 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      color: var(--on-accent);
-      background: var(--green);
+      color: var(--on-primary);
+      background: var(--primary);
       font-size: 26px;
       font-weight: 1000;
-      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .14);
+      box-shadow: 0 10px 24px -10px var(--card-shadow);
     }
 
     .rail-btn {
@@ -203,7 +242,7 @@
     .rail-btn.active,
     .rail-btn:hover {
       border-color: var(--line);
-      color: var(--green);
+      color: var(--green-ink);
       background: var(--panel-soft);
     }
 
@@ -304,9 +343,37 @@
     }
 
     .fx-star {
-      font-size: 16px;
-      line-height: 1;
+      line-height: 0;
     }
+
+    /* The judgement word: rhythm-game feedback on every match. */
+    .fx-judge {
+      position: absolute;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: var(--num-font);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      padding: 2px 12px;
+      border-radius: 12px;
+      background: var(--panel);
+      box-shadow: 0 10px 24px -8px var(--card-shadow);
+      transform: translate(-50%, -50%) rotate(-4deg);
+    }
+
+    .fx-judge small {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .fx-judge-perfect { color: var(--yellow-ink); }
+    .fx-judge-great { color: var(--green-ink); }
+    .fx-judge-good { color: #2f8a3a; }
+    .fx-judge-miss { color: var(--red-ink); }
+    :root[data-color-mode="dark"] .fx-judge-good { color: #8fe36a; }
 
     .fx-confetti {
       border-radius: 2px;
@@ -318,9 +385,9 @@
       top: 16%;
       padding: 10px 20px;
       border-radius: 999px;
-      color: #fff;
-      background: #2f7d00;
-      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.18);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 12px 30px -10px rgba(10, 8, 40, 0.45);
       font-size: 17px;
       font-weight: 1000;
       white-space: nowrap;
@@ -333,15 +400,16 @@
       align-items: center;
       gap: 3px;
       color: var(--muted);
-      font-size: 18px;
-      font-weight: 1000;
+      font-family: var(--num-font);
+      font-size: 22px;
+      font-weight: 800;
       filter: grayscale(1);
       opacity: 0.75;
       transition: filter 0.4s ease, opacity 0.4s ease, color 0.4s ease;
     }
 
     .streak-chip.lit {
-      color: #e07a00;
+      color: var(--yellow-ink);
       filter: none;
       opacity: 1;
     }
@@ -389,16 +457,17 @@
       display: block;
       padding: 10px 4px 12px;
       border-radius: 13px 13px 14px 14px;
-      color: var(--tile);
+      color: var(--tile-ink);
       background: var(--bg);
-      font-size: 24px;
-      font-weight: 1000;
+      font-family: var(--num-font);
+      font-size: 30px;
+      font-weight: 800;
     }
 
     /* Fixed colours (not the rotating theme), so each tile always means the same thing. */
-    .stat-tile.accuracy { --tile: #2f7d00; }
-    .stat-tile.time { --tile: #0b72b0; }
-    .stat-tile.combo { --tile: #b35c00; }
+    .stat-tile.accuracy { --tile: #0a7a70; --tile-ink: var(--green-ink); }
+    .stat-tile.time { --tile: #3b33a8; --tile-ink: var(--primary); }
+    .stat-tile.combo { --tile: #8a5a00; --tile-ink: var(--yellow-ink); }
 
     @keyframes tile-in {
       from { transform: translateY(14px) scale(0.85); opacity: 0; }
@@ -427,7 +496,7 @@
     }
 
     body.focus-mode .progress-fill {
-      box-shadow: 0 0 12px var(--green);
+      box-shadow: none;
     }
 
     .focus-exit {
@@ -479,9 +548,34 @@
       color: var(--text);
     }
 
+    .today-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 10px;
+    }
+
+    .today-num {
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 0.9;
+    }
+
+    .today-done {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .today-bar small {
+      flex-basis: 100%;
+    }
+
     .today-bar.done {
       border-color: var(--green);
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .today-bar.celebrate {
@@ -519,10 +613,20 @@
     }
 
     .progress {
+      position: relative;
       height: 16px;
       overflow: hidden;
       border-radius: 999px;
       background: var(--track);
+    }
+
+    /* Beat ticks: the set as a rhythm lane, one tick every fifth of the way. */
+    .progress::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 2px), rgba(255, 255, 255, 0.55) calc(20% - 2px) 20%);
+      pointer-events: none;
     }
 
     .progress-wrap {
@@ -576,32 +680,44 @@
     }
 
     .progress[data-tier="gold"] .progress-fill {
-      background: linear-gradient(90deg, #ffc800, #ff9600);
+      background: linear-gradient(90deg, #ffc933, #ff9a3d);
     }
 
     .progress[data-tier="fire"] .progress-fill {
-      background: linear-gradient(90deg, #ff9600, #ff4b4b);
+      background: linear-gradient(90deg, #ff9a3d, #ff5c8a);
     }
 
     .progress[data-tier="blaze"] .progress-fill {
-      background: linear-gradient(90deg, #1cb0f6, #ce82ff 60%, #ff86d0);
+      background: linear-gradient(90deg, #18c6b5, #ffc933 55%, #ff5c8a);
     }
 
+    /* Combo count at the right end of the lane: a big rolling number and its word. */
     .combo-label {
       position: absolute;
-      left: 2px;
-      bottom: calc(100% + 5px);
-      color: var(--green);
-      font-size: 14px;
-      font-weight: 1000;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      right: 0;
+      bottom: calc(100% + 4px);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      color: var(--green-ink);
+      font-family: var(--num-font);
+      font-weight: 800;
       white-space: nowrap;
-      transform-origin: left center;
+      transform-origin: right bottom;
       opacity: 0;
       transform: translateY(6px) scale(0.8);
       transition: opacity 250ms ease, transform 350ms cubic-bezier(.34, 1.56, .64, 1), color 300ms ease;
       pointer-events: none;
+    }
+
+    .combo-label b {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .combo-label span {
+      font-size: 13px;
+      letter-spacing: 0.08em;
     }
 
     .combo-label.show {
@@ -609,27 +725,31 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Label colours meet 4.5:1 on light backgrounds; brighter in dark mode. */
-    .combo-label { color: #2f7d00; }
-    .combo-label[data-tier="gold"] { color: #a85a00; }
-    .combo-label[data-tier="fire"] { color: #c62828; }
-    .combo-label[data-tier="blaze"] { color: #7b3fbf; }
-
-    :root[data-color-mode="dark"] .combo-label { color: #89e219; }
-    :root[data-color-mode="dark"] .combo-label[data-tier="gold"] { color: #ffc800; }
-    :root[data-color-mode="dark"] .combo-label[data-tier="fire"] { color: #ff7b6b; }
-    :root[data-color-mode="dark"] .combo-label[data-tier="blaze"] { color: #d9a3ff; }
+    .combo-label[data-tier="gold"] { color: var(--yellow-ink); }
+    .combo-label[data-tier="fire"],
+    .combo-label[data-tier="blaze"] { color: var(--red-ink); }
 
     .top-count {
-      min-width: 68px;
+      min-width: 56px;
       color: var(--muted);
-      font-size: 20px;
-      font-weight: 900;
+      font-family: var(--num-font);
+      font-size: 22px;
+      font-weight: 800;
       text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fx-digit {
+      display: inline-block;
+    }
+
+    .icon {
+      flex: none;
+      vertical-align: -2px;
     }
 
     .top-count.time-low {
-      color: var(--red);
+      color: var(--red-ink);
     }
 
     .prompt {
@@ -664,7 +784,7 @@
       border-radius: var(--radius);
       color: var(--text);
       background: transparent;
-      box-shadow: 0 4px 0 var(--card-shadow);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
       cursor: pointer;
       display: grid;
       grid-template-columns: 40px 1fr;
@@ -681,14 +801,14 @@
 
     .match-card:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--card-shadow);
+      box-shadow: 0 3px 16px -6px var(--card-shadow);
     }
 
     .match-card.selected {
       border-color: var(--blue);
       color: var(--selected-ink);
       background: var(--selected-bg);
-      box-shadow: 0 4px 0 var(--selected-shadow);
+      box-shadow: 0 6px 16px -6px var(--selected-shadow);
     }
 
     .match-card.paired {
@@ -715,7 +835,7 @@
       border-color: var(--green);
       color: var(--correct-ink);
       background: var(--correct-bg);
-      box-shadow: 0 4px 0 var(--correct-shadow);
+      box-shadow: 0 6px 16px -6px var(--correct-shadow);
       animation: correctPulse 420ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
@@ -742,7 +862,7 @@
       border-color: var(--red);
       color: var(--wrong-ink);
       background: var(--wrong-bg);
-      box-shadow: 0 4px 0 var(--wrong-shadow);
+      box-shadow: 0 6px 16px -6px var(--wrong-shadow);
       animation: shake 220ms ease;
     }
 
@@ -817,7 +937,7 @@
 
     .review-heading {
       margin: 0 0 10px;
-      color: var(--red);
+      color: var(--red-ink);
       font-size: 15px;
       font-weight: 900;
       text-align: left;
@@ -835,9 +955,9 @@
       place-items: center;
       border: 0;
       border-radius: 16px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: 0 4px 0 var(--green-dark);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 4px 18px -8px var(--card-shadow);
       cursor: pointer;
       padding: 0 18px;
       font-size: 17px;
@@ -854,20 +974,20 @@
 
     .duo-button:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--green-dark);
+      box-shadow: 0 1px 18px -8px var(--card-shadow);
     }
 
     .duo-button.secondary {
-      color: var(--blue);
+      color: var(--blue-ink);
       background: transparent;
       border: 2px solid var(--line);
-      box-shadow: 0 4px 0 var(--card-shadow);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
     }
 
     .duo-button.danger {
       color: #fff;
       background: var(--red-deep);
-      box-shadow: 0 4px 0 var(--wrong-shadow);
+      box-shadow: 0 6px 16px -6px var(--wrong-shadow);
     }
 
     .danger-zone {
@@ -877,7 +997,7 @@
     }
 
     .danger-zone h2 {
-      color: var(--red);
+      color: var(--red-ink);
     }
 
     .danger-zone p b {
@@ -887,13 +1007,13 @@
     .duo-button.warning {
       color: var(--warn-ink);
       background: var(--yellow);
-      box-shadow: 0 4px 0 var(--warn-shadow);
+      box-shadow: 0 6px 16px -6px var(--warn-shadow);
     }
 
     .duo-button[disabled] {
       color: var(--dim);
       background: var(--track);
-      box-shadow: 0 4px 0 var(--card-shadow);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
       cursor: not-allowed;
       filter: none;
       transform: none;
@@ -1011,7 +1131,7 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: var(--radius);
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--bg);
       cursor: pointer;
       padding: 8px 10px;
@@ -1139,7 +1259,9 @@
       outline-offset: 1px;
     }
 
-    .sr-only {
+    /* #feedback gets its class replaced by code ("feedback good"), so it is hidden by id. */
+    .sr-only,
+    #feedback {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -1185,7 +1307,7 @@
     }
 
     @keyframes hint-pulse {
-      0%, 100% { box-shadow: 0 4px 0 var(--card-shadow); }
+      0%, 100% { box-shadow: 0 6px 16px -6px var(--card-shadow); }
       35% { box-shadow: 0 0 0 4px var(--green), 0 4px 0 var(--card-shadow); }
     }
 
@@ -1287,7 +1409,7 @@
       border-bottom: 2px solid #111;
       padding-bottom: 6px;
       margin-bottom: 10px;
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-head h1 {
@@ -1303,7 +1425,7 @@
     }
 
     .ps-body {
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-body.cols-2 {
@@ -1393,9 +1515,9 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: 50%;
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--panel);
-      box-shadow: 0 2px 0 var(--card-shadow);
+      box-shadow: 0 4px 16px -6px var(--card-shadow);
       cursor: pointer;
       padding: 0;
     }
@@ -1424,7 +1546,7 @@
 
     .link-button.intro-link {
       margin: 6px 0 0 -8px;
-      color: var(--blue);
+      color: var(--blue-ink);
     }
 
     .link-button {
@@ -1432,7 +1554,7 @@
       min-height: 32px;
       place-items: center;
       border: 0;
-      color: var(--red);
+      color: var(--red-ink);
       background: transparent;
       cursor: pointer;
       padding: 0 8px;
@@ -1451,18 +1573,24 @@
       display: block;
     }
 
+    /* The set's result, as a rhythm game ends a song: CLEAR / FULL COMBO / TIME UP. */
     .completion-badge {
-      width: 104px;
-      height: 104px;
-      display: grid;
-      place-items: center;
-      margin: 16px auto 18px;
-      border-radius: 30px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: inset 0 -8px 0 rgba(0, 0, 0, .16);
-      font-size: 56px;
-      font-weight: 1000;
+      margin: 18px auto 8px;
+      color: var(--yellow-ink);
+      font-family: var(--num-font);
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      transform: rotate(-4deg);
+    }
+
+    .completion-badge.full-combo {
+      color: var(--green-ink);
+    }
+
+    .completion-badge.time-up {
+      color: var(--red-ink);
     }
 
     .completion h2 {
@@ -1516,9 +1644,9 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .16);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 10px 24px -10px var(--card-shadow);
       font-size: 24px;
       font-weight: 1000;
     }
@@ -1574,7 +1702,7 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: var(--radius);
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--bg);
       cursor: pointer;
       padding: 0 14px;
@@ -1586,9 +1714,9 @@
 
     .install-small.primary {
       border-color: transparent;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: 0 4px 0 var(--green-dark);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 4px 18px -8px var(--card-shadow);
     }
 
     @keyframes shake {
@@ -1732,11 +1860,11 @@
       gap: 3px;
     }
     .lang-toggle .lang-opt {
-      opacity: .45;
+      opacity: .8;
     }
     .lang-toggle .lang-opt.on {
       opacity: 1;
-      color: var(--green);
+      color: var(--green-ink);
     }
     .lang-toggle .sep {
       opacity: .35;
@@ -1792,8 +1920,8 @@
       display: grid;
       place-items: center;
       border-radius: 10px;
-      color: var(--on-accent);
-      background: var(--green);
+      color: var(--on-primary);
+      background: var(--primary);
       font-weight: 1000;
     }
 
@@ -1824,7 +1952,7 @@
     }
 
     .intro-demo b {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     /* `label { display: grid }` would otherwise beat the hidden attribute */
@@ -1858,7 +1986,7 @@
 
     .tab-btn[aria-selected="true"] {
       border-color: var(--line);
-      color: var(--green);
+      color: var(--green-ink);
       background: var(--panel-soft);
       margin-bottom: -2px;
       padding-bottom: 2px;
@@ -1935,7 +2063,7 @@
     }
 
     .sample-note .link-button {
-      color: var(--blue);
+      color: var(--blue-ink);
       padding: 0;
     }
 
@@ -1971,7 +2099,7 @@
     }
 
     .custom-row .cr-own {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .custom-row .stage-tag {
@@ -1985,7 +2113,7 @@
     }
 
     .custom-row .stage-tag.is-mastered {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .list-foot {
@@ -2129,7 +2257,7 @@
       width: 100%;
       max-width: 28px;
       border-radius: 6px 6px 2px 2px;
-      background: var(--blue);
+      background: var(--green);
     }
 
     .forecast-label {
@@ -2168,7 +2296,7 @@
     }
 
     .drill-title b {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .drill-prompt {
@@ -2199,12 +2327,12 @@
     }
 
     .drill-ok {
-      color: var(--green);
+      color: var(--green-ink);
       font-weight: 900;
     }
 
     .drill-bad {
-      color: var(--red);
+      color: var(--red-ink);
       font-weight: 900;
     }
 
@@ -2224,7 +2352,7 @@
     }
 
     .drill-sentence mark {
-      color: var(--red);
+      color: var(--red-ink);
       background: transparent;
       text-decoration: underline wavy var(--red);
       text-underline-offset: 3px;
@@ -2260,7 +2388,7 @@
       border: 2px solid var(--line);
       border-radius: 999px;
       padding: 2px 10px;
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--panel);
       cursor: pointer;
       font: inherit;
@@ -2281,7 +2409,7 @@
     }
 
     .drill-actions .link-button {
-      color: var(--blue);
+      color: var(--blue-ink);
     }
 
     .drill-actions #drillSkip {
@@ -2326,7 +2454,7 @@
             <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
           </div>
           <div class="top-count" id="topCount">10</div>
-          <div class="streak-chip" id="streakChip" hidden><span aria-hidden="true">🔥</span><b id="streakChipN">0</b></div>
+          <div class="streak-chip" id="streakChip" hidden><svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="streakChipN">0</b></div>
           <div class="today-bar" id="todayBar" hidden></div>
         </div>
 
@@ -2337,7 +2465,7 @@
         </div>
 
         <div class="completion" id="completionView">
-          <div class="completion-badge">✓</div>
+          <div class="completion-badge" aria-hidden="true">CLEAR</div>
           <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
           <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
           <div class="completion-stats" id="completionStats" hidden></div>
@@ -2776,71 +2904,25 @@
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
     const THEME_KEY = "word_snap_theme_index";
     const COLOR_MODE_KEY = "word_snap_color_mode";
-    // Light base for bg/panels/text. Accent colors still come from COLOR_THEMES.
-    const LIGHT_BASE = {
-      bg: "#f4f7f9", panel: "#ffffff", panel2: "#eef3f6",
-      line: "#d5dee4", lineStrong: "#b3c1ca", text: "#1b2a31", muted: "#5d727d", dim: "#9fb0b9"
+    // One visual world (the rhythm-game stage). Colours keep their meaning everywhere:
+    // violet = selected, teal = correct, gold = perfect, rose = wrong; the skin no longer
+    // rotates per set. Values mirror the :root tokens in the stylesheet.
+    const STAGE = {
+      dark: {
+        bg: "#1a1745", panel: "#262158", panel2: "#201c4f", line: "#39337a", lineStrong: "#5a52a3",
+        text: "#f3f1ff", muted: "#b8b2e8", dim: "#9690d6",
+        greenInk: "#5ef0e2", blueInk: "#b9a8ff", redInk: "#ff8fb0", yellowInk: "#ffd666",
+        primary: "#c9c1ff", primaryDark: "#a99cff", onPrimary: "#1a1745"
+      },
+      light: {
+        bg: "#f5f3ff", panel: "#ffffff", panel2: "#ece8ff", line: "#dcd6fb", lineStrong: "#b7aeef",
+        text: "#1d1a4a", muted: "#514b88", dim: "#6c66a6",
+        greenInk: "#0a7a70", blueInk: "#5a3fe0", redInk: "#c0245a", yellowInk: "#8a5a00",
+        primary: "#2b2470", primaryDark: "#1d1856", onPrimary: "#ffffff"
+      },
+      accent: { green: "#18c6b5", greenDark: "#0e9c8f", blue: "#7c5cff", blueDeep: "#6545e6", red: "#ff5c8a", redDeep: "#c9285a", yellow: "#ffc933" }
     };
-
-    // Soft accent themes — full skin (bg + accent) rotates after each finished level.
-    const COLOR_THEMES = [
-      {
-        id: "forest",
-        bg: "#131f24", panel: "#202f36", panel2: "#1a2a30",
-        line: "#37464f", lineStrong: "#52656d", text: "#f1f7fb", muted: "#8fa5af", dim: "#52656d",
-        green: "#58cc02", greenDark: "#46a302", blue: "#1cb0f6", blueDeep: "#1899d6",
-        red: "#ff4b4b", redDeep: "#ea2b2b", yellow: "#ffc800"
-      },
-      {
-        id: "ocean",
-        bg: "#0f1c2e", panel: "#1a2d45", panel2: "#15263a",
-        line: "#2e4a66", lineStrong: "#4a6d8c", text: "#eef6ff", muted: "#8fb0c9", dim: "#4a6d8c",
-        green: "#2dd4bf", greenDark: "#14b8a6", blue: "#38bdf8", blueDeep: "#0ea5e9",
-        red: "#fb7185", redDeep: "#e11d48", yellow: "#fbbf24"
-      },
-      {
-        id: "violet",
-        bg: "#1a1428", panel: "#2a2040", panel2: "#221a35",
-        line: "#3f3358", lineStrong: "#5c4d7a", text: "#f5f0ff", muted: "#a898c4", dim: "#5c4d7a",
-        green: "#a78bfa", greenDark: "#8b5cf6", blue: "#c084fc", blueDeep: "#a855f7",
-        red: "#f472b6", redDeep: "#db2777", yellow: "#fcd34d"
-      },
-      {
-        id: "sunset",
-        bg: "#1f1410", panel: "#332018", panel2: "#2a1a14",
-        line: "#4a3228", lineStrong: "#6b4a3a", text: "#fff7f0", muted: "#c4a090", dim: "#6b4a3a",
-        green: "#fb923c", greenDark: "#ea580c", blue: "#fbbf24", blueDeep: "#f59e0b",
-        red: "#f87171", redDeep: "#dc2626", yellow: "#fde047"
-      },
-      {
-        id: "rose",
-        bg: "#1f1218", panel: "#331f2a", panel2: "#2a1822",
-        line: "#4a3040", lineStrong: "#6b4860", text: "#fff0f5", muted: "#c498b0", dim: "#6b4860",
-        green: "#f472b6", greenDark: "#db2777", blue: "#fb7185", blueDeep: "#e11d48",
-        red: "#fb923c", redDeep: "#ea580c", yellow: "#fcd34d"
-      },
-      {
-        id: "slate",
-        bg: "#12141a", panel: "#1e222c", panel2: "#181b24",
-        line: "#323846", lineStrong: "#4b5563", text: "#f3f4f6", muted: "#9ca3af", dim: "#4b5563",
-        green: "#34d399", greenDark: "#10b981", blue: "#60a5fa", blueDeep: "#3b82f6",
-        red: "#f87171", redDeep: "#ef4444", yellow: "#facc15"
-      },
-      {
-        id: "mint",
-        bg: "#0f1f1c", panel: "#1a322e", panel2: "#142824",
-        line: "#2d4a44", lineStrong: "#3d665c", text: "#ecfdf8", muted: "#8fb8ae", dim: "#3d665c",
-        green: "#4ade80", greenDark: "#22c55e", blue: "#2dd4bf", blueDeep: "#14b8a6",
-        red: "#fb7185", redDeep: "#e11d48", yellow: "#fbbf24"
-      },
-      {
-        id: "amber",
-        bg: "#1a160c", panel: "#2e2818", panel2: "#242014",
-        line: "#453c28", lineStrong: "#635632", text: "#fffbeb", muted: "#b8a878", dim: "#635632",
-        green: "#fbbf24", greenDark: "#d97706", blue: "#f59e0b", blueDeep: "#b45309",
-        red: "#f87171", redDeep: "#dc2626", yellow: "#fde68a"
-      }
-    ];
+    const COLOR_THEMES = [{ id: "stage" }];
 
     // ---- i18n ----
     const LOCALE_KEY = "word_snap_lang";
@@ -2966,14 +3048,14 @@
           bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
-        fx: { combo: "{n} in a row" },
+        fx: { combo: "{n} in a row", comboWord: "COMBO" },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak" },
         today: {
-          done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
-          left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
+          done: "Today's goal done", streak: "{n}-day streak",
+          left: "Today: {list} left, about {m} min", leftNum: "to go today ({list}) · about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
           frozen: "You missed a day — this week's streak freeze kept your streak.",
           broken: "Your {n}-day streak ended. Start a new one today (best: {best} days).",
-          doneBanner: "✓ Today's goal done · 🔥 {n}-day streak",
+          doneBanner: "Today's goal done · {n}-day streak",
           chipTitle: "Day streak: {n} (best {best}). Grey until today's goal is done."
         },
         aiSettings: {
@@ -3041,7 +3123,7 @@
           textSaveDesktop: "This works as a web app. When your browser shows an install prompt, add it to your desktop or home screen.",
           actionGotIt: "Got it", noRemind: "Don't remind me", closeInstall: "Close install prompt"
         },
-        appearance: { auto: "◐ Auto", light: "☀ Light", dark: "☾ Dark" },
+        appearance: { auto: "Auto", light: "Light", dark: "Dark", btn: "Look" },
         trial: {
           doneTitle: "Trial complete!",
           doneText: "Those were sample words. Now bring in the words you actually need — pick a word book (zhongkao, gaokao, CET-4/6, IELTS…), paste a list, or let AI make one.",
@@ -3195,14 +3277,14 @@
           bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
-        fx: { combo: "连对 {n} 次" },
+        fx: { combo: "连对 {n} 次", comboWord: "连击" },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对" },
         today: {
-          done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
-          left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
+          done: "今日完成", streak: "连续 {n} 天",
+          left: "今天还剩 {list}，约 {m} 分钟", leftNum: "个词今天要练（{list}）· 约 {m} 分钟", due: "{n} 个到期", new: "{n} 个新词", practice: "一点练习",
           frozen: "昨天没练，本周的免断签保住了连续天数。",
           broken: "连续 {n} 天中断了，今天重新开始吧（最长纪录 {best} 天）。",
-          doneBanner: "✓ 今日完成 · 🔥 连续 {n} 天",
+          doneBanner: "今日完成 · 连续 {n} 天",
           chipTitle: "连续 {n} 天（最长 {best} 天）。今天的目标完成前是灰色的。"
         },
         aiSettings: {
@@ -3270,7 +3352,7 @@
           textSaveDesktop: "这个练习可以作为网页 App 使用。浏览器出现安装入口时，可以把它放到桌面或主屏幕。",
           actionGotIt: "知道了", noRemind: "不再提示", closeInstall: "关闭安装提醒"
         },
-        appearance: { auto: "◐ 外观", light: "☀ 浅色", dark: "☾ 深色" },
+        appearance: { auto: "自动", light: "浅色", dark: "深色", btn: "外观" },
         trial: {
           doneTitle: "体验完成！",
           doneText: "刚才是示例词。现在换成你真正要背的词吧：选一本词书（中考、高考、四六级、考研、雅思……）、粘贴词表，或者让 AI 帮你生成。",
@@ -3360,7 +3442,7 @@
       els.modeBtn.textContent = t("stats.modeBtn", { label: modeLabel(state.mode) });
       if (els.completionView && els.completionView.classList.contains("show")) {
         if (!state.words.length) {
-          els.completionBadge.textContent = "+";
+          setResultWord("start");
           els.completionTitle.textContent = t("lesson.emptyTitle");
           els.completionText.textContent = t("lesson.emptyText");
           els.continueBtn.textContent = t("lesson.emptyAddBtn");
@@ -3849,7 +3931,10 @@
 
     function updateColorModeUI() {
       document.querySelectorAll("[data-color-mode-btn]").forEach(btn => {
-        btn.textContent = colorModeLabel(colorMode);
+        // The button names the control; the current mode is in its accessible name and tooltip.
+        btn.textContent = t("appearance.btn");
+        btn.title = `${t("appearance.btn")}：${colorModeLabel(colorMode)}`;
+        btn.setAttribute("aria-label", btn.title);
       });
       const select = document.getElementById("colorModeSelect");
       if (select) {
@@ -3868,47 +3953,55 @@
     }
 
     function applyTheme(index) {
-      const i = ((Number(index) % COLOR_THEMES.length) + COLOR_THEMES.length) % COLOR_THEMES.length;
-      const theme = COLOR_THEMES[i] || COLOR_THEMES[0];
-      const darkBase = COLOR_THEMES[0] || theme;
+      const i = 0;
       const light = resolveColorScheme() === "light";
-      const base = light ? LIGHT_BASE : darkBase;
+      const base = light ? STAGE.light : STAGE.dark;
+      const a = STAGE.accent;
       const fixedBg = base.bg;
       const root = document.documentElement;
       root.setAttribute("data-color-mode", light ? "light" : "dark");
-      root.style.setProperty("--bg", fixedBg);
-      root.style.setProperty("--panel", base.panel);
-      root.style.setProperty("--panel-2", base.panel2);
-      root.style.setProperty("--line", base.line);
-      root.style.setProperty("--line-strong", base.lineStrong);
-      root.style.setProperty("--text", base.text);
-      root.style.setProperty("--muted", base.muted);
-      root.style.setProperty("--dim", base.dim);
-      root.style.setProperty("--green", theme.green);
-      root.style.setProperty("--green-dark", theme.greenDark);
-      root.style.setProperty("--blue", theme.blue);
-      root.style.setProperty("--blue-deep", theme.blueDeep);
-      root.style.setProperty("--red", theme.red);
-      root.style.setProperty("--red-deep", theme.redDeep);
-      root.style.setProperty("--yellow", theme.yellow);
-      root.style.setProperty("--panel-soft", mixHex(base.panel, fixedBg, 0.62));
-      root.style.setProperty("--track", mixHex(base.text, base.panel, 0.1));
-      root.style.setProperty("--card-shadow", mixHex(base.line, fixedBg, 0.55));
-      root.style.setProperty("--selected-bg", mixHex(theme.blue, fixedBg, 0.2));
-      root.style.setProperty("--selected-ink", mixHex(base.text, theme.blue, 0.84));
-      root.style.setProperty("--selected-shadow", mixHex(theme.blueDeep, fixedBg, 0.72));
-      root.style.setProperty("--correct-bg", mixHex(theme.green, fixedBg, 0.18));
-      root.style.setProperty("--correct-ink", mixHex(base.text, theme.green, 0.88));
-      root.style.setProperty("--correct-shadow", mixHex(theme.greenDark, fixedBg, 0.72));
-      root.style.setProperty("--wrong-bg", mixHex(theme.red, fixedBg, 0.2));
-      root.style.setProperty("--wrong-ink", mixHex(base.text, theme.red, 0.88));
-      root.style.setProperty("--wrong-shadow", mixHex(theme.redDeep, fixedBg, 0.72));
-      root.style.setProperty("--on-accent", mixHex(darkBase.bg, "#000000", 0.42));
-      root.style.setProperty("--warn-ink", mixHex(darkBase.bg, "#000000", 0.28));
-      root.style.setProperty("--warn-shadow", mixHex(theme.yellow, fixedBg, 0.62));
-      root.style.setProperty("--weak-wrong", mixHex(theme.red, base.text, 0.72));
-      root.style.setProperty("--scrim", rgbaFromHex(mixHex(darkBase.bg, "#000000", 0.35), light ? 0.45 : 0.72));
-      root.style.setProperty("--hover-soft", mixHex(base.text, base.panel, 0.06));
+      const set = (name, value) => root.style.setProperty(name, value);
+      set("--bg", fixedBg);
+      set("--panel", base.panel);
+      set("--panel-2", base.panel2);
+      set("--line", base.line);
+      set("--line-strong", base.lineStrong);
+      set("--text", base.text);
+      set("--muted", base.muted);
+      set("--dim", base.dim);
+      set("--green", a.green);
+      set("--green-dark", a.greenDark);
+      set("--blue", a.blue);
+      set("--blue-deep", a.blueDeep);
+      set("--red", a.red);
+      set("--red-deep", a.redDeep);
+      set("--yellow", a.yellow);
+      set("--green-ink", base.greenInk);
+      set("--blue-ink", base.blueInk);
+      set("--red-ink", base.redInk);
+      set("--yellow-ink", base.yellowInk);
+      set("--primary", base.primary);
+      set("--primary-dark", base.primaryDark);
+      set("--on-primary", base.onPrimary);
+      set("--panel-soft", mixHex(base.panel, fixedBg, 0.62));
+      set("--track", mixHex(a.blue, base.panel, light ? 0.14 : 0.22));
+      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.1 : 0.32));
+      set("--selected-ink", light ? "#2b1d8f" : base.text);
+      const neutralShadow = light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)";
+      set("--selected-shadow", neutralShadow);
+      set("--correct-bg", mixHex(a.green, base.panel, light ? 0.12 : 0.24));
+      set("--correct-ink", light ? "#075e56" : "#dffcf8");
+      set("--correct-shadow", neutralShadow);
+      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.1 : 0.24));
+      set("--wrong-ink", light ? "#8c1840" : "#ffe4ec");
+      set("--wrong-shadow", neutralShadow);
+      set("--on-accent", base.onPrimary);
+      set("--warn-ink", "#2b1800");
+      set("--warn-shadow", rgbaFromHex(a.yellow, 0.4));
+      set("--weak-wrong", base.redInk);
+      set("--card-shadow", light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)");
+      set("--scrim", light ? "rgba(29, 26, 74, .45)" : "rgba(8, 6, 32, .72)");
+      set("--hover-soft", mixHex(a.blue, base.panel, light ? 0.05 : 0.12));
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute("content", fixedBg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
@@ -3916,8 +4009,9 @@
       return i;
     }
 
-    /** Advance skin after a finished level (complete or timeout). */
+    /** The skin used to rotate after each level; one world now keeps colours meaningful. */
     function advanceThemeAfterLevel() {
+      return;
       const cur = state.settings && Number.isFinite(state.settings.themeIndex)
         ? state.settings.themeIndex
         : 0;
@@ -4016,9 +4110,11 @@
     /** Right answer on the board. `ms` = reaction time for this pair. */
     function recordCorrect(word, ms) {
       const wasNew = engine.isNew(word);
-      engine.recordAnswer(word, engine.grade(true, ms), Date.now(), { ms, kind: "match" });
+      const grade = engine.grade(true, ms);
+      engine.recordAnswer(word, grade, Date.now(), { ms, kind: "match" });
       syncMastered(word);
       recordHabit(wasNew, ms, word.id);
+      return grade;
     }
 
     /** The word being answered was missed. */
@@ -4027,6 +4123,17 @@
       engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
       syncMastered(word);
       recordHabit(wasNew, 0, word.id);
+    }
+
+    const ICON_FLAME = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg>';
+    const ICON_CHECK = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>';
+
+    const RESULT_WORDS = { clear: "CLEAR", fullCombo: "FULL COMBO", timeUp: "TIME UP", start: "START" };
+    function setResultWord(kind) {
+      const badge = els.completionBadge;
+      badge.textContent = RESULT_WORDS[kind] || RESULT_WORDS.clear;
+      badge.classList.toggle("full-combo", kind === "fullCombo");
+      badge.classList.toggle("time-up", kind === "timeUp");
     }
 
     // ---- Daily goal and day streak (js/habit.js) ----
@@ -4072,18 +4179,28 @@
       const streakText = status.streak ? t("today.streak", { n: status.streak }) : "";
       let html;
       if (status.done) {
-        html = `<b>${t("today.done")}</b>${streakText ? ` · ${streakText}` : ""}`;
+        html = `<span class="today-done">${ICON_CHECK}<b>${t("today.done")}</b></span>${streakText ? `<span class="today-text">${streakText}</span>` : ""}`;
       } else {
         const parts = [];
         if (status.dueLeft) parts.push(t("today.due", { n: status.dueLeft }));
         if (status.newLeft) parts.push(t("today.new", { n: status.newLeft }));
-        html = `${streakText ? `${streakText} · ` : ""}${t("today.left", { list: parts.join(currentLang === "zh" ? "、" : ", ") || t("today.practice"), m: status.minutes })}`;
+        const left = status.dueLeft + status.newLeft;
+        html = left
+          ? `<span class="today-num" data-today-num></span><span class="today-text">${t("today.leftNum", { list: parts.join(currentLang === "zh" ? "、" : ", "), m: status.minutes })}</span>`
+          : `<span class="today-text">${t("today.left", { list: t("today.practice"), m: status.minutes })}</span>`;
       }
       const notice = status.notice;
       if (notice && !status.done) {
         html += `<small>${escapeHtml(notice.kind === "frozen" ? t("today.frozen") : t("today.broken", { n: notice.n, best: status.best }))}</small>`;
       }
+      const prevNum = els.todayBar.querySelector("[data-today-num]");
+      const prevText = prevNum ? prevNum.dataset.rollText : null;
       els.todayBar.innerHTML = html;
+      const num = els.todayBar.querySelector("[data-today-num]");
+      if (num) {
+        if (prevText != null) num.dataset.rollText = prevText;
+        WordSnapFx.roll(num, String(status.dueLeft + status.newLeft));
+      }
       els.todayBar.classList.toggle("done", status.done);
       if (habitCelebrate) {
         habitCelebrate = false;
@@ -4094,7 +4211,7 @@
       if (els.dayStreak) els.dayStreak.textContent = status.streak;
       if (els.streakChip) {
         els.streakChip.hidden = false;
-        els.streakChipN.textContent = status.streak;
+        WordSnapFx.roll(els.streakChipN, String(status.streak));
         els.streakChip.classList.toggle("lit", status.done);
         els.streakChip.title = t("today.chipTitle", { n: status.streak, best: status.best });
         if (status.justDone) {
@@ -4518,7 +4635,7 @@
       exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "✓";
+      setResultWord("clear");
       els.main.scrollTop = 0;
       state.lastCompletion = { allDone: false, reason: "queue", trial: true };
       stopDrills();
@@ -4830,7 +4947,10 @@
         return;
       }
       els.comboLabel.dataset.tier = tier.name;
-      els.comboLabel.textContent = t("fx.combo", { n: streak });
+      els.comboLabel.innerHTML = `<b data-combo-n></b><span>${escapeHtml(t("fx.comboWord"))}</span>`;
+      const n = els.comboLabel.querySelector("[data-combo-n]");
+      n.dataset.rollText = String(Math.max(0, streak - 1));
+      WordSnapFx.roll(n, String(streak));
       const wasShown = els.comboLabel.classList.contains("show");
       els.comboLabel.classList.add("show");
       if (WordSnapFx.isMilestone(streak)) {
@@ -5461,7 +5581,7 @@
       word.correct += 1;
       word.streak += 1;
       word.lastMs = elapsed;
-      recordCorrect(word, elapsed);
+      const grade = recordCorrect(word, elapsed);
       state.blockWords.add(word.id);
 
       state.score += 1;
@@ -5479,6 +5599,7 @@
       state.levelStreak = (state.levelStreak || 0) + 1;
       state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
       WordSnapFx.ripple([first.card, second.card], WordSnapFx.tierFor(state.streak).colors[0]);
+      WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
       glintProgress();
       updateCombo(state.streak);
@@ -5620,6 +5741,7 @@
       state.levelStreak = 0;
       playMistakeTone();
       WordSnapFx.haptic("wrong");
+      WordSnapFx.judge([first.card, second.card], "miss", 0);
       updateCombo(0);
       state.selected = null;
 
@@ -5703,7 +5825,7 @@
       advanceThemeAfterLevel();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "✓";
+      setResultWord(reason === "timeout" ? "timeUp" : !state.levelMistakes && state.completedThisRun > 0 ? "fullCombo" : "clear");
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
       const trial = isTrial();
@@ -6732,7 +6854,7 @@
       exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "+";
+      setResultWord("start");
       els.completionTitle.textContent = t("lesson.emptyTitle");
       els.completionText.textContent = t("lesson.emptyText");
       els.continueBtn.textContent = t("lesson.emptyAddBtn");
@@ -6748,7 +6870,7 @@
       // Endless: no clock, show progress through the current set instead.
       if (isEndless() || isTrial() || (state.lastCompletion && state.lastCompletion.trial)) {
         const total = state.sessionTotal || BLOCK_SIZE;
-        els.topCount.textContent = `${Math.min(state.completedThisRun || 0, total)}/${total}`;
+        WordSnapFx.roll(els.topCount, `${Math.min(state.completedThisRun || 0, total)}/${total}`);
         els.topCount.classList.remove("time-low");
         return;
       }

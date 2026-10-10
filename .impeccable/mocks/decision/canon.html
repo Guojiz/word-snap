@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><title>Category standard</title>
+<style>
+  * { box-sizing:border-box; margin:0; }
+  body { width:390px; height:844px; overflow:hidden; background:#ffffff; color:#1f2937; font-family:"PingFang SC","HarmonyOS Sans SC","Noto Sans SC",system-ui,sans-serif; }
+  header { padding:52px 20px 0; display:grid; grid-template-columns:28px 1fr auto; gap:12px; align-items:center; }
+  .x { color:#9ca3af; font-size:24px; font-weight:700; }
+  .bar { height:16px; border-radius:8px; background:#e5e7eb; overflow:hidden; }
+  .bar i { display:block; height:100%; width:48%; background:#16a34a; border-radius:8px; }
+  .hearts { color:#ef4444; font-weight:800; }
+  h1 { margin:34px 20px 0; font-size:24px; font-weight:800; }
+  .board { margin:22px 20px 0; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .card { height:60px; border-radius:14px; border:2px solid #e5e7eb; box-shadow:0 4px 0 #e5e7eb; display:grid; place-items:center; font-weight:700; font-size:17px; }
+  .card.sel { border-color:#38bdf8; background:#f0f9ff; box-shadow:0 4px 0 #7dd3fc; }
+  .card.ok { color:#9ca3af; border-color:#f3f4f6; box-shadow:none; }
+  .cta { position:absolute; left:20px; right:20px; bottom:34px; height:52px; border-radius:14px; background:#16a34a; box-shadow:0 4px 0 #15803d; color:#fff; display:grid; place-items:center; font-weight:800; }
+</style></head>
+<body>
+  <header><div class="x">×</div><div class="bar"><i></i></div><div class="hearts">♥ 5</div></header>
+  <h1>选出配对</h1>
+  <div class="board">
+    <div class="card ok">摇摆</div><div class="card ok">sway</div>
+    <div class="card sel">颗粒物</div><div class="card">furor</div>
+    <div class="card">骚动</div><div class="card">particulate</div>
+    <div class="card">块茎</div><div class="card">notorious</div>
+    <div class="card">臭名昭著的</div><div class="card">tuber</div>
+  </div>
+  <div class="cta">继续</div>
+</body></html>

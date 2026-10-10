@@ -23,3 +23,11 @@ test("no DOM, no effects (and no crash)", () => {
   Fx.countUp(el, 42);
   assert.equal(el.textContent, "42");
 });
+
+test("judgement names follow the engine grade", () => {
+  assert.deepEqual([4, 3, 2, 1].map(Fx.judgementFor), ["perfect", "great", "good", "miss"]);
+  Fx.judge([{}], "perfect", 900); // no DOM: nothing happens
+  const el = { textContent: "", dataset: {} };
+  Fx.roll(el, "12");
+  assert.equal(el.textContent, "12");
+});
