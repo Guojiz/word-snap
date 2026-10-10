@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const Fx = require("../js/fx.js");
 
 test("streak tiers change at 5, 10 and 20; milestones at 5 / 10 / 20 / 50 / 100 and every 50 after", () => {
-  assert.deepEqual([3, 5, 12, 20, 80].map(n => Fx.tierFor(n).name), ["base", "gold", "fire", "blaze", "blaze"]);
+  assert.deepEqual([3, 5, 12, 20, 80].map(n => Fx.tierFor(n).name), ["base", "warm", "fire", "blaze", "blaze"]);
   assert.deepEqual([4, 5, 10, 11, 20, 50, 150, 151].map(Fx.isMilestone), [false, true, true, false, true, true, true, false]);
 });
 

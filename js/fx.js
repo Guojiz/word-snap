@@ -1,5 +1,5 @@
 /*
- * Word Snap motion, in the spirit of Duolingo's: quiet on every answer, bigger
+ * Word Snap motion for the rhythm-game stage: quiet on every answer, bigger
  * only when it means something.
  *   judge      the rhythm-game judgement over a match: PERFECT / GREAT / GOOD / MISS,
  *              from the engine's own grade (reaction time against the learner's pace)
@@ -25,9 +25,10 @@
 
   /** Streak tiers: the progress bar and its label change colour at these lengths. */
   const TIERS = [
-    { at: 20, name: "blaze", colors: ["#18c6b5", "#ffc933", "#ff5c8a"] },
-    { at: 10, name: "fire", colors: ["#ff9a3d", "#ff5c8a", "#ffc933"] },
-    { at: 5, name: "gold", colors: ["#ffc933", "#ff9a3d"] },
+    // Milestone stars stay out of gold (gold means PERFECT only).
+    { at: 20, name: "blaze", colors: ["#18c6b5", "#ffa45c", "#ff5c8a"] },
+    { at: 10, name: "fire", colors: ["#ffa45c", "#ff5c8a"] },
+    { at: 5, name: "warm", colors: ["#18c6b5", "#ffa45c"] },
     { at: 0, name: "base", colors: ["#18c6b5", "#5ef0e2"] }
   ];
   const MILESTONES = [5, 10, 20, 50, 100];
@@ -226,7 +227,7 @@
     if (!enabled()) return;
     const width = win.innerWidth || 400;
     const height = win.innerHeight || 700;
-    const colors = ["#ff5c8a", "#ffc933", "#18c6b5", "#7c5cff", "#ff9a3d"];
+    const colors = ["#ff5c8a", "#18c6b5", "#7ad151", "#ffa45c", "#5ef0e2"];
     for (let i = 0; i < amount; i++) {
       const el = doc.createElement("span");
       el.className = "fx-confetti";

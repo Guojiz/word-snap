@@ -1,0 +1,1283 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T16:55:31+00:00",
+  "title": "Design System: Word Snap",
+  "extensions": {
+    "colorMeta": {
+      "stage-bg": {
+        "role": "neutral",
+        "displayName": "Stage Indigo",
+        "canonical": "#24205a",
+        "tonalRamp": [
+          "#09012d",
+          "#1f1a54",
+          "#3a3975",
+          "#585999",
+          "#787bbd",
+          "#9a9ee3",
+          "#bfc4fc",
+          "#ebedff"
+        ],
+        "cssVar": "--bg"
+      },
+      "stage-panel": {
+        "role": "neutral",
+        "displayName": "Stage Panel",
+        "canonical": "#2f2a6e",
+        "tonalRamp": [
+          "#09002e",
+          "#201659",
+          "#3a377c",
+          "#5757a0",
+          "#7779c5",
+          "#999ceb",
+          "#c0c3fe",
+          "#ebedfe"
+        ],
+        "cssVar": "--panel"
+      },
+      "stage-panel-2": {
+        "role": "neutral",
+        "displayName": "Stage Panel 2",
+        "canonical": "#29246a",
+        "tonalRamp": [
+          "#09012d",
+          "#1f165b",
+          "#38377e",
+          "#5657a2",
+          "#7579c7",
+          "#979ced",
+          "#bfc4fc",
+          "#ebedff"
+        ],
+        "cssVar": "--panel-2"
+      },
+      "stage-panel-soft": {
+        "role": "neutral",
+        "displayName": "Stage Panel Soft",
+        "canonical": "#2b2666",
+        "tonalRamp": [
+          "#09012d",
+          "#201857",
+          "#3a3879",
+          "#58589d",
+          "#787ac2",
+          "#9a9de8",
+          "#c0c4fb",
+          "#ebedff"
+        ],
+        "cssVar": "--panel-soft"
+      },
+      "stage-line": {
+        "role": "neutral",
+        "displayName": "Stage Line",
+        "canonical": "#463f8f",
+        "tonalRamp": [
+          "#0a012c",
+          "#22115f",
+          "#3c3382",
+          "#5954a6",
+          "#7976cc",
+          "#9b99f2",
+          "#c1c3ff",
+          "#ecedff"
+        ],
+        "cssVar": "--line"
+      },
+      "stage-line-strong": {
+        "role": "neutral",
+        "displayName": "Stage Line Strong",
+        "canonical": "#6a62b5",
+        "tonalRamp": [
+          "#0b012c",
+          "#24105e",
+          "#3f3381",
+          "#5c53a5",
+          "#7c75ca",
+          "#9e98f1",
+          "#c4c2fe",
+          "#ecedfe"
+        ],
+        "cssVar": "--line-strong"
+      },
+      "stage-track": {
+        "role": "neutral",
+        "displayName": "Stage Track",
+        "canonical": "#40358e",
+        "tonalRamp": [
+          "#0a012d",
+          "#230a65",
+          "#3c3089",
+          "#5952ae",
+          "#7974d3",
+          "#9a98fa",
+          "#c2c3fc",
+          "#ecedff"
+        ],
+        "cssVar": "--track"
+      },
+      "stage-text": {
+        "role": "neutral",
+        "displayName": "Stage Text",
+        "canonical": "#f3f1ff",
+        "tonalRamp": [
+          "#0b0a12",
+          "#25232e",
+          "#42404b",
+          "#615f6b",
+          "#82808d",
+          "#a5a3b0",
+          "#c9c7d5",
+          "#eeecfa"
+        ],
+        "cssVar": "--text"
+      },
+      "stage-muted": {
+        "role": "neutral",
+        "displayName": "Stage Muted",
+        "canonical": "#b8b2e8",
+        "tonalRamp": [
+          "#0d0228",
+          "#251d47",
+          "#413a68",
+          "#605a8a",
+          "#817bad",
+          "#a49dd2",
+          "#c7c1f8",
+          "#eeecfe"
+        ],
+        "cssVar": "--muted"
+      },
+      "stage-dim": {
+        "role": "neutral",
+        "displayName": "Stage Dim",
+        "canonical": "#9690d6",
+        "tonalRamp": [
+          "#0c002c",
+          "#251853",
+          "#403775",
+          "#5e5798",
+          "#7f78bc",
+          "#a19be2",
+          "#c5c1ff",
+          "#edecff"
+        ],
+        "cssVar": "--dim"
+      },
+      "day-bg": {
+        "role": "neutral",
+        "displayName": "Lavender Day",
+        "canonical": "#f5f3ff",
+        "tonalRamp": [
+          "#0b0a11",
+          "#25242c",
+          "#42404a",
+          "#61606a",
+          "#82818b",
+          "#a5a3ae",
+          "#c9c7d3",
+          "#efedf9"
+        ],
+        "cssVar": "--bg"
+      },
+      "day-panel": {
+        "role": "neutral",
+        "displayName": "Day Panel",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ],
+        "cssVar": "--panel"
+      },
+      "day-panel-2": {
+        "role": "neutral",
+        "displayName": "Day Panel 2",
+        "canonical": "#ece8ff",
+        "tonalRamp": [
+          "#0c0817",
+          "#262233",
+          "#433f51",
+          "#625e72",
+          "#837f94",
+          "#a6a2b7",
+          "#cac6dc",
+          "#efecff"
+        ],
+        "cssVar": "--panel-2"
+      },
+      "day-panel-soft": {
+        "role": "neutral",
+        "displayName": "Day Panel Soft",
+        "canonical": "#fbfaff",
+        "tonalRamp": [
+          "#0b0b0e",
+          "#252428",
+          "#424145",
+          "#616065",
+          "#828286",
+          "#a5a4a9",
+          "#c9c8cd",
+          "#efeef3"
+        ],
+        "cssVar": "--panel-soft"
+      },
+      "day-line": {
+        "role": "neutral",
+        "displayName": "Day Line",
+        "canonical": "#dcd6fb",
+        "tonalRamp": [
+          "#0d061e",
+          "#26203b",
+          "#433d5b",
+          "#625c7c",
+          "#837d9f",
+          "#a6a0c3",
+          "#cac4e8",
+          "#efecff"
+        ],
+        "cssVar": "--line"
+      },
+      "day-line-strong": {
+        "role": "neutral",
+        "displayName": "Day Line Strong",
+        "canonical": "#b7aeef",
+        "tonalRamp": [
+          "#0e002b",
+          "#26194d",
+          "#42386f",
+          "#615792",
+          "#8278b6",
+          "#a49bdb",
+          "#c8c0fd",
+          "#eeecfe"
+        ],
+        "cssVar": "--line-strong"
+      },
+      "day-track": {
+        "role": "neutral",
+        "displayName": "Day Track",
+        "canonical": "#ede8ff",
+        "tonalRamp": [
+          "#0c0817",
+          "#262233",
+          "#433f51",
+          "#625e71",
+          "#847f93",
+          "#a6a1b7",
+          "#cac5dc",
+          "#f0ebff"
+        ],
+        "cssVar": "--track"
+      },
+      "day-text": {
+        "role": "neutral",
+        "displayName": "Day Text",
+        "canonical": "#1d1a4a",
+        "tonalRamp": [
+          "#09012d",
+          "#1f1d4d",
+          "#3b3b6e",
+          "#595b91",
+          "#797cb5",
+          "#9b9fda",
+          "#bfc4fc",
+          "#ebedfe"
+        ],
+        "cssVar": "--text"
+      },
+      "day-muted": {
+        "role": "neutral",
+        "displayName": "Day Muted",
+        "canonical": "#514b88",
+        "tonalRamp": [
+          "#0c012b",
+          "#241951",
+          "#3f3873",
+          "#5d5896",
+          "#7e79ba",
+          "#a09ce0",
+          "#c4c2fd",
+          "#ededfe"
+        ],
+        "cssVar": "--muted"
+      },
+      "day-dim": {
+        "role": "neutral",
+        "displayName": "Day Dim",
+        "canonical": "#6c66a6",
+        "tonalRamp": [
+          "#0c012b",
+          "#241951",
+          "#403773",
+          "#5e5796",
+          "#7e79ba",
+          "#a19ce0",
+          "#c5c2fd",
+          "#edecfe"
+        ],
+        "cssVar": "--dim"
+      },
+      "ink-button-stage": {
+        "role": "primary",
+        "displayName": "Stage Ink Button",
+        "canonical": "#c9c1ff",
+        "tonalRamp": [
+          "#0d0129",
+          "#261a4b",
+          "#42386c",
+          "#61588f",
+          "#8279b3",
+          "#a49cd8",
+          "#c8c0fe",
+          "#eeecfe"
+        ],
+        "cssVar": "--primary"
+      },
+      "ink-button-stage-deep": {
+        "role": "primary",
+        "displayName": "Ink Button Stage Deep",
+        "canonical": "#a99cff",
+        "tonalRamp": [
+          "#0d002c",
+          "#280763",
+          "#422e86",
+          "#6050ab",
+          "#8072d1",
+          "#a295f7",
+          "#c6c1fe",
+          "#edecfe"
+        ],
+        "cssVar": "--primary-dark"
+      },
+      "on-ink-button-stage": {
+        "role": "primary",
+        "displayName": "On Ink Button Stage",
+        "canonical": "#24205a",
+        "tonalRamp": [
+          "#09012d",
+          "#1f1a54",
+          "#3a3975",
+          "#585999",
+          "#787bbd",
+          "#9a9ee3",
+          "#bfc4fc",
+          "#ebedff"
+        ],
+        "cssVar": "--on-primary"
+      },
+      "ink-button-day": {
+        "role": "primary",
+        "displayName": "Day Ink Button",
+        "canonical": "#2b2470",
+        "tonalRamp": [
+          "#09002f",
+          "#1f135f",
+          "#393582",
+          "#5656a6",
+          "#7578cc",
+          "#979bf2",
+          "#bfc4ff",
+          "#ebedff"
+        ],
+        "cssVar": "--primary"
+      },
+      "ink-button-day-deep": {
+        "role": "primary",
+        "displayName": "Ink Button Day Deep",
+        "canonical": "#1d1856",
+        "tonalRamp": [
+          "#080030",
+          "#1e1957",
+          "#383979",
+          "#55599d",
+          "#757bc2",
+          "#979ee7",
+          "#bec4fb",
+          "#ebedff"
+        ],
+        "cssVar": "--primary-dark"
+      },
+      "on-ink-button-day": {
+        "role": "primary",
+        "displayName": "On Ink Button Day",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ],
+        "cssVar": "--on-primary"
+      },
+      "violet": {
+        "role": "secondary",
+        "displayName": "Chosen Violet",
+        "canonical": "#7c5cff",
+        "tonalRamp": [
+          "#0c012c",
+          "#260169",
+          "#440ba9",
+          "#6036da",
+          "#7e64f8",
+          "#9e95ff",
+          "#c4c2fe",
+          "#edecff"
+        ],
+        "cssVar": "--blue"
+      },
+      "violet-deep": {
+        "role": "secondary",
+        "displayName": "Violet Deep",
+        "canonical": "#6545e6",
+        "tonalRamp": [
+          "#0b012c",
+          "#250369",
+          "#4110aa",
+          "#5c39da",
+          "#7a66f8",
+          "#9b96ff",
+          "#c2c2ff",
+          "#ecedff"
+        ],
+        "cssVar": "--blue-deep"
+      },
+      "violet-ink-stage": {
+        "role": "secondary",
+        "displayName": "Violet Ink Stage",
+        "canonical": "#b9a8ff",
+        "tonalRamp": [
+          "#0e0129",
+          "#2a0f5a",
+          "#46317c",
+          "#6451a0",
+          "#8573c5",
+          "#a796eb",
+          "#cabffe",
+          "#eeecff"
+        ],
+        "cssVar": "--blue-ink"
+      },
+      "violet-ink-day": {
+        "role": "secondary",
+        "displayName": "Violet Ink Day",
+        "canonical": "#5a3fe0",
+        "tonalRamp": [
+          "#09012d",
+          "#22056a",
+          "#3d13ab",
+          "#573bdc",
+          "#7467fa",
+          "#9899f9",
+          "#c0c4fb",
+          "#ebedff"
+        ],
+        "cssVar": "--blue-ink"
+      },
+      "selected-bg-stage": {
+        "role": "secondary",
+        "displayName": "Selected Bg Stage",
+        "canonical": "#483a9c",
+        "tonalRamp": [
+          "#0b012d",
+          "#24026a",
+          "#3d2d8e",
+          "#5a4fb3",
+          "#7a72d9",
+          "#9b97f9",
+          "#c2c3fb",
+          "#ecedff"
+        ],
+        "cssVar": "--selected-bg"
+      },
+      "selected-bg-day": {
+        "role": "secondary",
+        "displayName": "Selected Bg Day",
+        "canonical": "#f2efff",
+        "tonalRamp": [
+          "#0c0913",
+          "#26232f",
+          "#42404d",
+          "#625f6d",
+          "#83808e",
+          "#a5a3b2",
+          "#cac7d6",
+          "#efecfc"
+        ],
+        "cssVar": "--selected-bg"
+      },
+      "selected-ink-stage": {
+        "role": "secondary",
+        "displayName": "Selected Ink Stage",
+        "canonical": "#f3f1ff",
+        "tonalRamp": [
+          "#0b0a12",
+          "#25232e",
+          "#42404b",
+          "#615f6b",
+          "#82808d",
+          "#a5a3b0",
+          "#c9c7d5",
+          "#eeecfa"
+        ],
+        "cssVar": "--selected-ink"
+      },
+      "selected-ink-day": {
+        "role": "secondary",
+        "displayName": "Selected Ink Day",
+        "canonical": "#2b1d8f",
+        "tonalRamp": [
+          "#07012f",
+          "#1c0270",
+          "#332a9b",
+          "#4d4fc1",
+          "#6c72e8",
+          "#919cf9",
+          "#bbc5ff",
+          "#eaedff"
+        ],
+        "cssVar": "--selected-ink"
+      },
+      "teal": {
+        "role": "tertiary",
+        "displayName": "Correct Teal",
+        "canonical": "#18c6b5",
+        "tonalRamp": [
+          "#000f0c",
+          "#042c27",
+          "#034d46",
+          "#0b7166",
+          "#209689",
+          "#2dbdad",
+          "#4ce4d2",
+          "#b8fff4"
+        ],
+        "cssVar": "--green"
+      },
+      "teal-deep": {
+        "role": "tertiary",
+        "displayName": "Teal Deep",
+        "canonical": "#0e9c8f",
+        "tonalRamp": [
+          "#000f0c",
+          "#042c28",
+          "#034d46",
+          "#0c7067",
+          "#219589",
+          "#42bbad",
+          "#6ce0d1",
+          "#b8fff4"
+        ],
+        "cssVar": "--green-dark"
+      },
+      "teal-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Teal Ink Stage",
+        "canonical": "#5ef0e2",
+        "tonalRamp": [
+          "#000f0d",
+          "#002c28",
+          "#044d47",
+          "#0e7068",
+          "#23958b",
+          "#04beb1",
+          "#4fe3d6",
+          "#b9fff6"
+        ],
+        "cssVar": "--green-ink"
+      },
+      "teal-ink-day": {
+        "role": "tertiary",
+        "displayName": "Teal Ink Day",
+        "canonical": "#0a7a70",
+        "tonalRamp": [
+          "#000f0c",
+          "#012c28",
+          "#064d46",
+          "#107067",
+          "#349489",
+          "#5bb8ac",
+          "#81ddd0",
+          "#b9fff4"
+        ],
+        "cssVar": "--green-ink"
+      },
+      "correct-bg-stage": {
+        "role": "tertiary",
+        "displayName": "Correct Bg Stage",
+        "canonical": "#294f7f",
+        "tonalRamp": [
+          "#000a20",
+          "#02244c",
+          "#1d4271",
+          "#3c6394",
+          "#5c84b8",
+          "#7ea8de",
+          "#a8ccfb",
+          "#e4f0ff"
+        ],
+        "cssVar": "--correct-bg"
+      },
+      "correct-bg-day": {
+        "role": "tertiary",
+        "displayName": "Correct Bg Day",
+        "canonical": "#e3f8f6",
+        "tonalRamp": [
+          "#020e0d",
+          "#182927",
+          "#354644",
+          "#536564",
+          "#748785",
+          "#96aaa8",
+          "#bacecc",
+          "#dff4f2"
+        ],
+        "cssVar": "--correct-bg"
+      },
+      "correct-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Correct Ink Stage",
+        "canonical": "#dffcf8",
+        "tonalRamp": [
+          "#000f0d",
+          "#122a27",
+          "#2f4745",
+          "#4e6764",
+          "#6e8985",
+          "#90aca8",
+          "#b4d0cc",
+          "#d9f6f2"
+        ],
+        "cssVar": "--correct-ink"
+      },
+      "correct-ink-day": {
+        "role": "tertiary",
+        "displayName": "Correct Ink Day",
+        "canonical": "#075e56",
+        "tonalRamp": [
+          "#010f0c",
+          "#022c28",
+          "#094d46",
+          "#226f66",
+          "#489188",
+          "#6cb5ab",
+          "#90d9cf",
+          "#bbfef4"
+        ],
+        "cssVar": "--correct-ink"
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Perfect Gold",
+        "canonical": "#ffc933",
+        "tonalRamp": [
+          "#110a00",
+          "#302303",
+          "#543f00",
+          "#795d05",
+          "#a07d18",
+          "#ca9e23",
+          "#f7c125",
+          "#ffedc5"
+        ],
+        "cssVar": "--yellow"
+      },
+      "gold-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Gold Ink Stage",
+        "canonical": "#ffd666",
+        "tonalRamp": [
+          "#100a00",
+          "#2f2303",
+          "#523f01",
+          "#785e06",
+          "#9e7e1a",
+          "#c7a025",
+          "#edc453",
+          "#feedc1"
+        ],
+        "cssVar": "--yellow-ink"
+      },
+      "gold-ink-day": {
+        "role": "tertiary",
+        "displayName": "Gold Ink Day",
+        "canonical": "#8a5a00",
+        "tonalRamp": [
+          "#130900",
+          "#352001",
+          "#5a3a05",
+          "#83570e",
+          "#a9772e",
+          "#ce9a53",
+          "#f4be77",
+          "#feebd4"
+        ],
+        "cssVar": "--yellow-ink"
+      },
+      "leaf": {
+        "role": "tertiary",
+        "displayName": "Good Leaf",
+        "canonical": "#7ad151",
+        "tonalRamp": [
+          "#030f00",
+          "#0f2d00",
+          "#214f04",
+          "#34730c",
+          "#4b981f",
+          "#68be3d",
+          "#8ce464",
+          "#d1febf"
+        ],
+        "cssVar": "--good",
+        "note": "Defined in the :root blocks only (not in STAGE / applyTheme)."
+      },
+      "leaf-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Leaf Ink Stage",
+        "canonical": "#8fe36a",
+        "tonalRamp": [
+          "#030f00",
+          "#102d02",
+          "#234e09",
+          "#317300",
+          "#479914",
+          "#6bbd44",
+          "#8fe36a",
+          "#d0ffbd"
+        ],
+        "cssVar": "--good-ink",
+        "note": "Defined in the :root blocks only (not in STAGE / applyTheme)."
+      },
+      "leaf-ink-day": {
+        "role": "tertiary",
+        "displayName": "Leaf Ink Day",
+        "canonical": "#2b7a2f",
+        "tonalRamp": [
+          "#001001",
+          "#032e06",
+          "#0c5013",
+          "#247429",
+          "#49974b",
+          "#6dbb6d",
+          "#91e090",
+          "#cbffc9"
+        ],
+        "cssVar": "--good-ink",
+        "note": "Defined in the :root blocks only (not in STAGE / applyTheme)."
+      },
+      "rose": {
+        "role": "tertiary",
+        "displayName": "Miss Rose",
+        "canonical": "#ff5c8a",
+        "tonalRamp": [
+          "#1d0107",
+          "#4a021d",
+          "#7a0b35",
+          "#af1850",
+          "#dd3b6e",
+          "#fa7193",
+          "#ffb0bf",
+          "#fee8ec"
+        ],
+        "cssVar": "--red"
+      },
+      "rose-deep": {
+        "role": "tertiary",
+        "displayName": "Rose Deep",
+        "canonical": "#c9285a",
+        "tonalRamp": [
+          "#1e0006",
+          "#4a031b",
+          "#7a0e32",
+          "#b40349",
+          "#dc3d69",
+          "#f9738f",
+          "#ffb0bc",
+          "#fee8eb"
+        ],
+        "cssVar": "--red-deep"
+      },
+      "rose-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Rose Ink Stage",
+        "canonical": "#ff8fb0",
+        "tonalRamp": [
+          "#1d0009",
+          "#480421",
+          "#78103c",
+          "#9d375b",
+          "#c45a7c",
+          "#eb7d9e",
+          "#fcb0c4",
+          "#ffe8ed"
+        ],
+        "cssVar": "--red-ink"
+      },
+      "rose-ink-day": {
+        "role": "tertiary",
+        "displayName": "Rose Ink Day",
+        "canonical": "#c0245a",
+        "tonalRamp": [
+          "#1e0007",
+          "#49051d",
+          "#7c0334",
+          "#b10d4f",
+          "#da406f",
+          "#fd6e92",
+          "#fdb1bf",
+          "#ffe8eb"
+        ],
+        "cssVar": "--red-ink"
+      },
+      "wrong-bg-stage": {
+        "role": "tertiary",
+        "displayName": "Wrong Bg Stage",
+        "canonical": "#613675",
+        "tonalRamp": [
+          "#160020",
+          "#380b49",
+          "#572c6a",
+          "#784c8d",
+          "#9a6db1",
+          "#be90d6",
+          "#e4b4fc",
+          "#f7e8ff"
+        ],
+        "cssVar": "--wrong-bg"
+      },
+      "wrong-bg-day": {
+        "role": "tertiary",
+        "displayName": "Wrong Bg Day",
+        "canonical": "#ffeff3",
+        "tonalRamp": [
+          "#12080b",
+          "#2d2125",
+          "#4b3e41",
+          "#6b5d61",
+          "#8c7e82",
+          "#afa1a4",
+          "#d4c5c8",
+          "#faeaee"
+        ],
+        "cssVar": "--wrong-bg"
+      },
+      "wrong-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Wrong Ink Stage",
+        "canonical": "#ffe4ec",
+        "tonalRamp": [
+          "#15060b",
+          "#321f25",
+          "#503b42",
+          "#715a61",
+          "#937b82",
+          "#b69da5",
+          "#dbc1c9",
+          "#ffe8ee"
+        ],
+        "cssVar": "--wrong-ink"
+      },
+      "wrong-ink-day": {
+        "role": "tertiary",
+        "displayName": "Wrong Ink Day",
+        "canonical": "#8c1840",
+        "tonalRamp": [
+          "#1e0007",
+          "#49041d",
+          "#7d0134",
+          "#a33153",
+          "#ca5573",
+          "#f27895",
+          "#feb0bf",
+          "#fee8ec"
+        ],
+        "cssVar": "--wrong-ink"
+      },
+      "ember-ink-stage": {
+        "role": "tertiary",
+        "displayName": "Ember (stage)",
+        "canonical": "#ffa45c",
+        "tonalRamp": [
+          "#160700",
+          "#3a1c02",
+          "#63350a",
+          "#914d03",
+          "#bf6916",
+          "#e58c43",
+          "#ffb782",
+          "#feeadc"
+        ],
+        "cssVar": "--ember-ink",
+        "note": "Defined in the :root blocks only (not in STAGE / applyTheme)."
+      },
+      "ember-ink-day": {
+        "role": "tertiary",
+        "displayName": "Ember (day)",
+        "canonical": "#b4530f",
+        "tonalRamp": [
+          "#180500",
+          "#3e1802",
+          "#692f09",
+          "#9b4401",
+          "#c56326",
+          "#ed864d",
+          "#fdb793",
+          "#ffeadf"
+        ],
+        "cssVar": "--ember-ink",
+        "note": "Defined in the :root blocks only (not in STAGE / applyTheme)."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Result word",
+        "purpose": "CLEAR / FULL COMBO / TIME UP on the set result, tilted -4deg."
+      },
+      "judgement": {
+        "displayName": "Judgement",
+        "purpose": "PERFECT / GREAT / GOOD / MISS chip over a matched pair, tilted -4deg."
+      },
+      "numeral-result": {
+        "displayName": "Result count",
+        "purpose": "Judgement counts on the result screen; count up."
+      },
+      "numeral-today": {
+        "displayName": "Today number",
+        "purpose": "Words left today; rolls per digit."
+      },
+      "numeral-combo": {
+        "displayName": "Combo number",
+        "purpose": "Combo count at the lane's right end; rolls per digit."
+      },
+      "numeral-count": {
+        "displayName": "Trial count / streak",
+        "purpose": "7/25 count and day streak; 16px count on phones."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Board instruction; 30px on phones; 32px completion title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Dialog, panel and drill headings."
+      },
+      "card-word": {
+        "displayName": "Card word",
+        "purpose": "Words and meanings on match cards; 18px on phones, 16/15px two-line clamp for long items."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Primary and secondary buttons."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Dialog and panel copy, muted."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels and small buttons."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-shadow-stage",
+        "value": "rgba(5, 3, 30, .55)",
+        "purpose": "Shadow tint on the indigo stage (--card-shadow)."
+      },
+      {
+        "name": "card-shadow-day",
+        "value": "rgba(36, 32, 90, .16)",
+        "purpose": "Shadow tint on the lavender day (--card-shadow)."
+      },
+      {
+        "name": "card-lift",
+        "value": "0 6px 16px -6px var(--card-shadow)",
+        "purpose": "Match cards in every state, secondary buttons."
+      },
+      {
+        "name": "card-pressed",
+        "value": "0 3px 16px -6px var(--card-shadow)",
+        "purpose": "Match card :active, moved 3px down."
+      },
+      {
+        "name": "button-lift",
+        "value": "0 4px 18px -8px var(--card-shadow)",
+        "purpose": "Primary buttons; 0 1px 18px -8px when pressed."
+      },
+      {
+        "name": "chip-lift",
+        "value": "0 10px 24px -8px var(--card-shadow)",
+        "purpose": "Judgement chip (logo tile uses -10px spread)."
+      },
+      {
+        "name": "dialog",
+        "value": "0 24px 80px rgba(0, 0, 0, .4)",
+        "purpose": "Modal cards over the scrim."
+      },
+      {
+        "name": "banner",
+        "value": "0 12px 30px -10px rgba(10, 8, 40, 0.45)",
+        "purpose": "Banner pill over the board."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 3px solid var(--blue); outline-offset: 2px",
+        "purpose": "Keyboard focus (:focus-visible); 1px offset on inputs."
+      },
+      {
+        "name": "focus-vignette",
+        "value": "radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(8, 6, 32, 0.2) 100%)",
+        "purpose": "body::after in focus mode, fades in over 0.8s."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-state",
+        "value": "cubic-bezier(.2, .8, .2, 1)",
+        "purpose": "--ease: state transitions, judgement chip, digit roll."
+      },
+      {
+        "name": "spring",
+        "value": "cubic-bezier(.34, 1.56, .64, 1)",
+        "purpose": "Rewards: lane fill, combo label, pop, correct pulse, result tiles."
+      },
+      {
+        "name": "press",
+        "value": "90ms",
+        "purpose": "Card and button hover/press transitions."
+      },
+      {
+        "name": "theme-shift",
+        "value": "420ms",
+        "purpose": "--theme-shift: colour cross-fade when switching stage/day."
+      },
+      {
+        "name": "judge",
+        "value": "520ms",
+        "purpose": "Judgement chip rise, overshoot 1.12, hold, float off; static 700ms when effects are off."
+      },
+      {
+        "name": "roll",
+        "value": "260ms + 35ms per digit",
+        "purpose": "Changed digits roll up from 60% below."
+      },
+      {
+        "name": "ripple",
+        "value": "480ms",
+        "purpose": "Ring out of each matched card, in the match's judgement colour (gold / teal / leaf)."
+      },
+      {
+        "name": "correct-pulse",
+        "value": "420ms",
+        "purpose": "Correct card scale 1.045 and brighten."
+      },
+      {
+        "name": "shake",
+        "value": "220ms",
+        "purpose": "Wrong card ±7px."
+      },
+      {
+        "name": "card-enter",
+        "value": "900ms",
+        "purpose": "Replacement card rises 10px from 0.96."
+      },
+      {
+        "name": "lane-fill",
+        "value": "650ms spring",
+        "purpose": "Progress fill width."
+      },
+      {
+        "name": "pop",
+        "value": "420ms spring",
+        "purpose": "Combo milestones (1.3), streak lit (1.35)."
+      },
+      {
+        "name": "burst",
+        "value": "700ms",
+        "purpose": "10 stars in teal / ember / rose at combo milestones 5/10/20/50 and when the streak lights."
+      },
+      {
+        "name": "result-tiles",
+        "value": "520ms spring, 90ms stagger",
+        "purpose": "Result cells rise in; counts count up over 700ms."
+      },
+      {
+        "name": "confetti",
+        "value": "1800-3200ms",
+        "purpose": "Today's goal done only; rose / teal / leaf / ember / teal-ink pieces, no gold."
+      },
+      {
+        "name": "banner",
+        "value": "2800ms",
+        "purpose": "Today's goal pill; static 2600ms when effects are off."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce or effects off",
+        "purpose": "fx layer skips everything except the judgement word and banner (shown static); a global CSS rule collapses every animation and transition to 0.01ms."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "rail-to-bottom-nav",
+        "value": "1050px"
+      },
+      {
+        "name": "phone",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Match Card",
+      "kind": "card",
+      "refersTo": "match-card",
+      "description": "The board's card: number key plus word; selected, correct and wrong are colour states.",
+      "html": "<div class=\"ds-board\"><button class=\"ds-card\"><span class=\"ds-num\">1</span><span class=\"ds-word\">樱桃</span></button><button class=\"ds-card ds-selected\"><span class=\"ds-num\">2</span><span class=\"ds-word\">cherry</span></button><button class=\"ds-card ds-correct\"><span class=\"ds-num\">3</span><span class=\"ds-word\">pear</span></button><button class=\"ds-card ds-wrong\"><span class=\"ds-num\">4</span><span class=\"ds-word\">furor</span></button></div>",
+      "css": ".ds-board{display:grid;grid-template-columns:repeat(2,200px);gap:10px;padding:16px;background:var(--bg,#24205a)} .ds-card{height:60px;display:grid;grid-template-columns:40px 1fr;align-items:center;padding:0 16px 0 12px;border:2px solid var(--line,#463f8f);border-radius:14px;color:var(--text,#f3f1ff);background:var(--panel,#2f2a6e);box-shadow:0 6px 16px -6px var(--card-shadow,rgba(5,3,30,.55));cursor:pointer;font:inherit;transition:transform 90ms cubic-bezier(.2,.8,.2,1),border-color 90ms,background 90ms,box-shadow 90ms} .ds-card:hover{border-color:var(--line-strong,#6a62b5);background:var(--panel-soft,#2b2666)} .ds-card:active{transform:translateY(3px);box-shadow:0 3px 16px -6px var(--card-shadow,rgba(5,3,30,.55))} .ds-card:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:2px} .ds-num{font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-weight:700;font-size:16px;color:var(--muted,#b8b2e8)} .ds-word{font-size:21px;font-weight:800;text-align:center} .ds-selected{border-color:var(--blue,#7c5cff);color:var(--selected-ink,#f3f1ff);background:var(--selected-bg,#483a9c)} .ds-correct{border-color:var(--green,#18c6b5);color:var(--correct-ink,#dffcf8);background:var(--correct-bg,#294f7f)} .ds-wrong{border-color:var(--red,#ff5c8a);color:var(--wrong-ink,#ffe4ec);background:var(--wrong-bg,#613675)}"
+    },
+    {
+      "name": "Lane with Combo",
+      "kind": "custom",
+      "refersTo": "lane-track",
+      "description": "Progress lane with beat ticks, one judged segment per match, combo count at the right end.",
+      "html": "<div class=\"ds-lane-wrap\"><div class=\"ds-combo\"><b>7</b><span>连击</span></div><div class=\"ds-lane\"><div class=\"ds-fill\"></div></div><span class=\"ds-count\">7/25</span></div>",
+      "css": ".ds-lane-wrap{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;position:relative;padding:32px 16px 16px;background:var(--bg,#24205a);width:360px} .ds-lane{position:relative;height:16px;border-radius:999px;overflow:hidden;background:var(--track,#40358e)} .ds-lane::after{content:\"\";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(20% - 2px),rgba(255,255,255,.55) calc(20% - 2px) 20%)} .ds-fill{width:28%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#ffc933 0 30%,#18c6b5 30% 58%,#ffc933 58% 72%,#7ad151 72% 86%,#18c6b5 86% 100%);transition:width 650ms cubic-bezier(.34,1.56,.64,1)} .ds-combo{position:absolute;right:76px;top:4px;display:flex;align-items:baseline;gap:4px;color:var(--text,#f3f1ff);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-weight:800} .ds-combo b{font-size:30px;line-height:1} .ds-combo span{font-size:13px;letter-spacing:.08em} .ds-count{min-width:56px;text-align:right;color:var(--muted,#b8b2e8);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Judgement Chip",
+      "kind": "custom",
+      "refersTo": "judge-chip",
+      "description": "The judgement word over a matched pair, in its ink colour, with reaction time.",
+      "html": "<div class=\"ds-judges\"><span class=\"ds-judge ds-perfect\">PERFECT<small>0.8s</small></span><span class=\"ds-judge ds-great\">GREAT<small>1.3s</small></span><span class=\"ds-judge ds-good\">GOOD<small>2.4s</small></span><span class=\"ds-judge ds-miss\">MISS</span></div>",
+      "css": ".ds-judges{display:flex;gap:18px;padding:24px;background:var(--bg,#24205a)} .ds-judge{display:inline-flex;align-items:baseline;gap:6px;padding:0 10px;border-radius:12px;background:var(--panel,#2f2a6e);box-shadow:0 10px 24px -8px var(--card-shadow,rgba(5,3,30,.55));font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-size:26px;font-weight:800;letter-spacing:.02em;transform:rotate(-4deg)} .ds-judge small{color:var(--muted,#b8b2e8);font-size:15px} .ds-perfect{color:var(--yellow-ink,#ffd666)} .ds-great{color:var(--green-ink,#5ef0e2)} .ds-good{color:var(--good-ink,#8fe36a)} .ds-miss{color:var(--red-ink,#ff8fb0)}"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink-button fill: lavender on the stage, indigo by day.",
+      "html": "<button class=\"ds-btn-primary\">继续</button>",
+      "css": ".ds-btn-primary{min-width:150px;height:54px;padding:0 18px;border:0;border-radius:16px;color:var(--on-primary,#24205a);background:var(--primary,#c9c1ff);box-shadow:0 4px 18px -8px var(--card-shadow,rgba(5,3,30,.55));font:inherit;font-size:17px;font-weight:1000;line-height:1.15;cursor:pointer;transition:transform 90ms cubic-bezier(.2,.8,.2,1),box-shadow 90ms,filter 90ms} .ds-btn-primary:hover{filter:brightness(1.03)} .ds-btn-primary:active{transform:translateY(3px);box-shadow:0 1px 18px -8px var(--card-shadow,rgba(5,3,30,.55))} .ds-btn-primary:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Transparent with line outline and violet-ink text.",
+      "html": "<button class=\"ds-btn-secondary\">专项练混淆过的词</button>",
+      "css": ".ds-btn-secondary{min-width:150px;height:54px;padding:0 18px;border:2px solid var(--line,#463f8f);border-radius:16px;color:var(--blue-ink,#b9a8ff);background:transparent;box-shadow:0 6px 16px -6px var(--card-shadow,rgba(5,3,30,.55));font:inherit;font-size:17px;font-weight:1000;cursor:pointer;transition:transform 90ms cubic-bezier(.2,.8,.2,1)} .ds-btn-secondary:hover{filter:brightness(1.03)} .ds-btn-secondary:active{transform:translateY(3px)} .ds-btn-secondary:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:2px}"
+    },
+    {
+      "name": "Today Line and Streak",
+      "kind": "custom",
+      "refersTo": "numeral-today",
+      "description": "Words left today as a big Saira number; streak chip greyscale until the goal is done, then ember.",
+      "html": "<div class=\"ds-today\"><span class=\"ds-today-num\">9</span><span>个词今天要练 · 约 1 分钟</span><span class=\"ds-streak\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z\"/></svg>0</span><span class=\"ds-streak ds-lit\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z\"/></svg>12</span></div>",
+      "css": ".ds-today{display:flex;align-items:baseline;gap:4px 10px;padding:16px;color:var(--muted,#b8b2e8);background:var(--bg,#24205a);font-size:15px;font-weight:800} .ds-today-num{color:var(--text,#f3f1ff);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-size:34px;font-weight:800;line-height:.9} .ds-streak{display:inline-flex;align-items:center;gap:3px;margin-left:auto;color:var(--muted,#b8b2e8);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-size:22px;font-weight:800;filter:grayscale(1);opacity:.75;transition:filter .4s,opacity .4s,color .4s} .ds-streak.ds-lit{margin-left:0;color:var(--ember-ink,#ffa45c);filter:none;opacity:1}"
+    },
+    {
+      "name": "Result Block",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Set result: CLEAR word, four judgement counts, result line.",
+      "html": "<div class=\"ds-result\"><div class=\"ds-clear\">CLEAR</div><div class=\"ds-cells\"><div><b class=\"ds-p\">PERFECT</b><span>9</span></div><div><b class=\"ds-g\">GREAT</b><span>7</span></div><div><b class=\"ds-o\">GOOD</b><span>2</span></div><div><b class=\"ds-m\">MISS</b><span>2</span></div></div><p class=\"ds-line\">最大连击 <b>12</b> · 正确率 <b>90%</b> · 用时 <b>1:35</b></p></div>",
+      "css": ".ds-result{width:360px;padding:20px;text-align:center;background:var(--bg,#24205a);color:var(--text,#f3f1ff)} .ds-clear{color:var(--primary,#c9c1ff);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-size:64px;font-weight:800;line-height:1;letter-spacing:.02em;transform:rotate(-4deg)} .ds-cells{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px;margin:18px 0 6px;font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-weight:800} .ds-cells div{display:grid;justify-items:center} .ds-cells b{font-size:15px;letter-spacing:.04em} .ds-cells span{font-size:38px;line-height:1.05;font-variant-numeric:tabular-nums} .ds-p{color:var(--yellow-ink,#ffd666)} .ds-g{color:var(--green-ink,#5ef0e2)} .ds-o{color:var(--good-ink,#8fe36a)} .ds-m{color:var(--red-ink,#ff8fb0)} .ds-line{margin:10px 0 0;color:var(--muted,#b8b2e8);font-size:15px;font-weight:700} .ds-line b{color:var(--text,#f3f1ff);font-family:\"Saira Condensed\",\"Arial Narrow\",sans-serif;font-size:20px;font-weight:800}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "stage-chip-selected",
+      "description": "Library stage filters; pressed state is violet.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">全部 <b>120</b></button><button class=\"ds-chip\" aria-pressed=\"false\">学习中 <b>14</b></button></div>",
+      "css": ".ds-chips{display:flex;gap:8px;padding:16px;background:var(--panel,#2f2a6e)} .ds-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 12px;border:2px solid var(--line,#463f8f);border-radius:999px;color:var(--muted,#b8b2e8);background:var(--bg,#24205a);font:inherit;font-size:14px;font-weight:800;cursor:pointer} .ds-chip b{color:var(--text,#f3f1ff)} .ds-chip:hover{border-color:var(--line-strong,#6a62b5)} .ds-chip:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:2px} .ds-chip[aria-pressed=\"true\"]{border-color:var(--blue,#7c5cff);color:var(--selected-ink,#f3f1ff);background:var(--selected-bg,#483a9c)} .ds-chip[aria-pressed=\"true\"] b{color:inherit}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Ground-colour field, 2px line, violet border and caret on focus.",
+      "html": "<label class=\"ds-label\">新词<input class=\"ds-input\" placeholder=\"apple,苹果\"></label>",
+      "css": ".ds-label{display:grid;gap:7px;width:320px;padding:16px;background:var(--panel,#2f2a6e);color:var(--muted,#b8b2e8);font-size:14px;font-weight:900} .ds-input{width:100%;padding:12px 13px;border:2px solid var(--line,#463f8f);border-radius:14px;color:var(--text,#f3f1ff);background:var(--bg,#24205a);caret-color:var(--blue,#7c5cff);font:inherit;font-weight:400;outline:none} .ds-input:hover{border-color:var(--line-strong,#6a62b5)} .ds-input:focus{border-color:var(--blue,#7c5cff)} .ds-input:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:1px}"
+    },
+    {
+      "name": "Bottom Navigation",
+      "kind": "nav",
+      "refersTo": "bottom-nav-item",
+      "description": "Phones: five equal buttons in thumb reach; active one in ink colour.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-btn ds-on\" aria-current=\"page\">练习</button><button class=\"ds-nav-btn\">词库</button><button class=\"ds-nav-btn\">设置</button><button class=\"ds-nav-btn\">外观</button><button class=\"ds-nav-btn\">EN / 中</button></nav>",
+      "css": ".ds-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;width:380px;padding:8px 16px;border-top:1px solid var(--line,#463f8f);background:var(--bg,#24205a)} .ds-nav-btn{min-height:44px;padding:6px 4px;border:2px solid var(--line,#463f8f);border-radius:14px;color:var(--muted,#b8b2e8);background:var(--panel-soft,#2b2666);font:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:color 160ms cubic-bezier(.2,.8,.2,1),border-color 160ms} .ds-nav-btn:hover,.ds-nav-btn.ds-on{color:var(--primary,#c9c1ff)} .ds-nav-btn:focus-visible{outline:3px solid var(--blue,#7c5cff);outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Rhythm Stage",
+    "overview": "Every match is a note landing on a rhythm-game stage. The learner taps a meaning and a word; the pair is judged on the spot (PERFECT, GREAT, GOOD or MISS) from the review engine's own reaction-time grade, the lane at the top fills one judged segment per match, the combo counts up at the lane's right end, and the number of words left today rolls down towards zero. At night the stage is a deep indigo room; by day it is lavender with white cards. The atmosphere comes from the judgement words and the lane, not from decoration.\n\nThe surface is dense and quiet so the board can be loud only when a match lands. One condensed face (Saira Condensed) carries every judgement and every numeral; all running text and every Chinese string stays in the system Chinese face. Colours are states, not decoration: each hue has one meaning everywhere in the app. The look deliberately replaces a borrowed Duolingo arrangement (green, 3D block buttons, mascot cheer): there are no block buttons, no mascot and no green-as-brand.",
+    "keyCharacteristics": [
+      "Two stages, one world: indigo stage (dark) and lavender day (light), switched by `data-color-mode`, same roles in both.",
+      "Hue = meaning: violet chosen, teal correct/GREAT, gold PERFECT, leaf GOOD, rose wrong/MISS, ember a lit day streak.",
+      "Indigo-ink buttons, not coloured buttons: the primary action is the stage's own ink (lavender on indigo, indigo on lavender).",
+      "Saira Condensed for scoreboard material only (numerals, judgements, result words), rolling digit by digit.",
+      "Soft lifted cards, 14px corners, 2px outlines; no hard offset shadows."
+    ],
+    "rules": [
+      {
+        "name": "The One Gold Rule",
+        "body": "Gold means PERFECT and nothing else. Result words, the combo count, the streak, milestone stars and confetti never turn gold; CLEAR is ink, FULL COMBO is teal, TIME UP is rose, the lit streak is ember.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chosen Violet Rule",
+        "body": "Violet marks what the learner has chosen or where the keyboard is: the selected card, a pressed filter, the focus ring. It is never a fill for a primary action and never a success colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Variant Rule",
+        "body": "Base hues are for outlines, fills and segments; anything read as text uses the matching `-ink` variant for the current mode, which is what holds the 4.5:1 contrast.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoreboard Rule",
+        "body": "Saira Condensed is for numerals and the English judgement and result words only. Chinese text, sentences and buttons are never set in it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Roll Rule",
+        "body": "A number that changes in place (today's remaining, the combo, the trial count, the streak) rolls only its changed digits upward; summary figures count up instead. Numbers never jump.",
+        "section": "typography"
+      },
+      {
+        "name": "The Soft Lift Rule",
+        "body": "Shadows are blurred, negatively spread and indigo-tinted. No hard offset shadows and no 3D block bottoms under buttons.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** give every state the same hue everywhere: violet chosen, teal correct/GREAT, gold PERFECT, leaf GOOD, rose wrong/MISS, ember lit streak.",
+      "**Do** use the `-ink` variant of a hue for any text in it, and check it at 4.5:1 against the surface it sits on in both modes.",
+      "**Do** set every numeral and every judgement or result word in Saira Condensed, and roll changed digits rather than replacing the number.",
+      "**Do** make the primary action an ink-button fill (lavender on stage, indigo by day) with 16px corners and button lift.",
+      "**Do** keep cards and controls at 14px corners with 2px outlines and the soft indigo-tinted lift.",
+      "**Do** keep touch targets at 44px or more and show the 3px violet focus ring (2px offset) for keyboard focus.",
+      "**Do** keep the judgement word visible when motion is reduced or effects are off; drop only its motion."
+    ],
+    "donts": [
+      "**Don't** use gold for anything but PERFECT: not the combo, the streak, a result word, a warning or a celebration ripple.",
+      "**Don't** use violet as a primary-action fill or for success; its only fill is a pressed state (the listen button while it speaks).",
+      "**Don't** bring back the borrowed Duolingo look: green as brand colour, 3D block buttons with hard bottom edges, a mascot cheering.",
+      "**Don't** set Chinese text or sentences in Saira Condensed.",
+      "**Don't** add `text-transform: uppercase` to new components; capitals belong to the judgement and result words, which are written in capitals.",
+      "**Don't** hard-code new hex values in components; add a token with both a stage and a day value first."
+    ]
+  }
+}

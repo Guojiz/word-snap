@@ -62,6 +62,8 @@
       --yellow: #ffc933;
       --yellow-ink: #ffd666;
       --ember-ink: #ffa45c;
+      --good: #7ad151;
+      --good-ink: #8fe36a;
       --primary: #c9c1ff;
       --primary-dark: #a99cff;
       --on-primary: #24205a;
@@ -104,6 +106,7 @@
       --red-ink: #c0245a;
       --yellow-ink: #8a5a00;
       --ember-ink: #b4530f;
+      --good-ink: #2b7a2f;
       --primary: #2b2470;
       --primary-dark: #1d1856;
       --on-primary: #ffffff;
@@ -372,9 +375,8 @@
 
     .fx-judge-perfect { color: var(--yellow-ink); }
     .fx-judge-great { color: var(--green-ink); }
-    .fx-judge-good { color: #2f8a3a; }
+    .fx-judge-good { color: var(--good-ink); }
     .fx-judge-miss { color: var(--red-ink); }
-    :root[data-color-mode="dark"] .fx-judge-good { color: #8fe36a; }
 
     .fx-confetti {
       border-radius: 2px;
@@ -780,8 +782,16 @@
     }
 
     .match-card .num {
+      color: var(--muted);
       font-family: var(--num-font);
       font-weight: 700;
+    }
+
+    /* On coloured card states the hint takes the card's own ink (always ≥ 4.5:1). */
+    .match-card.selected .num,
+    .match-card.correct .num,
+    .match-card.wrong .num {
+      color: inherit;
     }
 
     .match-card .reading {
@@ -1183,7 +1193,7 @@
       width: 18px;
       height: 18px;
       flex: 0 0 auto;
-      accent-color: var(--green);
+      accent-color: var(--blue);
     }
 
     label {
@@ -1211,6 +1221,14 @@
     select:focus,
     textarea:focus {
       border-color: var(--blue);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
     ::selection {
@@ -1263,8 +1281,8 @@
       max-width: calc(100vw - 32px);
       padding: 10px 10px 10px 18px;
       border-radius: 14px;
-      color: #fff;
-      background: #1f2a30;
+      color: var(--on-primary);
+      background: var(--primary);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
       font-weight: 800;
       transform: translateX(-50%);
@@ -1275,8 +1293,8 @@
       border: 0;
       border-radius: 10px;
       padding: 0 14px;
-      color: #1f2a30;
-      background: #fff;
+      color: var(--primary);
+      background: var(--on-primary);
       font: inherit;
       font-weight: 900;
       cursor: pointer;
@@ -1982,7 +2000,7 @@
 
     .tab-btn[aria-selected="true"] {
       border-color: var(--line);
-      color: var(--green-ink);
+      color: var(--primary);
       background: var(--panel-soft);
       margin-bottom: -2px;
       padding-bottom: 2px;
@@ -2140,7 +2158,7 @@
     .ai-section progress {
       width: 100%;
       height: 10px;
-      accent-color: var(--green);
+      accent-color: var(--blue);
     }
 
     .wordbook .option-grid {
@@ -2425,7 +2443,7 @@
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
       <div class="logo" aria-hidden="true">W</div>
-      <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
+      <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
       <button class="rail-btn" type="button" id="openLibraryRail" data-en="Library" data-zh="词库">词库</button>
       <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
@@ -2434,7 +2452,7 @@
 
     <main class="main">
       <nav class="mobile-nav" aria-label="窄屏导航" data-en-aria="Mobile navigation" data-zh-aria="窄屏导航">
-        <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
+        <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
         <button class="rail-btn" type="button" id="openLibraryMobile" data-en="Library" data-zh="词库">词库</button>
         <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
         <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
@@ -2900,7 +2918,8 @@
     const COLOR_MODE_KEY = "word_snap_color_mode";
     // One visual world (the rhythm-game stage). Colours keep their meaning everywhere:
     // violet = selected, teal = correct, gold = perfect, rose = wrong; the skin no longer
-    // rotates per set. Values mirror the :root tokens in the stylesheet.
+    // rotates per set. :root holds the pre-JS fallbacks; applyTheme() derives the mixed
+    // tones (selected / correct / wrong grounds, track) at runtime — DESIGN.md records those.
     const STAGE = {
       dark: {
         bg: "#24205a", panel: "#2f2a6e", panel2: "#29246a", line: "#463f8f", lineStrong: "#6a62b5",
@@ -4131,7 +4150,7 @@
     }
 
     // The lane is the set's judgement history: one segment per match, in its judgement colour.
-    const JUDGE_COLORS = { perfect: "#ffc933", great: "#18c6b5", good: "#7ad151" };
+    const JUDGE_COLORS = { perfect: "#ffc933", great: "#18c6b5", good: "#7ad151" }; // = --yellow / --green / --good
     function laneGradient() {
       const list = state.levelJudgements || [];
       if (!list.length) return "none";
@@ -5598,7 +5617,7 @@
       second.card.classList.add("correct");
       state.levelStreak = (state.levelStreak || 0) + 1;
       state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
-      WordSnapFx.ripple([first.card, second.card], WordSnapFx.tierFor(state.streak).colors[0]);
+      WordSnapFx.ripple([first.card, second.card], JUDGE_COLORS[WordSnapFx.judgementFor(grade)] || JUDGE_COLORS.great);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
       updateCombo(state.streak);
