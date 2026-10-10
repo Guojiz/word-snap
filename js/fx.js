@@ -5,6 +5,7 @@
  *   burst      a few stars out of an element (streak milestones 5 / 10 / 20 / 50)
  *   countUp    a number that counts up (set summary)
  *   confetti   today's goal done
+ *   banner     a short message over the board (today's goal done, also in focus mode)
  *   haptic     a short vibration where the device has one
  * Everything is drawn in one fixed layer that ignores the pointer, animated with
  * the Web Animations API and removed when done. Nothing runs when the system asks
@@ -172,6 +173,27 @@
     }
   }
 
+  /** A pill over the board for a moment ("Today's goal done") — seen even in focus mode. */
+  function banner(text) {
+    if (!doc || !text) return;
+    const el = doc.createElement("div");
+    el.className = "fx-banner";
+    el.setAttribute("role", "status");
+    el.textContent = text;
+    getLayer().appendChild(el);
+    if (!enabled() || !el.animate) {
+      setTimeout(() => el.remove(), 2600);
+      return;
+    }
+    play(el, [
+      { transform: "translate(-50%, -12px) scale(0.85)", opacity: 0 },
+      { transform: "translate(-50%, 0) scale(1.06)", opacity: 1, offset: 0.12 },
+      { transform: "translate(-50%, 0) scale(1)", opacity: 1, offset: 0.2 },
+      { transform: "translate(-50%, 0) scale(1)", opacity: 1, offset: 0.85 },
+      { transform: "translate(-50%, -8px) scale(0.98)", opacity: 0 }
+    ], { duration: 2800, easing: "ease-out" });
+  }
+
   /** A short vibration (correct: a tap; wrong: a double buzz). Off with effects. */
   function haptic(kind = "tap") {
     if (!on || !win || !win.navigator || typeof win.navigator.vibrate !== "function") return;
@@ -180,5 +202,5 @@
     } catch { /* not allowed here */ }
   }
 
-  return { ripple, burst, pop, countUp, confetti, haptic, setEnabled, enabled, tierFor, isMilestone, clock, SPRING };
+  return { ripple, burst, pop, countUp, confetti, banner, haptic, setEnabled, enabled, tierFor, isMilestone, clock, SPRING };
 });

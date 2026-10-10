@@ -262,11 +262,12 @@ export const WORDLIST_SCHEMA = {
         type: "object",
         properties: {
           word: { type: "string" },
+          reading: { type: "string" },
           meaning: { type: "string" },
           example: { type: "string" },
           translation: { type: "string" }
         },
-        required: ["word", "meaning", "example", "translation"]
+        required: ["word", "reading", "meaning", "example", "translation"]
       }
     }
   },
@@ -289,6 +290,7 @@ export function wordListPrompt(request, lang, max = 60) {
         "Write both as the language's own name, e.g. English, 中文, 日本語, 한국어, Español, Français, Deutsch.\n" +
         `items: as many words as the request asks for (20 if it does not say), at most ${max}. Each item:\n` +
         "- word: in the target language, dictionary form (phrases are fine);\n" +
+        "- reading: how to read the word when the spelling does not show it — kana for Japanese, pinyin with tone marks for Chinese; otherwise empty;\n" +
         "- meaning: short, in the native language; separate senses with ; and never use commas;\n" +
         "- example: one short, natural target-language sentence that really uses the word;\n" +
         "- translation: the example in the native language.\n" +
@@ -417,10 +419,13 @@ export function parseWordList(text, lang, max = 100) {
     const key = word.toLowerCase();
     if (!word || !meaning || seen.has(key)) continue;
     seen.add(key);
+    // Kana / pinyin / hangul only, and not just the word again.
+    const rawReading = importField(raw.reading, 40).replace(/[（）()\[\]=,，]/g, "").trim();
+    const reading = rawReading && rawReading !== word && /^[\u3040-\u30ffー・\s]+$|^[a-zA-Zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü\s'-]+$|^[\uac00-\ud7af\s]+$/.test(rawReading) ? rawReading : "";
     // Examples are optional: drop one that is not a sentence in the target language.
     const example = sentenceIn(importField(raw.example, 200), a);
     const translation = example ? importField(raw.translation, 160) : "";
-    items.push({ word, meaning, example, translation });
+    items.push({ word, reading, meaning, example, translation });
   }
   if (!items.length) return null;
   const changed = a !== current.a || b !== current.b;
@@ -432,9 +437,11 @@ export function wordListToImport(list) {
   const lines = [];
   if (list.lang) lines.push(`@lang: ${list.lang.a} | ${list.lang.b}`);
   for (const item of list.items) {
+    // "食べる（たべる）": the app splits the reading back out on import.
+    const word = item.reading ? `${item.word}（${item.reading}）` : item.word;
     lines.push(item.example
-      ? `${item.word},${item.meaning} | ${item.example}${item.translation ? ` | ${item.translation}` : ""}`
-      : `${item.word},${item.meaning}`);
+      ? `${word},${item.meaning} | ${item.example}${item.translation ? ` | ${item.translation}` : ""}`
+      : `${word},${item.meaning}`);
   }
   return lines.join("\n");
 }

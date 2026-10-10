@@ -30,8 +30,9 @@ const POS = /^(?:[a-z]+\.\s*)+/i;
  */
 export function cleanMeaning(translation, maxSenses = 3, maxLength = 18) {
   const senses = [];
-  for (const raw of String(translation || "").split(/\\n|\n/)) {
-    const line = raw.trim();
+  // ECDICT keeps line breaks as literal "\\n" (sometimes "\\r\\n"); either may appear.
+  for (const raw of String(translation || "").split(/\\r\\n|\\n|\\r|\r?\n/)) {
+    const line = raw.replace(/\\r|\r/g, "").trim();
     if (!line || line.startsWith("[")) continue;
     const body = line.replace(POS, "")
       .replace(/[（(][^（）()]*[）)]/g, "")
@@ -68,4 +69,15 @@ export function bookProgress(words, library) {
   let have = 0;
   for (const [word] of words) if (library.has(word.toLowerCase())) have += 1;
   return have;
+}
+
+/**
+ * Book order: words new at this level first (not in an easier book), then words
+ * an easier book already has, and the most frequent function words last — a
+ * learner opening IELTS should not start with "in", "on", "as".
+ * rank: frequency rank (1 = most frequent); easier: Set of words in easier books.
+ */
+export function bookGroup(word, rank, easier, basicRank = 120) {
+  if (rank <= basicRank) return 2;
+  return easier.has(word) ? 1 : 0;
 }

@@ -54,7 +54,7 @@ test("word list: cleaned for the import format, deduplicated, language switch ke
   const list = parseWordList(JSON.stringify({
     target: "日本語", native: "中文",
     items: [
-      { word: "食べる", meaning: "吃，吃饭", example: "朝ご飯を食べる。", translation: "吃早饭。" },
+      { word: "食べる", reading: "たべる", meaning: "吃，吃饭", example: "朝ご飯を食べる。", translation: "吃早饭。" },
       { word: "食べる", meaning: "duplicate", example: "", translation: "" },
       { word: "行く", meaning: "去=前往", example: "Go", translation: "去" },
       { word: "", meaning: "empty", example: "", translation: "" },
@@ -69,7 +69,8 @@ test("word list: cleaned for the import format, deduplicated, language switch ke
   assert.equal(list.items[2].word, "a / b");
   const lines = wordListToImport(list).split("\n");
   assert.equal(lines[0], "@lang: 日本語 | 中文");
-  assert.equal(lines[1], "食べる,吃；吃饭 | 朝ご飯を食べる。 | 吃早饭。");
+  assert.equal(lines[1], "食べる（たべる）,吃；吃饭 | 朝ご飯を食べる。 | 吃早饭。", "the reading travels in the word column");
+  assert.equal(list.items[1].reading, "", "no reading given, none invented");
   assert.equal(lines[2], "行く,去；前往");
   // Same language as now: no @lang line.
   const same = parseWordList(JSON.stringify({ target: "English", native: "中文", items: [{ word: "sway", meaning: "摇摆", example: "", translation: "" }] }));

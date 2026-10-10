@@ -248,7 +248,7 @@
 
     .lesson-top {
       display: grid;
-      grid-template-columns: 36px minmax(0, 1fr) auto;
+      grid-template-columns: 36px minmax(0, 1fr) auto auto;
       gap: 18px;
       align-items: center;
       margin-bottom: 54px;
@@ -257,6 +257,7 @@
     /* Focus mode: everything but the board goes away and the board glides to the
        middle of the screen (js: enterFocus / exitFocus animate the move). */
     body.focus-mode .rail,
+    body.focus-mode .streak-chip,
     body.focus-mode .mobile-nav,
     body.focus-mode .today-bar,
     body.focus-mode .prompt-kicker,
@@ -311,6 +312,40 @@
       border-radius: 2px;
     }
 
+    .fx-banner {
+      position: absolute;
+      left: 50%;
+      top: 16%;
+      padding: 10px 20px;
+      border-radius: 999px;
+      color: #fff;
+      background: #2f7d00;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.18);
+      font-size: 17px;
+      font-weight: 1000;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+
+    /* Day streak, always next to the progress: grey until today's goal is done, then orange. */
+    .streak-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 1000;
+      filter: grayscale(1);
+      opacity: 0.75;
+      transition: filter 0.4s ease, opacity 0.4s ease, color 0.4s ease;
+    }
+
+    .streak-chip.lit {
+      color: #e07a00;
+      filter: none;
+      opacity: 1;
+    }
+
     /* Set summary: Duolingo-style stat tiles that pop in one after another. */
     .completion.show .completion-badge {
       animation: badge-pop 650ms cubic-bezier(.34, 1.56, .64, 1);
@@ -361,9 +396,9 @@
     }
 
     /* Fixed colours (not the rotating theme), so each tile always means the same thing. */
-    .stat-tile.accuracy { --tile: #58cc02; }
-    .stat-tile.time { --tile: #1cb0f6; }
-    .stat-tile.combo { --tile: #ff9600; }
+    .stat-tile.accuracy { --tile: #2f7d00; }
+    .stat-tile.time { --tile: #0b72b0; }
+    .stat-tile.combo { --tile: #b35c00; }
 
     @keyframes tile-in {
       from { transform: translateY(14px) scale(0.85); opacity: 0; }
@@ -412,6 +447,10 @@
       visibility: hidden;
       transition: opacity 0.4s ease, visibility 0.4s ease;
       cursor: pointer;
+    }
+
+    @media (hover: none) {
+      .focus-exit .key-hint { display: none; }
     }
 
     body.focus-mode .focus-exit {
@@ -570,9 +609,16 @@
       transform: translateY(0) scale(1);
     }
 
-    .combo-label[data-tier="gold"] { color: #ff9600; }
-    .combo-label[data-tier="fire"] { color: #ff4b4b; }
-    .combo-label[data-tier="blaze"] { color: #ce82ff; }
+    /* Label colours meet 4.5:1 on light backgrounds; brighter in dark mode. */
+    .combo-label { color: #2f7d00; }
+    .combo-label[data-tier="gold"] { color: #a85a00; }
+    .combo-label[data-tier="fire"] { color: #c62828; }
+    .combo-label[data-tier="blaze"] { color: #7b3fbf; }
+
+    :root[data-color-mode="dark"] .combo-label { color: #89e219; }
+    :root[data-color-mode="dark"] .combo-label[data-tier="gold"] { color: #ffc800; }
+    :root[data-color-mode="dark"] .combo-label[data-tier="fire"] { color: #ff7b6b; }
+    :root[data-color-mode="dark"] .combo-label[data-tier="blaze"] { color: #d9a3ff; }
 
     .top-count {
       min-width: 68px;
@@ -652,6 +698,20 @@
       opacity: 0;
       pointer-events: none;
       transform: scale(.98);
+    }
+
+    .match-card .reading {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .reading-inline {
+      color: var(--muted);
+      font-weight: 700;
     }
 
     .match-card.correct {
@@ -1524,13 +1584,14 @@
 
     @media (max-width: 640px) {
       .lesson-top {
-        grid-template-columns: 36px 1fr;
+        grid-template-columns: 30px minmax(0, 1fr) auto auto;
+        gap: 10px;
         margin-bottom: 30px;
       }
 
       .top-count {
-        grid-column: 1 / -1;
-        text-align: left;
+        min-width: 0;
+        font-size: 16px;
       }
 
       h1 {
@@ -1906,6 +1967,11 @@
       margin-bottom: 14px;
     }
 
+    .ai-section label > span,
+    .ai-section .small-button {
+      text-transform: none;
+    }
+
     .ai-section h3 {
       margin: 14px 0 6px;
       font-size: 16px;
@@ -2075,6 +2141,10 @@
       overflow-wrap: anywhere;
     }
 
+    .drill-hint-text {
+      margin-bottom: 6px;
+    }
+
     .drill-sentence mark {
       color: var(--red);
       background: transparent;
@@ -2178,6 +2248,7 @@
             <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
           </div>
           <div class="top-count" id="topCount">10</div>
+          <div class="streak-chip" id="streakChip" hidden><span aria-hidden="true">🔥</span><b id="streakChipN">0</b></div>
           <div class="today-bar" id="todayBar" hidden></div>
         </div>
 
@@ -2321,7 +2392,7 @@
             <span data-en="Daily reminder" data-zh="每日提醒">每日提醒</span>
             <select id="reminderSelect"></select>
           </label>
-          <p class="import-hint lang-pair-custom" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
+          <p class="import-hint" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
           <label>
             <span data-en="Appearance" data-zh="外观">外观</span>
             <select id="colorModeSelect"></select>
@@ -2497,7 +2568,7 @@
         <div class="form-grid">
           <label>
             <span id="sideLabelA">英文</span>
-            <input id="newEnglish" autocomplete="off" placeholder="example" data-en-ph="example" data-zh-ph="example" />
+            <input id="newEnglish" autocomplete="off" placeholder="单词" data-en-ph="word" data-zh-ph="单词" />
           </label>
           <label>
             <span id="sideLabelB">中文</span>
@@ -2602,7 +2673,7 @@
     </div>
   </div>
 
-  <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus · Esc" data-zh="退出专注 · Esc">退出专注 · Esc</button>
+  <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus<span class=&quot;key-hint&quot;> · Esc</span>" data-zh="退出专注<span class=&quot;key-hint&quot;> · Esc</span>">退出专注<span class="key-hint"> · Esc</span></button>
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
@@ -2708,7 +2779,7 @@
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
           addOne: "Add one", bulkLabel: "Bulk input",
-          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning\nWith an example: word,meaning | Example sentence. | Translation",
+          bulkPlaceholder: "One per line: {a} word,{b} meaning\nOr: word = meaning\nWith an example: word,meaning | Example sentence | Translation",
           addBulk: "Bulk add", clearAll: "Clear all words",
           optionsTitle: "Practice options",
           optLevelSeconds: "Base level time (sec)", optLevelTimeTolerance: "Time tolerance (e.g. 0.2)",
@@ -2748,6 +2819,7 @@
           pickAll: "Select all", pickNone: "Select none", missedN: "×{n}"
         },
         feedback: {
+          pairMismatch: "{n} words in your library are not {a}. They stay in the library — delete them in My words, or switch the pair back.",
           pickPair: "Pick one card from each side.", pickMatch: "Now pick its match.",
           correct: "Matched!", allDoneCheck: "All matched. Now check.",
           wrong: "Wrong: {a} = {b}", timeChallenge: "Timed challenge: {t}. Correct answers refill fast; wrong words roll back.",
@@ -2785,6 +2857,7 @@
           blockSummary: "{done} pairs, {m} mistakes, {fresh} new words.",
           blockDue: "{n} reviews are due today; they come first in the next set.",
           blockClear: "Nothing is due right now — the next set brings new words.",
+          blockGoalDone: "Today's goal is done ✓. {n} more words come due later today — keep going if you like.",
           confusedPairs: "Mixed up: {list}. They will appear side by side again.",
           contrastBtn: "AI: {a} vs {b}", contrastLoading: "Asking AI…", contrastFailed: "AI couldn't explain this pair right now."
         },
@@ -2804,7 +2877,10 @@
         today: {
           done: "✓ Today's goal done", streak: "🔥 {n}-day streak",
           left: "Today: {list} left, about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
-          frozen: "You missed a day — this week's streak freeze kept your streak."
+          frozen: "You missed a day — this week's streak freeze kept your streak.",
+          broken: "Your {n}-day streak ended. Start a new one today (best: {best} days).",
+          doneBanner: "✓ Today's goal done · 🔥 {n}-day streak",
+          chipTitle: "Day streak: {n} (best {best}). Grey until today's goal is done."
         },
         aiSettings: {
           about: "Runs a small language model ({name}) on this device: when you have no idea for a sentence card it suggests a situation in Chinese, and it writes example sentences for words that have none (each one passes the grammar check first). Free, no account, nothing you write leaves the device. It needs English–Chinese words and a download of about {mb} MB, once.",
@@ -2833,7 +2909,7 @@
           spellPrompt: "Type the word for this meaning.", spellPlaceholder: "Type the word",
           spellRight: "Right!", spellWrong: "The answer is <b>{w}</b>. Type it once to remember it.", copyAgain: "Not quite — type <b>{w}</b> exactly.",
           sentenceTitle: "Make a sentence with {w}",
-          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (ran, tubers…).",
+          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (past tense, plural…).",
           sentencePlaceholder: "A sentence using {w}",
           loadingEngine: "Loading the grammar checker (about 8 MB, only the first time; it then works offline)…",
           checking: "Checking…",
@@ -2848,9 +2924,10 @@
           aiBetter: "More natural", aiUse: "Use this",
           aiWrong: "Not quite yet — here is the AI's check.",
           aiUnavailable: "AI could not check this sentence right now. Try again, or skip this card.",
+          aiOff: "AI is off, so this sentence cannot be checked — skip the card (sentence cards in this language need AI).",
           sentenceRuleAi: "Any word order and any form of the word is fine; AI checks grammar and meaning.",
           noIdea: "No example for this word yet — skip the card if nothing comes to mind.",
-          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
+          idea: "Idea: “{text}” — now say it using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
           kind_Agreement: "Agreement", kind_MissingVerb: "Missing verb", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
           kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
           kind_WordChoice: "Word choice", kind_Usage: "Usage", kind_Repetition: "Repeated word", kind_Regionalism: "British spelling (fine)",
@@ -2868,10 +2945,10 @@
           textSaveDesktop: "This works as a web app. When your browser shows an install prompt, add it to your desktop or home screen.",
           actionGotIt: "Got it", noRemind: "Don't remind me", closeInstall: "Close install prompt"
         },
-        appearance: { auto: "Auto", light: "Light", dark: "Dark" },
+        appearance: { auto: "◐ Auto", light: "☀ Light", dark: "☾ Dark" },
         trial: {
           doneTitle: "Trial complete!",
-          doneText: "Those were sample words. Now bring in the words you actually need — pick a word book (CET-4/6, IELTS…), paste a list, or let AI make one.",
+          doneText: "Those were sample words. Now bring in the words you actually need — pick a word book (zhongkao, gaokao, CET-4/6, IELTS…), paste a list, or let AI make one.",
           importBtn: "Import my words",
           notYet: "No words imported yet — tap “Import my words”, or keep practicing with the samples for now."
         },
@@ -2883,7 +2960,7 @@
           listNeedRequest: "Say what you want to learn first, e.g. “IELTS verbs, 30”.",
           listMaking: "AI is writing the list… (up to a minute)",
           listFailed: "AI could not make the list. Check the API key in Settings, or try a shorter request.",
-          listReady: "{n} words are in the box below. Check them, then tap Bulk add.",
+          listReady: "{n} words are now in the Bulk input box. Check them, then tap Bulk add.",
           examplesAdded: "Added example sentences to {n} words already in the library.",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
@@ -2929,7 +3006,7 @@
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
           addOne: "添加一个", bulkLabel: "批量录入",
-          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义\n带例句：单词,释义 | 例句 | 例句翻译",
+          bulkPlaceholder: "每行一个：{a}词,{b}释义\n也可以：单词 = 释义\n带例句：单词,释义 | 例句 | 例句翻译",
           addBulk: "批量添加", clearAll: "清空全部词",
           optionsTitle: "练习选项",
           optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "时间容错（如 0.2）",
@@ -2969,6 +3046,7 @@
           pickAll: "全选", pickNone: "全不选", missedN: "错 {n}"
         },
         feedback: {
+          pairMismatch: "词库里有 {n} 个词不是 {a}，它们会留在词库里。可以在「我的词库」里删掉，或者把语言对切回去。",
           pickPair: "选择一个中文和一个英文。", pickMatch: "再选它的配对。",
           correct: "配对成功。", allDoneCheck: "全部配完了。现在检查。",
           wrong: "不对：{a} = {b}", timeChallenge: "限时挑战：{t}。答对快速补位，错词会回滚。",
@@ -3006,6 +3084,7 @@
           blockSummary: "配对 {done} 组，错 {m} 次，新学 {fresh} 个词。",
           blockDue: "今天还有 {n} 个词到期，下一组会先复习它们。",
           blockClear: "现在没有到期的词，下一组会学新词。",
+          blockGoalDone: "今天的目标已经完成 ✓。今天晚些时候还有 {n} 个词到期，想多练可以继续。",
           confusedPairs: "混淆过：{list}。之后它们会再次同时出现。",
           contrastBtn: "AI 辨析：{a} / {b}", contrastLoading: "正在问 AI……", contrastFailed: "AI 暂时没能辨析这一对。"
         },
@@ -3025,7 +3104,10 @@
         today: {
           done: "✓ 今日完成", streak: "🔥 连续 {n} 天",
           left: "今天还剩 {list}，约 {m} 分钟", due: "{n} 个词到期", new: "{n} 个新词", practice: "一点练习",
-          frozen: "昨天没练，本周的免断签保住了连续天数。"
+          frozen: "昨天没练，本周的免断签保住了连续天数。",
+          broken: "连续 {n} 天中断了，今天重新开始吧（最长纪录 {best} 天）。",
+          doneBanner: "✓ 今日完成 · 🔥 连续 {n} 天",
+          chipTitle: "连续 {n} 天（最长 {best} 天）。今天的目标完成前是灰色的。"
         },
         aiSettings: {
           about: "在这台设备上运行一个小语言模型（{name}）：造句卡没有思路时，给你一句中文情景；没有例句的词，自动补上例句（每句都先过语法检查）。免费，不用账号，你写的内容不会离开这台设备。需要词库是英文–中文，并下载约 {mb}MB，只需一次。",
@@ -3054,7 +3136,7 @@
           spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
           spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
           sentenceTitle: "用 {w} 造一个句子",
-          sentenceRule: "语序不限，语法正确就行；任何词形都算（ran、tubers……）。",
+          sentenceRule: "语序不限，语法正确就行；这个词的任何形式都算（过去式、复数……）。",
           sentencePlaceholder: "写一个用到 {w} 的句子",
           loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
           checking: "正在检查……",
@@ -3069,9 +3151,10 @@
           aiBetter: "更地道的说法", aiUse: "用这句",
           aiWrong: "还不太对，看看 AI 的批改：",
           aiUnavailable: "AI 暂时没能检查这句话。可以再试一次，或者跳过这张卡。",
+          aiOff: "AI 已关闭，这句话没法检查，请跳过这张卡（这种语言的造句卡需要 AI）。",
           sentenceRuleAi: "语序不限，任何词形都算；AI 会检查语法和意思。",
           noIdea: "这个词还没有例句，实在没思路就跳过这张卡。",
-          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
+          idea: "思路：「{text}」——试着用 {w} 把它写出来。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
           kind_Agreement: "主谓一致", kind_MissingVerb: "缺少谓语", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
           kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
           kind_WordChoice: "用词", kind_Usage: "用法", kind_Repetition: "重复", kind_Regionalism: "英式拼写（没问题）",
@@ -3089,10 +3172,10 @@
           textSaveDesktop: "这个练习可以作为网页 App 使用。浏览器出现安装入口时，可以把它放到桌面或主屏幕。",
           actionGotIt: "知道了", noRemind: "不再提示", closeInstall: "关闭安装提醒"
         },
-        appearance: { auto: "自动", light: "浅色", dark: "深色" },
+        appearance: { auto: "◐ 外观", light: "☀ 浅色", dark: "☾ 深色" },
         trial: {
           doneTitle: "体验完成！",
-          doneText: "刚才是示例词。现在换成你真正要背的词吧：选一本词书（四六级、考研、雅思……）、粘贴词表，或者让 AI 帮你生成。",
+          doneText: "刚才是示例词。现在换成你真正要背的词吧：选一本词书（中考、高考、四六级、考研、雅思……）、粘贴词表，或者让 AI 帮你生成。",
           importBtn: "导入我的单词",
           notYet: "还没有导入单词。点「导入我的单词」继续，或者先用示例词练。"
         },
@@ -3104,7 +3187,7 @@
           listNeedRequest: "先写想背什么，比如「雅思高频动词 30 个」。",
           listMaking: "AI 正在生成词表……（最多一分钟左右）",
           listFailed: "AI 没能生成词表。请检查设置里的 API Key，或者把需求写短一点。",
-          listReady: "{n} 个词已经放进下面的输入框，检查一下再点「批量添加」。",
+          listReady: "{n} 个词已经放进「批量录入」框，检查一下再点「批量添加」。",
           examplesAdded: "已为词库里已有的 {n} 个词补上例句。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
@@ -3225,7 +3308,9 @@
       { a: "English", b: "中文" },
       { a: "English", b: "日本語" },
       { a: "English", b: "Español" },
-      { a: "中文", b: "English" }
+      { a: "中文", b: "English" },
+      { a: "日本語", b: "中文" },
+      { a: "한국어", b: "中文" }
     ];
     let deferredInstallPrompt = null;
 
@@ -3293,6 +3378,8 @@
       reminderNote: document.getElementById("reminderNote"),
       todayBar: document.getElementById("todayBar"),
       dayStreak: document.getElementById("dayStreak"),
+      streakChip: document.getElementById("streakChip"),
+      streakChipN: document.getElementById("streakChipN"),
       drill: document.getElementById("drill"),
       drillKicker: document.getElementById("drillKicker"),
       drillTitle: document.getElementById("drillTitle"),
@@ -3443,7 +3530,25 @@
         lastDrawRound: 0
       };
       setExample(word, extra && extra.ex, extra && extra.exZh, extra && extra.exAi === true);
+      setReading(word, extra && extra.reading);
       return word;
+    }
+
+    /** Optional reading of side A (kana for Japanese, pinyin for Chinese), shown small on the card. */
+    function setReading(word, reading) {
+      const value = typeof reading === "string" ? reading.trim().slice(0, 60) : "";
+      if (value && value !== word.en) word.reading = value; else delete word.reading;
+    }
+
+    /** "食べる（たべる）" / "学校 (xuéxiào)" → ["食べる", "たべる"]; other words unchanged. */
+    function splitReading(text) {
+      const m = String(text).match(/^(.+?)\s*[（(\[]([^（）()\[\]]+)[）)\]]$/);
+      if (!m) return [text, ""];
+      const [, base, reading] = m;
+      // Only for words written in Han / kana / hangul, with a phonetic reading inside.
+      if (!/[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(base)) return [text, ""];
+      if (!/^[\u3040-\u30ffー・\s]+$|^[a-zA-Zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü\s'0-9-]+$|^[\uac00-\ud7af\s]+$/.test(reading.trim())) return [text, ""];
+      return [base.trim(), reading.trim()];
     }
 
     /**
@@ -3815,7 +3920,7 @@
       const wasNew = engine.isNew(word);
       engine.recordAnswer(word, engine.grade(true, ms), Date.now(), { ms, kind: "match" });
       syncMastered(word);
-      recordHabit(wasNew, ms);
+      recordHabit(wasNew, ms, word.id);
     }
 
     /** The word being answered was missed. */
@@ -3823,42 +3928,40 @@
       const wasNew = engine.isNew(word);
       engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
       syncMastered(word);
-      recordHabit(wasNew, 0);
+      recordHabit(wasNew, 0, word.id);
     }
 
     // ---- Daily goal and day streak (js/habit.js) ----
     // Today's goal: no words due right now, plus the day's new words (Settings).
     // Days change at 4 am. One missed day a week is bridged by the streak freeze.
     let habit = WordSnapHabit.normalize(null);
-    let habitNotice = "";
     let habitCelebrate = false;
 
-    function recordHabit(wasNew, ms) {
+    function recordHabit(wasNew, ms, id) {
       if (isTrial()) return;
-      WordSnapHabit.recordAnswer(habit, { wasNew, ms });
+      WordSnapHabit.recordAnswer(habit, { wasNew, ms, id });
     }
 
     function habitStatus(now = Date.now()) {
       let due = 0, newAvailable = 0;
       for (const word of state.words) {
         if (engine.isNew(word)) newAvailable += 1;
-        else if (engine.dueAt(word, now) <= now) due += 1;
+        else if (engine.dueAt(word, now) <= now && !WordSnapHabit.learnedToday(habit, word.id, now)) due += 1;
       }
       return WordSnapHabit.today(habit, { due, newAvailable, goalNew: state.settings.dailyNew, now });
     }
 
-    /** Bridges a missed day with the weekly freeze (once a day) and says so on the today bar. */
+    /** Once a day: bridge a missed day with the weekly freeze, or note that the streak broke. */
     function settleHabit() {
-      const frozen = WordSnapHabit.settle(habit);
-      if (frozen.length) {
-        habitNotice = t("today.frozen");
-        saveWords();
-      }
+      const before = JSON.stringify(habit.notice);
+      WordSnapHabit.settle(habit);
+      if (JSON.stringify(habit.notice) !== before) saveWords();
     }
 
     function renderToday() {
       if (!els.todayBar) return;
       els.todayBar.hidden = isTrial() || !state.words.length;
+      if (els.streakChip && els.todayBar.hidden) els.streakChip.hidden = true;
       if (els.todayBar.hidden) return;
       settleHabit(); // once a day, also when the page stays open past 4 am
       const status = habitStatus();
@@ -3866,6 +3969,7 @@
         habitCelebrate = true;
         saveWords();
         WordSnapFx.confetti();
+        WordSnapFx.banner(t("today.doneBanner", { n: status.streak }));
       }
       const streakText = status.streak ? t("today.streak", { n: status.streak }) : "";
       let html;
@@ -3877,7 +3981,10 @@
         if (status.newLeft) parts.push(t("today.new", { n: status.newLeft }));
         html = `${streakText ? `${streakText} · ` : ""}${t("today.left", { list: parts.join(currentLang === "zh" ? "、" : ", ") || t("today.practice"), m: status.minutes })}`;
       }
-      if (habitNotice) html += `<small>${escapeHtml(habitNotice)}</small>`;
+      const notice = status.notice;
+      if (notice && !status.done) {
+        html += `<small>${escapeHtml(notice.kind === "frozen" ? t("today.frozen") : t("today.broken", { n: notice.n, best: status.best }))}</small>`;
+      }
       els.todayBar.innerHTML = html;
       els.todayBar.classList.toggle("done", status.done);
       if (habitCelebrate) {
@@ -3887,6 +3994,16 @@
         els.todayBar.classList.add("celebrate");
       }
       if (els.dayStreak) els.dayStreak.textContent = status.streak;
+      if (els.streakChip) {
+        els.streakChip.hidden = false;
+        els.streakChipN.textContent = status.streak;
+        els.streakChip.classList.toggle("lit", status.done);
+        els.streakChip.title = t("today.chipTitle", { n: status.streak, best: status.best });
+        if (status.justDone) {
+          WordSnapFx.pop(els.streakChip, 1.35);
+          WordSnapFx.burst(els.streakChip, 10);
+        }
+      }
       if (status.justDone) syncReminders();
     }
 
@@ -4164,15 +4281,35 @@
       [/^(deutsch|german|德语|de)$/i, "de-DE"], [/^(한국어|korean|韩语|ko)$/i, "ko-KR"], [/^(русский|russian|俄语|ru)$/i, "ru-RU"],
       [/^(italiano|italian|意大利语|it)$/i, "it-IT"], [/^(português|portugues|portuguese|葡萄牙语|pt)$/i, "pt-BR"]
     ];
+    /** Whether a word's script fits a language name (unknown languages: anything fits). */
+    function fitsLanguage(text, label) {
+      const tag = speechLang(label, "") || "";
+      const s = String(text || "");
+      const kana = /[\u3040-\u30ff]/.test(s), hangul = /[\uac00-\ud7af]/.test(s);
+      const han = /[\u4e00-\u9fff]/.test(s), cyrillic = /[\u0400-\u04ff]/.test(s), latin = /[A-Za-z\u00c0-\u024f]/.test(s);
+      const known = SPEECH_LANGS.some(([re]) => re.test(String(label || "").trim()));
+      if (!known) return true;
+      if (tag.startsWith("ja")) return kana || han;
+      if (tag.startsWith("zh")) return han && !kana;
+      if (tag.startsWith("ko")) return hangul;
+      if (tag.startsWith("ru")) return cyrillic;
+      return latin && !kana && !hangul && !han && !cyrillic;
+    }
+
     function speechLang(label, text) {
       const name = String(label || "").trim();
-      for (const [re, tag] of SPEECH_LANGS) if (re.test(name)) return tag;
       const s = String(text || "");
+      // The script wins when it is unmistakable: a Japanese word left in the library
+      // after switching the pair back to English must not be read with an English voice.
       if (/[\u3040-\u30ff]/.test(s)) return "ja-JP";
       if (/[\uac00-\ud7af]/.test(s)) return "ko-KR";
-      if (/[\u4e00-\u9fff]/.test(s)) return "zh-CN";
       if (/[\u0400-\u04ff]/.test(s)) return "ru-RU";
-      return "en-US";
+      let fromLabel = null;
+      for (const [re, tag] of SPEECH_LANGS) if (re.test(name)) { fromLabel = tag; break; }
+      const han = /[\u4e00-\u9fff]/.test(s);
+      // Han text under a non-CJK label is Chinese (or kanji-only Japanese under 日本語).
+      if (han && !(fromLabel && /^(zh|ja)/.test(fromLabel))) return "zh-CN";
+      return fromLabel || (han ? "zh-CN" : "en-US");
     }
 
     // prefer natural voices for the language; skip the novelty voices some systems ship (Albert, Zarvox, Bells…)
@@ -4334,7 +4471,7 @@
       return `
           <div class="custom-row">
             ${speakButton(word.en) || "<span></span>"}
-            <b title="${escapeHtml(word.en)}">${escapeHtml(word.en)}</b>
+            <b title="${escapeHtml(word.en)}">${escapeHtml(word.en)}${word.reading ? ` <small class="reading-inline">${escapeHtml(word.reading)}</small>` : ""}</b>
             <span class="cr-mean" title="${escapeHtml(word.zh)}">${escapeHtml(word.zh)}</span>
             ${stageTag(word)}
             <button class="link-button" type="button" data-delete="${escapeHtml(word.id)}">${t("library.deleteBtn")}</button>
@@ -4640,7 +4777,12 @@
     // with Esc, the "Exit focus" button, or pointing at the top or left edge.
     // Settings can turn it off.
     const FOCUS_AFTER_ANSWERS = 3;
-    const FOCUS_IDLE_MS = 10000;
+    // Long enough to think about a hard word: coming back moves the board, so it must
+    // not happen while someone is about to tap (testers mis-tapped at 10 s).
+    const FOCUS_IDLE_MS = 60000;
+    // Enter after the match's ripple has played, so it does not stay behind as a ghost.
+    const FOCUS_ENTER_DELAY_MS = 520;
+    let focusEnterTimer = null;
     let focusAnswers = 0;
     let focusIdleTimer = null;
 
@@ -4654,7 +4796,13 @@
       clearTimeout(focusIdleTimer);
       if (answered) focusAnswers += 1;
       const playing = !els.completionView.classList.contains("show") && !shouldPauseLevel();
-      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS) enterFocus();
+      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS && !focusEnterTimer) {
+        focusEnterTimer = setTimeout(() => {
+          focusEnterTimer = null;
+          const stillPlaying = !els.completionView.classList.contains("show") && !shouldPauseLevel();
+          if (!focusOn() && stillPlaying && focusAnswers >= FOCUS_AFTER_ANSWERS) enterFocus();
+        }, FOCUS_ENTER_DELAY_MS);
+      }
       focusIdleTimer = setTimeout(exitFocus, FOCUS_IDLE_MS);
     }
 
@@ -4694,6 +4842,8 @@
     /** instant: no glide (a window or the set summary is about to cover the board). */
     function exitFocus(options) {
       clearTimeout(focusIdleTimer);
+      clearTimeout(focusEnterTimer);
+      focusEnterTimer = null;
       focusAnswers = 0;
       if (!focusOn()) return;
       const from = els.matchGrid.getBoundingClientRect();
@@ -4857,6 +5007,7 @@
       state.levelDemoted = new Set();
       state.levelMistakes = 0;
       state.levelBestStreak = 0;
+      state.levelStreak = 0;
       state.lastCompletion = null;
       updateCombo(0);
 
@@ -4882,7 +5033,8 @@
       state.lastPairAt = 0;
       state.levelTimeLeftMs = null;
       state.levelDurationMs = endless ? 0 : computeLevelDurationMs(state.sessionTotal);
-      state.levelEndsAt = endless ? 0 : now + state.levelDurationMs;
+      // The trial has no clock: a first-timer should learn the board, not race it.
+      state.levelEndsAt = endless || isTrial() ? 0 : now + state.levelDurationMs;
       state.levelTimeIsAdaptive = Boolean(
         state.settings.adaptiveLevelTime
         && resolveMsPerPair(state.settings) > 0
@@ -4999,7 +5151,8 @@
         ? (slot.side === "left" ? slot.word.zh : slot.word.en)
         : "";
       if (label) button.title = label;
-      button.innerHTML = `<span class="num">${slot.key}</span><span class="word${isLongLabel(label) ? " long" : ""}">${escapeHtml(label)}</span>`;
+      const reading = slot.word && slot.side === "right" && slot.word.reading ? slot.word.reading : "";
+      button.innerHTML = `<span class="num">${slot.key}</span><span class="word${isLongLabel(label) ? " long" : ""}">${escapeHtml(label)}${reading ? `<small class="reading">${escapeHtml(reading)}</small>` : ""}</span>`;
       button.addEventListener("click", () => selectCard(button, slot.side, slot.index));
       return button;
     }
@@ -5224,7 +5377,8 @@
       first.card.classList.remove("selected");
       first.card.classList.add("correct");
       second.card.classList.add("correct");
-      state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.streak);
+      state.levelStreak = (state.levelStreak || 0) + 1;
+      state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
       WordSnapFx.ripple([first.card, second.card], WordSnapFx.tierFor(state.streak).colors[0]);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
       glintProgress();
@@ -5364,6 +5518,7 @@
 
       state.mistakes += 1;
       state.streak = 0;
+      state.levelStreak = 0;
       playMistakeTone();
       WordSnapFx.haptic("wrong");
       updateCombo(0);
@@ -5447,6 +5602,7 @@
       state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
       if (!trial) startDrills();
+      if (installNudgeWaiting) setTimeout(showInstallNudge, 1200);
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
       saveWords();
@@ -5487,7 +5643,8 @@
         els.completionTitle.textContent = t("timeouts.blockTitle");
         els.completionText.textContent = [
           t("timeouts.blockSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0, fresh: block.fresh || 0 }),
-          dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
+          dueToday && habitStatus().done ? t("timeouts.blockGoalDone", { n: dueToday })
+            : dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
         ].join(" ");
         renderReviewList();
         return;
@@ -5859,7 +6016,8 @@
       syncAiApiProviderHints(mod);
       const saved = Boolean(config.key);
       els.aiApiSaveBtn.disabled = aiApiUI.busy;
-      els.aiApiToggleBtn.hidden = !saved || aiApiUI.busy;
+      // After a failed test the key needs fixing, not switching on.
+      els.aiApiToggleBtn.hidden = !saved || aiApiUI.busy || (!config.on && aiApiUI.messageKind === "bad");
       els.aiApiToggleBtn.textContent = config.on ? t("aiSettings.apiPause") : t("aiSettings.apiResume");
       els.aiApiClearBtn.hidden = !saved || aiApiUI.busy;
       let message = aiApiUI.message, kind = aiApiUI.messageKind;
@@ -5959,6 +6117,7 @@
         const mod = await loadAiModule();
         els.bulkInput.value = mod.wordListToImport(list);
         setImportStatus(t("ai.listReady", { n: list.items.length }), "good");
+        els.bulkInput.scrollIntoView({ block: "center", behavior: "smooth" });
       } catch (error) {
         setImportStatus(t("ai.listFailed"), "bad");
       } finally {
@@ -6319,7 +6478,7 @@
       if (!english) {
         if (!feedback) {
           // No grade without a check; the card can be skipped.
-          els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.aiUnavailable")}</p>`;
+          els.drillResult.innerHTML = `<p class="drill-bad">${t(strongAiOn() ? "drill.aiUnavailable" : "drill.aiOff")}</p>`;
           return;
         }
         result = { ok: feedback.ok, aiOnly: true, issues: [], structure: [], target: { found: true } };
@@ -6364,32 +6523,37 @@
     els.drillHint.addEventListener("click", async () => {
       const card = drill.list[drill.index];
       if (!card || card.type !== "sentence") return;
+      // The hint goes above whatever is shown (an AI correction must not disappear).
+      const showHint = html => {
+        els.drillResult.querySelectorAll(".drill-hint-text").forEach(el => el.remove());
+        els.drillResult.insertAdjacentHTML("afterbegin", `<div class="drill-hint-text">${html}</div>`);
+      };
       try {
         if (!card.word.exZh && aiWanted()) {
-          els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.thinking")}</p>`;
+          showHint(`<p class="drill-muted">${t("drill.thinking")}</p>`);
           // The idea is the translation of a model-written example that passed the grammar
           // check (the model's free-form ideas were too thin); the example is kept for later cards.
           const idea = await aiExampleFor(card.word);
           if (drill.list[drill.index] !== card) return;
           if (idea) {
-            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.tr), w: escapeHtml(card.word.en) })}</p>`;
+            showHint(`<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.tr), w: escapeHtml(card.word.en) })}</p>`);
             return;
           }
         }
         if (!targetIsEnglish()) {
           // Sentence frames exist for English only.
-          els.drillResult.innerHTML = `<p class="drill-muted">${card.word.exZh
+          showHint(`<p class="drill-muted">${card.word.exZh
             ? t("drill.idea", { text: escapeHtml(card.word.exZh), w: escapeHtml(card.word.en) })
-            : t("drill.noIdea")}</p>`;
+            : t("drill.noIdea")}</p>`);
           return;
         }
         const mod = await loadSentenceModule();
         const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
-        els.drillResult.innerHTML = `<p class="drill-muted">${hint.kind === "idea"
+        showHint(`<p class="drill-muted">${hint.kind === "idea"
           ? t("drill.idea", { text: escapeHtml(hint.text), w: escapeHtml(card.word.en) })
-          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`;
+          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`);
       } catch (error) {
-        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+        showHint(`<p class="drill-bad">${t("drill.engineFailed")}</p>`);
       }
     });
     els.drillResult.addEventListener("click", event => {
@@ -6473,8 +6637,9 @@
     /** Countdown only — runs every timer tick, so it must stay cheap. */
     function renderTimer() {
       // Endless: no clock, show progress through the current set instead.
-      if (isEndless()) {
-        els.topCount.textContent = `${Math.min(state.completedThisRun || 0, BLOCK_SIZE)}/${BLOCK_SIZE}`;
+      if (isEndless() || isTrial() || (state.lastCompletion && state.lastCompletion.trial)) {
+        const total = state.sessionTotal || BLOCK_SIZE;
+        els.topCount.textContent = `${Math.min(state.completedThisRun || 0, total)}/${total}`;
         els.topCount.classList.remove("time-low");
         return;
       }
@@ -6551,7 +6716,8 @@
       if (!pair) return null;
       ex = ex.trim();
       exZh = exZh.trim();
-      return ex ? [...pair, ex, exZh] : pair;
+      const [word, reading] = splitReading(pair[0]);
+      return [word, pair[1], ex, ex ? exZh : "", reading];
     }
 
     function splitWordMeaning(trimmed) {
@@ -6749,9 +6915,10 @@
         if (known) {
           // Re-importing a word with an example sentence adds the sentence (progress is kept).
           if (pair[2] && !known.ex) { setExample(known, pair[2], pair[3]); withExample += 1; }
+          if (pair[4] && !known.reading) setReading(known, pair[4]);
           return;
         }
-        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3] });
+        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3], reading: pair[4] });
         existing.set(key, word);
         state.words.push(word);
         added += 1;
@@ -6993,6 +7160,7 @@
         if (LANG_PAIR_PRESETS[idx]) langPair = { ...LANG_PAIR_PRESETS[idx] };
       }
       const previousReminder = state.settings.reminder;
+      const previousPair = state.settings.langPair;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
@@ -7029,6 +7197,14 @@
       if (els.optionsStatus) {
         els.optionsStatus.textContent = t("feedback.optionsSaved");
         els.optionsStatus.className = "import-status good";
+      }
+      if (previousPair.a !== nextSettings.langPair.a || previousPair.b !== nextSettings.langPair.b) {
+        // Words stay in the library when the pair changes; say so if some do not fit the new side A.
+        const foreign = state.words.filter(word => word.custom && !fitsLanguage(word.en, nextSettings.langPair.a)).length;
+        if (foreign && els.optionsStatus) {
+          els.optionsStatus.textContent = t("feedback.pairMismatch", { n: foreign, a: nextSettings.langPair.a });
+          els.optionsStatus.className = "import-status bad";
+        }
       }
       if (reminderChanged) {
         syncReminders({ ask: Boolean(nextSettings.reminder) }).then(ok => {
@@ -7095,8 +7271,16 @@
       els.installAction.textContent = t("install.actionGotIt");
     }
 
+    let installNudgeWaiting = false;
+
     function showInstallNudge() {
       if (!els.installNudge || isStandaloneApp() || hasHiddenInstallNudge()) return;
+      // Never over a board in play: wait for the end of the set.
+      if (!els.completionView.classList.contains("show") && !els.practiceView.classList.contains("hidden")) {
+        installNudgeWaiting = true;
+        return;
+      }
+      installNudgeWaiting = false;
       // One overlay at a time: the intro re-offers this when it closes.
       if (document.querySelector(".modal.open")) return;
       setInstallNudgeCopy();
@@ -7124,7 +7308,7 @@
       els.hideInstallNudge.addEventListener("click", () => closeInstallNudge(true));
       els.installAction.addEventListener("click", async () => {
         if (!deferredInstallPrompt) {
-          closeInstallNudge(false);
+          closeInstallNudge(true); // "Got it": instructions read, do not show them again
           return;
         }
 
@@ -7239,7 +7423,8 @@
         (en ? els.newChinese : els.newEnglish).focus();
         return;
       }
-      if (!addWords([[en, zh]])) {
+      const [word, reading] = splitReading(en);
+      if (!addWords([[word, zh, "", "", reading]])) {
         setAddOneStatus(t("feedback.alreadyInLibrary"), "bad");
         return;
       }
@@ -7286,6 +7471,7 @@
     });
 
     // ---- Built-in word books (wordbooks/*.json from ECDICT, loaded on demand) ----
+    const BOOK_KEY = "word-snap-book"; // the last book picked, preselected next time
     let wordbookIndex = null;
     const wordbookCache = new Map();
     let wordbookModule = null;
@@ -7334,6 +7520,10 @@
           els.bookCount.innerHTML = [20, 50, 100, 200, 500].map(n => `<option value="${n}">${t("wordbook.count", { n })}</option>`).join("")
             + `<option value="0">${t("wordbook.all")}</option>`;
           els.bookCount.value = "50";
+          try {
+            const last = localStorage.getItem(BOOK_KEY);
+            if (last && books.some(b => b.id === last)) els.bookSelect.value = last;
+          } catch (error) { /* private mode */ }
         }
         const book = books.find(b => b.id === els.bookSelect.value) || books[0];
         const words = await loadBook(book.id);
@@ -7378,7 +7568,10 @@
     }
 
     if (els.bookSelect) {
-      els.bookSelect.addEventListener("change", syncWordbookUI);
+      els.bookSelect.addEventListener("change", () => {
+        try { localStorage.setItem(BOOK_KEY, els.bookSelect.value); } catch (error) { /* private mode */ }
+        syncWordbookUI();
+      });
       els.bookImportBtn.addEventListener("click", importFromBook);
     }
 
@@ -7465,7 +7658,7 @@
     function buildBackupText() {
       const { a, b } = state.settings.langPair;
       return [`@lang: ${a} | ${b}`, ...state.words.map(word =>
-        [word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
+        [word.reading ? `${word.en}（${word.reading}）` : word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
     }
 
     document.getElementById("copyBackupBtn").addEventListener("click", async () => {

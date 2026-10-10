@@ -54,12 +54,19 @@ test("one missed day is bridged by the weekly freeze, the second in the same wee
   // Wed missed.
   assert.deepEqual(H.settle(h, at(3)), [H.dayKey(at(2))]);
   assert.equal(H.streak(h, at(3)), 2, "frozen day keeps the streak, adds nothing");
+  assert.deepEqual(H.noticeFor(h, at(3)), { day: H.dayKey(at(3)), kind: "frozen", n: 2 });
   assert.equal(H.freezeAvailable(h, at(3)), false);
   finishDay(h, at(3)); // Thu
   assert.equal(H.streak(h, at(3)), 3);
   // Fri missed: this week's freeze is used.
   assert.deepEqual(H.settle(h, at(5)), []);
   assert.equal(H.streak(h, at(5)), 0);
+  assert.equal(H.noticeFor(h, at(5)).kind, "broken");
+  assert.equal(H.noticeFor(h, at(5)).n, 3, "the broken streak is named");
+  assert.equal(H.today(h, { now: at(5) }).best, 3, "and counts as the best so far");
+  assert.equal(H.noticeFor(h, at(6)), null, "the notice is for that day only");
+  // The notice survives a reload.
+  assert.equal(H.noticeFor(H.normalize(JSON.parse(JSON.stringify(h))), at(5)).kind, "broken");
   // Next week the freeze is back.
   assert.equal(H.freezeAvailable(h, at(7)), true);
 });
@@ -95,4 +102,16 @@ test("reminders: the next days at the chosen time, not today once the goal is do
   finishDay(h, at(0, 12));
   plan = H.reminderPlan(h, { now: at(0, 13), hour: 20, minute: 0, days: 3 });
   assert.equal(plan[0].id, 7101, "no reminder today after the goal is done");
+});
+
+test("words learned today are not extra due work; the best streak is kept", () => {
+  const h = H.normalize(null);
+  H.recordAnswer(h, { wasNew: true, id: "w1", now: at(0) });
+  assert.equal(H.learnedToday(h, "w1", at(0)), true);
+  assert.equal(H.learnedToday(h, "w2", at(0)), false);
+  assert.equal(H.learnedToday(h, "w1", at(1)), false, "tomorrow it is a normal review");
+  finishDay(h, at(0));
+  finishDay(h, at(1));
+  assert.equal(H.today(h, { now: at(1) }).best, 2);
+  assert.equal(H.normalize(JSON.parse(JSON.stringify(h))).best, 2);
 });

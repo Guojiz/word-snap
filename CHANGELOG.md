@@ -26,6 +26,13 @@
 - **Focus mode** (automatic): after three answers in a row the navigation, today bar and title go away and the board glides to the centre of the screen, with a soft vignette; it returns after 10 s idle, at the end of a set, on any window, Esc, the *Exit focus* button or pointing at the edges.
 - **Motion** (`js/fx.js`, Duolingo-style): progress bar with a highlight band, springy growth and a glint per match; a streak label above it from 3 in a row, with the bar turning gold / fire / violet at 5 / 10 / 20 and a star burst on milestones; a pop and a soft ripple on matched cards; set summary tiles (accuracy, time, best streak) that pop in and count up; confetti for today's goal; vibration on answers. Off in Settings or with reduced motion.
 
+- **Fixes from simulated-learner testing** (three personas: a first-time high-school student on a phone, a Japanese learner with an API key, a long-time IELTS learner):
+  - Word books open with words new at their level (IELTS no longer starts with *in, on, as*); hand-checked meanings for common polysemous words (*can* = 能；可以；罐头); no stray `\r`; place names dropped.
+  - Focus mode: leaves after 60 s idle (was 10 s, testers mis-tapped when the board moved) and enters after the match ripple; no "Esc" hint on touch screens.
+  - Day streak: a 🔥 badge next to the progress (grey until today's goal is done), a notice when a streak breaks (with the best streak), the streak-freeze notice survives reloads, and a "Today's goal done" banner that shows even in focus mode. Words learned today no longer count as due, so the goal does not grow while you meet it.
+  - Readings: `食べる（たべる）` keeps the reading (cards, library, backup); AI word lists return kana / pinyin. A word in another script is read with its own voice; switching the language pair says how many words do not fit.
+  - The trial has no countdown; the summary no longer says "goal done" and "n due" at once; the best streak counts this set only; copy no longer assumes English; the install hint never covers the board and "Got it" is remembered; contrast of the streak label and summary tiles; 日本語 / 한국어 → 中文 presets; the hint no longer wipes an AI correction.
+
 ### Changed
 
 - Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).
@@ -33,7 +40,7 @@
 ### Fixed
 
 - Fewer false subject–verb agreement errors in sentence cards (contractions, modals, mis-tagged words such as *particulate*).
-- Service worker cache bumped to `word-snap-v51`; the downloaded AI model is kept across updates.
+- Service worker cache bumped to `word-snap-v52`; the downloaded AI model is kept across updates.
 
 ## 2026-10-06
 

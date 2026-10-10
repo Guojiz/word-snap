@@ -51,28 +51,38 @@
       for (const [k, v] of Object.entries(value.freezes)) if (/^\d+$/.test(k) && isNum(v)) freezes[k] = v;
     }
     const t = value.today && typeof value.today === "object" ? value.today : {};
+    const n = value.notice && typeof value.notice === "object" ? value.notice : null;
     return {
       days,
       freezes,
       today: {
         day: isNum(t.day) ? t.day : null,
         newLearned: isNum(t.newLearned) ? Math.max(0, t.newLearned) : 0,
-        answers: isNum(t.answers) ? Math.max(0, t.answers) : 0
+        answers: isNum(t.answers) ? Math.max(0, t.answers) : 0,
+        // Words first learned today: their quick re-checks are part of learning them,
+        // not extra "due" work, so the day's goal does not grow while you meet it.
+        newIds: Array.isArray(t.newIds) ? t.newIds.filter(id => typeof id === "string").slice(-500) : []
       },
       pairMs: isNum(value.pairMs) && value.pairMs > 0 ? value.pairMs : DEFAULT_PAIR_MS,
-      settled: isNum(value.settled) ? value.settled : null
+      settled: isNum(value.settled) ? value.settled : null,
+      best: isNum(value.best) ? Math.max(0, value.best) : 0,
+      // What happened to the streak overnight, shown for that day: { day, kind: "frozen" | "broken", n }
+      notice: n && isNum(n.day) && (n.kind === "frozen" || n.kind === "broken") && isNum(n.n) ? { day: n.day, kind: n.kind, n: n.n } : null
     };
   }
 
   function rollToday(h, day) {
-    if (h.today.day !== day) h.today = { day, newLearned: 0, answers: 0 };
+    if (h.today.day !== day) h.today = { day, newLearned: 0, answers: 0, newIds: [] };
   }
 
   /** One answer (any card). wasNew: the word had never been answered. ms: time for a board pair. */
-  function recordAnswer(h, { wasNew = false, ms = 0, now = Date.now() } = {}) {
+  function recordAnswer(h, { wasNew = false, ms = 0, now = Date.now(), id = null } = {}) {
     rollToday(h, dayKey(now));
     h.today.answers += 1;
-    if (wasNew) h.today.newLearned += 1;
+    if (wasNew) {
+      h.today.newLearned += 1;
+      if (id && !h.today.newIds.includes(id)) h.today.newIds.push(id);
+    }
     // Typical time per pair, for "about n minutes"; long pauses are not answers.
     if (ms > 300 && ms < 60000) h.pairMs = h.pairMs * 0.9 + ms * 0.1;
   }
@@ -88,6 +98,9 @@
     const done = Object.keys(h.days).filter(k => h.days[k] === "done").map(Number).filter(d => d < today);
     if (!done.length) return [];
     const last = Math.max(...Object.keys(h.days).map(Number).filter(d => d < today));
+    if (last >= today - 1) return []; // nothing missed
+    const before = streakFrom(h, last);
+    h.best = Math.max(h.best || 0, before);
     const frozen = [];
     for (let day = last + 1; day < today; day++) {
       const week = weekKey(day);
@@ -98,13 +111,15 @@
     }
     // A gap longer than the freezes could cover leaves the streak broken; the
     // used freezes stay used (the bridge would not reach today anyway), so undo them.
-    if (frozen.length && frozen[frozen.length - 1] !== today - 1) {
+    if (!frozen.length || frozen[frozen.length - 1] !== today - 1) {
       for (const day of frozen) {
         delete h.days[day];
         delete h.freezes[weekKey(day)];
       }
+      if (before >= 2) h.notice = { day: today, kind: "broken", n: before };
       return [];
     }
+    h.notice = { day: today, kind: "frozen", n: before };
     prune(h, today);
     return frozen;
   }
@@ -117,13 +132,21 @@
   /** Completed days in a row (frozen days bridge but do not count), ending today or yesterday. */
   function streak(h, now = Date.now()) {
     const today = dayKey(now);
-    let day = h.days[today] === "done" ? today : today - 1;
+    return streakFrom(h, h.days[today] === "done" ? today : today - 1);
+  }
+
+  function streakFrom(h, day) {
     let count = 0;
     while (h.days[day]) {
       if (h.days[day] === "done") count += 1;
       day -= 1;
     }
     return count;
+  }
+
+  /** Today's streak notice ({ kind, n }) or null. */
+  function noticeFor(h, now = Date.now()) {
+    return h.notice && h.notice.day === dayKey(now) ? h.notice : null;
   }
 
   /** Whether this week's freeze is still unused. */
@@ -152,10 +175,13 @@
     const done = h.days[day] === "done";
     // A review is about one pair; a new word takes about three (learning steps).
     const minutes = done ? 0 : Math.max(1, Math.round((dueLeft * 1.3 + newLeft * 3) * h.pairMs / 60000));
+    const current = streak(h, now);
+    h.best = Math.max(h.best || 0, current);
     return {
       done, justDone, dueLeft, newLeft,
       newLearned: h.today.newLearned, goalNew: newTarget,
-      minutes, streak: streak(h, now), freezeAvailable: freezeAvailable(h, now)
+      minutes, streak: current, best: h.best, freezeAvailable: freezeAvailable(h, now),
+      notice: noticeFor(h, now)
     };
   }
 
@@ -179,5 +205,10 @@
     return plan;
   }
 
-  return { normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, dayKey, weekKey, DAY_MS };
+  /** Whether the word was first learned today (its re-checks are not "due" work). */
+  function learnedToday(h, id, now = Date.now()) {
+    return h.today.day === dayKey(now) && h.today.newIds.includes(id);
+  }
+
+  return { normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, learnedToday, noticeFor, dayKey, weekKey, DAY_MS };
 });
