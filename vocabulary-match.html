@@ -638,11 +638,8 @@
     }
 
     .prompt-kicker {
-      color: var(--green);
-      font-size: 17px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      text-transform: uppercase;
+      /* Set number and trial count live in the progress row (top-count); no label above the title. */
+      display: none;
     }
 
     h1 {
@@ -1127,6 +1124,69 @@
     select:focus,
     textarea:focus {
       border-color: var(--blue);
+    }
+
+    /* Keyboard focus is always visible (mouse clicks do not show it). */
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 1px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: calc(100vw - 32px);
+      padding: 10px 10px 10px 18px;
+      border-radius: 14px;
+      color: #fff;
+      background: #1f2a30;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      font-weight: 800;
+      transform: translateX(-50%);
+    }
+
+    .undo-toast button {
+      min-height: 40px;
+      border: 0;
+      border-radius: 10px;
+      padding: 0 14px;
+      color: #1f2a30;
+      background: #fff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .match-card.hint-correct {
+      border-color: var(--green);
+      animation: hint-pulse 900ms ease-out;
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { box-shadow: 0 4px 0 var(--card-shadow); }
+      35% { box-shadow: 0 0 0 4px var(--green), 0 4px 0 var(--card-shadow); }
     }
 
     textarea {
@@ -1963,6 +2023,21 @@
       margin-top: 8px;
     }
 
+    .settings-group + .settings-group {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 2px solid var(--line);
+    }
+
+    .settings-group h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .settings-group .option-grid {
+      margin-top: 10px;
+    }
+
     .ai-wordlist {
       margin-bottom: 14px;
     }
@@ -2067,7 +2142,8 @@
     }
 
     .drill {
-      margin: 0 0 22px;
+      position: relative;
+      margin: 22px 0;
       border: 2px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
@@ -2076,11 +2152,13 @@
     }
 
     .drill-kicker {
-      margin: 0 0 6px;
-      color: var(--blue);
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      margin: 0;
+      color: var(--muted);
       font-size: 13px;
-      font-weight: 900;
-      text-transform: uppercase;
+      font-weight: 800;
     }
 
     .drill-title {
@@ -2242,7 +2320,7 @@
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
         <div class="lesson-top">
-          <button class="icon-button" type="button" id="quitBtn" aria-label="重新开始" data-en-aria="Start over" data-zh-aria="重新开始">×</button>
+          <button class="icon-button" type="button" id="quitBtn" aria-label="结束本组" title="结束本组" data-en-aria="End this set" data-zh-aria="结束本组">×</button>
           <div class="progress-wrap">
             <div class="combo-label" id="comboLabel" aria-live="polite"></div>
             <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
@@ -2253,16 +2331,21 @@
         </div>
 
         <div class="prompt" id="practiceView">
-          <div class="prompt-kicker" id="roundLabel">第 1 轮</div>
-          <h1 data-en="Match the pairs" data-zh="选择配对">选择配对</h1>
+          <div class="prompt-kicker" id="roundLabel">第 1 组</div>
+          <h1 data-en="Match each meaning to its word" data-zh="把意思和单词配成对">把意思和单词配成对</h1>
           <div class="match-grid" id="matchGrid"></div>
         </div>
 
         <div class="completion" id="completionView">
           <div class="completion-badge">✓</div>
-          <h2 id="completionTitle" data-en="Round complete" data-zh="这一轮结束">这一轮结束</h2>
-          <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
+          <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
+          <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
           <div class="completion-stats" id="completionStats" hidden></div>
+          <div class="completion-actions">
+            <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
+            <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
+          </div>
           <section class="drill" id="drill" hidden aria-live="polite">
             <p class="drill-kicker" id="drillKicker"></p>
             <h3 class="drill-title" id="drillTitle"></h3>
@@ -2271,7 +2354,7 @@
             <textarea id="drillSentence" rows="3" autocomplete="off" spellcheck="false" hidden></textarea>
             <div class="drill-result" id="drillResult"></div>
             <div class="drill-actions">
-              <button class="duo-button" type="button" id="drillSubmit"></button>
+              <button class="duo-button secondary" type="button" id="drillSubmit"></button>
               <button class="link-button" type="button" id="drillHint" data-en="I have no idea" data-zh="我没有思路">我没有思路</button>
               <button class="link-button" type="button" id="drillWrongMeaning" hidden data-en="I used the wrong meaning" data-zh="我用错了意思">我用错了意思</button>
               <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
@@ -2279,11 +2362,7 @@
           </section>
           <p class="review-heading" id="reviewHeading"></p>
           <ul class="review-list" id="reviewList"></ul>
-          <div class="completion-actions">
-            <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
-            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
-            <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
-          </div>
+
         </div>
 
       </section>
@@ -2310,7 +2389,7 @@
     </main>
   </div>
 
-  <div class="install-nudge" id="installNudge" role="dialog" aria-live="polite" aria-labelledby="installTitle" aria-describedby="installText">
+  <div class="install-nudge" id="installNudge" role="dialog" aria-live="polite" aria-labelledby="installTitle" aria-describedby="installText" inert>
     <button class="install-close" type="button" id="closeInstallNudge" aria-label="关闭安装提醒" data-en-aria="Close install prompt" data-zh-aria="关闭安装提醒">×</button>
     <div class="install-nudge-body">
       <div class="install-icon" aria-hidden="true">W</div>
@@ -2359,88 +2438,102 @@
         <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
       </div>
       <section class="modal-section" id="settingsSection">
-        <div class="option-grid">
-          <label>
-            <span data-en="Language pair" data-zh="语言对">语言对</span>
-            <select id="langPairSelect"></select>
-          </label>
-          <label class="lang-pair-custom" id="langPairCustomRow" hidden>
-            <span data-en="Side A" data-zh="左侧">左侧</span>
-            <input id="langPairA" type="text" autocomplete="off" />
-          </label>
-          <label class="lang-pair-custom" id="langPairCustomRow2" hidden>
-            <span data-en="Side B" data-zh="右侧">右侧</span>
-            <input id="langPairB" type="text" autocomplete="off" />
-          </label>
-          <label>
-            <span data-en="How to practice" data-zh="练习方式">练习方式</span>
-            <select id="flowSelect"></select>
-          </label>
-          <label>
-            <span data-en="Practice mode" data-zh="练习模式">练习模式</span>
-            <select id="modeSelect"></select>
-          </label>
-          <label>
-            <span data-en="Cards after each set (spelling / sentence)" data-zh="每组后的练习卡（拼写 / 造句）">每组后的练习卡（拼写 / 造句）</span>
-            <select id="drillsSelect"></select>
-          </label>
-          <label>
-            <span data-en="New words per day (daily goal)" data-zh="每天新词数（每日目标）">每天新词数（每日目标）</span>
-            <select id="dailyNewSelect"></select>
-          </label>
-          <label id="reminderRow">
-            <span data-en="Daily reminder" data-zh="每日提醒">每日提醒</span>
-            <select id="reminderSelect"></select>
-          </label>
-          <p class="import-hint" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
-          <label>
-            <span data-en="Appearance" data-zh="外观">外观</span>
-            <select id="colorModeSelect"></select>
-          </label>
-          <label data-levels-only>
-            <span data-en="Max words per level" data-zh="每关最多单词数">每关最多单词数</span>
-            <input id="roundSize" type="number" min="5" max="200" step="1" />
-          </label>
-          <label data-levels-only>
-            <span data-en="Base level time (sec)" data-zh="基础每关时间（秒）">基础每关时间（秒）</span>
-            <input id="levelSeconds" type="number" min="20" max="900" step="5" />
+        <!-- Four groups, each a single kind of decision. -->
+        <div class="settings-group">
+          <h3 data-en="Learning plan" data-zh="学习计划">学习计划</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Language pair" data-zh="语言对">语言对</span>
+              <select id="langPairSelect"></select>
+            </label>
+            <label>
+              <span data-en="New words per day" data-zh="每天学几个新词">每天学几个新词</span>
+              <select id="dailyNewSelect"></select>
+            </label>
+            <label class="lang-pair-custom" id="langPairCustomRow" hidden>
+              <span data-en="Side A (the language you learn)" data-zh="左侧（要学的语言）">左侧（要学的语言）</span>
+              <input id="langPairA" type="text" autocomplete="off" />
+            </label>
+            <label class="lang-pair-custom" id="langPairCustomRow2" hidden>
+              <span data-en="Side B (meanings)" data-zh="右侧（释义用的语言）">右侧（释义用的语言）</span>
+              <input id="langPairB" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span data-en="Which words come up" data-zh="先出哪些词">先出哪些词</span>
+              <select id="modeSelect"></select>
+            </label>
+            <label id="reminderRow">
+              <span data-en="Daily reminder" data-zh="每日提醒">每日提醒</span>
+              <select id="reminderSelect"></select>
+            </label>
+            <p class="import-hint" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3 data-en="Pace" data-zh="练习节奏">练习节奏</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Practice" data-zh="练法">练法</span>
+              <select id="flowSelect"></select>
+            </label>
+            <label>
+              <span data-en="Cards after each set" data-zh="每组后的拼写 / 造句卡">每组后的拼写 / 造句卡</span>
+              <select id="drillsSelect"></select>
+            </label>
+            <label data-levels-only>
+              <span data-en="Max words per level" data-zh="每关最多几个词">每关最多几个词</span>
+              <input id="roundSize" type="number" min="5" max="200" step="1" />
+            </label>
+            <label data-levels-only>
+              <span data-en="Time per level (sec)" data-zh="每关时间（秒）">每关时间（秒）</span>
+              <input id="levelSeconds" type="number" min="20" max="900" step="5" />
+            </label>
+          </div>
+          <label class="check-row" data-levels-only>
+            <input id="adaptiveLevelTime" type="checkbox" />
+            <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
           </label>
         </div>
-        <label class="check-row" data-levels-only>
-          <input id="adaptiveLevelTime" type="checkbox" />
-          <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
-        </label>
-        <label class="check-row">
-          <input id="streakTones" type="checkbox" />
-          <span data-en="Piano notes for a streak of correct matches" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
-        </label>
-        <label class="check-row">
-          <input id="effectsOn" type="checkbox" />
-          <span data-en="Effects and vibration: streak bar, ripples, confetti" data-zh="动画特效和震动：连对进度条、光晕、彩纸">动画特效和震动：连对进度条、光晕、彩纸</span>
-        </label>
-        <label class="check-row">
-          <input id="focusMode" type="checkbox" />
-          <span data-en="Focus mode: hide everything but the board while you are matching (automatic)" data-zh="专注模式：连续答题时自动隐藏棋盘以外的界面">专注模式：连续答题时自动隐藏棋盘以外的界面</span>
-        </label>
+        <div class="settings-group">
+          <h3 data-en="Feedback and look" data-zh="反馈与外观">反馈与外观</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Appearance" data-zh="外观">外观</span>
+              <select id="colorModeSelect"></select>
+            </label>
+          </div>
+          <label class="check-row">
+            <input id="focusMode" type="checkbox" />
+            <span data-en="Focus mode: hide everything but the board while you are matching" data-zh="专注模式：连续答题时只留下棋盘">专注模式：连续答题时只留下棋盘</span>
+          </label>
+          <label class="check-row">
+            <input id="effectsOn" type="checkbox" />
+            <span data-en="Effects and vibration" data-zh="动画特效和震动">动画特效和震动</span>
+          </label>
+          <label class="check-row">
+            <input id="streakTones" type="checkbox" />
+            <span data-en="Piano notes for a streak" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
+          </label>
+        </div>
         <details class="advanced">
           <summary data-en="Advanced" data-zh="高级选项">高级选项</summary>
           <div class="option-grid">
             <label data-levels-only>
-              <span data-en="Time tolerance (e.g. 0.2)" data-zh="时间容错（如 0.2）">时间容错（如 0.2）</span>
+              <span data-en="Extra time on timed levels (0.2 = 20% more)" data-zh="限时关卡多给的时间（0.2 = 多 20%）">限时关卡多给的时间（0.2 = 多 20%）</span>
               <input id="levelTimeTolerance" type="number" min="0" max="2" step="0.05" />
             </label>
             <label>
-              <span data-en="Refill min delay (sec)" data-zh="补词最短延迟（秒）">补词最短延迟（秒）</span>
+              <span data-en="Shortest wait before a new card (sec)" data-zh="新卡出现前最短等几秒">新卡出现前最短等几秒</span>
               <input id="refillMinSeconds" type="number" min="0.1" max="10" step="0.1" />
             </label>
             <label>
-              <span data-en="Refill max delay (sec)" data-zh="补词最长延迟（秒）">补词最长延迟（秒）</span>
+              <span data-en="Longest wait before a new card (sec)" data-zh="新卡出现前最长等几秒">新卡出现前最长等几秒</span>
               <input id="refillMaxSeconds" type="number" min="0.1" max="15" step="0.1" />
             </label>
           </div>
           <label class="check-row">
             <input id="pauseRefillWhileSelected" type="checkbox" />
-            <span data-en="Pause refill while a card is selected" data-zh="选中卡片时暂停补词，不打断当前选择">选中卡片时暂停补词，不打断当前选择</span>
+            <span data-en="Wait with new cards while I have one selected" data-zh="选中卡片时先不补新卡">选中卡片时先不补新卡</span>
           </label>
           <label class="check-row">
             <input id="recycleMastered" type="checkbox" />
@@ -2487,7 +2580,7 @@
         </div>
         <p class="import-hint" id="aiWeakNote" hidden></p>
         <div id="aiLocalBlock" hidden>
-          <h3 data-en="On-device model" data-zh="端侧模型">端侧模型</h3>
+          <h3 data-en="Model on this device" data-zh="本机模型（不联网）">本机模型（不联网）</h3>
           <p id="aiAbout"></p>
           <progress id="aiProgress" max="1" value="0" hidden></progress>
           <p class="import-status" id="aiStatus" role="status" aria-live="polite"></p>
@@ -2673,6 +2766,7 @@
     </div>
   </div>
 
+  <p class="sr-only" id="feedback" role="status" aria-live="polite"></p>
   <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus<span class=&quot;key-hint&quot;> · Esc</span>" data-zh="退出专注<span class=&quot;key-hint&quot;> · Esc</span>">退出专注<span class="key-hint"> · Esc</span></button>
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
@@ -2763,7 +2857,7 @@
         lesson: {
           roundN: "Round {n}", roundLevel: "Level {n} · {done}/{total}", trialLevel: "Trial level · {done}/{total}",
           endlessLabel: "Set {n} · endless",
-          choosePair: "Match the pairs", continueBtn: "Continue",
+          choosePair: "Match each meaning to its word", continueBtn: "Continue",
           emptyTitle: "No words yet", emptyText: "Open the Library to add words first, then start matching.",
           emptyAddBtn: "Add words"
         },
@@ -2792,7 +2886,7 @@
           saveOptions: "Save options",
           listTitle: "Word list",
           listBlurb: "All words in your library. You can re-add after clearing.",
-          deleteBtn: "Delete", speak: "Listen to {w}", stageNew: "New", stageMastered: "Mastered",
+          deleteBtn: "Delete", deleted: "Deleted {w}", undo: "Undo", speak: "Listen to {w}", stageNew: "New", stageMastered: "Mastered",
           emptyListA: "No words yet", emptyListB: "Add some above",
           dueNow: "Due now", dueToday: "Later today", dueTomorrow: "Tomorrow", dueInDays: "In {n} days",
           forecastTitle: "Reviews in the next 7 days", dayToday: "Today", dayTomorrow: "Tmrw",
@@ -2904,7 +2998,7 @@
           weakWeb: "This device is not powerful enough for an on-device model; use an API key instead."
         },
         drill: {
-          kicker: "Practice {i}/{n} · {type}", type_spell: "Spelling", type_sentence: "Make a sentence",
+          kicker: "{type} · {i}/{n}", type_spell: "Spelling", type_sentence: "Make a sentence",
           check: "Check", next: "Next",
           spellPrompt: "Type the word for this meaning.", spellPlaceholder: "Type the word",
           spellRight: "Right!", spellWrong: "The answer is <b>{w}</b>. Type it once to remember it.", copyAgain: "Not quite — type <b>{w}</b> exactly.",
@@ -2915,7 +3009,9 @@
           checking: "Checking…",
           engineFailed: "The grammar checker could not load. It needs a connection the first time — you can skip this card.",
           sentenceOk: "Grammatical — nice sentence!",
-          checkMeaning: "Grammar is checked on your device; meaning is not. Make sure {w} means “{m}” here.",
+          sentenceBasicOk: "No obvious grammar problems found.",
+          finish: "Done",
+          checkMeaning: "This device only does a basic grammar check — meaning and some grammar are not checked. Make sure {w} means “{m}” here, or turn on AI in Settings for a full check.",
           notUsed: "The sentence doesn't use {w} yet (any form is fine).",
           short: "Write at least 4 words.", onlyWord: "Write a whole sentence, not just the word.",
           noVerb: "Tip: the sentence may be missing a verb.",
@@ -2988,9 +3084,9 @@
           langToggle: "切换语言"
         },
         lesson: {
-          roundN: "第 {n} 轮", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
+          roundN: "第 {n} 组", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
           endlessLabel: "第 {n} 组 · 无限练习",
-          choosePair: "选择配对", continueBtn: "继续",
+          choosePair: "把意思和单词配成对", continueBtn: "继续",
           emptyTitle: "还没有单词", emptyText: "请先进入词库添加单词。添加后就可以开始配对练习。",
           emptyAddBtn: "去添加单词"
         },
@@ -3009,7 +3105,7 @@
           bulkPlaceholder: "每行一个：{a}词,{b}释义\n也可以：单词 = 释义\n带例句：单词,释义 | 例句 | 例句翻译",
           addBulk: "批量添加", clearAll: "清空全部词",
           optionsTitle: "练习选项",
-          optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "时间容错（如 0.2）",
+          optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "限时关卡多给的时间（0.2 = 多 20%）",
           optRefillTrigger: "消掉几组后补词",
           optRefillMin: "补词最短延迟（秒）", optRefillMax: "补词最长延迟（秒）",
           optAdaptiveLevelTime: "按上次实际通关配速自适应本关时间（加容错）",
@@ -3019,11 +3115,11 @@
           saveOptions: "保存选项",
           listTitle: "词库列表",
           listBlurb: "这里显示当前词库里的全部单词。清空后可以重新录入。",
-          deleteBtn: "删除", speak: "朗读 {w}", stageNew: "新词", stageMastered: "已掌握",
+          deleteBtn: "删除", deleted: "已删除 {w}", undo: "撤销", speak: "朗读 {w}", stageNew: "新词", stageMastered: "已掌握",
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
           dueNow: "待复习", dueToday: "今天稍后", dueTomorrow: "明天", dueInDays: "{n} 天后",
           forecastTitle: "未来 7 天复习量", dayToday: "今天", dayTomorrow: "明天",
-          mySentences: "我的例句：", aiExample: "由端侧 AI 生成，已通过语法检查",
+          mySentences: "我的例句：", aiExample: "由本机 AI 生成，已通过语法检查",
           langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
           stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
           groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
@@ -3057,7 +3153,7 @@
           nextLevel: "继续进入下一关。",
           wrongWithReplay: "不对：{a} = {b}。错词会回滚再出现。",
           optionsSaved: "练习选项已保存，下一关生效。",
-          addedOne: "新词已加入下一轮。", addedN: "已加入 {n} 个新词。",
+          addedOne: "新词会在下一组出现。", addedN: "已加入 {n} 个新词。",
           emptyLib: "词库为空，请先补充单词。",
           needBoth: "请同时填写单词和释义。",
           alreadyInLibrary: "这个词已经在词库里了。",
@@ -3069,13 +3165,13 @@
           removeSamples: "移除全部 {n} 个内置示例词及其进度？你自己添加的词不受影响。"
         },
         timeouts: {
-          allPass: "全部过关", timeUp: "时间到", levelComplete: "这一关完成", roundOver: "这一轮结束",
+          allPass: "全部过关", timeUp: "时间到", levelComplete: "这一关完成", roundOver: "这一组结束",
           allDoneText: "所有词都连续答对过。可以清空进度再来一次，或者录入新词。",
-          remainingUnstable: "还有 {n} 个词没有稳定。下一轮会优先出现错过、慢过或只答对一次的词。",
+          remainingUnstable: "还有 {n} 个词没有稳定。下一组会先出错过、慢过或只答对一次的词。",
           queueCleared: "本关队列已清空。错词已经回滚练过，还有 {n} 个词没有稳定。",
           allStable: "本关完成。所有词都稳定了，继续后会进入循环复习。",
           levelMatched: "这一关配对 {n} 组。继续后会重新洗牌，并优先出现不熟的词。",
-          nextRoundPriority: "下一轮会优先出现你不熟的词。",
+          nextRoundPriority: "下一组会先出你最不熟的词。",
           levelSummary: "本关配对 {done} 组，错 {m} 次。",
           stillLearning: "还有 {n} 个词需要巩固，接下来会优先出现。",
           timeUpText: "没配完的词仍在练习队列里。",
@@ -3125,13 +3221,13 @@
           apiNetwork: "连不上服务商。浏览器会拦截部分服务商，可以换一家试试，或者用安卓 App（所有服务商都能用）。",
           apiHttp: "服务商返回了错误（{msg}）。",
           apiPause: "暂停使用", apiResume: "开启", apiCleared: "已从本机删除 Key。",
-          apiLocalNote: "优先使用 API Key，端侧模型作为备用。",
+          apiLocalNote: "优先使用 API Key，本机模型作为备用。",
           aboutNative: "在这台手机上运行 {name}（约 {mb}MB，下载一次，之后离线可用）：批改造句卡（错在哪、为什么、怎么改，意思也一起查），讲解混淆的词，补例句，生成词表，任何语言对都可以。免费，你写的内容不出手机。每次回答要几秒钟。",
-          weakNative: "这台手机内存不到 12GB，跑端侧模型会很卡，建议改用 API Key。",
-          weakWeb: "这台设备性能不够跑端侧模型，可以改用 API Key。"
+          weakNative: "这台手机内存不到 12GB，跑本机模型会很卡，建议改用 API Key。",
+          weakWeb: "这台设备性能不够跑本机模型，可以改用 API Key。"
         },
         drill: {
-          kicker: "小练习 {i}/{n} · {type}", type_spell: "拼写", type_sentence: "造句",
+          kicker: "{type} · {i}/{n}", type_spell: "拼写", type_sentence: "造句",
           check: "检查", next: "下一题",
           spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
           spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
@@ -3141,8 +3237,10 @@
           loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
           checking: "正在检查……",
           engineFailed: "语法检查引擎加载失败。第一次使用需要联网下载，可以先跳过这题。",
-          sentenceOk: "语法正确，句子不错！",
-          checkMeaning: "语法在本机检查，意思检查不了：请确认这里的 {w} 是「{m}」的意思。",
+          sentenceOk: "语法和意思都对，句子不错！",
+          sentenceBasicOk: "没发现明显的语法问题。",
+          finish: "完成",
+          checkMeaning: "本机只做基础语法检查，意思和部分语法查不了。请确认这里的 {w} 是「{m}」的意思；想要完整批改，可以在设置里开启 AI。",
           notUsed: "句子里还没有用到 {w}（任何词形都可以）。",
           short: "至少写 4 个词。", onlyWord: "请写一个完整的句子，不要只写这个词。",
           noVerb: "提示：句子可能缺少谓语动词。",
@@ -5146,6 +5244,7 @@
       button.dataset.side = slot.side;
       button.dataset.index = String(slot.index);
       button.dataset.id = slot.word ? slot.word.id : "";
+      if (slot.word) button.setAttribute("aria-pressed", "false");
       button.disabled = !slot.word;
       const label = slot.word
         ? (slot.side === "left" ? slot.word.zh : slot.word.en)
@@ -5529,6 +5628,16 @@
         first.card.classList.add("wrong");
       }
       if (second.card) second.card.classList.add("wrong");
+      // Show where the first card's real partner is, so a miss teaches something.
+      if (first.card && firstWord) {
+        const partner = els.matchGrid.querySelector(`.match-card[data-id="${CSS.escape(firstWord.id)}"]:not([data-side="${first.side}"])`);
+        if (partner && partner !== second.card) {
+          partner.classList.remove("hint-correct");
+          void partner.offsetWidth;
+          partner.classList.add("hint-correct");
+          setTimeout(() => partner.classList.remove("hint-correct"), 950);
+        }
+      }
       els.feedback.className = "feedback bad";
       els.feedback.textContent = t("feedback.wrong", { a: firstWord.en, b: firstWord.zh });
       saveWords();
@@ -6370,7 +6479,7 @@
       if (right) {
         card.phase = "done";
         els.drillResult.innerHTML = `<p class="drill-ok">${t("drill.spellRight")}</p>`;
-        els.drillSubmit.textContent = t("drill.next");
+        els.drillSubmit.textContent = t(drill.index >= drill.list.length - 1 ? "drill.finish" : "drill.next");
         els.drillSubmit.focus();
       } else {
         card.phase = "copy";
@@ -6410,7 +6519,7 @@
         parts.push(`<p class="drill-bad">${t(result.aiOnly ? "drill.aiWrong" : "drill.aiMeaningBad")}</p>`);
         parts.push(aiFeedbackHtml(feedback));
       } else if (result.ok) {
-        parts.push(`<p class="drill-ok">${t("drill.sentenceOk")}</p>`);
+        parts.push(`<p class="drill-ok">${t(feedback ? "drill.sentenceOk" : "drill.sentenceBasicOk")}</p>`);
         if (feedback) {
           parts.push(`<p class="drill-muted">${t("drill.aiMeaningOk")}</p>`);
           if (feedback.better) parts.push(`<div class="drill-ai"><p><b>${t("drill.aiBetter")}</b>${escapeHtml(feedback.better)}</p></div>`);
@@ -6498,7 +6607,7 @@
         card.phase = "done";
         card.word.sentences = [...(card.word.sentences || []), { text, at: Date.now(), ok: true }].slice(-10);
         saveWords();
-        els.drillSubmit.textContent = t("drill.next");
+        els.drillSubmit.textContent = t(drill.index >= drill.list.length - 1 ? "drill.finish" : "drill.next");
         // Once a model has checked the meaning, the self-report button is not needed.
         els.drillWrongMeaning.hidden = Boolean(feedback && feedback.ok);
         els.drillHint.hidden = true;
@@ -7284,12 +7393,14 @@
       // One overlay at a time: the intro re-offers this when it closes.
       if (document.querySelector(".modal.open")) return;
       setInstallNudgeCopy();
+      els.installNudge.inert = false;
       els.installNudge.classList.add("show");
     }
 
     function closeInstallNudge(remember = false) {
       if (!els.installNudge) return;
       els.installNudge.classList.remove("show");
+      els.installNudge.inert = true;
       if (remember) rememberInstallNudgeHidden();
     }
 
@@ -7643,10 +7754,36 @@
       if (onSpeakClick(event)) return;
       const button = event.target.closest("[data-delete]");
       if (!button) return;
-      state.words = state.words.filter(word => word.id !== button.dataset.delete);
+      const index = state.words.findIndex(word => word.id === button.dataset.delete);
+      if (index < 0) return;
+      const [removed] = state.words.splice(index, 1);
       saveWords();
       renderRound();
+      showUndo(t("library.deleted", { w: removed.en }), () => {
+        state.words.splice(Math.min(index, state.words.length), 0, removed);
+        saveWords();
+        renderRound();
+      });
     });
+
+    // One undo at a time: "Deleted apple · Undo" for a few seconds.
+    let undoToast = null;
+    function showUndo(text, undo) {
+      if (undoToast) undoToast.remove();
+      const toast = document.createElement("div");
+      toast.className = "undo-toast";
+      toast.setAttribute("role", "status");
+      const label = document.createElement("span");
+      label.textContent = text;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = t("library.undo");
+      button.addEventListener("click", () => { undo(); toast.remove(); undoToast = null; });
+      toast.append(label, button);
+      document.body.appendChild(toast);
+      undoToast = toast;
+      setTimeout(() => { if (undoToast === toast) { toast.remove(); undoToast = null; } }, 7000);
+    }
 
     function setDangerStatus(text, kind = "") {
       const el = document.getElementById("dangerStatus");
@@ -7721,13 +7858,56 @@
       if (focusOn() && event.pointerType === "mouse" && (event.clientX < 110 || event.clientY < 60)) exitFocus();
     });
 
+    // ---- Dialog focus: move in, keep the page behind inert, return on close ----
+    const dialogReturnFocus = new Map();
+    function syncDialogs() {
+      const open = [els.introModal, els.settingsModal, els.libraryModal].filter(m => m && m.classList.contains("open"));
+      const app = document.querySelector(".app");
+      if (app) app.inert = open.length > 0;
+      for (const modal of [els.introModal, els.settingsModal, els.libraryModal]) {
+        if (!modal) continue;
+        const isOpen = modal.classList.contains("open");
+        if (isOpen && !dialogReturnFocus.has(modal)) {
+          dialogReturnFocus.set(modal, document.activeElement);
+          // Move focus in unless the dialog already placed it (the intro focuses its main button).
+          // After the open transition has made the dialog visible (hidden elements cannot take focus).
+          setTimeout(() => {
+            if (!modal.classList.contains("open") || modal.contains(document.activeElement)) return;
+            const target = ["[autofocus]", ".modal-top .icon-button", "button, [href], input, select, textarea"]
+              .map(selector => modal.querySelector(selector)).find(Boolean);
+            if (target) target.focus({ preventScroll: true });
+          }, 80);
+        } else if (!isOpen && dialogReturnFocus.has(modal)) {
+          const back = dialogReturnFocus.get(modal);
+          dialogReturnFocus.delete(modal);
+          if (!open.length && back && back.isConnected && typeof back.focus === "function") back.focus({ preventScroll: true });
+        }
+      }
+    }
+    const dialogObserver = new MutationObserver(syncDialogs);
+    [els.introModal, els.settingsModal, els.libraryModal].forEach(modal => {
+      if (modal) dialogObserver.observe(modal, { attributes: true, attributeFilter: ["class"] });
+    });
+
+    // Cards report their selected state to screen readers.
+    const pressedObserver = new MutationObserver(records => {
+      for (const record of records) {
+        const card = record.target;
+        if (card.classList && card.classList.contains("match-card")) {
+          card.setAttribute("aria-pressed", String(card.classList.contains("selected")));
+        }
+      }
+    });
+    pressedObserver.observe(els.matchGrid, { attributes: true, attributeFilter: ["class"], subtree: true });
+
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && focusOn()) {
         exitFocus();
         return;
       }
       if (els.introModal.classList.contains("open")) {
-        if (event.key === "Escape" || event.key === "Enter") {
+        // Enter belongs to the focused button; only Esc closes from anywhere.
+        if (event.key === "Escape") {
           event.preventDefault();
           closeIntro();
         }
@@ -7743,7 +7923,9 @@
       }
       if (event.target && event.target.closest && event.target.closest("#drill")) return;
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
-        if (event.target !== els.continueBtn) {
+        // A shortcut for "Continue" only when no other control has focus.
+        const onControl = event.target && event.target.closest && event.target.closest("button, a, input, select, textarea, summary");
+        if (!onControl) {
           event.preventDefault();
           els.continueBtn.click();
         }

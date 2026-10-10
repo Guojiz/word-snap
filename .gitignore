@@ -13,3 +13,5 @@ android/app/.cxx/
 *.apk
 .DS_Store
 dist/
+.impeccable/live/
+.impeccable/config.local.json
