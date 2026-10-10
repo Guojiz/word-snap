@@ -12,3 +12,4 @@ android/capacitor-cordova-android-plugins/
 android/app/.cxx/
 *.apk
 .DS_Store
+dist/
