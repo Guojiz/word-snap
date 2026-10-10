@@ -167,7 +167,7 @@
       { transform: "translate(-50%, -100%) scale(1.12) rotate(-4deg)", opacity: 1, offset: 0.22 },
       { transform: "translate(-50%, -100%) scale(1) rotate(-4deg)", opacity: 1, offset: 0.7 },
       { transform: "translate(-50%, -130%) scale(0.96) rotate(-4deg)", opacity: 0 }
-    ], { duration: 760, easing: "cubic-bezier(.2,.8,.2,1)" });
+    ], { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)" });
   }
 
   /** Sets el's text; changed characters roll up into place (a scoreboard, not a jump). */

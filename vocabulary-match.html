@@ -61,6 +61,7 @@
       --red-ink: #ff8fb0;
       --yellow: #ffc933;
       --yellow-ink: #ffd666;
+      --ember-ink: #ffa45c;
       --primary: #c9c1ff;
       --primary-dark: #a99cff;
       --on-primary: #24205a;
@@ -102,6 +103,7 @@
       --blue-ink: #5a3fe0;
       --red-ink: #c0245a;
       --yellow-ink: #8a5a00;
+      --ember-ink: #b4530f;
       --primary: #2b2470;
       --primary-dark: #1d1856;
       --on-primary: #ffffff;
@@ -228,7 +230,6 @@
       padding: 6px 2px;
       font-size: 12px;
       font-weight: 800;
-      text-transform: uppercase;
       text-align: center;
       line-height: 1.12;
       letter-spacing: -0.02em;
@@ -353,11 +354,11 @@
       align-items: baseline;
       gap: 6px;
       font-family: var(--num-font);
-      font-size: 32px;
+      font-size: 26px;
       font-weight: 800;
       letter-spacing: 0.02em;
       white-space: nowrap;
-      padding: 2px 12px;
+      padding: 0 10px;
       border-radius: 12px;
       background: var(--panel);
       box-shadow: 0 10px 24px -8px var(--card-shadow);
@@ -409,7 +410,7 @@
     }
 
     .streak-chip.lit {
-      color: var(--yellow-ink);
+      color: var(--ember-ink);
       filter: none;
       opacity: 1;
     }
@@ -481,6 +482,17 @@
     @media (prefers-reduced-motion: reduce) {
       .result-cell, .completion.show .completion-badge, .match-card.correct { animation: none; }
       .progress-fill { transition: none; }
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(8, 6, 32, 0.2) 100%);
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
     body.focus-mode::after {
@@ -1545,7 +1557,7 @@
     /* The set's result, as a rhythm game ends a song: CLEAR / FULL COMBO / TIME UP. */
     .completion-badge {
       margin: 18px auto 8px;
-      color: var(--yellow-ink);
+      color: var(--primary);
       font-family: var(--num-font);
       font-size: 64px;
       font-weight: 800;
@@ -1848,7 +1860,7 @@
     }
     .lang-toggle .lang-opt.on {
       opacity: 1;
-      color: var(--green-ink);
+      color: var(--primary);
     }
     .lang-toggle .sep {
       opacity: .35;
