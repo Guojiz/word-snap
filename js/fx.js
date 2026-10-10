@@ -145,8 +145,8 @@
     if (!doc) return;
     const boxes = cards.filter(c => c && c.getBoundingClientRect).map(c => c.getBoundingClientRect());
     if (!boxes.length) return;
-    // Centred between the pair (they are leaving the board), so it never covers the title or the lane.
-    const y = boxes.reduce((sum, b) => sum + b.top + b.height / 2, 0) / boxes.length;
+    // Above the pair, centred between its two cards.
+    const y = Math.min(...boxes.map(b => b.top)) - 6;
     const x = boxes.reduce((sum, b) => sum + b.left + b.width / 2, 0) / boxes.length;
     const el = doc.createElement("div");
     el.className = `fx-judge fx-judge-${kind}`;
@@ -163,10 +163,10 @@
       return;
     }
     play(el, [
-      { transform: "translate(-50%, -20%) scale(0.55) rotate(-4deg)", opacity: 0 },
-      { transform: "translate(-50%, -50%) scale(1.12) rotate(-4deg)", opacity: 1, offset: 0.22 },
-      { transform: "translate(-50%, -50%) scale(1) rotate(-4deg)", opacity: 1, offset: 0.7 },
-      { transform: "translate(-50%, -80%) scale(0.96) rotate(-4deg)", opacity: 0 }
+      { transform: "translate(-50%, -70%) scale(0.55) rotate(-4deg)", opacity: 0 },
+      { transform: "translate(-50%, -100%) scale(1.12) rotate(-4deg)", opacity: 1, offset: 0.22 },
+      { transform: "translate(-50%, -100%) scale(1) rotate(-4deg)", opacity: 1, offset: 0.7 },
+      { transform: "translate(-50%, -130%) scale(0.96) rotate(-4deg)", opacity: 0 }
     ], { duration: 760, easing: "cubic-bezier(.2,.8,.2,1)" });
   }
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Word Snap">
-  <rect width="512" height="512" rx="112" fill="#1a1745"/>
-  <rect x="86" y="388" width="340" height="30" rx="15" fill="#2e2968"/>
+  <rect width="512" height="512" rx="112" fill="#24205a"/>
+  <rect x="86" y="388" width="340" height="30" rx="15" fill="#3a3480"/>
   <rect x="86" y="388" width="214" height="30" rx="15" fill="#18c6b5"/>
   <path d="M120 128h52l30 158 40-158h44l40 158 30-158h52l-54 222h-54l-36-138-36 138h-54z" fill="#f3f1ff"/>
   <path transform="translate(392 36) scale(5)" d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z" fill="#ffc933"/>

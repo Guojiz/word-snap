@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#1a1745" />
+  <meta name="theme-color" content="#24205a" />
   <meta name="color-scheme" content="dark light" />
   <script>
     (function () {
@@ -42,11 +42,11 @@
        gold = PERFECT, rose = MISS / wrong; buttons are indigo ink (--primary).
        *-ink variants are the same hues dark/light enough for text (≥ 4.5:1). */
     :root {
-      --bg: #1a1745;
-      --panel: #262158;
-      --panel-2: #201c4f;
-      --line: #39337a;
-      --line-strong: #5a52a3;
+      --bg: #24205a;
+      --panel: #2f2a6e;
+      --panel-2: #29246a;
+      --line: #463f8f;
+      --line-strong: #6a62b5;
       --text: #f3f1ff;
       --muted: #b8b2e8;
       --dim: #9690d6;
@@ -63,9 +63,9 @@
       --yellow-ink: #ffd666;
       --primary: #c9c1ff;
       --primary-dark: #a99cff;
-      --on-primary: #1a1745;
-      --panel-soft: #211d51;
-      --track: #2e2968;
+      --on-primary: #24205a;
+      --panel-soft: #2a2565;
+      --track: #3a3480;
       --card-shadow: rgba(5, 3, 30, .55);
       --selected-bg: #2e2580;
       --selected-ink: #f3f1ff;
@@ -76,12 +76,12 @@
       --wrong-bg: #4a1a3a;
       --wrong-ink: #ffe4ec;
       --wrong-shadow: rgba(5, 3, 30, .55);
-      --on-accent: #1a1745;
+      --on-accent: #24205a;
       --warn-ink: #2b1800;
       --warn-shadow: rgba(255, 201, 51, .4);
       --weak-wrong: #ff8fb0;
       --scrim: rgba(8, 6, 32, .72);
-      --hover-soft: #2c2766;
+      --hover-soft: #363075;
       --radius: 14px;
       --ease: cubic-bezier(.2, .8, .2, 1);
       --theme-shift: 420ms;
@@ -242,7 +242,7 @@
     .rail-btn.active,
     .rail-btn:hover {
       border-color: var(--line);
-      color: var(--green-ink);
+      color: var(--primary);
       background: var(--panel-soft);
     }
 
@@ -287,7 +287,7 @@
 
     .lesson-top {
       display: grid;
-      grid-template-columns: 36px minmax(0, 1fr) auto auto;
+      grid-template-columns: 44px minmax(0, 1fr) auto auto;
       gap: 18px;
       align-items: center;
       margin-bottom: 54px;
@@ -361,7 +361,7 @@
       border-radius: 12px;
       background: var(--panel);
       box-shadow: 0 10px 24px -8px var(--card-shadow);
-      transform: translate(-50%, -50%) rotate(-4deg);
+      transform: translate(-50%, -100%) rotate(-4deg);
     }
 
     .fx-judge small {
@@ -414,7 +414,6 @@
       opacity: 1;
     }
 
-    /* Set summary: Duolingo-style stat tiles that pop in one after another. */
     .completion.show .completion-badge {
       animation: badge-pop 650ms cubic-bezier(.34, 1.56, .64, 1);
     }
@@ -425,49 +424,54 @@
       100% { transform: scale(1) rotate(0); }
     }
 
+    /* Set result: the judgement counts, as a rhythm game ends a song. */
     .completion-stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0 8px;
-    }
-
-    .stat-tile {
-      border: 2px solid var(--tile);
-      border-radius: 16px;
-      background: var(--tile);
-      overflow: hidden;
-      animation: tile-in 520ms cubic-bezier(.34, 1.56, .64, 1) both;
-    }
-
-    .stat-tile:nth-child(2) { animation-delay: 120ms; }
-    .stat-tile:nth-child(3) { animation-delay: 240ms; }
-
-    .stat-tile b {
-      display: block;
-      padding: 4px 6px 5px;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 1000;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .stat-tile span {
-      display: block;
-      padding: 10px 4px 12px;
-      border-radius: 13px 13px 14px 14px;
-      color: var(--tile-ink);
-      background: var(--bg);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px 12px;
+      margin: 18px 0 6px;
       font-family: var(--num-font);
-      font-size: 30px;
       font-weight: 800;
     }
 
-    /* Fixed colours (not the rotating theme), so each tile always means the same thing. */
-    .stat-tile.accuracy { --tile: #0a7a70; --tile-ink: var(--green-ink); }
-    .stat-tile.time { --tile: #3b33a8; --tile-ink: var(--primary); }
-    .stat-tile.combo { --tile: #8a5a00; --tile-ink: var(--yellow-ink); }
+    .result-cell {
+      display: grid;
+      justify-items: center;
+      animation: tile-in 520ms cubic-bezier(.34, 1.56, .64, 1) both;
+    }
+
+    .result-cell:nth-child(2) { animation-delay: 90ms; }
+    .result-cell:nth-child(3) { animation-delay: 180ms; }
+    .result-cell:nth-child(4) { animation-delay: 270ms; }
+
+    .result-cell b {
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .result-cell span {
+      color: var(--text);
+      font-size: 38px;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-line {
+      grid-column: 1 / -1;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .result-line b {
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 20px;
+      font-weight: 800;
+    }
 
     @keyframes tile-in {
       from { transform: translateY(14px) scale(0.85); opacity: 0; }
@@ -475,20 +479,8 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .stat-tile, .completion.show .completion-badge, .match-card.correct { animation: none; }
+      .result-cell, .completion.show .completion-badge, .match-card.correct { animation: none; }
       .progress-fill { transition: none; }
-    }
-
-    /* Focus mode: a soft vignette draws the eye to the board. */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 30;
-      pointer-events: none;
-      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(0, 0, 0, 0.18) 100%);
-      opacity: 0;
-      transition: opacity 0.8s ease;
     }
 
     body.focus-mode::after {
@@ -536,9 +528,7 @@
 
     .today-bar {
       grid-column: 1 / -1;
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      padding: 8px 14px;
+      padding: 2px 0;
       color: var(--muted);
       font-size: 15px;
       font-weight: 800;
@@ -595,8 +585,10 @@
     }
 
     .icon-button {
-      width: 36px;
-      height: 36px;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
       border: 0;
       border-radius: 50%;
       color: var(--dim);
@@ -639,56 +631,16 @@
       padding-top: 22px;
     }
 
-    /* Duolingo-style bar: a highlight band, a springy fill, a glint on every step,
-       and a streak colour (gold at 5, fire at 10, violet at 20). */
+    /* The lane: a springy fill coloured by each match's judgement (see laneGradient). */
     .progress-fill {
       position: relative;
       width: 0%;
       min-width: 16px;
       height: 100%;
       border-radius: inherit;
-      background: var(--green);
+      background: var(--primary);
       overflow: hidden;
       transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
-    }
-
-    .progress-fill::after {
-      content: "";
-      position: absolute;
-      left: 8px;
-      right: 8px;
-      top: 3px;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.32);
-    }
-
-    .progress-fill::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      transform: translateX(-120%);
-      background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
-    }
-
-    .progress-fill.glint::before {
-      animation: progress-glint 700ms ease-out;
-    }
-
-    @keyframes progress-glint {
-      to { transform: translateX(120%); }
-    }
-
-    .progress[data-tier="gold"] .progress-fill {
-      background: linear-gradient(90deg, #ffc933, #ff9a3d);
-    }
-
-    .progress[data-tier="fire"] .progress-fill {
-      background: linear-gradient(90deg, #ff9a3d, #ff5c8a);
-    }
-
-    .progress[data-tier="blaze"] .progress-fill {
-      background: linear-gradient(90deg, #18c6b5, #ffc933 55%, #ff5c8a);
     }
 
     /* Combo count at the right end of the lane: a big rolling number and its word. */
@@ -699,7 +651,7 @@
       display: flex;
       align-items: baseline;
       gap: 4px;
-      color: var(--green-ink);
+      color: var(--text);
       font-family: var(--num-font);
       font-weight: 800;
       white-space: nowrap;
@@ -711,7 +663,7 @@
     }
 
     .combo-label b {
-      font-size: 24px;
+      font-size: 30px;
       line-height: 1;
     }
 
@@ -725,9 +677,7 @@
       transform: translateY(0) scale(1);
     }
 
-    .combo-label[data-tier="gold"] { color: var(--yellow-ink); }
-    .combo-label[data-tier="fire"],
-    .combo-label[data-tier="blaze"] { color: var(--red-ink); }
+    /* The combo stays one colour: gold means PERFECT and nothing else. */
 
     .top-count {
       min-width: 56px;
@@ -783,7 +733,7 @@
       border: 2px solid var(--line);
       border-radius: var(--radius);
       color: var(--text);
-      background: transparent;
+      background: var(--panel);
       box-shadow: 0 6px 16px -6px var(--card-shadow);
       cursor: pointer;
       display: grid;
@@ -815,6 +765,11 @@
       opacity: 0;
       pointer-events: none;
       transform: scale(.98);
+    }
+
+    .match-card .num {
+      font-family: var(--num-font);
+      font-weight: 700;
     }
 
     .match-card .reading {
@@ -1246,6 +1201,20 @@
       border-color: var(--blue);
     }
 
+    ::selection {
+      color: var(--text);
+      background: rgba(124, 92, 255, 0.28);
+    }
+
+    input,
+    textarea {
+      caret-color: var(--blue);
+    }
+
+    html {
+      scrollbar-color: var(--line-strong) transparent;
+    }
+
     /* Keyboard focus is always visible (mouse clicks do not show it). */
     :focus-visible {
       outline: 3px solid var(--blue);
@@ -1308,7 +1277,7 @@
 
     @keyframes hint-pulse {
       0%, 100% { box-shadow: 0 6px 16px -6px var(--card-shadow); }
-      35% { box-shadow: 0 0 0 4px var(--green), 0 4px 0 var(--card-shadow); }
+      35% { box-shadow: 0 0 0 4px var(--green), 0 6px 16px -6px var(--card-shadow); }
     }
 
     textarea {
@@ -1618,7 +1587,7 @@
       border-radius: 18px;
       color: var(--text);
       background: var(--panel-soft);
-      box-shadow: 0 22px 60px rgba(0, 0, 0, .38), 0 5px 0 var(--card-shadow);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, .38);
       opacity: 0;
       pointer-events: none;
       transform: translateY(18px) scale(.98);
@@ -1668,10 +1637,10 @@
 
     .install-close {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
+      top: 4px;
+      right: 4px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
       border: 0;
@@ -1756,8 +1725,23 @@
         padding: 28px 18px calc(28px + env(safe-area-inset-bottom));
       }
 
+      /* Phones: navigation sits at the bottom, in reach of the thumb. */
       .mobile-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
         display: grid;
+        width: 100%;
+        margin: 0;
+        padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--line);
+        background: var(--bg);
+      }
+
+      .main {
+        padding-bottom: calc(96px + env(safe-area-inset-bottom));
       }
 
       .lesson {
@@ -1772,7 +1756,7 @@
 
     @media (max-width: 640px) {
       .lesson-top {
-        grid-template-columns: 30px minmax(0, 1fr) auto auto;
+        grid-template-columns: 44px minmax(0, 1fr) auto auto;
         gap: 10px;
         margin-bottom: 30px;
       }
@@ -2432,7 +2416,6 @@
       <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
       <button class="rail-btn" type="button" id="openLibraryRail" data-en="Library" data-zh="词库">词库</button>
       <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
-      <a class="rail-btn" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer">GitHub</a>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
       <button class="rail-btn lang-toggle" type="button" id="langToggleRail" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
     </aside>
@@ -2448,7 +2431,7 @@
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
         <div class="lesson-top">
-          <button class="icon-button" type="button" id="quitBtn" aria-label="结束本组" title="结束本组" data-en-aria="End this set" data-zh-aria="结束本组">×</button>
+          <button class="icon-button" type="button" id="quitBtn" aria-label="结束本组" title="结束本组" data-en-aria="End this set" data-zh-aria="结束本组"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
           <div class="progress-wrap">
             <div class="combo-label" id="comboLabel" aria-live="polite"></div>
             <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
@@ -2518,7 +2501,7 @@
   </div>
 
   <div class="install-nudge" id="installNudge" role="dialog" aria-live="polite" aria-labelledby="installTitle" aria-describedby="installText" inert>
-    <button class="install-close" type="button" id="closeInstallNudge" aria-label="关闭安装提醒" data-en-aria="Close install prompt" data-zh-aria="关闭安装提醒">×</button>
+    <button class="install-close" type="button" id="closeInstallNudge" aria-label="关闭安装提醒" data-en-aria="Close install prompt" data-zh-aria="关闭安装提醒"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="install-nudge-body">
       <div class="install-icon" aria-hidden="true">W</div>
       <div class="install-copy">
@@ -2562,8 +2545,9 @@
           <h2 id="settingsTitle" data-en="Settings" data-zh="设置">设置</h2>
           <p data-en="Changes save automatically and apply from the next set." data-zh="修改会自动保存，下一组生效。">修改会自动保存，下一组生效。</p>
           <button class="link-button intro-link" type="button" id="showIntroBtn" data-en="How to play" data-zh="玩法说明">玩法说明</button>
+          <a class="link-button intro-link" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer" data-en="Source code (GitHub)" data-zh="源代码（GitHub）">源代码（GitHub）</a>
         </div>
-        <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+        <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <section class="modal-section" id="settingsSection">
         <!-- Four groups, each a single kind of decision. -->
@@ -2737,7 +2721,7 @@
           <h2 id="libraryTitle" data-en="Library" data-zh="词库">词库</h2>
           <p id="librarySummary"></p>
         </div>
-        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="tab-bar" role="tablist" aria-label="词库" data-en-aria="Library" data-zh-aria="词库">
         <button class="tab-btn" type="button" role="tab" data-tab="list" data-en="My words" data-zh="我的词库">我的词库</button>
@@ -2883,8 +2867,6 @@
           <button class="duo-button danger" type="button" id="clearCustomBtn" data-en="Clear all words" data-zh="清空全部词">清空全部词</button>
         </div>
       </section>
-        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
-      </div>
 
 
 
@@ -2909,10 +2891,10 @@
     // rotates per set. Values mirror the :root tokens in the stylesheet.
     const STAGE = {
       dark: {
-        bg: "#1a1745", panel: "#262158", panel2: "#201c4f", line: "#39337a", lineStrong: "#5a52a3",
+        bg: "#24205a", panel: "#2f2a6e", panel2: "#29246a", line: "#463f8f", lineStrong: "#6a62b5",
         text: "#f3f1ff", muted: "#b8b2e8", dim: "#9690d6",
         greenInk: "#5ef0e2", blueInk: "#b9a8ff", redInk: "#ff8fb0", yellowInk: "#ffd666",
-        primary: "#c9c1ff", primaryDark: "#a99cff", onPrimary: "#1a1745"
+        primary: "#c9c1ff", primaryDark: "#a99cff", onPrimary: "#24205a"
       },
       light: {
         bg: "#f5f3ff", panel: "#ffffff", panel2: "#ece8ff", line: "#dcd6fb", lineStrong: "#b7aeef",
@@ -3049,10 +3031,10 @@
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
         fx: { combo: "{n} in a row", comboWord: "COMBO" },
-        summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak" },
+        summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         today: {
           done: "Today's goal done", streak: "{n}-day streak",
-          left: "Today: {list} left, about {m} min", leftNum: "to go today ({list}) · about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
+          left: "Today: {list} left, about {m} min", leftNum: "to go today · about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
           frozen: "You missed a day — this week's streak freeze kept your streak.",
           broken: "Your {n}-day streak ended. Start a new one today (best: {best} days).",
           doneBanner: "Today's goal done · {n}-day streak",
@@ -3278,10 +3260,10 @@
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
         fx: { combo: "连对 {n} 次", comboWord: "连击" },
-        summary: { accuracy: "正确率", time: "用时", combo: "最高连对" },
+        summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         today: {
           done: "今日完成", streak: "连续 {n} 天",
-          left: "今天还剩 {list}，约 {m} 分钟", leftNum: "个词今天要练（{list}）· 约 {m} 分钟", due: "{n} 个到期", new: "{n} 个新词", practice: "一点练习",
+          left: "今天还剩 {list}，约 {m} 分钟", leftNum: "个词今天要练 · 约 {m} 分钟", due: "{n} 个到期", new: "{n} 个新词", practice: "一点练习",
           frozen: "昨天没练，本周的免断签保住了连续天数。",
           broken: "连续 {n} 天中断了，今天重新开始吧（最长纪录 {best} 天）。",
           doneBanner: "今日完成 · 连续 {n} 天",
@@ -4136,6 +4118,15 @@
       badge.classList.toggle("time-up", kind === "timeUp");
     }
 
+    // The lane is the set's judgement history: one segment per match, in its judgement colour.
+    const JUDGE_COLORS = { perfect: "#ffc933", great: "#18c6b5", good: "#7ad151" };
+    function laneGradient() {
+      const list = state.levelJudgements || [];
+      if (!list.length) return "none";
+      const step = 100 / list.length;
+      return `linear-gradient(90deg, ${list.map((kind, i) => `${JUDGE_COLORS[kind] || JUDGE_COLORS.good} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
+    }
+
     // ---- Daily goal and day streak (js/habit.js) ----
     // Today's goal: no words due right now, plus the day's new words (Settings).
     // Days change at 4 am. One missed day a week is bridged by the streak freeze.
@@ -4935,13 +4926,12 @@
         || els.introModal.classList.contains("open");
     }
 
-    // ---- Streak label and progress bar (Duolingo-style) ----
-    // From 3 correct in a row a label above the bar counts the streak; the bar turns
-    // gold at 5, fire at 10, violet at 20; milestones pop with a few stars.
+    // ---- Combo count and lane ----
+    // From 3 correct in a row the combo count sits at the lane's right end and rolls;
+    // milestones (5 / 10 / 20 / 50) pop with a few stars.
     function updateCombo(streak) {
       if (!els.comboLabel) return;
       const tier = WordSnapFx.tierFor(streak);
-      els.progressBar.dataset.tier = streak >= 5 ? tier.name : "";
       if (streak < 3) {
         els.comboLabel.classList.remove("show");
         return;
@@ -4961,13 +4951,6 @@
       }
     }
 
-    function glintProgress() {
-      if (!WordSnapFx.enabled()) return;
-      els.progressFill.classList.remove("glint");
-      void els.progressFill.offsetWidth; // restart the sweep
-      els.progressFill.classList.add("glint");
-    }
-
     /** Accuracy, time and best streak of the set, as tiles that pop in and count up. */
     function renderCompletionStats() {
       const box = els.completionStats;
@@ -4976,16 +4959,19 @@
       const wrong = state.levelMistakes || 0;
       if (!correct) { box.hidden = true; return; }
       const accuracy = Math.round(correct / (correct + wrong) * 100);
+      const counts = { perfect: 0, great: 0, good: 0 };
+      (state.levelJudgements || []).forEach(kind => { if (kind in counts) counts[kind] += 1; });
       box.hidden = false;
-      box.innerHTML = [
-        ["accuracy", t("summary.accuracy")],
-        ["time", t("summary.time")],
-        ["combo", t("summary.combo")]
-      ].map(([kind, label]) => `<div class="stat-tile ${kind}"><b>${escapeHtml(label)}</b><span data-stat="${kind}"></span></div>`).join("");
-      const [accEl, timeEl, comboEl] = box.querySelectorAll("[data-stat]");
-      WordSnapFx.countUp(accEl, accuracy, n => `${n}%`, { delay: 150 });
-      WordSnapFx.countUp(timeEl, Math.round((state.lastLevelActiveMs || 0) / 1000), n => WordSnapFx.clock(n * 1000), { delay: 270 });
-      WordSnapFx.countUp(comboEl, state.levelBestStreak || 0, String, { delay: 390 });
+      const cells = [["perfect", counts.perfect], ["great", counts.great], ["good", counts.good], ["miss", wrong]];
+      box.innerHTML = cells.map(([kind]) =>
+        `<div class="result-cell"><b class="fx-judge-${kind}">${kind.toUpperCase()}</b><span data-result="${kind}"></span></div>`).join("")
+        + `<p class="result-line">${t("summary.line", {
+          combo: `<b data-result="combo"></b>`, acc: `<b data-result="acc"></b>`, time: `<b data-result="time"></b>`
+        })}</p>`;
+      cells.forEach(([kind, n], i) => WordSnapFx.countUp(box.querySelector(`[data-result="${kind}"]`), n, String, { delay: 120 + i * 90 }));
+      WordSnapFx.countUp(box.querySelector('[data-result="combo"]'), state.levelBestStreak || 0, String, { delay: 480 });
+      WordSnapFx.countUp(box.querySelector('[data-result="acc"]'), accuracy, n => `${n}%`, { delay: 480 });
+      WordSnapFx.countUp(box.querySelector('[data-result="time"]'), Math.round((state.lastLevelActiveMs || 0) / 1000), n => WordSnapFx.clock(n * 1000), { delay: 480 });
     }
 
     // ---- Focus mode (automatic) ----
@@ -5226,6 +5212,7 @@
       state.levelMistakes = 0;
       state.levelBestStreak = 0;
       state.levelStreak = 0;
+      state.levelJudgements = [];
       state.lastCompletion = null;
       updateCombo(0);
 
@@ -5582,6 +5569,7 @@
       word.streak += 1;
       word.lastMs = elapsed;
       const grade = recordCorrect(word, elapsed);
+      (state.levelJudgements || (state.levelJudgements = [])).push(WordSnapFx.judgementFor(grade));
       state.blockWords.add(word.id);
 
       state.score += 1;
@@ -5601,7 +5589,6 @@
       WordSnapFx.ripple([first.card, second.card], WordSnapFx.tierFor(state.streak).colors[0]);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
-      glintProgress();
       updateCombo(state.streak);
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
@@ -6898,6 +6885,7 @@
           ? Math.min(100, Math.round((state.completedThisRun || 0) / targetTotal * 100))
           : 0;
       els.progressFill.style.width = `${pct}%`;
+      els.progressFill.style.backgroundImage = laneGradient();
       renderTimer();
       els.roundLabel.textContent = levelLabel(state.completedThisRun || 0, targetTotal);
       els.score.textContent = state.score;
