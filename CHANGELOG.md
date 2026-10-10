@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- **CI and releases**: GitHub Actions run the tests and page checks on every pull request; `main` deploys only the built site (`www/`) to Pages with a per-commit cache name; a `v*` tag builds the Android APK and publishes it as a GitHub Release (signed when the release key secrets are set). See MAINTAINING.md.
+
 ### Changed
 
 - **New look: the rhythm-game stage** (replaces the borrowed Duolingo palette and 3D buttons; see DESIGN.md). Indigo stage at night, lavender by day; one fixed palette (no per-set skin rotation) where each colour has one meaning — violet selected, teal correct / GREAT, gold PERFECT only, rose wrong / MISS, indigo-ink buttons; text colours meet 4.5:1; Saira Condensed (OFL, bundled) for numbers and judgements; drawn SVG icons instead of emoji; new app icon.
