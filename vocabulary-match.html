@@ -1586,6 +1586,22 @@
     .lang-pair-custom {
       grid-column: 1 / -1;
     }
+
+    .import-hint.backup-overdue {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .undo-restore {
+      margin-top: 10px;
+      padding: 0;
+      color: var(--blue);
+    }
+
+    #backupNudge .link-button {
+      color: var(--blue);
+      padding: 0;
+    }
   </style>
 </head>
 <body>
@@ -1772,6 +1788,20 @@
         <p class="import-status" id="optionsStatus" role="status" aria-live="polite"></p>
       </section>
 
+      <section class="modal-section" id="backupSection" aria-labelledby="backupTitle">
+        <h2 id="backupTitle" data-en="Backup &amp; restore" data-zh="备份与恢复">备份与恢复</h2>
+        <p data-en="Your words and learning progress are stored only in this browser. Save a backup file to move them to another phone, computer or browser, or to get them back after browser data is cleared." data-zh="单词和学习进度只存在这个浏览器里。保存一个备份文件，就能搬到另一台手机、电脑或浏览器，清理浏览器数据后也能找回。">单词和学习进度只存在这个浏览器里。保存一个备份文件，就能搬到另一台手机、电脑或浏览器，清理浏览器数据后也能找回。</p>
+        <p class="import-hint" data-en="On the other device, open Word Snap → Settings → Restore from file and pick the backup (send it to yourself by chat, email, AirDrop or a cloud drive)." data-zh="换设备时：把文件发给自己（微信、邮件、AirDrop、网盘都行），在新设备打开 Word Snap → 设置 → 从文件恢复，选中这个文件即可。">换设备时：把文件发给自己（微信、邮件、AirDrop、网盘都行），在新设备打开 Word Snap → 设置 → 从文件恢复，选中这个文件即可。</p>
+        <p class="import-hint" id="backupLast"></p>
+        <p class="import-status" id="backupStatus" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="duo-button secondary" type="button" id="restoreBackupBtn" data-en="Restore from file" data-zh="从文件恢复">从文件恢复</button>
+          <button class="duo-button" type="button" id="saveBackupBtn" data-en="Save backup file" data-zh="保存备份文件">保存备份文件</button>
+        </div>
+        <button class="link-button undo-restore" type="button" id="undoRestoreBtn" hidden></button>
+        <input type="file" id="restoreFileInput" hidden />
+      </section>
+
       <section class="modal-section danger-zone" aria-labelledby="resetTitle">
         <h2 id="resetTitle" data-en="Reset learning progress" data-zh="重置学习进度">重置学习进度</h2>
         <p data-en="Puts every word back to “new” and clears the score. Your word list is kept. This cannot be undone." data-zh="把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。">把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。</p>
@@ -1806,6 +1836,10 @@
         <div class="sample-note" id="sampleNote" hidden>
           <span id="sampleNoteText"></span>
           <button class="link-button" type="button" id="removeSamplesBtn"></button>
+        </div>
+        <div class="sample-note" id="backupNudge" hidden>
+          <span id="backupNudgeText"></span>
+          <button class="link-button" type="button" id="backupNudgeBtn" data-en="Save backup file" data-zh="保存备份文件">保存备份文件</button>
         </div>
         <div class="custom-list" id="customList"></div>
         <p class="import-hint list-foot" data-en="Mastered words don't need deleting — they just come up rarely." data-zh="已掌握的词不用删，它们只是很少再出现。">已掌握的词不用删，它们只是很少再出现。</p>
@@ -1898,10 +1932,11 @@
         <h2 id="dangerTitle" data-en="Danger zone" data-zh="危险操作">危险操作</h2>
         <p data-en="&lt;b&gt;Clear all words&lt;/b&gt; deletes every word in your library together with its learning progress. This cannot be undone." data-zh="&lt;b&gt;清空全部词&lt;/b&gt;会删除词库里的所有单词，以及它们的学习进度，无法撤销。"><b>清空全部词</b>会删除词库里的所有单词，以及它们的学习进度，无法撤销。</p>
         <p data-en="&lt;b&gt;Why it exists:&lt;/b&gt; the library is meant to keep growing. Practice mixes reviewing old words with learning new ones, so you normally never need to clear it. Use this only to switch to a completely different set, such as a new textbook, a new term, or another language." data-zh="&lt;b&gt;设计目的：&lt;/b&gt;词库是用来越积越多的。练习时会自动把复习旧词和学习新词混在一起安排，所以平时不需要清空。这个选项只用于彻底换一套词，比如换教材、换学期或换一种语言。"><b>设计目的：</b>词库是用来越积越多的。练习时会自动把复习旧词和学习新词混在一起安排，所以平时不需要清空。这个选项只用于彻底换一套词，比如换教材、换学期或换一种语言。</p>
-        <p data-en="Copy a backup first: pasting it back into Bulk input restores the words (but not their progress)." data-zh="清空前建议先复制备份：之后粘贴回「批量录入」即可恢复单词（学习进度不会恢复）。">清空前建议先复制备份：之后粘贴回「批量录入」即可恢复单词（学习进度不会恢复）。</p>
+        <p data-en="Save a backup file first: Settings → Restore from file brings back the words and their progress. Copying the word list only keeps the words (paste it into Bulk input)." data-zh="清空前建议先保存备份文件：之后在「设置 → 从文件恢复」即可连同学习进度一起找回。复制词表只保留单词（粘贴回「批量录入」），不含进度。">清空前建议先保存备份文件：之后在「设置 → 从文件恢复」即可连同学习进度一起找回。复制词表只保留单词（粘贴回「批量录入」），不含进度。</p>
         <p class="import-status" id="dangerStatus" role="status" aria-live="polite"></p>
         <div class="form-actions">
-          <button class="duo-button secondary" type="button" id="copyBackupBtn" data-en="Copy word list backup" data-zh="复制词表备份">复制词表备份</button>
+          <button class="duo-button secondary" type="button" id="dangerSaveBackupBtn" data-en="Save backup file" data-zh="保存备份文件">保存备份文件</button>
+          <button class="duo-button secondary" type="button" id="copyBackupBtn" data-en="Copy word list" data-zh="复制词表">复制词表</button>
           <button class="duo-button danger" type="button" id="clearCustomBtn" data-en="Clear all words" data-zh="清空全部词">清空全部词</button>
         </div>
       </section>
@@ -2070,7 +2105,7 @@
           continueNext: "Continue to the next set."
         },
         confirm: {
-          clearAllConfirm: "Delete all {n} words and their learning progress? This cannot be undone.\n\nOnly do this to switch to a completely different word set. Copy a backup first if you might want these words back.",
+          clearAllConfirm: "Delete all {n} words and their learning progress? This cannot be undone.\n\nOnly do this to switch to a completely different word set. Save a backup file first (Settings → Backup & restore) if you might want these words back.",
           resetProgress: "Clear all learning progress (mastery, review schedule, score)? Your word list is kept.",
           removeSamples: "Remove all {n} built-in sample words and their progress? Your own words stay."
         },
@@ -2115,6 +2150,27 @@
           backupCopied: "Backup of {n} words copied. Keep it somewhere safe (e.g. a note).",
           backupFailed: "Couldn't copy automatically. The backup is in the Bulk input box above: copy it manually.",
           backupEmpty: "The library is empty; nothing to back up."
+        },
+        backup: {
+          saved: "Saved {name} ({n} words with progress). Keep it somewhere safe, e.g. send it to yourself or put it in a cloud drive.",
+          shared: "Backup of {n} words shared. Make sure it ended up somewhere you can find it later.",
+          cancelled: "Backup not saved.",
+          empty: "The library is empty; nothing to back up.",
+          never: "No backup yet.",
+          last: "Last backup: {date} ({ago}).",
+          overdue: "Last backup: {date} ({ago}). Words or progress have changed since: save a new one.",
+          today: "today", yesterday: "yesterday", daysAgo: "{n} days ago",
+          invalid: "That file isn't a Word Snap backup. (A plain text word list goes into Library → Add words → Bulk input.)",
+          tooBig: "That file is too large to be a Word Snap backup.",
+          readFailed: "Couldn't read that file.",
+          confirmRestore: "Restore the backup from {date}?\n\nIt has {n} words with their learning progress and settings. It replaces everything on this device ({cur} words now).\n\nYou can undo this afterwards.",
+          restoreFailed: "Couldn't restore: this browser won't let the page store data (private mode or storage full).",
+          restored: "Restored {n} words and their progress.",
+          undo: "Undo the restore (go back to the {n} words from before)",
+          confirmUndo: "Go back to the {n} words you had before the restore? Progress made since the restore will be lost.",
+          undone: "Restore undone.",
+          nudgeNever: "Your {n} words and progress are stored only in this browser. Save a backup file so you don't lose them when you change devices.",
+          nudgeOld: "Last backup was {ago}. Save a new one so your recent progress isn't lost."
         },
         langToggle: { en: "EN", zh: "中" }
       },
@@ -2198,7 +2254,7 @@
           continueNext: "继续就会进入下一组。"
         },
         confirm: {
-          clearAllConfirm: "将删除全部 {n} 个单词及学习进度，无法撤销。\n\n只有在彻底换一套词时才需要这样做。如果以后可能还要用这些词，请先复制备份。确定清空吗？",
+          clearAllConfirm: "将删除全部 {n} 个单词及学习进度，无法撤销。\n\n只有在彻底换一套词时才需要这样做。如果以后可能还要用这些词，请先保存备份文件（设置 → 备份与恢复）。确定清空吗？",
           resetProgress: "清空全部学习进度（掌握情况、复习计划、得分）？词库里的单词会保留。",
           removeSamples: "移除全部 {n} 个内置示例词及其进度？你自己添加的词不受影响。"
         },
@@ -2243,6 +2299,27 @@
           backupCopied: "已复制 {n} 个词的备份，请存到安全的地方（比如备忘录）。",
           backupFailed: "无法自动复制，备份已放进上方「批量录入」框，请手动复制。",
           backupEmpty: "词库是空的，没有可备份的内容。"
+        },
+        backup: {
+          saved: "已保存 {name}（{n} 个词，含学习进度）。请放到安全的地方，比如发给自己或存到网盘。",
+          shared: "已分享 {n} 个词的备份。请确认它存到了以后找得到的地方。",
+          cancelled: "备份没有保存。",
+          empty: "词库是空的，没有可备份的内容。",
+          never: "还没有备份过。",
+          last: "上次备份：{date}（{ago}）。",
+          overdue: "上次备份：{date}（{ago}）。之后单词或进度有变化，建议再存一份。",
+          today: "今天", yesterday: "昨天", daysAgo: "{n} 天前",
+          invalid: "这不是 Word Snap 的备份文件。（纯文本词表请粘贴到「词库 → 添加单词 → 批量录入」。）",
+          tooBig: "文件太大，不像是 Word Snap 的备份。",
+          readFailed: "无法读取这个文件。",
+          confirmRestore: "恢复 {date} 的备份？\n\n里面有 {n} 个词，以及它们的学习进度和设置。会替换这台设备上的全部内容（现在有 {cur} 个词）。\n\n恢复后可以撤销。",
+          restoreFailed: "恢复失败：这个浏览器不允许网页保存数据（无痕模式或存储已满）。",
+          restored: "已恢复 {n} 个词及学习进度。",
+          undo: "撤销恢复（回到恢复前的 {n} 个词）",
+          confirmUndo: "回到恢复前的 {n} 个词？恢复之后的练习进度会丢失。",
+          undone: "已撤销恢复。",
+          nudgeNever: "你的 {n} 个词和学习进度只存在这个浏览器里。保存一个备份文件，换设备时就不会丢。",
+          nudgeOld: "上次备份是{ago}。再存一份，最近的进度就不会丢。"
         },
         langToggle: { en: "EN", zh: "中" }
       }
@@ -2595,20 +2672,29 @@
         .map(word => ({ ...word, mastered: word.box >= MAX_BOX }));
     }
 
+    /** Everything saveWords() stores; also the payload of a backup file. */
+    function stateSnapshot() {
+      return {
+        words: state.words,
+        settings: state.settings,
+        drawHistory: state.drawHistory,
+        mode: state.mode,
+        onboarding: state.onboarding,
+        round: state.round,
+        score: state.score,
+        mistakes: state.mistakes,
+        streak: state.streak,
+        savedAt: new Date().toISOString()
+      };
+    }
+
+    // Set while a restore is reloading the page, so a late save can't overwrite the restored data.
+    let restoringBackup = false;
+
     function saveWords() {
+      if (restoringBackup) return;
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          words: state.words,
-          settings: state.settings,
-          drawHistory: state.drawHistory,
-          mode: state.mode,
-          onboarding: state.onboarding,
-          round: state.round,
-          score: state.score,
-          mistakes: state.mistakes,
-          streak: state.streak,
-          savedAt: new Date().toISOString()
-        }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateSnapshot()));
       } catch (error) {
         // Private mode / quota — practice still works for this session.
       }
@@ -3270,6 +3356,7 @@
       renderStageFilters();
       const samples = sampleWords();
       els.sampleNote.hidden = !samples.length;
+      renderBackupNudge();
       if (samples.length) {
         els.sampleNoteText.textContent = t("library.sampleNote");
         els.removeSamplesBtn.textContent = t("library.removeSamples", { n: samples.length });
@@ -4550,7 +4637,9 @@
       els.settingsModal.classList.add("open");
       pauseLevel();
       if (els.optionsStatus) els.optionsStatus.textContent = "";
+      setBackupStatus("");
       syncOptionsUI();
+      renderBackupUI();
     }
 
     function closeSettings() {
@@ -5025,6 +5114,294 @@
       }
     });
 
+    // ---- Backup file (words + progress + settings) ----
+    const LAST_BACKUP_KEY = "word_snap_last_backup_v1";
+    const PRE_RESTORE_KEY = "word_snap_pre_restore_v1";
+    const RESTORED_FLAG_KEY = "word_snap_restored_v1";
+    // Device preferences that travel with a backup. UI language stays per device.
+    const BACKUP_EXTRA_KEYS = [THEME_KEY, COLOR_MODE_KEY, PRINT_KEY];
+    const BACKUP_OVERDUE_DAYS = 14;
+    const PRE_RESTORE_KEEP_DAYS = 7;
+
+    function readJsonKey(key) {
+      try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; }
+    }
+
+    function lastBackupAt() {
+      const raw = readJsonKey(LAST_BACKUP_KEY);
+      const at = raw && Date.parse(raw.at);
+      return Number.isFinite(at) ? at : 0;
+    }
+
+    function formatBackupDate(ms) {
+      return new Date(ms).toLocaleDateString(currentLang === "en" ? "en" : "zh-CN", { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    function backupAgo(ms) {
+      const days = Math.floor((Date.now() - ms) / DAY_MS);
+      if (days <= 0) return t("backup.today");
+      if (days === 1) return t("backup.yesterday");
+      return t("backup.daysAgo", { n: days });
+    }
+
+    /** True when progress was saved after the last backup and that backup is old. */
+    function backupOverdue(at) {
+      if (!at || Date.now() - at < BACKUP_OVERDUE_DAYS * DAY_MS) return false;
+      const saved = readSavedState();
+      const savedAt = saved && Date.parse(saved.savedAt);
+      return !Number.isFinite(savedAt) || savedAt > at;
+    }
+
+    function backupFileName() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      return `word-snap-backup-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.json`;
+    }
+
+    function buildBackupFile() {
+      const extras = {};
+      BACKUP_EXTRA_KEYS.forEach(key => {
+        try {
+          const value = localStorage.getItem(key);
+          if (value != null) extras[key] = value;
+        } catch (e) {}
+      });
+      return {
+        app: "word-snap",
+        kind: "backup",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        wordCount: state.words.length,
+        data: stateSnapshot(),
+        extras
+      };
+    }
+
+    /** Phones: share sheet (Files, chat, AirDrop). Elsewhere, or if sharing files isn't supported: download. */
+    async function saveBackupFile(setStatus) {
+      if (!state.words.length) {
+        setStatus(t("backup.empty"), "bad");
+        return false;
+      }
+      const name = backupFileName();
+      const blob = new Blob([JSON.stringify(buildBackupFile())], { type: "application/json" });
+      let shared = false;
+      const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      if (coarse && navigator.canShare && navigator.share && typeof File === "function") {
+        const file = new File([blob], name, { type: "application/json" });
+        let canShare = false;
+        try { canShare = navigator.canShare({ files: [file] }); } catch (e) {}
+        if (canShare) {
+          try {
+            await navigator.share({ files: [file], title: name });
+            shared = true;
+          } catch (error) {
+            if (error && error.name === "AbortError") {
+              setStatus(t("backup.cancelled"), "");
+              return false;
+            }
+          }
+        }
+      }
+      if (!shared) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+      try { localStorage.setItem(LAST_BACKUP_KEY, JSON.stringify({ at: new Date().toISOString(), n: state.words.length })); } catch (e) {}
+      setStatus(t(shared ? "backup.shared" : "backup.saved", { n: state.words.length, name }), "good");
+      renderBackupUI();
+      return true;
+    }
+
+    /** Accepts a backup file, or a bare saved state (the localStorage value). */
+    function parseBackup(text) {
+      let obj = null;
+      try { obj = JSON.parse(String(text).replace(/^﻿/, "")); } catch (e) { return null; }
+      if (!obj || typeof obj !== "object") return null;
+      const data = obj.app === "word-snap" && obj.data && typeof obj.data === "object" ? obj.data : obj;
+      if (!Array.isArray(data.words)) return null;
+      const count = data.words.filter(word => word && word.en && word.zh).length;
+      if (!count) return null;
+      const extras = obj.extras && typeof obj.extras === "object" ? obj.extras : {};
+      const at = Date.parse(obj.exportedAt || data.savedAt);
+      return { data, extras, count, at: Number.isFinite(at) ? at : 0 };
+    }
+
+    function readFileText(file) {
+      if (file.text) return file.text();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(file);
+      });
+    }
+
+    function setBackupStatus(text, kind = "") {
+      const el = document.getElementById("backupStatus");
+      el.textContent = text;
+      el.className = `import-status${kind ? " " + kind : ""}`;
+    }
+
+    /** Write a saved state, reload, and say so after the reload. Returns false if storage refused. */
+    function replaceSavedState(json, extras, flag) {
+      restoringBackup = true;
+      try {
+        localStorage.setItem(STORAGE_KEY, json);
+      } catch (error) {
+        restoringBackup = false;
+        return false;
+      }
+      Object.keys(extras || {}).forEach(key => {
+        if (BACKUP_EXTRA_KEYS.includes(key) && typeof extras[key] === "string") {
+          try { localStorage.setItem(key, extras[key]); } catch (e) {}
+        }
+      });
+      try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
+      try { sessionStorage.setItem(RESTORED_FLAG_KEY, JSON.stringify(flag)); } catch (e) {}
+      location.reload();
+      return true;
+    }
+
+    async function restoreFromFile(file) {
+      if (file.size > 20 * 1024 * 1024) {
+        setBackupStatus(t("backup.tooBig"), "bad");
+        return;
+      }
+      let text = "";
+      try { text = await readFileText(file); } catch (e) {
+        setBackupStatus(t("backup.readFailed"), "bad");
+        return;
+      }
+      const backup = parseBackup(text);
+      if (!backup) {
+        setBackupStatus(t("backup.invalid"), "bad");
+        return;
+      }
+      const date = backup.at ? formatBackupDate(backup.at) : "?";
+      if (!confirm(t("backup.confirmRestore", { date, n: backup.count, cur: state.words.length }))) return;
+      // Keep what was here so the restore can be undone.
+      let previous = null;
+      try { previous = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      let keptPrevious = false;
+      if (previous) {
+        try {
+          localStorage.setItem(PRE_RESTORE_KEY, JSON.stringify({ at: new Date().toISOString(), state: previous }));
+          keptPrevious = true;
+        } catch (e) {}
+      }
+      // The restored data is already safe in that file.
+      if (backup.at) {
+        try { localStorage.setItem(LAST_BACKUP_KEY, JSON.stringify({ at: new Date(backup.at).toISOString(), n: backup.count })); } catch (e) {}
+      }
+      const json = JSON.stringify(backup.data);
+      let ok = replaceSavedState(json, backup.extras, { kind: "restored", n: backup.count });
+      if (!ok && keptPrevious) {
+        // Storage full: drop the undo copy and try once more.
+        try { localStorage.removeItem(PRE_RESTORE_KEY); } catch (e) {}
+        ok = replaceSavedState(json, backup.extras, { kind: "restored", n: backup.count });
+      }
+      if (!ok) setBackupStatus(t("backup.restoreFailed"), "bad");
+    }
+
+    function readPreRestore() {
+      const raw = readJsonKey(PRE_RESTORE_KEY);
+      if (!raw || typeof raw.state !== "string") return null;
+      const at = Date.parse(raw.at);
+      if (!Number.isFinite(at) || Date.now() - at > PRE_RESTORE_KEEP_DAYS * DAY_MS) {
+        try { localStorage.removeItem(PRE_RESTORE_KEY); } catch (e) {}
+        return null;
+      }
+      let count = 0;
+      try { count = (JSON.parse(raw.state).words || []).length; } catch (e) { return null; }
+      return { state: raw.state, count };
+    }
+
+    function renderBackupUI() {
+      const lastEl = document.getElementById("backupLast");
+      const at = lastBackupAt();
+      const overdue = backupOverdue(at);
+      lastEl.textContent = at
+        ? t(overdue ? "backup.overdue" : "backup.last", { date: formatBackupDate(at), ago: backupAgo(at) })
+        : t("backup.never");
+      lastEl.classList.toggle("backup-overdue", overdue || (!at && state.words.some(word => word.custom)));
+      const pre = readPreRestore();
+      const undoBtn = document.getElementById("undoRestoreBtn");
+      undoBtn.hidden = !pre;
+      if (pre) undoBtn.textContent = t("backup.undo", { n: pre.count });
+      renderBackupNudge();
+    }
+
+    /** One line in My words once there is real progress to lose and no recent backup. */
+    function renderBackupNudge() {
+      const nudge = document.getElementById("backupNudge");
+      if (!nudge) return;
+      const own = state.words.filter(word => word.custom);
+      const practiced = own.filter(word => !isNewWord(word)).length;
+      const at = lastBackupAt();
+      const show = own.length >= 10 && practiced >= 10 && (!at || backupOverdue(at));
+      nudge.hidden = !show;
+      if (!show) return;
+      document.getElementById("backupNudgeBtn").hidden = false;
+      document.getElementById("backupNudgeText").textContent = at
+        ? t("backup.nudgeOld", { ago: backupAgo(at) })
+        : t("backup.nudgeNever", { n: state.words.length });
+    }
+
+    document.getElementById("saveBackupBtn").addEventListener("click", () => saveBackupFile(setBackupStatus));
+    document.getElementById("dangerSaveBackupBtn").addEventListener("click", () => saveBackupFile(setDangerStatus));
+    document.getElementById("backupNudgeBtn").addEventListener("click", async () => {
+      const nudge = document.getElementById("backupNudge");
+      const text = document.getElementById("backupNudgeText");
+      const saved = await saveBackupFile((msg) => { text.textContent = msg; });
+      // Keep the confirmation visible in place of the reminder.
+      if (saved) {
+        nudge.hidden = false;
+        document.getElementById("backupNudgeBtn").hidden = true;
+      }
+    });
+    document.getElementById("restoreBackupBtn").addEventListener("click", () => {
+      setBackupStatus("");
+      document.getElementById("restoreFileInput").click();
+    });
+    document.getElementById("restoreFileInput").addEventListener("change", event => {
+      const input = event.target;
+      const file = input.files && input.files[0];
+      input.value = "";
+      if (file) restoreFromFile(file);
+    });
+    document.getElementById("undoRestoreBtn").addEventListener("click", () => {
+      const pre = readPreRestore();
+      if (!pre) {
+        renderBackupUI();
+        return;
+      }
+      if (!confirm(t("backup.confirmUndo", { n: pre.count }))) return;
+      if (replaceSavedState(pre.state, {}, { kind: "undone" })) {
+        try { localStorage.removeItem(PRE_RESTORE_KEY); } catch (e) {}
+      } else {
+        setBackupStatus(t("backup.restoreFailed"), "bad");
+      }
+    });
+
+    /** After the reload that a restore triggers: reopen Settings and confirm. */
+    function announceRestore() {
+      let flag = null;
+      try {
+        flag = JSON.parse(sessionStorage.getItem(RESTORED_FLAG_KEY) || "null");
+        sessionStorage.removeItem(RESTORED_FLAG_KEY);
+      } catch (e) {}
+      if (!flag) return;
+      openSettings();
+      setBackupStatus(flag.kind === "undone" ? t("backup.undone") : t("backup.restored", { n: flag.n }), "good");
+    }
+
     document.getElementById("clearCustomBtn").addEventListener("click", () => {
       if (!state.words.length) return;
       if (!confirm(t("confirm.clearAllConfirm", { n: state.words.length }))) return;
@@ -5158,6 +5535,7 @@
     syncOptionsUI();
     renderRound();
     if (!hasSeenIntro() && !savedState) openIntro();
+    announceRestore();
   </script>
   <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 </body>

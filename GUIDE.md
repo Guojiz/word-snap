@@ -25,7 +25,7 @@ Word Snap is a static single-page vocabulary matching practice app. Match pairs 
 - **Trial level**: first-time visitors play one 10-word level with the built-in sample words, then get **Import my words**. On import, the sample words are replaced by your list (a ticked-by-default option); untick it to keep them, or skip the trial from the intro with **I have a list — import it**.
 - If you keep the samples, **your own words are introduced first**, in the order you added them.
 - **Settings** (side rail / bottom nav) hold the practice options, save automatically, and keep the rarely needed ones under **Advanced**. Resetting learning progress lives here too, behind a confirmation — it is no longer a main navigation button.
-- **My words → Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Copy word list backup** first; pasting the backup into Bulk input restores the words (not their progress).
+- **My words → Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Save backup file** first; **Settings → Restore from file** brings back the words with their progress. (**Copy word list** still gives a plain text list for Bulk input, without progress.)
 - Empty-library prompt when there is nothing to practice.
 - Settings: language pair, practice mode (adaptive / weak only / all in order), appearance, max words per round, level time, adaptive time, piano notes; Advanced: time tolerance, refill delay, pause refill while selected, keep practicing after everything is mastered.
 - Synonyms count: if two entries share a meaning (e.g. `big` / `large` = 大的), either English card matches it.
@@ -124,13 +124,19 @@ Tab (spreadsheet / Anki paste), `=`, comma (`,` or `，`) and a spaced dash (`wo
 
 No account, no server upload. Words, settings, and progress stay in the current browser.
 
-Clearing site data, switching device/browser, or private mode can wipe local state. Back up your word list if you need it long-term.
+Clearing site data, switching device/browser, or private mode can wipe local state, so keep a backup file:
+
+- **Settings → Backup & restore → Save backup file** saves `word-snap-backup-YYYY-MM-DD.json`: every word with its review box and schedule, settings, practice mode, round and score, plus theme / appearance / print options. On phones it opens the share sheet (Files, chat, AirDrop…); elsewhere it downloads.
+- **Restore from file** on the other device (or after data was cleared) replaces everything there with the backup, after a confirmation. **Undo the restore** stays available for 7 days.
+- The UI language is not part of the backup (it is per device).
+- Once you have 10+ own words with progress and no backup (or none for 14 days while progress changed), *My words* shows a one-line reminder with a save button. The app cannot sync by itself: it has no server.
 
 ## Known limits
 
 - Board orientation is fixed: left = `zh` content, right = `en` content; language-pair presets only rename labels.
 - Starter vocabulary is English ↔ Chinese.
 - Language preference is per-device / per-browser.
+- No automatic sync between devices: move words and progress with a backup file (Settings → Backup & restore).
 
 ---
 
@@ -157,7 +163,7 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 - **体验关**：第一次打开先用内置示例词玩一关（10 个词），结束后点「导入我的单词」。导入时默认勾选「移除示例词」，词库里就只剩你自己的词；取消勾选可以保留示例词。也可以在介绍卡上点「我有词表，直接导入」跳过体验关。
 - 如果保留示例词，新词**先学你自己的词**（按添加顺序），示例词排在后面。
 - **设置**（侧栏 / 底栏）放练习选项，改完自动保存，不常用的收在「高级选项」里。重置学习进度也在这里，需要确认，不再是主导航按钮。
-- **我的词库 → 危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「复制词表备份」，之后粘贴回「批量录入」即可恢复单词（学习进度不恢复）。
+- **我的词库 → 危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「保存备份文件」，之后在「设置 → 从文件恢复」即可连同学习进度一起找回（「复制词表」仍可复制纯文本词表，粘贴回「批量录入」，不含进度）。
 - 设置：语言对、练习模式（自适应 / 只练弱项 / 全量顺序）、外观、每局最多单词数、每关时间、按速度自动调时、钢琴音阶；高级：时间容错、补词延迟、选中暂停补词、全部掌握后继续循环。
 - 同义词都算对：两个词条释义相同时（如 `big` / `large` = 大的），任一英文卡都能配上。
 - 每关结束列出本关混淆过的词及释义，方便回顾。
@@ -205,10 +211,16 @@ UNESCO = 联合国教科文组织
 
 ## 数据说明
 
-无需登录，不上传服务器。清理站点数据或换设备可能导致丢失，请自行备份词表。
+无需登录，不上传服务器。单词、设置和进度只存在当前浏览器里，清理站点数据、换设备 / 换浏览器、无痕模式都可能导致丢失，所以请保存备份文件：
+
+- **设置 → 备份与恢复 → 保存备份文件**：生成 `word-snap-backup-年-月-日.json`，包含全部单词及复习盒子和计划、设置、练习模式、轮次和得分，以及配色 / 外观 / 打印选项。手机上会弹出分享面板（存到文件、发微信、AirDrop 等），电脑上直接下载。
+- 在新设备（或数据被清理后）点 **从文件恢复**，确认后用备份替换这台设备上的全部内容。恢复后 7 天内可以 **撤销恢复**。
+- 界面语言不在备份里（按设备保存）。
+- 当你自己的词有 10 个以上且有学习进度、但还没备份过（或已 14 天没备份且进度有变化）时，「我的词库」顶部会出现一行提醒和保存按钮。网页没有服务器，不能自动同步。
 
 ## 已知限制
 
 - 面板方向固定（左 `zh`、右 `en`），语言对只改标签；
 - 内置词库仅英↔中；
-- 语言偏好按设备/浏览器存储。
+- 语言偏好按设备/浏览器存储；
+- 设备之间不会自动同步，换设备请用备份文件（设置 → 备份与恢复）。

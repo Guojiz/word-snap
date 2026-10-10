@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-10
+
+### Added
+
+- **Backup file for moving to another device.** Settings → *Backup & restore*: **Save backup file** writes `word-snap-backup-YYYY-MM-DD.json` with every word *and its learning progress*, settings, mode, round/score and theme/appearance/print options (share sheet on phones, download elsewhere). **Restore from file** replaces this device's data after a confirmation; **Undo the restore** stays for 7 days. Previously the only backup was copying the word list as text, which lost all progress, so changing phone or browser, or clearing site data, meant starting over.
+- Backup reminder: once you have 10+ own words with progress and no backup (or none for 14 days while progress changed), *My words* shows one line with a save button. Settings shows when you last backed up.
+
+### Changed
+
+- Danger zone: **Save backup file** sits next to *Clear all words*; the text-only button is now **Copy word list**.
+- Service worker cache bumped to `word-snap-v41`.
+
 ## 2026-10-06
 
 ### Added
