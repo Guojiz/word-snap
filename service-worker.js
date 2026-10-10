@@ -1,3 +1,4 @@
+// The deployed site stamps this with the commit (tools/build-www.mjs --site); this value is the local fallback.
 const CACHE_NAME = "word-snap-v57";
 const APP_SHELL = [
   "./",
