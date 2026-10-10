@@ -1,0 +1,16 @@
+{
+  "appId": "io.github.guojiz.wordsnap",
+  "appName": "Word Snap",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    },
+    "LocalNotifications": {
+      "iconColor": "#58CC02"
+    }
+  }
+}

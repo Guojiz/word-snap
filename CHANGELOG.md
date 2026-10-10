@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **New look: the rhythm-game stage** (replaces the borrowed Duolingo palette and 3D buttons; see DESIGN.md). Indigo stage at night, lavender by day; one fixed palette (no per-set skin rotation) where each colour has one meaning — violet selected, teal correct / GREAT, gold PERFECT only, rose wrong / MISS, indigo-ink buttons; text colours meet 4.5:1; Saira Condensed (OFL, bundled) for numbers and judgements; drawn SVG icons instead of emoji; new app icon.
+- **Every match is judged** PERFECT / GREAT / GOOD / MISS from the engine's reaction-time grade; the progress bar is a lane filled with each match's judgement colour; the set ends with CLEAR / FULL COMBO / TIME UP and the judgement counts, max combo, accuracy and time.
+- **Phones**: navigation moved to the bottom (thumb zone); today's remaining words as the big number.
+- **Settings** grouped into Learning plan / Pace / Feedback and look (+ AI); colliding and technical names rewritten; GitHub link moved into Settings.
+
+### Fixed
+
+- From an /impeccable critique (25/40) and simulated-learner tests: dialogs move focus in, keep the page behind inert and return focus; visible keyboard focus; screen-reader announcements and `aria-pressed` on cards; Enter no longer hijacked on the summary and intro; a wrong match highlights the right partner; deleting a word can be undone; rules-only sentence checks no longer praise; the last practice card says "Done"; 44 px close buttons; reduced motion covers every animation.
+
 ## 2026-10-07
 
 ### Added
@@ -12,6 +25,27 @@
 - **Spelling and sentence cards** after each set (0–3, default 2). The sentence check runs on the device (Harper WebAssembly + compromise): any grammatical word order and any word form passes, suggestions apply in one tap, only the first submission sets the grade, and passed sentences are saved. *I have no idea* gives the translated example or sentence frames. Spelling blanks the example, accepts synonyms from your list, asks you to copy the answer on a miss, and updates the schedule.
 - **On-device AI (optional, off by default)**: on WebGPU devices, *Settings → On-device AI* downloads Qwen2.5 1.5B (~870 MB, once) via WebLLM. It suggests a Chinese situation for *I have no idea* and writes example sentences for words without one (each must pass the grammar check). It does not judge meaning: no model up to 1.7B was reliable on `tools/ai-eval.html`. 8-second limit; any failure falls back to the rules.
 
+- **AI with your own API key (optional)**: *Settings → AI → Your own API key* (`js/ai-api.js`) supports DeepSeek, Qwen, Kimi, GLM, SiliconFlow, OpenAI, Claude, OpenRouter and any OpenAI-compatible server. Sentence cards then also check meaning and explain mistakes in three parts (where / why / fix, fix applies in one tap; a wrong meaning counts as Again), mixed-up pairs get an *AI* explanation, and up to 10 examples per set are written. The key is stored apart from the word library and never exported; CORS failures say to try another provider or the app.
+- **AI in any language pair**: prompts take the app's pair (study A, explanations in B); with a key, sentence cards also work for non-English words (the model checks grammar and meaning). **Make a list with AI** in *Add words* writes a list with examples in the import format, switching the language pair when asked. A **Use AI features** switch turns all AI off; devices under 8 GB do not offer the on-device model.
+
+- **Daily goal and day streak** (`js/habit.js`): today's goal is the due words plus *New words per day* (Settings, default 10); a bar above the board shows what is left and about how many minutes, then **✓ Today's goal done**. The day streak (4 am cutoff) sits in the side panel; one missed day per week is bridged by a streak freeze. The old *Streak* stat is now *Combo*.
+
+- **Word books**: *Add words → From a word book* imports the next 20–all words of zhongkao, gaokao, CET-4, CET-6, kaoyan, TOEFL, IELTS or GRE (from ECDICT, MIT; most frequent first; short meanings). Built by `tools/build-wordbooks.mjs`, loaded on demand.
+
+- **Android app (Capacitor)**: `package.json`, `capacitor.config.json` and the generated `android/` project; `npm run build:www` copies the site into `www/`, `npm run apk:debug` builds a debug APK. API calls go through CapacitorHttp (no CORS limits). **Daily reminder** (Settings, app only) schedules a week of local notifications and drops today's once the goal is done.
+
+- **On-device Qwen3.5 4B in the Android app**: a Capacitor plugin (`LlmPlugin.java` + JNI `llm_jni.cpp`) runs MNN's prebuilt LLM engine (3.6.1, arm64); the model downloads once from ModelScope with resume and progress. `js/ai-native.js` wraps it as the same engine as the API key, so sentence feedback, contrast, examples and word lists all work offline in any language pair. Only offered on phones with 12 GB of memory or more.
+
+- **Focus mode** (automatic): after three answers in a row the navigation, today bar and title go away and the board glides to the centre of the screen, with a soft vignette; it returns after 10 s idle, at the end of a set, on any window, Esc, the *Exit focus* button or pointing at the edges.
+- **Motion** (`js/fx.js`, Duolingo-style): progress bar with a highlight band, springy growth and a glint per match; a streak label above it from 3 in a row, with the bar turning gold / fire / violet at 5 / 10 / 20 and a star burst on milestones; a pop and a soft ripple on matched cards; set summary tiles (accuracy, time, best streak) that pop in and count up; confetti for today's goal; vibration on answers. Off in Settings or with reduced motion.
+
+- **Fixes from simulated-learner testing** (three personas: a first-time high-school student on a phone, a Japanese learner with an API key, a long-time IELTS learner):
+  - Word books open with words new at their level (IELTS no longer starts with *in, on, as*); hand-checked meanings for common polysemous words (*can* = 能；可以；罐头); no stray `\r`; place names dropped.
+  - Focus mode: leaves after 60 s idle (was 10 s, testers mis-tapped when the board moved) and enters after the match ripple; no "Esc" hint on touch screens.
+  - Day streak: a 🔥 badge next to the progress (grey until today's goal is done), a notice when a streak breaks (with the best streak), the streak-freeze notice survives reloads, and a "Today's goal done" banner that shows even in focus mode. Words learned today no longer count as due, so the goal does not grow while you meet it.
+  - Readings: `食べる（たべる）` keeps the reading (cards, library, backup); AI word lists return kana / pinyin. A word in another script is read with its own voice; switching the language pair says how many words do not fit.
+  - The trial has no countdown; the summary no longer says "goal done" and "n due" at once; the best streak counts this set only; copy no longer assumes English; the install hint never covers the board and "Got it" is remembered; contrast of the streak label and summary tiles; 日本語 / 한국어 → 中文 presets; the hint no longer wipes an AI correction.
+
 ### Changed
 
 - Progress from the box system is migrated once, keeping each word's due date. Library stages now come from the engine (Learning: in steps or stability under a day; Mastered: stability ≥ 21 days across at least three days).
@@ -19,7 +53,7 @@
 ### Fixed
 
 - Fewer false subject–verb agreement errors in sentence cards (contractions, modals, mis-tagged words such as *particulate*).
-- Service worker cache bumped to `word-snap-v45`; the downloaded AI model is kept across updates.
+- Service worker cache bumped to `word-snap-v52`; the downloaded AI model is kept across updates.
 
 ## 2026-10-06
 

@@ -1,11 +1,17 @@
-const CACHE_NAME = "word-snap-v46";
+const CACHE_NAME = "word-snap-v57";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./vocabulary-match.html",
   "./js/engine.js",
+  "./js/habit.js",
+  "./js/wordbooks.js",
+  "./js/fx.js",
+  "./vendor/fonts/saira-condensed-700.woff2",
+  "./vendor/fonts/saira-condensed-800.woff2",
   "./js/sentence.js",
   "./js/ai.js",
+  "./js/ai-api.js",
   "./js/ai-worker.js",
   "./manifest.webmanifest",
   "./apple-touch-icon.png",
