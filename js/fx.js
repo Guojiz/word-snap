@@ -25,11 +25,11 @@
 
   /** Streak tiers: the progress bar and its label change colour at these lengths. */
   const TIERS = [
-    // Milestone stars stay out of gold (gold means PERFECT only).
-    { at: 20, name: "blaze", colors: ["#18c6b5", "#ffa45c", "#ff5c8a"] },
-    { at: 10, name: "fire", colors: ["#ffa45c", "#ff5c8a"] },
-    { at: 5, name: "warm", colors: ["#18c6b5", "#ffa45c"] },
-    { at: 0, name: "base", colors: ["#18c6b5", "#5ef0e2"] }
+    // Confetti-card colours, deep enough to read on paper (gold means PERFECT only).
+    { at: 20, name: "blaze", colors: ["#ff7a59", "#3b8beb", "#2ec27e", "#9b7bff"] },
+    { at: 10, name: "fire", colors: ["#ff7a59", "#9b7bff", "#3b8beb"] },
+    { at: 5, name: "warm", colors: ["#2ec27e", "#ff7a59"] },
+    { at: 0, name: "base", colors: ["#2ec27e", "#3b8beb"] }
   ];
   const MILESTONES = [5, 10, 20, 50, 100];
   const STAR_SVG = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z"/></svg>';
@@ -88,7 +88,7 @@
   }
 
   /** A soft ring that grows out of each card's outline and fades. */
-  function ripple(cards, color = "#18c6b5") {
+  function ripple(cards, color = "#2ec27e") {
     if (!enabled()) return;
     for (const card of cards) {
       if (!card || !card.getBoundingClientRect) continue;
@@ -227,7 +227,7 @@
     if (!enabled()) return;
     const width = win.innerWidth || 400;
     const height = win.innerHeight || 700;
-    const colors = ["#ff5c8a", "#18c6b5", "#7ad151", "#ffa45c", "#5ef0e2"];
+    const colors = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff", "#ff7a59", "#3b8beb"];
     for (let i = 0; i < amount; i++) {
       const el = doc.createElement("span");
       el.className = "fx-confetti";

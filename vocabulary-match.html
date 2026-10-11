@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#24205a" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#fffcf6" />
+  <meta name="color-scheme" content="light dark" />
   <script>
     (function () {
       try {
@@ -23,104 +23,104 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <style>
+    /* Fredoka (SIL OFL, vendor/fonts/OFL.txt): the rounded face for English, numbers and
+       judgements. One variable file covers weights 500–700. Chinese stays on the system face. */
     @font-face {
-      font-family: "Saira Condensed";
-      font-weight: 700;
+      font-family: "Fredoka";
+      font-weight: 500 700;
       font-display: swap;
-      src: url("./vendor/fonts/saira-condensed-700.woff2") format("woff2");
+      src: url("./vendor/fonts/fredoka-latin.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
 
-    @font-face {
-      font-family: "Saira Condensed";
-      font-weight: 800;
-      font-display: swap;
-      src: url("./vendor/fonts/saira-condensed-800.woff2") format("woff2");
-    }
-
-    /* Stage (dark): an indigo rhythm-game stage. Day (light): lavender.
-       Violet (--blue) is for the selected card and focus only; teal = correct (GREAT),
-       gold = PERFECT, rose = MISS / wrong; buttons are indigo ink (--primary).
-       *-ink variants are the same hues dark/light enough for text (≥ 4.5:1). */
+    /* Confetti Cards (彩纸卡). Day (default): warm paper, ink text, five pastel confetti
+       colours — every matched pair takes the next one (see CONFETTI). Night: soft ink-blue
+       paper with the same pastels. Meanings stay fixed: sky (--blue) = selected / focus,
+       mint (--green) = correct, coral (--red) = wrong, lemon (--yellow) = PERFECT.
+       *-ink variants are the same hues dark/light enough for text (>= 4.5:1).
+       applyTheme() sets the same values at runtime; these are the pre-JS fallbacks. */
     :root {
-      --bg: #24205a;
-      --panel: #2f2a6e;
-      --panel-2: #29246a;
-      --line: #463f8f;
-      --line-strong: #6a62b5;
-      --text: #f3f1ff;
-      --muted: #b8b2e8;
-      --dim: #9690d6;
-      --green: #18c6b5;
-      --green-dark: #0e9c8f;
-      --green-ink: #5ef0e2;
-      --blue: #7c5cff;
-      --blue-deep: #6545e6;
-      --blue-ink: #b9a8ff;
-      --red: #ff5c8a;
-      --red-deep: #c9285a;
-      --red-ink: #ff8fb0;
-      --yellow: #ffc933;
-      --yellow-ink: #ffd666;
-      --ember-ink: #ffa45c;
-      --good: #7ad151;
-      --good-ink: #8fe36a;
-      --primary: #c9c1ff;
-      --primary-dark: #a99cff;
-      --on-primary: #24205a;
-      --panel-soft: #2a2565;
-      --track: #3a3480;
-      --card-shadow: rgba(5, 3, 30, .55);
-      --selected-bg: #2e2580;
-      --selected-ink: #f3f1ff;
-      --selected-shadow: rgba(5, 3, 30, .55);
-      --correct-bg: #123e4a;
-      --correct-ink: #dffcf8;
-      --correct-shadow: rgba(5, 3, 30, .55);
-      --wrong-bg: #4a1a3a;
-      --wrong-ink: #ffe4ec;
-      --wrong-shadow: rgba(5, 3, 30, .55);
-      --on-accent: #24205a;
+      --bg: #fffcf6;
+      --panel: #ffffff;
+      --panel-2: #fff7e8;
+      --line: #efe9de;
+      --line-strong: #dcd3c3;
+      --text: #2b2a3d;
+      --muted: #55546a;
+      --dim: #6b6a80;
+      --green: #4fd69c;
+      --green-dark: #2ec27e;
+      --green-ink: #1c7a50;
+      --blue: #3b8beb;
+      --blue-deep: #2a74d0;
+      --blue-ink: #1f5fb0;
+      --red: #ff7a59;
+      --red-deep: #c4421f;
+      --red-ink: #b13c1f;
+      --yellow: #ffd23f;
+      --yellow-ink: #8a6200;
+      --ember-ink: #b4530f;
+      --good: #9eebc4;
+      --good-ink: #1c7a50;
+      --primary: #2b2a3d;
+      --primary-dark: #1b1a2a;
+      --on-primary: #ffffff;
+      --panel-soft: #fffefb;
+      --track: #f1ece3;
+      --card-shadow: rgba(80, 60, 30, .14);
+      --selected-bg: #edf5fd;
+      --selected-ink: #1b3f73;
+      --selected-shadow: rgba(59, 139, 235, .22);
+      --correct-bg: #dff8eb;
+      --correct-ink: #2b2a3d;
+      --correct-shadow: rgba(80, 60, 30, .14);
+      --wrong-bg: #ffece8;
+      --wrong-ink: #8f2a12;
+      --wrong-shadow: rgba(255, 122, 89, .22);
+      --on-accent: #2b2a3d;
       --warn-ink: #2b1800;
-      --warn-shadow: rgba(255, 201, 51, .4);
-      --weak-wrong: #ff8fb0;
-      --scrim: rgba(8, 6, 32, .72);
-      --hover-soft: #363075;
-      --radius: 14px;
+      --warn-shadow: rgba(255, 210, 63, .4);
+      --weak-wrong: #b13c1f;
+      --scrim: rgba(43, 42, 61, .38);
+      --hover-soft: #fff7e8;
+      --radius: 18px;
       --ease: cubic-bezier(.2, .8, .2, 1);
       --theme-shift: 420ms;
-      --num-font: "Saira Condensed", "Arial Narrow", sans-serif;
+      --num-font: "Fredoka", "Nunito", "Varela Round", system-ui, sans-serif;
     }
 
-    :root[data-color-mode="light"] {
-      color-scheme: light;
-      --bg: #f5f3ff;
-      --panel: #ffffff;
-      --panel-2: #ece8ff;
-      --line: #dcd6fb;
-      --line-strong: #b7aeef;
-      --text: #1d1a4a;
-      --muted: #514b88;
-      --dim: #6c66a6;
-      --green-ink: #0a7a70;
-      --blue-ink: #5a3fe0;
-      --red-ink: #c0245a;
-      --yellow-ink: #8a5a00;
-      --ember-ink: #b4530f;
-      --good-ink: #2b7a2f;
-      --primary: #2b2470;
-      --primary-dark: #1d1856;
-      --on-primary: #ffffff;
-      --panel-soft: #faf9ff;
-      --track: #e4e0ff;
-      --card-shadow: rgba(36, 32, 90, .16);
-      --selected-bg: #efeaff;
-      --selected-ink: #2b1d8f;
-      --correct-bg: #e3faf7;
-      --correct-ink: #075e56;
-      --wrong-bg: #ffe9f0;
-      --wrong-ink: #8c1840;
-      --scrim: rgba(29, 26, 74, .45);
-      --hover-soft: #f1eeff;
+    :root[data-color-mode="light"] { color-scheme: light; }
+
+    :root[data-color-mode="dark"] {
+      --bg: #1f1e2e;
+      --panel: #2a2940;
+      --panel-2: #25243a;
+      --line: #3a3954;
+      --line-strong: #56557a;
+      --text: #f7f5ee;
+      --muted: #c9c6d8;
+      --dim: #a6a3bb;
+      --green-ink: #9eebc4;
+      --blue-ink: #a8d8ff;
+      --red-ink: #ffb4a2;
+      --yellow-ink: #ffe27a;
+      --ember-ink: #ffc08a;
+      --good-ink: #9eebc4;
+      --primary: #ffe27a;
+      --primary-dark: #ffd23f;
+      --on-primary: #2b2a3d;
+      --panel-soft: #252437;
+      --track: #34334c;
+      --card-shadow: rgba(0, 0, 0, .35);
+      --selected-bg: #2e3f66;
+      --selected-ink: #f7f5ee;
+      --selected-shadow: rgba(0, 0, 0, .35);
+      --correct-ink: #2b2a3d;
+      --wrong-bg: #593b46;
+      --wrong-ink: #ffe3dc;
+      --weak-wrong: #ffb4a2;
+      --scrim: rgba(10, 10, 20, .6);
+      --hover-soft: #302f48;
     }
     :root[data-color-mode="dark"] { color-scheme: dark; }
 
@@ -160,6 +160,8 @@
     }
 
     html,
+    html { font-synthesis-weight: none; }
+
     body {
       height: 100%;
       overflow: hidden;
@@ -175,7 +177,7 @@
       margin: 0;
       color: var(--text);
       background: var(--bg);
-      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
       letter-spacing: 0;
     }
 
@@ -206,16 +208,14 @@
     }
 
     .logo {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
+      width: 48px;
+      height: 48px;
       border-radius: 14px;
-      color: var(--on-primary);
-      background: var(--primary);
-      font-size: 26px;
-      font-weight: 1000;
-      box-shadow: 0 10px 24px -10px var(--card-shadow);
+      box-shadow: 0 10px 24px -12px var(--card-shadow);
+    }
+
+    .logo svg {
+      display: block;
     }
 
     .rail-btn {
@@ -417,22 +417,25 @@
       font-weight: 800;
       letter-spacing: 0.02em;
       white-space: nowrap;
-      padding: 0 10px;
-      border-radius: 12px;
+      padding: 2px 14px 3px;
+      border-radius: 999px;
+      color: #2b2a3d;
       background: var(--panel);
-      box-shadow: 0 10px 24px -8px var(--card-shadow);
+      box-shadow: 0 10px 24px -10px var(--card-shadow);
       transform: translate(-50%, -100%) rotate(-4deg);
     }
 
     .fx-judge small {
-      color: var(--muted);
+      color: #4a4960;
       font-size: 15px;
     }
 
-    .fx-judge-perfect { color: var(--yellow-ink); }
-    .fx-judge-great { color: var(--green-ink); }
-    .fx-judge-good { color: var(--good-ink); }
-    .fx-judge-miss { color: var(--red-ink); }
+    /* Pastel stickers with ink text (>= 7:1 on each): lemon = PERFECT, mint = GREAT,
+       sky = GOOD, peach = MISS. */
+    .fx-judge-perfect { background: #ffe27a; }
+    .fx-judge-great { background: #9eebc4; }
+    .fx-judge-good { background: #a8d8ff; }
+    .fx-judge-miss { background: #ffb4a2; }
 
     .fx-confetti {
       border-radius: 2px;
@@ -446,7 +449,7 @@
       border-radius: 999px;
       color: var(--on-primary);
       background: var(--primary);
-      box-shadow: 0 12px 30px -10px rgba(10, 8, 40, 0.45);
+      box-shadow: 0 12px 30px -10px rgba(43, 42, 61, 0.35);
       font-size: 17px;
       font-weight: 1000;
       white-space: nowrap;
@@ -503,7 +506,11 @@
     .result-cell:nth-child(3) { animation-delay: 180ms; }
     .result-cell:nth-child(4) { animation-delay: 270ms; }
 
+    /* The judgement label sits on its sticker colour (.fx-judge-*), in ink. */
     .result-cell b {
+      padding: 1px 10px;
+      border-radius: 999px;
+      color: #2b2a3d;
       font-size: 15px;
       letter-spacing: 0.04em;
     }
@@ -548,7 +555,7 @@
       inset: 0;
       z-index: 30;
       pointer-events: none;
-      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(8, 6, 32, 0.2) 100%);
+      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(43, 42, 61, 0.14) 100%);
       opacity: 0;
       transition: opacity 0.8s ease;
     }
@@ -687,7 +694,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 2px), rgba(255, 255, 255, 0.55) calc(20% - 2px) 20%);
+      background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 3px), var(--bg) calc(20% - 3px) 20%);
       pointer-events: none;
     }
 
@@ -708,7 +715,7 @@
       min-width: 16px;
       height: 100%;
       border-radius: inherit;
-      background: var(--primary);
+      background: #ffb4a2;
       overflow: hidden;
       transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
     }
@@ -889,10 +896,11 @@
       font-weight: 700;
     }
 
+    /* A matched pair is filled with its confetti colour (markCorrect sets --confetti). */
     .match-card.correct {
-      border-color: var(--green);
+      border-color: var(--confetti-edge, var(--green));
       color: var(--correct-ink);
-      background: var(--correct-bg);
+      background: var(--confetti, var(--correct-bg));
       box-shadow: 0 6px 16px -6px var(--correct-shadow);
       animation: correctPulse 420ms cubic-bezier(.34, 1.56, .64, 1);
     }
@@ -1356,7 +1364,7 @@
 
     ::selection {
       color: var(--text);
-      background: rgba(124, 92, 255, 0.28);
+      background: rgba(59, 139, 235, 0.25);
     }
 
     input,
@@ -1531,7 +1539,7 @@
       border-bottom: 2px solid #111;
       padding-bottom: 6px;
       margin-bottom: 10px;
-      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-head h1 {
@@ -1547,7 +1555,7 @@
     }
 
     .ps-body {
-      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-body.cols-2 {
@@ -1700,15 +1708,20 @@
       margin: 18px auto 8px;
       color: var(--primary);
       font-family: var(--num-font);
-      font-size: 64px;
-      font-weight: 800;
+      font-size: clamp(44px, 13vw, 64px);
+      font-weight: 700;
       line-height: 1;
       letter-spacing: 0.02em;
       transform: rotate(-4deg);
     }
 
+    /* Decorative (aria-hidden; the heading below carries the result): the wordmark's colours. */
     .completion-badge.full-combo {
       color: var(--green-ink);
+      background: linear-gradient(90deg, #ff7a59, #f5b800 30%, #2ec27e 55%, #3b82f6 80%, #9b7bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .completion-badge.time-up {
@@ -2092,16 +2105,22 @@
       text-align: center;
     }
 
+    /* The icon's two cards: peach meaning, sky word, ink text. */
     .intro-demo span {
-      border: 2px solid var(--blue);
       border-radius: var(--radius);
-      padding: 10px;
-      color: var(--selected-ink);
-      background: var(--selected-bg);
+      padding: 12px 10px;
+      color: #2b2a3d;
+      background: #ffb4a2;
+      transform: rotate(-3deg);
+    }
+
+    .intro-demo span:last-child {
+      background: #a8d8ff;
+      transform: rotate(3deg);
     }
 
     .intro-demo b {
-      color: var(--green-ink);
+      color: var(--muted);
     }
 
     /* `label { display: grid }` would otherwise beat the hidden attribute */
@@ -2577,7 +2596,7 @@
 <body>
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
-      <div class="logo" aria-hidden="true">W</div>
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
       <button class="rail-btn active" type="button" data-nav-practice aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Practice" data-zh="练习">练习</span></button>
       <button class="rail-btn" type="button" id="openLibraryRail"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
       <button class="rail-btn" type="button" data-open-settings><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
@@ -3051,25 +3070,29 @@
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
     const THEME_KEY = "word_snap_theme_index";
     const COLOR_MODE_KEY = "word_snap_color_mode";
-    // One visual world (the rhythm-game stage). Colours keep their meaning everywhere:
-    // violet = selected, teal = correct, gold = perfect, rose = wrong; the skin no longer
-    // rotates per set. :root holds the pre-JS fallbacks; applyTheme() derives the mixed
-    // tones (selected / correct / wrong grounds, track) at runtime — DESIGN.md records those.
+    // One visual world: Confetti Cards (彩纸卡). Colours keep their meaning everywhere:
+    // sky = selected, mint = correct, lemon = perfect, coral = wrong; each matched pair
+    // also takes the next confetti colour (CONFETTI). :root holds the pre-JS fallbacks;
+    // applyTheme() derives the mixed tones at runtime — DESIGN.md records those.
     const STAGE = {
       dark: {
-        bg: "#24205a", panel: "#2f2a6e", panel2: "#29246a", line: "#463f8f", lineStrong: "#6a62b5",
-        text: "#f3f1ff", muted: "#b8b2e8", dim: "#9690d6",
-        greenInk: "#5ef0e2", blueInk: "#b9a8ff", redInk: "#ff8fb0", yellowInk: "#ffd666",
-        primary: "#c9c1ff", primaryDark: "#a99cff", onPrimary: "#24205a"
+        bg: "#1f1e2e", panel: "#2a2940", panel2: "#25243a", line: "#3a3954", lineStrong: "#56557a",
+        text: "#f7f5ee", muted: "#c9c6d8", dim: "#a6a3bb",
+        greenInk: "#9eebc4", blueInk: "#a8d8ff", redInk: "#ffb4a2", yellowInk: "#ffe27a",
+        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
       },
       light: {
-        bg: "#f5f3ff", panel: "#ffffff", panel2: "#ece8ff", line: "#dcd6fb", lineStrong: "#b7aeef",
-        text: "#1d1a4a", muted: "#514b88", dim: "#6c66a6",
-        greenInk: "#0a7a70", blueInk: "#5a3fe0", redInk: "#c0245a", yellowInk: "#8a5a00",
-        primary: "#2b2470", primaryDark: "#1d1856", onPrimary: "#ffffff"
+        bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
+        text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
+        greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
+        primary: "#2b2a3d", primaryDark: "#1b1a2a", onPrimary: "#ffffff"
       },
-      accent: { green: "#18c6b5", greenDark: "#0e9c8f", blue: "#7c5cff", blueDeep: "#6545e6", red: "#ff5c8a", redDeep: "#c9285a", yellow: "#ffc933" }
+      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffd23f" }
     };
+    // Peach, sky, lemon, mint, lilac. Matched cards are filled with these and keep ink text
+    // (#2b2a3d on every one is >= 8:1), in both day and night.
+    const CONFETTI = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff"];
+    const CONFETTI_INK = "#2b2a3d";
     const COLOR_THEMES = [{ id: "stage" }];
 
     // ---- i18n ----
@@ -4142,25 +4165,25 @@
       set("--primary", base.primary);
       set("--primary-dark", base.primaryDark);
       set("--on-primary", base.onPrimary);
-      set("--panel-soft", mixHex(base.panel, fixedBg, 0.62));
-      set("--track", mixHex(a.blue, base.panel, light ? 0.14 : 0.22));
-      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.1 : 0.32));
-      set("--selected-ink", light ? "#2b1d8f" : base.text);
-      const neutralShadow = light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)";
-      set("--selected-shadow", neutralShadow);
-      set("--correct-bg", mixHex(a.green, base.panel, light ? 0.12 : 0.24));
-      set("--correct-ink", light ? "#075e56" : "#dffcf8");
+      set("--panel-soft", mixHex(base.panel, fixedBg, 0.5));
+      set("--track", light ? "#f1ece3" : "#34334c");
+      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.09 : 0.22));
+      set("--selected-ink", light ? "#1b3f73" : base.text);
+      const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
+      set("--selected-shadow", light ? rgbaFromHex(a.blue, 0.22) : neutralShadow);
+      set("--correct-bg", "#9eebc4");
+      set("--correct-ink", CONFETTI_INK);
       set("--correct-shadow", neutralShadow);
-      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.1 : 0.24));
-      set("--wrong-ink", light ? "#8c1840" : "#ffe4ec");
-      set("--wrong-shadow", neutralShadow);
-      set("--on-accent", base.onPrimary);
+      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.14 : 0.22));
+      set("--wrong-ink", light ? "#8f2a12" : "#ffe3dc");
+      set("--wrong-shadow", light ? rgbaFromHex(a.red, 0.22) : neutralShadow);
+      set("--on-accent", CONFETTI_INK);
       set("--warn-ink", "#2b1800");
       set("--warn-shadow", rgbaFromHex(a.yellow, 0.4));
       set("--weak-wrong", base.redInk);
-      set("--card-shadow", light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)");
-      set("--scrim", light ? "rgba(29, 26, 74, .45)" : "rgba(8, 6, 32, .72)");
-      set("--hover-soft", mixHex(a.blue, base.panel, light ? 0.05 : 0.12));
+      set("--card-shadow", neutralShadow);
+      set("--scrim", light ? "rgba(43, 42, 61, .38)" : "rgba(10, 10, 20, .6)");
+      set("--hover-soft", light ? "#fff7e8" : "#302f48");
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute("content", fixedBg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
@@ -4300,13 +4323,18 @@
       badge.classList.toggle("time-up", kind === "timeUp");
     }
 
-    // The lane is the set's judgement history: one segment per match, in its judgement colour.
-    const JUDGE_COLORS = { perfect: "#ffc933", great: "#18c6b5", good: "#7ad151" }; // = --yellow / --green / --good
+    /** The confetti colour of the set's nth match (0-based), and a deeper edge for its border. */
+    function confettiFor(n) {
+      const fill = CONFETTI[((n % CONFETTI.length) + CONFETTI.length) % CONFETTI.length];
+      return { fill, edge: mixHex(fill, CONFETTI_INK, 0.78) };
+    }
+
+    // The lane is the set's history: one segment per match, in that pair's confetti colour.
     function laneGradient() {
       const list = state.levelJudgements || [];
       if (!list.length) return "none";
       const step = 100 / list.length;
-      return `linear-gradient(90deg, ${list.map((kind, i) => `${JUDGE_COLORS[kind] || JUDGE_COLORS.good} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
+      return `linear-gradient(90deg, ${list.map((kind, i) => `${confettiFor(i).fill} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
     }
 
     // ---- Daily goal and day streak (js/habit.js) ----
@@ -5806,12 +5834,17 @@
       // Reaction timer for the next pair only — does not move levelStartedAt.
       state.roundStartedAt = performance.now();
 
+      // Each pair in the set takes the next confetti colour; the lane repeats the sequence.
+      const confetti = confettiFor(state.levelJudgements.length - 1);
       first.card.classList.remove("selected");
-      first.card.classList.add("correct");
-      second.card.classList.add("correct");
+      [first.card, second.card].forEach(card => {
+        card.style.setProperty("--confetti", confetti.fill);
+        card.style.setProperty("--confetti-edge", confetti.edge);
+        card.classList.add("correct");
+      });
       state.levelStreak = (state.levelStreak || 0) + 1;
       state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
-      WordSnapFx.ripple([first.card, second.card], JUDGE_COLORS[WordSnapFx.judgementFor(grade)] || JUDGE_COLORS.great);
+      WordSnapFx.ripple([first.card, second.card], confetti.edge);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
       updateCombo(state.streak);

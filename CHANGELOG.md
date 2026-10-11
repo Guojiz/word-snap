@@ -8,6 +8,7 @@
 
 ### Changed
 
+- **New brand: Confetti Cards (彩纸卡)**, replacing the heavy indigo stage. Warm near-white paper by day (the default) and soft ink-blue by night; every matched pair is filled with the next of five pastel confetti colours (peach, sky, lemon, mint, lilac) with ink text, and the progress lane repeats them, so a finished set looks like a strip of confetti. Judgements are pastel stickers; FULL COMBO is drawn in the wordmark's colours. Fredoka (OFL, bundled, Latin only) replaces Saira Condensed for English, numbers and judgements; Chinese keeps the system face. New icon (two cards leaning together, with confetti) for the web app, PWA, iOS and Android launcher.
 - **New look: the rhythm-game stage** (replaces the borrowed Duolingo palette and 3D buttons; see DESIGN.md). Indigo stage at night, lavender by day; one fixed palette (no per-set skin rotation) where each colour has one meaning — violet selected, teal correct / GREAT, gold PERFECT only, rose wrong / MISS, indigo-ink buttons; text colours meet 4.5:1; Saira Condensed (OFL, bundled) for numbers and judgements; drawn SVG icons instead of emoji; new app icon.
 - **Every match is judged** PERFECT / GREAT / GOOD / MISS from the engine's reaction-time grade; the progress bar is a lane filled with each match's judgement colour; the set ends with CLEAR / FULL COMBO / TIME UP and the judgement counts, max combo, accuracy and time.
 - **Phones**: navigation moved to the bottom (thumb zone); today's remaining words as the big number.

@@ -1,5 +1,5 @@
 // The deployed site stamps this with the commit (tools/build-www.mjs --site); this value is the local fallback.
-const CACHE_NAME = "word-snap-v57";
+const CACHE_NAME = "word-snap-v58";
 // Grammar and AI libraries (vendor/, ~8 MB) live in their own cache, named by
 // library versions, so an app release does not make everyone download them again.
 // Bump this (not CACHE_NAME) when a library in vendor/ is updated.
@@ -13,8 +13,7 @@ const APP_SHELL = [
   "./js/habit.js",
   "./js/wordbooks.js",
   "./js/fx.js",
-  "./vendor/fonts/saira-condensed-700.woff2",
-  "./vendor/fonts/saira-condensed-800.woff2",
+  "./vendor/fonts/fredoka-latin.woff2",
   "./js/sentence.js",
   "./js/ai.js",
   "./js/ai-api.js",

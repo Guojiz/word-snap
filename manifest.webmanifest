@@ -6,8 +6,8 @@
   "start_url": "./vocabulary-match.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#24205a",
-  "theme_color": "#24205a",
+  "background_color": "#fffcf6",
+  "theme_color": "#fffcf6",
   "orientation": "portrait",
   "icons": [
     {
