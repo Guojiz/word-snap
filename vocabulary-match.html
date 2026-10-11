@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
   <meta name="theme-color" content="#fffcf6" />
@@ -581,7 +581,7 @@
     .focus-exit {
       position: fixed;
       right: 16px;
-      bottom: calc(16px + env(safe-area-inset-bottom));
+      bottom: calc(16px + var(--sab));
       z-index: 5;
       border: 2px solid var(--line);
       border-radius: 999px;
@@ -1270,7 +1270,7 @@
         max-height: calc(100dvh - 12px);
         border-width: 2px 0 0;
         border-radius: 22px 22px 0 0;
-        padding-bottom: env(safe-area-inset-bottom);
+        padding-bottom: var(--sab);
       }
 
       .modal.open .modal-card {
@@ -1279,7 +1279,7 @@
       }
 
       .intro-actions {
-        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        padding-bottom: calc(20px + var(--sab));
       }
     }
 
@@ -1414,7 +1414,7 @@
     .undo-toast {
       position: fixed;
       left: 50%;
-      bottom: calc(20px + env(safe-area-inset-bottom));
+      bottom: calc(20px + var(--sab));
       z-index: 60;
       display: flex;
       align-items: center;
@@ -1898,7 +1898,7 @@
 
       .main {
         display: block;
-        padding: 28px 18px calc(28px + env(safe-area-inset-bottom));
+        padding: 28px 18px calc(28px + var(--sab));
       }
 
       /* Phones: navigation sits at the bottom, in reach of the thumb. */
@@ -1911,13 +1911,13 @@
         display: grid;
         width: 100%;
         margin: 0;
-        padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+        padding: 6px 10px calc(6px + var(--sab));
         border-top: 1px solid var(--line);
         background: var(--bg);
       }
 
       .main {
-        padding-bottom: calc(96px + env(safe-area-inset-bottom));
+        padding-bottom: calc(96px + var(--sab));
       }
 
       .lesson {
@@ -2601,27 +2601,1134 @@
       color: var(--muted);
       font-size: 15px;
     }
+
+    /* ==== App shell: launch screen, screens, tab bar, home, onboarding (js/shell.js) ==== */
+    /* Safe areas: env() on modern WebViews; Capacitor's SystemBars injects --safe-area-inset-*
+       where env() does not reach (older Android WebViews, edge-to-edge). */
+    :root {
+      --sat: max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px));
+      --sab: max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px));
+      --tabbar-h: 72px;
+      --spring: cubic-bezier(.34, 1.56, .64, 1);
+      --glide: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    /* Launch screen. Plays on its own from first paint; the shell only decides when it leaves. */
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      /* Fixed paper, the same as the Android launch screen (res/values and values-night colors.xml), so the
+         system splash hands over without a colour jump; it then fades into the set's colour. */
+      background: #fffcf6;
+      transition: opacity 420ms ease, visibility 0s linear 420ms;
+    }
+
+    :root[data-color-mode="dark"] .splash { background: #1f1e2e; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-color-mode]) .splash { background: #1f1e2e; }
+    }
+
+    .splash.leave {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-mark {
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      transition: transform 420ms var(--glide);
+    }
+
+    .splash.leave .splash-mark {
+      transform: scale(1.08) translateY(-8px);
+    }
+
+    .splash-icon {
+      overflow: visible;
+      filter: drop-shadow(0 18px 30px rgba(80, 60, 30, .16));
+    }
+
+    .splash-icon * {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .sp-tile { animation: sp-tile 520ms var(--spring) both; }
+    .sp-a { animation: sp-a 620ms var(--spring) 160ms both; }
+    .sp-b { animation: sp-b 620ms var(--spring) 160ms both; }
+    .splash-icon { animation: sp-snap 360ms ease-out 560ms both; }
+    .sp-dot { animation: sp-pop 420ms var(--spring) 600ms both; }
+    .sp-c1 { animation: sp-c1 700ms var(--spring) 640ms both; }
+    .sp-c2 { animation: sp-c2 700ms var(--spring) 680ms both; }
+    .sp-c3 { animation: sp-c3 700ms var(--spring) 720ms both; }
+
+    .splash-word {
+      display: flex;
+      font-family: var(--num-font);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .splash-word i {
+      font-style: normal;
+      animation: sp-letter 520ms var(--spring) both;
+    }
+
+    .splash-word i:nth-child(1) { color: #ff7a59; animation-delay: 620ms; }
+    .splash-word i:nth-child(2) { color: #f5b800; animation-delay: 660ms; }
+    .splash-word i:nth-child(3) { color: #2ec27e; animation-delay: 700ms; }
+    .splash-word i:nth-child(4) { color: #3b82f6; animation-delay: 740ms; }
+    .splash-word i:nth-child(n+5) { animation-delay: 780ms; }
+
+    .splash-tag {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 600;
+      animation: sp-fade 500ms ease 900ms both;
+    }
+
+    @keyframes sp-tile { from { transform: scale(.6); opacity: 0; } }
+    @keyframes sp-a { from { transform: translate(-46px, 14px) rotate(-28deg); opacity: 0; } }
+    @keyframes sp-b { from { transform: translate(46px, -14px) rotate(28deg); opacity: 0; } }
+    @keyframes sp-snap { 0% { transform: scale(1); } 35% { transform: scale(1.07, .95); } 100% { transform: scale(1); } }
+    @keyframes sp-pop { from { transform: scale(0); } }
+    @keyframes sp-c1 { from { transform: translate(28px, 34px) scale(0); } }
+    @keyframes sp-c2 { from { transform: translate(-34px, -34px) scale(0); } }
+    @keyframes sp-c3 { from { transform: translate(-30px, 40px) scale(0) rotate(90deg); } }
+    @keyframes sp-letter { from { transform: translateY(22px) scale(.7); opacity: 0; } }
+    @keyframes sp-fade { from { opacity: 0; transform: translateY(6px); } }
+
+    /* Screens. body[data-screen] says which one shows; the tab bar hides while you practise. */
+    body:not([data-screen="practice"]) .lesson,
+    body:not([data-screen="home"]) .home {
+      display: none !important;
+    }
+
+    .screen-enter {
+      animation: screen-in 420ms var(--glide) both;
+    }
+
+    .screen-enter-back {
+      animation: screen-in-back 360ms var(--glide) both;
+    }
+
+    @keyframes screen-in { from { opacity: 0; transform: translateY(24px); } }
+    @keyframes screen-in-back { from { opacity: 0; transform: scale(.98); } }
+
+    /* View Transitions (Chrome / Android WebView 111+): whole-screen snapshots. */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 380ms;
+      animation-timing-function: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    html[data-nav-dir="forward"]::view-transition-old(root) { animation-name: vt-out-forward; }
+    html[data-nav-dir="forward"]::view-transition-new(root) { animation-name: vt-in-forward; }
+    html[data-nav-dir="back"]::view-transition-old(root) { animation-name: vt-out-back; }
+    html[data-nav-dir="back"]::view-transition-new(root) { animation-name: vt-in-back; }
+
+    @keyframes vt-in-forward { from { opacity: 0; transform: translateY(32px) scale(.985); } }
+    @keyframes vt-out-forward { to { opacity: 0; transform: scale(.965); } }
+    @keyframes vt-in-back { from { opacity: 0; transform: scale(.965); } }
+    @keyframes vt-out-back { to { opacity: 0; transform: translateY(32px) scale(.985); } }
+
+    .mobile-nav.tab-bar-app { view-transition-name: tabbar; }
+
+    /* Tab bar (phones and tablets): three destinations, Material-style indicator pill. */
+    @media (max-width: 1050px) {
+      .mobile-nav.tab-bar-app {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        padding: 6px 8px calc(8px + var(--sab));
+        border-top: 1px solid var(--line);
+        background: color-mix(in srgb, var(--bg) 86%, transparent);
+        -webkit-backdrop-filter: saturate(1.4) blur(18px);
+        backdrop-filter: saturate(1.4) blur(18px);
+        z-index: 45;
+        transition: transform 320ms var(--glide), opacity 240ms ease;
+      }
+
+      body[data-screen="practice"] .mobile-nav.tab-bar-app,
+      body[data-screen="onboard"] .mobile-nav.tab-bar-app {
+        transform: translateY(110%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .main {
+        padding-top: calc(18px + var(--sat));
+        padding-bottom: calc(var(--tabbar-h) + 24px + var(--sab));
+      }
+
+      body[data-screen="practice"] .main {
+        padding-bottom: calc(24px + var(--sab));
+      }
+    }
+
+    .tab-btn-app {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      border: 0;
+      padding: 4px 0 2px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab-btn-app .nav-icon {
+      box-sizing: content-box;
+      width: 24px;
+      height: 24px;
+      padding: 4px 20px;
+      border-radius: 999px;
+      transition: background-color 260ms var(--glide), transform 200ms var(--spring), color 200ms ease;
+    }
+
+    .tab-btn-app.active {
+      color: var(--text);
+    }
+
+    .tab-btn-app.active .nav-icon {
+      color: #2b2a3d;
+      background: var(--primary);
+      animation: tab-pop 360ms var(--spring);
+    }
+
+    .tab-btn-app:active .nav-icon {
+      transform: scale(.9);
+    }
+
+    .tab-btn-app:focus-visible {
+      outline: none;
+    }
+
+    .tab-btn-app:focus-visible .nav-icon {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    @keyframes tab-pop { 0% { transform: scaleX(.6); } 100% { transform: none; } }
+
+    .rail-btn[data-nav].active {
+      border-color: transparent;
+      color: #2b2a3d;
+      background: var(--primary);
+    }
+
+    /* ---- Home ---- */
+    .home {
+      width: min(560px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .home > * {
+      animation: home-rise 560ms var(--glide) both;
+    }
+
+    .home > :nth-child(2) { animation-delay: 40ms; }
+    .home > :nth-child(3) { animation-delay: 70ms; }
+    .home > :nth-child(4) { animation-delay: 110ms; }
+    .home > :nth-child(5) { animation-delay: 170ms; }
+    .home > :nth-child(6) { animation-delay: 230ms; }
+
+    @keyframes home-rise { from { opacity: 0; transform: translateY(18px); } }
+
+    .home-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .home-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .home-brand svg {
+      border-radius: 10px;
+      box-shadow: 0 6px 14px -8px var(--card-shadow);
+    }
+
+    .wordmark {
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 22px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .wordmark i { font-style: normal; }
+    .wordmark i:nth-child(1) { color: #ff7a59; }
+    .wordmark i:nth-child(2) { color: #f5b800; }
+    .wordmark i:nth-child(3) { color: #2ec27e; }
+    .wordmark i:nth-child(4) { color: #3b82f6; }
+
+    .home-streak {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line);
+      font-family: var(--num-font);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .home-streak.lit {
+      color: var(--ember-ink);
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ember-ink) 35%, transparent);
+    }
+
+    .home-date {
+      margin: 6px 0 -10px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .home-greeting {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+
+    .today-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: grid;
+      gap: 20px;
+      padding: 22px;
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line), 0 22px 44px -30px var(--card-shadow);
+    }
+
+    .today-card .deco {
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      opacity: .9;
+      animation: deco-float 7s ease-in-out infinite;
+    }
+
+    .deco-1 { top: -78px; right: -66px; width: 132px; height: 132px; background: var(--primary); opacity: .4 !important; }
+    .deco-2 { top: 22px; right: 96px; width: 12px; height: 12px; background: #ffb4a2; animation-delay: -2s !important; }
+    .deco-3 { bottom: 92px; right: 22px; width: 16px; height: 16px; border-radius: 4px !important; background: #9eebc4; transform: rotate(20deg); animation-delay: -4s !important; }
+
+    @keyframes deco-float { 50% { translate: 0 -6px; } }
+
+    .today-main {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .today-ring {
+      position: relative;
+      width: 116px;
+      height: 116px;
+    }
+
+    .today-ring svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ring-track,
+    .ring-fill {
+      fill: none;
+      stroke-width: 12;
+    }
+
+    .ring-track { stroke: var(--track); }
+
+    .ring-fill {
+      stroke: var(--primary-dark);
+      stroke-linecap: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      transition: stroke-dashoffset 1100ms var(--spring) 250ms, stroke 300ms ease;
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .ring-center b {
+      font-family: var(--num-font);
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .ring-center span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ring-center svg {
+      width: 44px;
+      height: 44px;
+      color: var(--green-ink);
+      animation: sp-pop 520ms var(--spring) 500ms both;
+    }
+
+    .today-copy h2 {
+      margin: 0 0 6px;
+      font-size: 21px;
+      line-height: 1.3;
+    }
+
+    .today-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .today-go {
+      width: 100%;
+      min-height: 58px;
+      font-size: 19px;
+    }
+
+    .week-card {
+      padding: 16px 18px 18px;
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .card-head span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .week-strip {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      text-align: center;
+    }
+
+    .week-strip li {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .week-strip .dot {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #2b2a3d;
+      background: var(--track);
+    }
+
+    .week-strip .done .dot {
+      background: var(--c);
+      animation: sp-pop 520ms var(--spring) both;
+      animation-delay: calc(var(--i) * 60ms + 300ms);
+    }
+
+    .week-strip .frozen .dot {
+      color: var(--blue-ink);
+      background: transparent;
+      box-shadow: inset 0 0 0 2px var(--blue);
+    }
+
+    .week-strip .today {
+      color: var(--text);
+    }
+
+    .week-strip .today:not(.done) .dot {
+      background: transparent;
+      box-shadow: inset 0 0 0 2.5px var(--text);
+    }
+
+    /* A past day with no practice: an empty ring, so filled always means "done". */
+    .week-strip li:not(.done):not(.frozen):not(.today):not(.future) .dot {
+      background: transparent;
+      box-shadow: inset 0 0 0 2px var(--track);
+    }
+
+    .week-strip .future .dot {
+      background: transparent;
+      box-shadow: inset 0 0 0 2px var(--track);
+      opacity: .5;
+    }
+
+    .book-card {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) 22px;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+      padding: 16px 16px 16px 18px;
+      border: 0;
+      border-radius: 24px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 160ms var(--spring), box-shadow 200ms ease;
+    }
+
+    .book-card:active { transform: scale(.98); }
+    .book-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+    .book-cover {
+      position: relative;
+      width: 54px;
+      height: 54px;
+    }
+
+    .book-cover i {
+      position: absolute;
+      top: 6px;
+      width: 28px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    .book-cover i:first-child { left: 4px; background: #ffb4a2; transform: rotate(-10deg); }
+    .book-cover i:last-child { right: 4px; background: var(--primary); transform: rotate(10deg); }
+
+    .book-copy {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .book-copy b {
+      font-size: 17px;
+    }
+
+    .book-copy > span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .book-bar {
+      display: block;
+      height: 8px;
+      margin-top: 4px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: var(--track);
+    }
+
+    .book-bar i {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: #9eebc4;
+      transition: width 900ms var(--glide) 300ms;
+    }
+
+    .book-card .chev { color: var(--dim); }
+
+    /* ---- Onboarding ---- */
+    .onboard {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      padding: calc(8px + var(--sat)) 0 calc(14px + var(--sab));
+      background: var(--bg);
+    }
+
+    .onboard[hidden] { display: none; }
+
+    .ob-top,
+    .ob-foot {
+      width: min(560px, 100%);
+      margin: 0 auto;
+    }
+
+    .ob-top {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) 64px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+    }
+
+    .ob-back { transition: opacity 200ms ease; }
+    .ob-back[aria-hidden="true"] { opacity: 0; pointer-events: none; }
+
+    .ob-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .ob-steps i {
+      height: 8px;
+      border-radius: 99px;
+      background: var(--track);
+      transition: background-color 400ms var(--glide), transform 400ms var(--spring);
+    }
+
+    .ob-steps i.on:nth-child(1) { background: #ffb4a2; }
+    .ob-steps i.on:nth-child(2) { background: #a8d8ff; }
+    .ob-steps i.on:nth-child(3) { background: #9eebc4; }
+
+    .ob-skip {
+      justify-self: end;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .ob-viewport {
+      overflow: hidden;
+    }
+
+    .ob-track {
+      display: flex;
+      height: 100%;
+      transition: transform 520ms var(--glide);
+    }
+
+    .ob-page {
+      flex: 0 0 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      padding: 8px 20px 24px;
+    }
+
+    .ob-page > * {
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ob-page.active > * {
+      animation: home-rise 520ms var(--glide) both;
+    }
+
+    .ob-page.active > :nth-child(2) { animation-delay: 60ms; }
+    .ob-page.active > :nth-child(3) { animation-delay: 110ms; }
+    .ob-page.active > :nth-child(4) { animation-delay: 160ms; }
+    .ob-page.active > :nth-child(5) { animation-delay: 210ms; }
+
+    .ob-page h1 {
+      margin-top: 14px;
+      margin-bottom: 8px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .ob-lead {
+      margin-top: 0;
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .ob-hero {
+      position: relative;
+      height: 120px;
+    }
+
+    .ob-card {
+      position: absolute;
+      top: 34px;
+      display: grid;
+      place-items: center;
+      width: 132px;
+      height: 54px;
+      border-radius: 18px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line), 0 10px 22px -14px var(--card-shadow);
+      font-size: 19px;
+      font-weight: 700;
+      animation: ob-meet-a 3.4s var(--glide) infinite;
+    }
+
+    .ob-card-a { left: calc(50% - 150px); }
+    .ob-card-b { left: calc(50% + 18px); animation-name: ob-meet-b; }
+
+    @keyframes ob-meet-a {
+      0%, 12% { transform: none; background: var(--panel); }
+      30% { transform: translateX(10px) rotate(-4deg); background: var(--panel); }
+      38%, 78% { transform: translateX(10px) rotate(-4deg); color: #2b2a3d; background: #9eebc4; box-shadow: inset 0 0 0 2px #7bc8a3; }
+      100% { transform: none; background: var(--panel); }
+    }
+
+    @keyframes ob-meet-b {
+      0%, 12% { transform: none; background: var(--panel); }
+      30% { transform: translateX(-10px) rotate(4deg); background: var(--panel); }
+      38%, 78% { transform: translateX(-10px) rotate(4deg); color: #2b2a3d; background: #9eebc4; box-shadow: inset 0 0 0 2px #7bc8a3; }
+      100% { transform: none; background: var(--panel); }
+    }
+
+    .ob-spark {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      opacity: 0;
+      animation: ob-spark 3.4s ease-out infinite;
+    }
+
+    .ob-spark-1 { background: #ffe27a; --dx: -40px; --dy: -46px; }
+    .ob-spark-2 { background: #ffb4a2; --dx: 44px; --dy: -40px; border-radius: 50%; }
+    .ob-spark-3 { background: #d4c4ff; --dx: 6px; --dy: -58px; }
+
+    @keyframes ob-spark {
+      0%, 34% { opacity: 0; transform: translate(-50%, 0) scale(.4); }
+      40% { opacity: 1; }
+      62%, 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), var(--dy)) scale(1) rotate(140deg); }
+    }
+
+    .ob-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ob-books { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ob-times { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .ob-opt {
+      position: relative;
+      display: grid;
+      gap: 3px;
+      min-height: 66px;
+      align-content: center;
+      padding: 12px 40px 12px 16px;
+      border: 0;
+      border-radius: 18px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line);
+      text-align: left;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 160ms var(--spring), box-shadow 200ms ease, background-color 200ms ease;
+    }
+
+    .ob-opt b {
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .ob-opt small {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .ob-opt.wide { grid-column: 1 / -1; }
+    .ob-opt:active { transform: scale(.97); }
+    .ob-opt:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+    .ob-opt::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      width: 20px;
+      height: 20px;
+      margin-top: -10px;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 2px var(--line-strong);
+      transition: box-shadow 200ms ease, background-color 200ms ease;
+    }
+
+    .ob-opt[aria-checked="true"] {
+      background: color-mix(in srgb, var(--c, #ffe27a) 38%, var(--panel));
+      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--c, #ffe27a) 70%, #2b2a3d);
+    }
+
+    .ob-opt[aria-checked="true"]::after {
+      background: #2b2a3d url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.5 3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 20px no-repeat;
+      box-shadow: none;
+      animation: sp-pop 360ms var(--spring);
+    }
+
+    :root[data-color-mode="dark"] .ob-opt[aria-checked="true"]::after {
+      background-color: #f7f5ee;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.5 3 3 6-7' fill='none' stroke='%232b2a3d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    .ob-opt.skeleton {
+      cursor: default;
+      background: linear-gradient(100deg, var(--panel) 30%, var(--panel-2) 50%, var(--panel) 70%) 0 0 / 300% 100%;
+      animation: shimmer 1.3s linear infinite;
+    }
+
+    .ob-opt.skeleton::after { display: none; }
+
+    @keyframes shimmer { to { background-position: -150% 0; } }
+
+    .ob-bell {
+      display: grid;
+      place-items: center;
+      margin-top: 10px;
+    }
+
+    .ob-bell svg { animation: ob-ring 2.6s ease-in-out 600ms infinite; transform-origin: 50% 20%; }
+
+    @keyframes ob-ring {
+      0%, 60%, 100% { transform: rotate(0); }
+      66% { transform: rotate(12deg); }
+      72% { transform: rotate(-10deg); }
+      78% { transform: rotate(6deg); }
+      84% { transform: rotate(-3deg); }
+    }
+
+    .ob-note {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      background: var(--panel-2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .ob-foot {
+      padding: 10px 20px 0;
+    }
+
+    .ob-foot .duo-button {
+      width: 100%;
+      min-height: 56px;
+      font-size: 18px;
+    }
+
+    .duo-button.is-loading {
+      color: transparent !important;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .duo-button.is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid rgba(43, 42, 61, .25);
+      border-top-color: #2b2a3d;
+      animation: spin 700ms linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Phones: Library and Settings are full pages above the tab bar, not sheets. Over the
+       board (opened from a set) they stay sheets with a close button. */
+    @media (max-width: 1050px) {
+      body:not([data-screen="practice"]) #libraryModal,
+      body:not([data-screen="practice"]) #settingsModal {
+        bottom: calc(var(--tabbar-h) + var(--sab));
+        padding: 0;
+        place-items: stretch;
+        background: var(--bg);
+      }
+
+      body:not([data-screen="practice"]) #libraryModal .modal-card,
+      body:not([data-screen="practice"]) #settingsModal .modal-card {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        padding-top: var(--sat);
+        padding-bottom: 0;
+        border: 0;
+        border-radius: 0;
+        background: var(--bg);
+        box-shadow: none;
+        animation: page-in 340ms var(--glide) both;
+      }
+
+      body:not([data-screen="practice"]) #libraryModal .modal-top,
+      body:not([data-screen="practice"]) #settingsModal .modal-top {
+        border-bottom: 0;
+      }
+
+      body:not([data-screen="practice"]) #libraryModal .modal-top h2,
+      body:not([data-screen="practice"]) #settingsModal .modal-top h2 {
+        font-size: 30px;
+      }
+
+      body:not([data-screen="practice"]) #closeLibrary,
+      body:not([data-screen="practice"]) #closeSettings {
+        display: none;
+      }
+    }
+
+    @keyframes page-in { from { opacity: 0; transform: translateY(14px); } }
+
+    @media (max-width: 1050px) {
+      /* Library's sections as a segmented control, not desktop folder tabs. */
+      body:not([data-screen="practice"]) #libraryModal .tab-bar {
+        margin: 2px 20px 6px;
+        padding: 4px;
+        gap: 4px;
+        border: 0;
+        border-radius: 16px;
+        background: var(--track);
+        outline: 10px solid var(--bg);
+      }
+
+      body:not([data-screen="practice"]) #libraryModal .tab-btn {
+        min-height: 42px;
+        border: 0;
+        border-radius: 12px;
+        transition: background 200ms ease, color 200ms ease, box-shadow 200ms ease;
+      }
+
+      body:not([data-screen="practice"]) #libraryModal .tab-btn[aria-selected="true"] {
+        margin: 0;
+        padding-bottom: 0;
+        background: var(--panel);
+        box-shadow: 0 2px 8px -2px var(--card-shadow);
+      }
+    }
+
+    .ob-stack {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 7px 6px;
+      width: min(100%, 300px);
+      margin: 6px auto 26px;
+    }
+
+    .ob-stack i {
+      aspect-ratio: 3 / 4;
+      border-radius: 5px;
+      background: var(--track);
+      rotate: var(--r);
+      scale: .82;
+      transition: background 260ms ease, scale 420ms var(--spring), rotate 420ms var(--spring);
+      transition-delay: calc(var(--i) * 12ms);
+    }
+
+    .ob-stack i.on {
+      background: var(--c);
+      rotate: 0deg;
+      scale: 1;
+    }
+
+    /* Touch phones: the 1-0 keyboard hints mean nothing, give the words the room. */
+    @media (max-width: 640px) and (hover: none) and (pointer: coarse) {
+      .match-card {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0 12px;
+      }
+
+      .match-card .num { display: none; }
+    }
+
+    /* Tall phones: the board fills the screen like a game board, not a short list. */
+    @media (max-width: 640px) and (min-height: 720px) {
+      .match-grid {
+        grid-template-rows: repeat(5, 70px);
+        gap: 12px;
+      }
+
+      .match-card { height: 70px; }
+    }
+
+    /* Desktop: the home screen sits in the same column as the board. */
+    @media (min-width: 1051px) {
+      .home {
+        padding-top: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .splash *, .splash-word i, .splash-tag,
+      .home > *, .ob-page.active > *, .ob-card, .ob-spark, .ob-bell svg,
+      .today-card .deco, .week-strip .done .dot, .tab-btn-app.active .nav-icon,
+      .screen-enter, .screen-enter-back, .ring-center svg {
+        animation: none !important;
+      }
+      .ob-track, .ring-fill, .book-bar i { transition: none; }
+      .ob-spark { display: none; }
+    }
   </style>
 </head>
-<body>
+<body data-screen="home">
+  <!-- Launch screen: the icon's two cards snap together, then the first screen rises in (js/shell.js). -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="splash-mark">
+      <svg class="splash-icon" viewBox="0 0 120 120" width="132" height="132">
+        <rect class="sp-tile" width="120" height="120" rx="30" fill="#fff7e8"/>
+        <g class="sp-card sp-a"><rect x="22" y="32" width="42" height="56" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/></g>
+        <g class="sp-card sp-b"><rect x="56" y="32" width="42" height="56" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/></g>
+        <circle class="sp-dot" cx="60" cy="60" r="6" fill="#ffffff"/>
+        <circle class="sp-c sp-c1" cx="30" cy="24" r="4" fill="#ffe27a"/>
+        <circle class="sp-c sp-c2" cx="96" cy="96" r="5" fill="#9eebc4"/>
+        <rect class="sp-c sp-c3" x="88" y="18" width="8" height="8" rx="2" fill="#d4c4ff" transform="rotate(20 92 22)"/>
+      </svg>
+      <div class="splash-word" lang="en"><i>W</i><i>o</i><i>r</i><i>d</i><i>&#160;</i><i>S</i><i>n</i><i>a</i><i>p</i></div>
+      <p class="splash-tag" data-en="Learning words can be easy." data-zh="背单词，可以很轻松。">背单词，可以很轻松。</p>
+    </div>
+  </div>
+
+  <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on the board. -->
+  <section class="onboard" id="onboardScreen" aria-label="开始使用" data-en-aria="Get started" data-zh-aria="开始使用" hidden>
+    <header class="ob-top">
+      <button class="icon-button ob-back" type="button" id="obBack" aria-label="上一步" data-en-aria="Back" data-zh-aria="上一步"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="ob-steps" id="obSteps" aria-hidden="true"><i></i><i></i><i></i></div>
+      <button class="link-button ob-skip" type="button" id="obSkip" data-en="Skip" data-zh="跳过">跳过</button>
+    </header>
+    <div class="ob-viewport">
+      <div class="ob-track" id="obTrack">
+        <div class="ob-page" data-step="0">
+          <div class="ob-hero" aria-hidden="true">
+            <span class="ob-card ob-card-a">文学</span><span class="ob-card ob-card-b" lang="en">literature</span>
+            <span class="ob-spark ob-spark-1"></span><span class="ob-spark ob-spark-2"></span><span class="ob-spark ob-spark-3"></span>
+          </div>
+          <h1 data-en="What are you studying for?" data-zh="你在准备什么？">你在准备什么？</h1>
+          <p class="ob-lead" data-en="Pick a word book. Word Snap plans the words for each day; you just match the pairs." data-zh="选一本词书，每天要背哪些词交给 Word Snap 安排，你只管配对。">选一本词书，每天要背哪些词交给 Word Snap 安排，你只管配对。</p>
+          <div class="ob-options ob-books" id="obBooks" role="radiogroup" aria-label="词书" data-en-aria="Word book" data-zh-aria="词书"></div>
+        </div>
+        <div class="ob-page" data-step="1">
+          <div class="ob-stack" id="obStack" aria-hidden="true"></div>
+          <h1 data-en="How many new words a day?" data-zh="每天学几个新词？">每天学几个新词？</h1>
+          <p class="ob-lead" data-en="Reviews come on top and take less time. You can change this in Settings any time." data-zh="复习的词另外算，花的时间更少。之后随时可以在设置里改。">复习的词另外算，花的时间更少。之后随时可以在设置里改。</p>
+          <div class="ob-options ob-goals" id="obGoals" role="radiogroup" aria-label="每天新词数" data-en-aria="New words per day" data-zh-aria="每天新词数"></div>
+        </div>
+        <div class="ob-page" data-step="2">
+          <div class="ob-bell" aria-hidden="true"><svg viewBox="0 0 64 64" width="88" height="88"><circle cx="32" cy="32" r="30" fill="var(--panel-2)"/><path d="M32 14c-7 0-12 5-12 12v8l-4 6h32l-4-6v-8c0-7-5-12-12-12z" fill="#ffe27a" stroke="#2b2a3d" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 44a5 5 0 0 0 10 0" fill="none" stroke="#2b2a3d" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="18" r="4" fill="#ffb4a2"/><circle cx="16" cy="22" r="3" fill="#a8d8ff"/></svg></div>
+          <h1 data-en="A nudge each day?" data-zh="每天提醒你一下？">每天提醒你一下？</h1>
+          <p class="ob-lead" data-en="One gentle reminder at the time you pick, and none once today's goal is done." data-zh="在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。">在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。</p>
+          <div class="ob-options ob-times" id="obTimes" role="radiogroup" aria-label="提醒时间" data-en-aria="Reminder time" data-zh-aria="提醒时间"></div>
+          <p class="ob-note" id="obWebNote" hidden data-en="A web page cannot remind you on time. Install the Android app to turn reminders on." data-zh="网页没法定时提醒；装上安卓 App 后就能打开每日提醒。">网页没法定时提醒；装上安卓 App 后就能打开每日提醒。</p>
+        </div>
+      </div>
+    </div>
+    <footer class="ob-foot">
+      <button class="duo-button" type="button" id="obNext" data-en="Continue" data-zh="继续">继续</button>
+    </footer>
+  </section>
+
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
       <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
-      <button class="rail-btn active" type="button" data-nav-practice aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Practice" data-zh="练习">练习</span></button>
-      <button class="rail-btn" type="button" id="openLibraryRail"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
-      <button class="rail-btn" type="button" data-open-settings><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
+      <button class="rail-btn active" type="button" data-nav="home" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="nav-label" data-en="Home" data-zh="首页">首页</span></button>
+      <button class="rail-btn" type="button" data-nav="library"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
+      <button class="rail-btn" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
       <button class="rail-btn lang-toggle" type="button" id="langToggleRail" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
     </aside>
 
     <main class="main">
-      <nav class="mobile-nav" aria-label="窄屏导航" data-en-aria="Mobile navigation" data-zh-aria="窄屏导航">
-        <button class="rail-btn active" type="button" data-nav-practice aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Practice" data-zh="练习">练习</span></button>
-        <button class="rail-btn" type="button" id="openLibraryMobile"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
-        <button class="rail-btn" type="button" data-open-settings><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
-        <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
-        <button class="rail-btn lang-toggle" type="button" id="langToggleMobile" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
+      <nav class="mobile-nav tab-bar-app" aria-label="主导航" data-en-aria="Main navigation" data-zh-aria="主导航">
+        <button class="tab-btn-app active" type="button" data-nav="home" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="nav-label" data-en="Home" data-zh="首页">首页</span></button>
+        <button class="tab-btn-app" type="button" data-nav="library"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
+        <button class="tab-btn-app" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
       </nav>
+
+      <section class="home" id="homeScreen" aria-labelledby="homeGreeting">
+        <header class="home-top">
+          <div class="home-brand" aria-hidden="true">
+            <svg viewBox="0 0 120 120" width="34" height="34"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg>
+            <span class="wordmark" lang="en"><i>W</i><i>o</i><i>r</i><i>d</i> Snap</span>
+          </div>
+          <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
+        </header>
+        <p class="home-date" id="homeDate"></p>
+        <h1 class="home-greeting" id="homeGreeting"></h1>
+
+        <article class="today-card" id="todayCard">
+          <span class="deco deco-1" aria-hidden="true"></span><span class="deco deco-2" aria-hidden="true"></span><span class="deco deco-3" aria-hidden="true"></span>
+          <div class="today-main">
+            <div class="today-ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><circle class="ring-track" cx="60" cy="60" r="50"/><circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50" pathLength="100"/></svg>
+              <div class="ring-center"><b id="ringNum">0</b><span id="ringUnit"></span></div>
+            </div>
+            <div class="today-copy">
+              <h2 id="todayTitle"></h2>
+              <p id="todaySub"></p>
+            </div>
+          </div>
+          <button class="duo-button today-go" type="button" id="homeGo"></button>
+        </article>
+
+        <section class="week-card" aria-labelledby="weekTitle">
+          <div class="card-head"><h2 id="weekTitle" data-en="This week" data-zh="这一周">这一周</h2><span id="weekNote"></span></div>
+          <ol class="week-strip" id="weekStrip"></ol>
+        </section>
+
+        <button class="book-card" type="button" id="homeBook">
+          <span class="book-cover" aria-hidden="true"><i></i><i></i></span>
+          <span class="book-copy">
+            <b id="bookTitle"></b>
+            <span id="bookSub"></span>
+            <span class="book-bar" aria-hidden="true"><i id="bookBar"></i></span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </section>
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
         <div class="lesson-top">
@@ -3075,6 +4182,7 @@
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
+  <script src="./js/shell.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
@@ -3241,6 +4349,24 @@
         },
         fx: { combo: "{n} in a row", comboWord: "COMBO" },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
+        home: {
+          night: "Still up?", morning: "Good morning", noon: "Good afternoon", afternoon: "Good afternoon", evening: "Good evening",
+          leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
+          doneTitle: "Today's goal is done", doneSub: "{n}-day streak. One more set never hurts.", doneSubNoStreak: "Nice work. One more set never hurts.",
+          start: "Start practice", resume: "Continue the set", again: "One more set", nextSet: "Next set",
+          emptyTitle: "Your library is empty", emptySub: "Pick a word book or paste your own list to begin.", emptyBtn: "Add words", emptyUnit: "words",
+          trialTitle: "Try a set first", trialSub: "Ten sample words to learn the game; switch to your own words after.", trialBtn: "Play the sample set", trialUnit: "sample words",
+          chooseTitle: "Now pick your words", chooseSub: "You've played the samples. Choose a word book or import your own list.", chooseBtn: "Choose a word book",
+          week: "{n} of 7 days", weekDays: "M,T,W,T,F,S,S", weekToday: "today",
+          bookMine: "My library", bookSamples: "Sample words", bookSub: "{n} words · {m} mastered",
+          streakTitle: "{n}-day streak"
+        },
+        onboard: {
+          sample: "Just try the sample words", sampleSub: "10 words to learn the game", words: "{n} words",
+          goal: "{n} new words", goalEasy: "Easy", goalNormal: "Recommended", goalSerious: "Serious", goalSprint: "Sprint", goalMin: "about {m} min a day",
+          morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", none: "No reminders", noneSub: "You can turn them on later",
+          next: "Continue", finish: "Start the first set", preparing: "Preparing your words…", failed: "Could not load that word book. Check the connection and try again, or skip for now."
+        },
         today: {
           done: "Today's goal done", streak: "{n}-day streak",
           left: "Today: {list} left, about {m} min", leftNum: "to go today · about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
@@ -3470,6 +4596,24 @@
         },
         fx: { combo: "连对 {n} 次", comboWord: "连击" },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
+        home: {
+          night: "夜深了", morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好",
+          leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
+          doneTitle: "今天的目标完成了", doneSub: "已经连续 {n} 天。想多练也可以再来一组。", doneSubNoStreak: "做得好。想多练也可以再来一组。",
+          start: "开始练习", resume: "继续这一组", again: "再练一组", nextSet: "下一组",
+          emptyTitle: "词库还是空的", emptySub: "选一本词书，或者粘贴自己的词表，就能开始了。", emptyBtn: "添加单词", emptyUnit: "个词",
+          trialTitle: "先玩一组试试", trialSub: "用 10 个示例词熟悉玩法，之后再换成你要背的词。", trialBtn: "开始体验", trialUnit: "个示例词",
+          chooseTitle: "换成你要背的词吧", chooseSub: "示例词已经玩过了。选一本词书，或者导入自己的词表。", chooseBtn: "选一本词书",
+          week: "本周 {n}/7 天", weekDays: "一,二,三,四,五,六,日", weekToday: "今天",
+          bookMine: "我的词库", bookSamples: "示例词", bookSub: "{n} 个词 · 已掌握 {m}",
+          streakTitle: "连续 {n} 天"
+        },
+        onboard: {
+          sample: "先用示例词试试", sampleSub: "10 个词，熟悉一下玩法", words: "{n} 词",
+          goal: "{n} 个新词", goalEasy: "轻松", goalNormal: "推荐", goalSerious: "认真", goalSprint: "冲刺", goalMin: "每天约 {m} 分钟",
+          morning: "早上", noon: "中午", evening: "晚上", night: "睡前", none: "先不用提醒", noneSub: "以后可以在设置里打开",
+          next: "继续", finish: "开始第一组", preparing: "正在准备词书……", failed: "词书没加载出来。检查一下网络再试，或者先跳过。"
+        },
         today: {
           done: "今日完成", streak: "连续 {n} 天",
           left: "今天还剩 {list}，约 {m} 分钟", leftNum: "个词今天要练 · 约 {m} 分钟", due: "{n} 个到期", new: "{n} 个新词", practice: "一点练习",
@@ -3647,6 +4791,7 @@
           if (state.lastCompletion) renderCompletionCopy();
         }
       }
+      if (els.homeScreen) refreshShellCopy();
     }
 
     const DEFAULT_SETTINGS = {
@@ -3735,6 +4880,19 @@
       completionBadge: document.querySelector(".completion-badge"),
       libraryModal: document.getElementById("libraryModal"),
       introModal: document.getElementById("introModal"),
+      onboardScreen: document.getElementById("onboardScreen"),
+      obBooks: document.getElementById("obBooks"),
+      obGoals: document.getElementById("obGoals"),
+      obStack: document.getElementById("obStack"),
+      obTimes: document.getElementById("obTimes"),
+      obTrack: document.getElementById("obTrack"),
+      obSteps: document.getElementById("obSteps"),
+      obBack: document.getElementById("obBack"),
+      obSkip: document.getElementById("obSkip"),
+      obNext: document.getElementById("obNext"),
+      obWebNote: document.getElementById("obWebNote"),
+      homeGo: document.getElementById("homeGo"),
+      homeBook: document.getElementById("homeBook"),
       main: document.querySelector(".main"),
       librarySummary: document.getElementById("librarySummary"),
       newEnglish: document.getElementById("newEnglish"),
@@ -4220,6 +5378,7 @@
       if (meta) meta.setAttribute("content", fixedBg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
       if (state && state.settings) state.settings.themeIndex = i;
+      syncSystemBars();
       return i;
     }
 
@@ -5191,6 +6350,7 @@
 
     function shouldPauseLevel() {
       return document.hidden
+        || document.body.dataset.screen !== "practice"
         || els.libraryModal.classList.contains("open")
         || els.settingsModal.classList.contains("open")
         || els.introModal.classList.contains("open");
@@ -7196,6 +8356,7 @@
 
       // The full word list is only visible inside the library; skip rebuilding it otherwise.
       if (els.libraryModal.classList.contains("open")) { renderCustomList(); updatePrintPreview(); }
+      if (els.homeScreen && document.body.dataset.screen === "home") renderHome();
     }
 
     function currentRoundTotal() {
@@ -7503,8 +8664,8 @@
     }
 
     /** Opens on "My words", or on "Add words" when the library is empty. */
-    function openLibrary(tab) {
-      closeSettings();
+    function openLibraryRaw(tab) {
+      closeSettingsRaw();
       closeInstallNudge(false);
       els.libraryModal.classList.add("open");
       pauseLevel();
@@ -7516,8 +8677,8 @@
       showLibraryTab(typeof tab === "string" ? tab : state.words.length ? "list" : "add");
     }
 
-    function openSettings() {
-      closeLibrary();
+    function openSettingsRaw() {
+      closeLibraryRaw();
       closeInstallNudge(false);
       els.settingsModal.classList.add("open");
       pauseLevel();
@@ -7527,7 +8688,7 @@
       aiInit().then(syncAiUI);
     }
 
-    function closeSettings() {
+    function closeSettingsRaw() {
       if (!els.settingsModal.classList.contains("open")) return;
       els.settingsModal.classList.remove("open");
       resumeLevel();
@@ -7564,7 +8725,7 @@
       try { return localStorage.getItem(INTRO_SEEN_KEY) === "1"; } catch (e) { return true; }
     }
 
-    function closeLibrary() {
+    function closeLibraryRaw() {
       if (!els.libraryModal.classList.contains("open")) return;
       els.libraryModal.classList.remove("open");
       // Closed without importing: back on the choice screen, now with a nudge.
@@ -7844,13 +9005,7 @@
     }
 
     document.getElementById("openLibrary").addEventListener("click", () => openLibrary());
-    document.getElementById("openLibraryRail").addEventListener("click", () => openLibrary());
-    document.getElementById("openLibraryMobile").addEventListener("click", () => openLibrary());
-    document.querySelectorAll("[data-open-settings]").forEach(btn => btn.addEventListener("click", openSettings));
-    document.querySelectorAll("[data-nav-practice]").forEach(btn => btn.addEventListener("click", () => {
-      closeLibrary();
-      closeSettings();
-    }));
+    document.querySelectorAll("[data-nav]").forEach(btn => btn.addEventListener("click", () => navTo(btn.dataset.nav)));
     document.getElementById("closeSettings").addEventListener("click", closeSettings);
     els.settingsModal.addEventListener("click", event => {
       if (event.target === els.settingsModal) closeSettings();
@@ -7904,7 +9059,8 @@
         showCompletion(false, "block");
         return;
       }
-      renderRound();
+      // Otherwise × goes home; the set waits, paused, until you come back.
+      goHome();
     });
     if (els.langPairSelect) {
       els.langPairSelect.addEventListener("change", () => {
@@ -8264,7 +9420,12 @@
     function syncDialogs() {
       const open = [els.introModal, els.settingsModal, els.libraryModal].filter(m => m && m.classList.contains("open"));
       const app = document.querySelector(".app");
-      if (app) app.inert = open.length > 0;
+      // On phones, Library and Settings off the board are pages above the tab bar: the
+      // tab bar stays usable, only the screen behind goes inert.
+      const asPage = open.length > 0 && !open.includes(els.introModal) && document.body.dataset.screen !== "practice"
+        && window.matchMedia("(max-width: 1050px)").matches;
+      if (app) app.inert = open.length > 0 && !asPage;
+      document.querySelectorAll(".app > .rail, .main > :not(.mobile-nav)").forEach(el => { el.inert = asPage; });
       for (const modal of [els.introModal, els.settingsModal, els.libraryModal]) {
         if (!modal) continue;
         const isOpen = modal.classList.contains("open");
@@ -8369,6 +9530,430 @@
     });
     applyStaticI18n();
 
+    // ==== App shell: screens, navigation, home, onboarding (js/shell.js) ====
+    // Screens are body[data-screen] = "home" | "practice" | "onboard"; Library and Settings
+    // are overlays (full pages on phones, dialogs on desktop). Every step is a history
+    // entry, so the browser back button and the Android back gesture walk the same stack.
+    let nav = null;
+    let navSyncing = false; // true while the shell itself opens / closes an overlay
+
+    function openLibrary(tab) {
+      openLibraryRaw(tab);
+      if (nav && !navSyncing) nav.overlay("library");
+      syncNavUI();
+    }
+
+    function closeLibrary() {
+      const wasOpen = els.libraryModal.classList.contains("open");
+      closeLibraryRaw();
+      if (wasOpen && nav && !navSyncing && nav.current().overlay === "library") nav.closeOverlay();
+      syncNavUI();
+    }
+
+    function openSettings() {
+      openSettingsRaw();
+      if (nav && !navSyncing) nav.overlay("settings");
+      syncNavUI();
+    }
+
+    function closeSettings() {
+      const wasOpen = els.settingsModal.classList.contains("open");
+      closeSettingsRaw();
+      if (wasOpen && nav && !navSyncing && nav.current().overlay === "settings") nav.closeOverlay();
+      syncNavUI();
+    }
+
+    /** Tab bar / rail: Home, Library, Settings. */
+    function navTo(target) {
+      if (!nav) return;
+      WordSnapFx.haptic("tap");
+      const { screen, overlay } = nav.current();
+      if (target === "home") {
+        if (overlay) nav.closeOverlay();
+        else if (screen === "practice") goHome();
+        else document.querySelector(".main").scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (overlay === target) {
+        // The active tab again: back to the top of that page.
+        const card = (target === "library" ? els.libraryModal : els.settingsModal).querySelector(".modal-card");
+        if (card) card.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (target === "library") openLibrary();
+      else if (target === "settings") openSettings();
+    }
+
+    function goHome() {
+      if (!nav) return;
+      if (nav.current().screen === "home") return;
+      if (!nav.back()) nav.go("home", { replace: true });
+    }
+
+    function syncNavUI() {
+      if (!nav) return;
+      const { screen, overlay } = nav.current();
+      const active = overlay === "library" || overlay === "settings" ? overlay : screen === "home" ? "home" : "";
+      document.querySelectorAll("[data-nav]").forEach(btn => {
+        const on = btn.dataset.nav === active;
+        btn.classList.toggle("active", on);
+        if (on) btn.setAttribute("aria-current", "page");
+        else btn.removeAttribute("aria-current");
+      });
+      const tabBar = document.querySelector(".mobile-nav");
+      if (tabBar) tabBar.inert = screen !== "home";
+      syncDialogs();
+    }
+
+    /** The nav moved (a tap, back, the gesture): bring the page in line with it. */
+    function renderNav(entry, from, dir) {
+      navSyncing = true;
+      try {
+        if (entry.overlay !== "library") closeLibraryRaw();
+        if (entry.overlay !== "settings") closeSettingsRaw();
+        if (entry.overlay === "library" && !els.libraryModal.classList.contains("open")) openLibraryRaw();
+        if (entry.overlay === "settings" && !els.settingsModal.classList.contains("open")) openSettingsRaw();
+      } finally {
+        navSyncing = false;
+      }
+      if (!from || from.screen !== entry.screen) {
+        // The update renders whatever the nav says when it runs: two quick moves (onboarding
+        // ends with reset + go) start two transitions, and the skipped one must not win.
+        WordSnapShell.transition(() => applyScreen(nav.current().screen, dir), dir);
+      }
+      syncNavUI();
+    }
+
+    let shownScreen = null;
+    function applyScreen(screen, dir) {
+      const prev = shownScreen;
+      if (screen === prev) { syncNavUI(); return; }
+      shownScreen = screen;
+      document.body.dataset.screen = screen;
+      els.onboardScreen.hidden = screen !== "onboard";
+      if (prev === "practice" && screen !== "practice") pauseLevel();
+      if (screen === "home") {
+        renderHome();
+        els.main.scrollTop = 0;
+      }
+      if (screen === "practice") {
+        if (!state.words.length) renderRound();
+        else resumeLevel();
+      }
+      if (screen === "onboard") renderOnboard();
+      // Without View Transitions the entering screen plays its own entrance.
+      if (typeof document.startViewTransition !== "function" && prev && screen !== "onboard") {
+        const el = screen === "home" ? els.homeScreen : document.querySelector(".lesson");
+        const cls = dir === "back" ? "screen-enter-back" : "screen-enter";
+        el.classList.remove("screen-enter", "screen-enter-back");
+        void el.offsetWidth;
+        el.classList.add(cls);
+      }
+      syncNavUI();
+    }
+
+    /** The big button on Home: resume the paused set, or start the next one. */
+    function startFromHome() {
+      if (!state.words.length) { openLibrary("add"); return; }
+      if (awaitingTrialChoice()) { state.trialLibraryVisited = true; openLibrary("add"); return; }
+      const setOver = els.completionView.classList.contains("show");
+      if (setOver) {
+        state.round += 1;
+        saveWords();
+        renderRound();
+      }
+      WordSnapFx.haptic("tap");
+      nav.go("practice");
+    }
+
+    // ---- Home ----
+    const ICON_CHECK_BIG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="m7 12.5 3.2 3.2L17 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const ICON_DOT_CHECK = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="m5 10.5 3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const ICON_DOT_FROZEN = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M10 2v16M3 6l14 8M17 6 3 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+    function greetingKey(hour) {
+      if (hour < 5) return "home.night";
+      if (hour < 11) return "home.morning";
+      if (hour < 13) return "home.noon";
+      if (hour < 18) return "home.afternoon";
+      return "home.evening";
+    }
+
+    function renderHome() {
+      if (!els.homeScreen) return;
+      const now = new Date();
+      els.homeGreeting.textContent = t(greetingKey(now.getHours()));
+      els.homeDate.textContent = now.toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "long", day: "numeric", weekday: "long" });
+      settleHabit();
+      const status = habitStatus(now.getTime());
+      const streak = isTrial() ? 0 : status.streak;
+      els.homeStreakN.textContent = String(streak);
+      els.homeStreak.classList.toggle("lit", status.done && !isTrial());
+      els.homeStreak.setAttribute("aria-label", t("home.streakTitle", { n: streak }));
+
+      let title, sub, btn, num, unit, pct = 0, done = false;
+      if (!state.words.length) {
+        title = t("home.emptyTitle"); sub = t("home.emptySub"); btn = t("home.emptyBtn");
+        num = "0"; unit = t("home.emptyUnit");
+      } else if (awaitingTrialChoice()) {
+        title = t("home.chooseTitle"); sub = t("home.chooseSub"); btn = t("home.chooseBtn");
+        num = String(sampleWords().length); unit = t("home.trialUnit"); pct = 100; done = true;
+      } else if (isTrial()) {
+        title = t("home.trialTitle"); sub = t("home.trialSub"); btn = t("home.trialBtn");
+        num = String(Math.min(TRIAL_SIZE, sampleWords().length)); unit = t("home.trialUnit");
+      } else if (status.done) {
+        done = true; pct = 100;
+        title = t("home.doneTitle");
+        sub = status.streak ? t("home.doneSub", { n: status.streak }) : t("home.doneSubNoStreak");
+        btn = t("home.again");
+      } else {
+        const left = status.dueLeft + status.newLeft;
+        const parts = [];
+        if (status.dueLeft) parts.push(t("today.due", { n: status.dueLeft }));
+        if (status.newLeft) parts.push(t("today.new", { n: status.newLeft }));
+        title = !left ? t("home.again") : status.newLearned ? t("home.goingTitle", { d: status.newLearned }) : t("home.leftTitle");
+        sub = t("home.leftSub", { list: parts.join(currentLang === "zh" ? "、" : ", ") || t("today.practice"), m: status.minutes });
+        num = String(left); unit = t("home.unit");
+        const learned = status.newLearned;
+        pct = Math.round(100 * learned / Math.max(1, learned + left));
+      }
+      if (!btn) {
+        const midSet = state.completedThisRun > 0 && !els.completionView.classList.contains("show");
+        btn = midSet ? t("home.resume") : els.completionView.classList.contains("show") && !status.done ? t("home.nextSet") : t("home.start");
+      }
+      els.todayTitle.textContent = title;
+      els.todaySub.textContent = sub;
+      els.homeGo.textContent = btn;
+      const center = els.ringCenter || (els.ringCenter = els.ringNum.parentElement);
+      if (done && !awaitingTrialChoice()) {
+        center.innerHTML = ICON_CHECK_BIG + `<span>${escapeHtml(t("home.unitDone"))}</span>`;
+      } else {
+        center.innerHTML = `<b></b><span></span>`;
+        center.querySelector("b").textContent = num;
+        center.querySelector("span").textContent = unit;
+      }
+      // Next frame, so the ring sweeps from where it was.
+      requestAnimationFrame(() => { els.ringFill.style.strokeDashoffset = String(100 - Math.max(pct ? 4 : 0, pct)); });
+
+      // This week, Monday to Sunday: done days in confetti colours, frozen days as a ring.
+      const today = WordSnapHabit.dayKey(now.getTime());
+      const monday = today - ((today + 3) % 7);
+      const labels = t("home.weekDays").split(",");
+      let doneDays = 0;
+      els.weekStrip.innerHTML = labels.map((label, i) => {
+        const day = monday + i;
+        const mark = habit.days[day];
+        if (mark === "done") doneDays += 1;
+        const cls = [mark === "done" ? "done" : mark === "frozen" ? "frozen" : "", day === today ? "today" : "", day > today ? "future" : ""].filter(Boolean).join(" ");
+        const icon = mark === "done" ? ICON_DOT_CHECK : mark === "frozen" ? ICON_DOT_FROZEN : "";
+        return `<li class="${cls}" style="--i:${i};--c:${CONFETTI[i % CONFETTI.length]}"><span class="dot">${icon}</span><span>${day === today ? escapeHtml(t("home.weekToday")) : escapeHtml(label)}</span></li>`;
+      }).join("");
+      els.weekNote.textContent = t("home.week", { n: doneDays });
+
+      const samplesOnly = state.words.length > 0 && !state.words.some(word => word.custom);
+      let bookName = samplesOnly ? t("home.bookSamples") : t("home.bookMine");
+      try {
+        const id = localStorage.getItem(BOOK_KEY);
+        const book = id && wordbookIndex && wordbookIndex.find(b => b.id === id);
+        if (book && !samplesOnly) bookName = currentLang === "zh" ? book.zh : book.en;
+        else if (id && !wordbookIndex && !samplesOnly) loadWordbookIndex().then(() => { if (document.body.dataset.screen === "home") renderHome(); }).catch(() => {});
+      } catch (error) { /* private mode */ }
+      const mastered = state.words.filter(isMastered).length;
+      els.bookTitle.textContent = bookName;
+      els.bookSub.textContent = t("home.bookSub", { n: state.words.length, m: mastered });
+      requestAnimationFrame(() => { els.bookBar.style.width = `${state.words.length ? Math.max(mastered ? 3 : 0, Math.round(100 * mastered / state.words.length)) : 0}%`; });
+    }
+
+    // ---- Onboarding ----
+    const ob = { step: 0, book: "", goal: 10, time: "" };
+    const OB_GOALS = [[5, "goalEasy"], [10, "goalNormal"], [20, "goalSerious"], [30, "goalSprint"]];
+    const OB_TIMES = [["08:00", "morning"], ["12:30", "noon"], ["20:00", "evening"], ["21:30", "night"]];
+
+    function obOption({ value, title, small, wide, color, checked }) {
+      return `<button type="button" class="ob-opt${wide ? " wide" : ""}" role="radio" aria-checked="${checked ? "true" : "false"}" data-value="${escapeHtml(value)}" style="--c:${color}"><b>${escapeHtml(title)}</b>${small ? `<small>${escapeHtml(small)}</small>` : ""}</button>`;
+    }
+
+    function renderOnboard() {
+      const native = isNativeApp();
+      if (!els.obBooks.dataset.ready) {
+        els.obBooks.innerHTML = Array.from({ length: 8 }, () => '<span class="ob-opt skeleton" aria-hidden="true"></span>').join("");
+        loadWordbookIndex().then(books => {
+          els.obBooks.dataset.ready = "1";
+          paintObBooks(books);
+        }).catch(() => {
+          els.obBooks.dataset.ready = "1";
+          paintObBooks([]);
+        });
+      } else if (wordbookIndex) {
+        paintObBooks(wordbookIndex);
+      }
+      els.obGoals.innerHTML = OB_GOALS.map(([n, key], i) => obOption({
+        value: String(n), title: `${t("onboard.goal", { n })} · ${t("onboard." + key)}`,
+        small: t("onboard.goalMin", { m: Math.max(3, Math.round(n * 0.5)) }), wide: true,
+        color: CONFETTI[(i + 2) % CONFETTI.length], checked: ob.goal === n
+      })).join("");
+      paintObStack();
+      els.obTimes.hidden = !native;
+      els.obWebNote.hidden = native;
+      if (native && !ob.time && ob.step === 0) ob.time = "20:00";
+      els.obTimes.innerHTML = OB_TIMES.map(([time, key], i) => obOption({
+        value: time, title: t("onboard." + key), small: time, color: CONFETTI[i % CONFETTI.length], checked: ob.time === time
+      })).join("") + obOption({ value: "", title: t("onboard.none"), small: t("onboard.noneSub"), wide: true, color: "#efe9de", checked: !ob.time });
+      paintObStep();
+    }
+
+    function paintObBooks(books) {
+      els.obBooks.innerHTML = books.map((book, i) => obOption({
+        value: book.id, title: currentLang === "zh" ? book.zh : book.en, small: t("onboard.words", { n: book.count }),
+        color: CONFETTI[i % CONFETTI.length], checked: ob.book === book.id
+      })).join("") + obOption({ value: "sample", title: t("onboard.sample"), small: t("onboard.sampleSub"), wide: true, color: "#efe9de", checked: ob.book === "sample" });
+      paintObStep();
+    }
+
+    function paintObStep() {
+      els.obTrack.style.transform = `translateX(${-100 * ob.step}%)`;
+      els.obTrack.querySelectorAll(".ob-page").forEach((page, i) => {
+        page.classList.toggle("active", i === ob.step);
+        page.inert = i !== ob.step;
+      });
+      els.obSteps.querySelectorAll("i").forEach((dot, i) => dot.classList.toggle("on", i <= ob.step));
+      els.obBack.setAttribute("aria-hidden", ob.step === 0 ? "true" : "false");
+      els.obBack.tabIndex = ob.step === 0 ? -1 : 0;
+      const last = ob.step === 2;
+      els.obNext.textContent = last ? t("onboard.finish") : t("onboard.next");
+      els.obNext.disabled = ob.step === 0 && !ob.book;
+    }
+
+    function obSelect(group, value) {
+      if (group === els.obBooks) ob.book = value;
+      if (group === els.obGoals) { ob.goal = Number(value); paintObStack(); }
+      if (group === els.obTimes) ob.time = value;
+      group.querySelectorAll(".ob-opt").forEach(opt => opt.setAttribute("aria-checked", opt.dataset.value === value ? "true" : "false"));
+      WordSnapFx.haptic("tap");
+      paintObStep();
+    }
+
+    /** The goal, drawn: one little card per new word a day (up to 30). */
+    function paintObStack() {
+      const max = OB_GOALS[OB_GOALS.length - 1][0];
+      if (els.obStack.children.length !== max) {
+        els.obStack.innerHTML = Array.from({ length: max }, (_, i) =>
+          `<i style="--i:${i};--c:${CONFETTI[i % CONFETTI.length]};--r:${((i * 37) % 11) - 5}deg"></i>`).join("");
+      }
+      [...els.obStack.children].forEach((card, i) => card.classList.toggle("on", i < ob.goal));
+    }
+
+    function obGo(step) {
+      ob.step = Math.max(0, Math.min(2, step));
+      paintObStep();
+      const page = els.obTrack.querySelectorAll(".ob-page")[ob.step];
+      if (page) page.scrollTop = 0;
+    }
+
+    /** Skip: the sample set, straight on the board (the old first-visit path). */
+    function skipOnboarding() {
+      try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
+      saveWords();
+      renderRound();
+      nav.reset("home");
+      nav.go("practice");
+    }
+
+    async function finishOnboarding() {
+      const native = isNativeApp();
+      els.obNext.classList.add("is-loading");
+      els.obNext.setAttribute("aria-label", t("onboard.preparing"));
+      try {
+        if (ob.book && ob.book !== "sample") {
+          const [words, mod] = await Promise.all([loadBook(ob.book), loadWordbookModule()]);
+          const pairs = mod.nextFromBook(words, new Set(), Math.max(60, ob.goal * 10));
+          removeSampleWords();
+          if (!bookPairOk()) applyImportConfig({ lang: { a: "English", b: "中文" } });
+          addWords(pairs);
+          endTrial();
+          try { localStorage.setItem(BOOK_KEY, ob.book); } catch (e) {}
+        }
+        state.settings = normalizeSettings({ ...state.settings, dailyNew: ob.goal, reminder: native ? ob.time : state.settings.reminder });
+        try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
+        saveWords();
+        syncOptionsUI();
+        if (native && ob.time) syncReminders({ ask: true });
+        state.round = 1;
+        renderRound();
+        nav.reset("home");
+        nav.go("practice");
+      } catch (error) {
+        els.obWebNote.hidden = false;
+        els.obWebNote.textContent = t("onboard.failed");
+        obGo(0);
+      } finally {
+        els.obNext.classList.remove("is-loading");
+        els.obNext.removeAttribute("aria-label");
+      }
+    }
+
+    [els.obBooks, els.obGoals, els.obTimes].forEach(group => group.addEventListener("click", event => {
+      const opt = event.target.closest(".ob-opt:not(.skeleton)");
+      if (opt) obSelect(group, opt.dataset.value);
+    }));
+    els.obNext.addEventListener("click", () => {
+      WordSnapFx.haptic("tap");
+      if (ob.step < 2) obGo(ob.step + 1);
+      else finishOnboarding();
+    });
+    els.obBack.addEventListener("click", () => obGo(ob.step - 1));
+    els.obSkip.addEventListener("click", skipOnboarding);
+    els.homeGo.addEventListener("click", startFromHome);
+    els.homeBook.addEventListener("click", () => openLibrary());
+
+    /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
+    window.wordSnapBack = function () {
+      if (els.introModal.classList.contains("open")) { closeIntro(); return true; }
+      if (focusOn()) { exitFocus(); return true; }
+      if (nav && nav.current().screen === "onboard" && ob.step > 0) { obGo(ob.step - 1); return true; }
+      return Boolean(nav && nav.back());
+    };
+
+    /** The language changed: redraw the shell copy that is built in JS. */
+    function refreshShellCopy() {
+      const screen = document.body.dataset.screen;
+      if (screen === "home") renderHome();
+      if (screen === "onboard") { renderOnboard(); paintObStep(); }
+    }
+
+    /** Status bar and navigation bar icons follow the page (dark icons on light paper). */
+    function syncSystemBars() {
+      if (!isNativeApp()) return;
+      try {
+        const bars = window.Capacitor.Plugins && window.Capacitor.Plugins.SystemBars;
+        if (bars && bars.setStyle) bars.setStyle({ style: resolveColorScheme() === "light" ? "LIGHT" : "DARK" });
+      } catch (error) { /* older shell */ }
+    }
+
+    function initShell(firstRun) {
+      Object.assign(els, {
+        homeScreen: document.getElementById("homeScreen"),
+        homeGreeting: document.getElementById("homeGreeting"),
+        homeDate: document.getElementById("homeDate"),
+        homeStreak: document.getElementById("homeStreak"),
+        homeStreakN: document.getElementById("homeStreakN"),
+        todayTitle: document.getElementById("todayTitle"),
+        todaySub: document.getElementById("todaySub"),
+        ringFill: document.getElementById("ringFill"),
+        ringNum: document.getElementById("ringNum"),
+        weekStrip: document.getElementById("weekStrip"),
+        weekNote: document.getElementById("weekNote"),
+        bookTitle: document.getElementById("bookTitle"),
+        bookSub: document.getElementById("bookSub"),
+        bookBar: document.getElementById("bookBar")
+      });
+      const initial = firstRun ? "onboard" : "home";
+      nav = WordSnapShell.createNav({ initial, render: renderNav });
+      applyScreen(initial, "none");
+      syncSystemBars();
+      WordSnapShell.splash(document.getElementById("splash"), { holdMs: firstRun ? 1500 : 1150 });
+    }
+
     initInstallNudge();
     registerServiceWorker();
     const savedState = readSavedState();
@@ -8414,7 +9999,8 @@
     syncReminders(); // the app: reschedule the week's reminders on every start
     if (isNativeApp() && state.settings.ai.on) aiInit(); // so the 4B model's features show without opening Settings
     renderRound();
-    if (!hasSeenIntro() && !savedState) openIntro();
+    // Onboarding until it is finished or skipped: closing the app halfway brings it back.
+    initShell(!hasSeenIntro() && state.onboarding === "trial");
   </script>
   <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 </body>
