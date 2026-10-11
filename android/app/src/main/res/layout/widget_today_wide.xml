@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 4×2: the same column, plus today's reviews and new words as two leaning confetti cards. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:clipToOutline="true"
+    android:orientation="horizontal"
+    android:padding="@dimen/widget_padding">
+
+    <include
+        layout="@layout/widget_today_body"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:layout_width="124dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp">
+
+        <LinearLayout
+            android:id="@+id/card_review"
+            android:layout_width="62dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/widget_card_peach"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:rotation="-8">
+
+            <TextView
+                android:id="@+id/card_review_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_semibold"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="@string/widget_preview_review"
+                android:textColor="@color/confetti_ink"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/card_review_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:text="@string/widget_card_review"
+                android:textColor="@color/confetti_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_new"
+            android:layout_width="62dp"
+            android:layout_height="80dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="2dp"
+            android:background="@drawable/widget_card_sky"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:rotation="7">
+
+            <TextView
+                android:id="@+id/card_new_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fredoka_semibold"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="@string/widget_preview_new"
+                android:textColor="@color/confetti_ink"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/card_new_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:text="@string/widget_card_new"
+                android:textColor="@color/confetti_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

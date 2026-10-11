@@ -1,5 +1,6 @@
 # Builds the Android APK. A tag "v1.2.3" publishes a GitHub Release with the APK attached;
-# "Run workflow" builds one to download from the run's artifacts.
+# "Run workflow" builds one to download from the run's artifacts, and so does every pull
+# request that touches the native app (a debug APK, so a broken build shows before merging).
 # Signed release builds need four repository secrets (see MAINTAINING.md):
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
 # Without them the workflow builds a debug APK instead.
@@ -9,6 +10,13 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "android/**"
+      - "capacitor.config.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/apk.yml"
 
 permissions:
   contents: write
@@ -39,7 +47,7 @@ jobs:
       - name: Web files into the app
         run: npm run build:www && npx cap sync android
       - name: Signed release APK
-        if: env.HAS_KEYSTORE == 'true'
+        if: env.HAS_KEYSTORE == 'true' && github.event_name != 'pull_request'
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -51,8 +59,8 @@ jobs:
           cd android && ./gradlew assembleRelease --no-daemon
           cp app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/word-snap-$WORD_SNAP_VERSION_NAME.apk"
           rm -f "$RUNNER_TEMP/release.jks"
-      - name: Debug APK (no signing key configured)
-        if: env.HAS_KEYSTORE != 'true'
+      - name: Debug APK (pull request, or no signing key configured)
+        if: env.HAS_KEYSTORE != 'true' || github.event_name == 'pull_request'
         run: |
           cd android && ./gradlew assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/word-snap-$WORD_SNAP_VERSION_NAME-debug.apk"

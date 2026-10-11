@@ -3578,6 +3578,15 @@
             </label>
             <p class="import-hint" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
           </div>
+          <!-- Android app only: two more nudges, sent by the app itself (js/native-habit.js). -->
+          <label class="check-row" id="nudgeStreakRow" hidden>
+            <input id="nudgeStreak" type="checkbox" />
+            <span data-en="Evening nudge at 9 pm when today's goal is still open and a streak is at stake" data-zh="晚上 9 点还没完成今天目标时，提醒我保住连续天数">晚上 9 点还没完成今天目标时，提醒我保住连续天数</span>
+          </label>
+          <label class="check-row" id="nudgeDueRow" hidden>
+            <input id="nudgeDue" type="checkbox" />
+            <span data-en="At 5:30 pm, tell me when 10 or more words are due for review" data-zh="下午 5:30 有 10 个以上的词该复习时告诉我">下午 5:30 有 10 个以上的词该复习时告诉我</span>
+          </label>
         </div>
         <div class="settings-group">
           <h3 data-en="Pace" data-zh="练习节奏">练习节奏</h3>
@@ -3873,6 +3882,7 @@
   <p class="sr-only" id="feedback" role="status" aria-live="polite"></p>
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
+  <script src="./js/native-habit.js"></script>
   <script src="./js/fx.js"></script>
   <script src="./js/shell.js"></script>
   <script>
@@ -4466,6 +4476,7 @@
       if (typeof updateColorModeUI === "function") updateColorModeUI();
       if (typeof setInstallNudgeCopy === "function") setInstallNudgeCopy();
       if (typeof renderStats === "function") renderStats();
+      if (typeof queueNativeHabit === "function") queueNativeHabit();
       if (typeof renderPrintPanel === "function") renderPrintPanel();
       els.modeBtn.textContent = t("stats.modeBtn", { label: modeLabel(state.mode) });
       if (els.completionView && els.completionView.classList.contains("show")) {
@@ -4508,6 +4519,9 @@
       streakTones: true,
       effects: true,
       reminder: "",
+      // Android app only, off until the learner turns them on (js/native-habit.js).
+      nudgeStreak: false,
+      nudgeDue: false,
       langPair: { a: "English", b: "中文" },
       // On-device model (js/ai.js). Off until the learner downloads it in Settings.
       ai: { on: false, enabled: true }
@@ -4597,6 +4611,8 @@
       reminderRow: document.getElementById("reminderRow"),
       reminderSelect: document.getElementById("reminderSelect"),
       reminderNote: document.getElementById("reminderNote"),
+      nudgeStreak: document.getElementById("nudgeStreak"),
+      nudgeDue: document.getElementById("nudgeDue"),
       todayBar: document.getElementById("todayBar"),
       dayStreak: document.getElementById("dayStreak"),
       streakChip: document.getElementById("streakChip"),
@@ -4830,6 +4846,8 @@
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
         reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
+        nudgeStreak: raw.nudgeStreak === true,
+        nudgeDue: raw.nudgeDue === true,
         langPair: normalizeLangPair(raw.langPair),
         ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
@@ -5243,9 +5261,10 @@
       if (!els.todayBar) return;
       els.todayBar.hidden = isTrial() || !state.words.length;
       if (els.streakChip && els.todayBar.hidden) els.streakChip.hidden = true;
-      if (els.todayBar.hidden) return;
+      if (els.todayBar.hidden) return queueNativeHabit(null);
       settleHabit(); // once a day, also when the page stays open past 4 am
       const status = habitStatus();
+      queueNativeHabit(status);
       if (status.justDone) {
         habitCelebrate = true;
         saveWords();
@@ -5339,6 +5358,76 @@
         return false;
       }
     }
+
+    async function askNotificationPermission() {
+      const plugin = notificationsPlugin();
+      if (!plugin) return true;
+      try {
+        let permission = await plugin.checkPermissions();
+        if (permission.display !== "granted") permission = await plugin.requestPermissions();
+        return permission.display === "granted";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    // ---- Home-screen widget and nudges (Android app: NativeHabit plugin) ----
+    // Today's progress, the streak and the week's due times go to the app's native
+    // side, which draws the widget and sends the evening / review nudges while the
+    // app is closed (js/native-habit.js). Sent shortly after each change.
+    var nativeHabitStatus = null; // var: setLang() can run before this line
+    var nativeHabitTimer = 0;
+
+    function nativeHabitPlugin() {
+      if (!isNativeApp()) return null;
+      const cap = window.Capacitor;
+      try {
+        return (cap.Plugins && cap.Plugins.NativeHabit) || (cap.registerPlugin && cap.registerPlugin("NativeHabit")) || null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    /** status: today's habit status, null when there is nothing to practise; omitted: the last one. */
+    function queueNativeHabit(status) {
+      if (status !== undefined) nativeHabitStatus = status;
+      if (!isNativeApp()) return;
+      clearTimeout(nativeHabitTimer);
+      nativeHabitTimer = setTimeout(sendNativeHabit, 600);
+    }
+
+    function sendNativeHabit() {
+      clearTimeout(nativeHabitTimer);
+      const plugin = nativeHabitPlugin();
+      if (!plugin) return;
+      const now = Date.now();
+      const status = nativeHabitStatus;
+      let newAvailable = 0;
+      if (status) for (const word of state.words) if (engine.isNew(word)) newAvailable += 1;
+      const snapshot = WordSnapNativeHabit.snapshot({
+        Habit: WordSnapHabit,
+        habit,
+        status,
+        due: status ? WordSnapNativeHabit.dueTimes(state.words, {
+          isNew: word => engine.isNew(word),
+          dueAt: word => engine.dueAt(word, now),
+          learnedToday: word => WordSnapHabit.learnedToday(habit, word.id, now),
+          now
+        }) : [],
+        newAvailable,
+        dailyNew: state.settings.dailyNew,
+        lang: currentLang,
+        nudges: { streak: state.settings.nudgeStreak, due: state.settings.nudgeDue },
+        reminder: state.settings.reminder,
+        now
+      });
+      Promise.resolve(plugin.sync({ snapshot })).catch(() => {});
+    }
+
+    // Leaving the app: send now, so the widget never waits for the timer.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && nativeHabitTimer) sendNativeHabit();
+    });
 
     /** The card picked by mistake: mixed up, so it loses some stability (no review logged). */
     function recordWrongPick(word) {
@@ -8370,6 +8459,11 @@
         if (state.settings.reminder && !times.includes(state.settings.reminder)) times.push(state.settings.reminder);
         els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
         els.reminderSelect.value = state.settings.reminder;
+        [["nudgeStreak", "nudgeStreakRow"], ["nudgeDue", "nudgeDueRow"]].forEach(([key, row]) => {
+          if (!els[key]) return;
+          document.getElementById(row).hidden = !native;
+          els[key].checked = state.settings[key];
+        });
       }
       if (els.dailyNewSelect) {
         els.dailyNewSelect.innerHTML = [0, 5, 10, 15, 20, 30].map(n => `<option value="${n}">${t("settings.dailyNew", { n })}</option>`).join("");
@@ -8417,6 +8511,7 @@
         if (LANG_PAIR_PRESETS[idx]) langPair = { ...LANG_PAIR_PRESETS[idx] };
       }
       const previousReminder = state.settings.reminder;
+      const previousNudges = state.settings.nudgeStreak + "," + state.settings.nudgeDue;
       const previousPair = state.settings.langPair;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
@@ -8439,6 +8534,8 @@
         streakTones: els.streakTones ? els.streakTones.checked : true,
         effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
+        nudgeStreak: els.nudgeStreak ? els.nudgeStreak.checked : state.settings.nudgeStreak,
+        nudgeDue: els.nudgeDue ? els.nudgeDue.checked : state.settings.nudgeDue,
         langPair,
         ai: state.settings.ai
       });
@@ -8460,6 +8557,16 @@
         if (foreign && els.optionsStatus) {
           els.optionsStatus.textContent = t("feedback.pairMismatch", { n: foreign, a: nextSettings.langPair.a });
           els.optionsStatus.className = "import-status bad";
+        }
+      }
+      if (previousNudges !== nextSettings.nudgeStreak + "," + nextSettings.nudgeDue) {
+        queueNativeHabit();
+        if (nextSettings.nudgeStreak || nextSettings.nudgeDue) {
+          askNotificationPermission().then(ok => {
+            if (ok || !els.optionsStatus) return;
+            els.optionsStatus.textContent = t("reminder.denied");
+            els.optionsStatus.className = "import-status bad";
+          });
         }
       }
       if (reminderChanged) {

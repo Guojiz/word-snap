@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="widget_name">Word Snap 今日进度</string>
+    <string name="widget_description">今天的目标和连续天数</string>
+    <plurals name="widget_streak">
+        <item quantity="other">连续 %d 天</item>
+    </plurals>
+    <plurals name="widget_words_left">
+        <item quantity="other">个词待练</item>
+    </plurals>
+    <plurals name="widget_words_left_full">
+        <item quantity="other">今天还有 %d 个词</item>
+    </plurals>
+    <string name="widget_minutes">约 %d 分钟</string>
+    <string name="widget_breakdown">%1$s · 复习 %2$d · 新词 %3$d</string>
+    <string name="widget_done">今日完成</string>
+    <string name="widget_done_streak">%s，明天见</string>
+    <string name="widget_done_sub">明天见</string>
+    <string name="widget_play">来练一组</string>
+    <string name="widget_play_sub">练一组就能完成今天</string>
+    <string name="widget_start">开始背单词</string>
+    <string name="widget_start_sub">选一本词书就能开始</string>
+    <string name="widget_card_review">复习</string>
+    <string name="widget_card_new">新词</string>
+    <string name="widget_preview_unit">个词待练</string>
+    <string name="widget_preview_caption">约 6 分钟</string>
+
+    <plurals name="nudge_streak_title">
+        <item quantity="other">连续 %d 天，别断在今天</item>
+    </plurals>
+    <plurals name="nudge_streak_body">
+        <item quantity="other">今天还差 %1$d 个词，大约 %2$d 分钟就能保住。</item>
+    </plurals>
+    <string name="nudge_streak_body_set">练一组就能完成今天的目标。</string>
+    <plurals name="nudge_due_title">
+        <item quantity="other">%d 个词该复习了</item>
+    </plurals>
+    <string name="nudge_due_body">趁还记得过一遍，大约 %d 分钟。</string>
+    <string name="channel_streak">连续天数提醒</string>
+    <string name="channel_streak_desc">晚上 9 点还没完成今天目标、连续天数快断时提醒</string>
+    <string name="channel_due">复习提醒</string>
+    <string name="channel_due_desc">下午 5:30 有 10 个以上的词该复习时提醒</string>
+</resources>

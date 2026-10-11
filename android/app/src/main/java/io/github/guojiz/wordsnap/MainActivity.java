@@ -9,6 +9,8 @@ import androidx.core.splashscreen.SplashScreen;
 
 import com.getcapacitor.BridgeActivity;
 
+import io.github.guojiz.wordsnap.habit.NativeHabitPlugin;
+
 public class MainActivity extends BridgeActivity {
     /** Asks the web app to take one step back; true when it did (see js/shell.js). */
     private static final String BACK_JS =
@@ -20,6 +22,7 @@ public class MainActivity extends BridgeActivity {
         SplashScreen.installSplashScreen(this);
         // App-local plugins must be registered before the bridge starts.
         registerPlugin(LlmPlugin.class);
+        registerPlugin(NativeHabitPlugin.class);
         super.onCreate(savedInstanceState);
         // Draw behind the status and navigation bars; the page pads itself with the safe-area insets.
         EdgeToEdge.enable(this);
