@@ -62,9 +62,9 @@
       --ember-ink: #b4530f;
       --good: #9eebc4;
       --good-ink: #1c7a50;
-      --primary: #2b2a3d;
-      --primary-dark: #1b1a2a;
-      --on-primary: #ffffff;
+      --primary: #ffe27a;
+      --primary-dark: #ffd23f;
+      --on-primary: #2b2a3d;
       --panel-soft: #fffefb;
       --track: #f1ece3;
       --card-shadow: rgba(80, 60, 30, .14);
@@ -160,8 +160,6 @@
     }
 
     html,
-    html { font-synthesis-weight: none; }
-
     body {
       height: 100%;
       overflow: hidden;
@@ -270,7 +268,7 @@
     .rail-btn.active,
     .rail-btn:hover {
       border-color: var(--line);
-      color: var(--primary);
+      color: var(--text);
       background: var(--panel-soft);
     }
 
@@ -1025,7 +1023,7 @@
       border-radius: 16px;
       color: var(--on-primary);
       background: var(--primary);
-      box-shadow: 0 4px 18px -8px var(--card-shadow);
+      box-shadow: inset 0 -3px 0 var(--primary-dark), 0 6px 18px -10px var(--warn-shadow);
       cursor: pointer;
       padding: 12px 20px;
       font-size: 17px;
@@ -1041,8 +1039,8 @@
     }
 
     .duo-button:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 18px -8px var(--card-shadow);
+      transform: translateY(2px);
+      box-shadow: inset 0 -1px 0 var(--primary-dark), 0 2px 10px -8px var(--warn-shadow);
     }
 
     .duo-button.secondary {
@@ -1706,7 +1704,7 @@
     /* The set's result, as a rhythm game ends a song: CLEAR / FULL COMBO / TIME UP. */
     .completion-badge {
       margin: 18px auto 8px;
-      color: var(--primary);
+      color: var(--text);
       font-family: var(--num-font);
       font-size: clamp(44px, 13vw, 64px);
       font-weight: 700;
@@ -2014,7 +2012,7 @@
     }
     .lang-toggle .lang-opt.on {
       opacity: 1;
-      color: var(--primary);
+      color: var(--text);
     }
     .lang-toggle .sep {
       opacity: .35;
@@ -2154,7 +2152,7 @@
 
     .tab-btn[aria-selected="true"] {
       border-color: var(--line);
-      color: var(--primary);
+      color: var(--text);
       background: var(--panel-soft);
       margin-bottom: -2px;
       padding-bottom: 2px;
@@ -3085,7 +3083,7 @@
         bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
         text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
         greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
-        primary: "#2b2a3d", primaryDark: "#1b1a2a", onPrimary: "#ffffff"
+        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
       },
       accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffd23f" }
     };

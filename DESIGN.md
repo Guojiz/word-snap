@@ -25,9 +25,9 @@ colors:
   night-muted: "#c9c6d8"
   night-dim: "#a6a3bb"
   ink: "#2b2a3d"
-  ink-button-day: "#2b2a3d"
-  ink-button-day-deep: "#1b1a2a"
-  on-ink-button-day: "#ffffff"
+  lemon-button-day: "#ffe27a"
+  lemon-button-day-deep: "#ffd23f"
+  on-lemon-button-day: "#2b2a3d"
   lemon-button-night: "#ffe27a"
   lemon-button-night-deep: "#ffd23f"
   on-lemon-button-night: "#2b2a3d"
@@ -192,8 +192,8 @@ components:
     rounded: "{rounded.pill}"
     height: "16px"
   button-primary:
-    backgroundColor: "{colors.ink-button-day}"
-    textColor: "{colors.on-ink-button-day}"
+    backgroundColor: "{colors.lemon-button-day}"
+    textColor: "{colors.on-lemon-button-day}"
     typography: "{typography.button}"
     rounded: "{rounded.button}"
     height: "54px"
@@ -253,7 +253,7 @@ Day (light) is the main look: warm paper, white panels, soft beige outlines and 
 - Paper first: near-white paper by day (the default), soft ink-blue by night, switched by `data-color-mode`, same roles in both.
 - Confetti is the reward: matched pairs, the lane and the icon use five pastels (peach, sky, lemon, mint, lilac) with ink text; the rest of the page stays quiet.
 - Hue = meaning: sky chosen/focus, mint correct, lemon PERFECT, coral wrong/MISS, ember a lit day streak.
-- Ink buttons: the primary action is ink with white text by day and lemon with ink text at night.
+- Lemon buttons: the primary action is a lemon fill with ink text, day and night; nothing on the page is a heavy dark block.
 - Fredoka for all Latin text, numerals, judgements and result words, rolling digit by digit.
 - Soft lifted cards, 18px corners, 2px outlines; no hard offset shadows.
 
@@ -261,10 +261,10 @@ Day (light) is the main look: warm paper, white panels, soft beige outlines and 
 
 A warm paper neutral family carries the whole surface; five pastel confetti colours fill what the learner has matched, and four meaning hues mark states, each with an `-ink` variant tuned for text in each mode.
 
-The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is **sky**, `--green*` is **mint**, `--yellow*` is **lemon/gold** (PERFECT), `--red*` is **coral**, `--primary*` is the **ink button** (lemon at night), `--good` / `--good-ink` is the mint pastel and its ink, `--ember-ink` is **ember**. The `:root` blocks hold pre-JS fallbacks; at runtime `applyTheme()` writes the tokens onto `<html>` from the `STAGE` object and mixes the derived surfaces (panel-soft, selected and wrong backgrounds) from the base hues. Those runtime values are the ones recorded in the frontmatter. The confetti colours are the `CONFETTI` array, their ink is `CONFETTI_INK`; `confettiFor(n)` returns the nth fill and its edge, `mixHex(fill, ink, 0.78)`. Ember, the judgement chips, the FULL COMBO gradient and the icon colours are not in `STAGE`; they come straight from the CSS, `js/fx.js` and `icon.svg`.
+The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is **sky**, `--green*` is **mint**, `--yellow*` is **lemon/gold** (PERFECT), `--red*` is **coral**, `--primary*` is the **lemon button**, `--good` / `--good-ink` is the mint pastel and its ink, `--ember-ink` is **ember**. The `:root` blocks hold pre-JS fallbacks; at runtime `applyTheme()` writes the tokens onto `<html>` from the `STAGE` object and mixes the derived surfaces (panel-soft, selected and wrong backgrounds) from the base hues. Those runtime values are the ones recorded in the frontmatter. The confetti colours are the `CONFETTI` array, their ink is `CONFETTI_INK`; `confettiFor(n)` returns the nth fill and its edge, `mixHex(fill, ink, 0.78)`. Ember, the judgement chips, the FULL COMBO gradient and the icon colours are not in `STAGE`; they come straight from the CSS, `js/fx.js` and `icon.svg`.
 
 ### Primary
-- **Ink Button** (ink-button-day / lemon-button-night): the fill of every primary action (Continue, Save, Start), the banner pill and the CLEAR result word. By day it is ink `#2b2a3d` with white text; at night it is lemon `#ffe27a` with ink text. It is also the active colour of navigation, of the selected library tab and of the chosen language in the EN / 中 toggle, and the fill of the undo toast (on-ink text, with an inverted Undo button).
+- **Ink Button** (lemon-button-day / lemon-button-night): the fill of every primary action (Continue, Save, Start), the intro step numbers and the banner pill: lemon `#ffe27a` with ink text in both modes, with a 3px deeper-lemon (`#ffd23f`) bottom edge. It is also the fill of the undo toast (ink text, with an inverted Undo button). Active navigation, the selected library tab, the chosen language and the CLEAR result word use the plain text colour, not the button colour.
 
 ### Confetti
 - **Peach, Sky, Lemon, Mint, Lilac** (confetti-*): the five fills, in that order. Each matched pair in a set takes the next one (the first pair peach, the sixth peach again), with ink text (at least 8:1 on every fill) and a 2px border of its edge colour (the fill mixed 78% with ink). The lane's segments repeat the same sequence, one per match, so the lane and the pairs agree. The ripple around a matched pair is drawn in the pair's edge colour. The same pastels draw the intro's demo cards (peach meaning, sky word) and the judgement chips, and appear in the goal confetti. They are identical by day and at night.
@@ -274,7 +274,7 @@ The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is 
 
 ### Tertiary (state hues)
 - **Correct Mint** (mint, mint-deep, mint-ink-*, correct-*): "today done" and its check, the hint ring after a miss, mastered tags and import success. A matched card normally wears its confetti colour; `correct-bg` (the mint pastel) is only the fallback when none is set.
-- **Perfect Lemon / Gold** (gold, gold-ink-*, confetti-lemon): the PERFECT chip is a lemon sticker. Lemon otherwise appears only as one of the five confetti fills and as the night primary button; no reward or warning is gold.
+- **Perfect Lemon / Gold** (gold, gold-ink-*, confetti-lemon): the PERFECT chip is a lemon sticker. Lemon otherwise appears only as one of the five confetti fills and as the primary button; no reward or warning is gold.
 - **Miss Coral** (coral, coral-deep, coral-ink-*, wrong-*): a wrong match's outline, tint and shake, TIME UP, the low-time countdown, weak-word counts, review headings, sentence errors, the danger zone and destructive buttons (coral-deep fill, white text). The MISS chip is the peach sticker.
 - **Ember** (ember-ink-*): the day-streak flame and number once today's goal is done. Before that the chip is greyscale at 75% opacity.
 - **Celebration deep tones** (coral, sky, mint-deep, lilac-deep): milestone stars use these deeper confetti colours so they read on paper; the goal confetti mixes the five pastels with coral and sky.
@@ -339,7 +339,7 @@ Depth is soft lift plus tonal layering. Surfaces are told apart first by tone (p
 ### Shadow Vocabulary
 - **Card lift** (`box-shadow: 0 6px 16px -6px var(--card-shadow)`): match cards in every state, secondary buttons, the hint pulse base.
 - **Card pressed** (`box-shadow: 0 3px 16px -6px var(--card-shadow)`): match card `:active`.
-- **Button lift** (`box-shadow: 0 4px 18px -8px var(--card-shadow)`): primary buttons and small primary actions.
+- **Button lift**: primary buttons have a 3px deeper-lemon inner bottom edge and a soft lemon glow (`inset 0 -3px 0 var(--primary-dark), 0 6px 18px -10px var(--warn-shadow)`).
 - **Chip lift** (`box-shadow: 0 10px 24px -10px var(--card-shadow)`): the judgement chip; `0 10px 24px -12px` for the logo tile.
 - **Dialog** (`box-shadow: 0 24px 80px rgba(0, 0, 0, .4)`): modal cards over the scrim.
 
@@ -383,7 +383,7 @@ A pastel sticker (pill radius, chip lift, rotated -4deg) that pops above the mat
 
 ### Buttons
 - **Shape:** 16px corners, 54px tall, min 150px wide (full width on phones).
-- **Primary:** ink fill with white text by day, lemon fill with ink text at night; 17px 800, button lift. Hover brightens 3%; pressed moves 3px down.
+- **Primary:** lemon fill with ink text in both modes; 17px 800, button lift. Hover brightens 3%; pressed moves 2px down and the edge flattens.
 - **Secondary:** transparent with a 2px line outline and sky-ink text.
 - **Danger:** coral-deep fill, white text, only inside the danger zone (a coral-outlined box).
 - **Disabled:** track fill, dim text, no movement.
@@ -402,7 +402,7 @@ A pastel sticker (pill radius, chip lift, rotated -4deg) that pops above the mat
 Library, Settings and the intro open as centred cards (max 720px wide, 18px corners, panel fill, dialog shadow) over the scrim, with 20px sections divided by 2px lines. The intro's demo shows the icon's two cards: a peach meaning and a sky word in ink, leaning towards each other.
 
 ### Undo Toast
-After a delete, a 14px-cornered toast centred above the bottom edge: ink-button fill with on-ink text, and an Undo button inverted (on-ink fill, ink text, 10px corners, 40px tall).
+After a delete, a 14px-cornered toast centred above the bottom edge: lemon fill with ink text, and an Undo button inverted (on-ink fill, ink text, 10px corners, 40px tall).
 
 ### Navigation
 - **Phones (≤1050px):** fixed bottom bar on the ground colour; three 52px tabs with a 22px line icon over a 12px label (11px at ≤360px), no outline; the active tab takes the selected fill and ink and carries `aria-current="page"`. Appearance (48px) and EN / 中 (60px) are 44px outlined toggles. Labels never break inside a word: they are `nowrap` and shrink, never `overflow-wrap: anywhere`.
@@ -425,7 +425,7 @@ One easing for state (`cubic-bezier(.2, .8, .2, 1)`) and one spring for rewards 
 - **Do** set text on any pastel in ink `#2b2a3d`, in day and night alike.
 - **Do** use the `-ink` variant of a hue for any other text in it, and check it at 4.5:1 against the surface it sits on in both modes.
 - **Do** set every numeral and every judgement or result word in Fredoka, and roll changed digits rather than replacing the number.
-- **Do** make the primary action an ink fill by day and a lemon fill at night, with 16px corners and button lift.
+- **Do** make the primary action a lemon fill with ink text, with 16px corners and button lift.
 - **Do** keep cards and controls at 18px corners with 2px outlines and the soft lift.
 - **Do** keep touch targets at 44px or more and show the 3px sky focus ring (2px offset) for keyboard focus.
 - **Do** keep the judgement word visible when motion is reduced or effects are off; drop only its motion.
