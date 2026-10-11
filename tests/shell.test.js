@@ -83,3 +83,10 @@ test("transition runs the update directly without the View Transitions API", asy
   await S.transition(() => { ran = true; }, "forward", { document: {}, matchMedia: () => ({ matches: false }) });
   assert.equal(ran, true);
 });
+
+test("flood just runs the action without animation support or under reduced motion", async () => {
+  let ran = 0;
+  await S.flood({}, () => { ran += 1; }, { win: { document: {}, matchMedia: () => ({ matches: false }) } });
+  await S.flood({ animate() {} }, () => { ran += 1; }, { win: { document: {}, matchMedia: () => ({ matches: true }) } });
+  assert.equal(ran, 2);
+});

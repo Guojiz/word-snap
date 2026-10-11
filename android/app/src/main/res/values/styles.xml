@@ -17,7 +17,7 @@
 
 
     <!-- Launch: the Android 12 SplashScreen API (core-splashscreen backports it). The two
-         confetti cards on paper, then the web launch screen takes over on the same paper. -->
+         confetti cards on paper, then the web app opens on Home. -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_paper</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>

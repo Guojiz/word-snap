@@ -131,89 +131,37 @@
   }
 
   /**
-   * The start screen: big colour blocks; tapping one starts the app. `pick(index)` gets the
-   * tapped block's `data-theme` (Enter / Space and taps between blocks pass `fallback`)
-   * and should make it the set colour. Then that block's colour floods the screen from
-   * where it sits, the others fly off, the flood fades to show the first screen
-   * underneath, and the element is removed. Resolves once the first screen is visible.
+   * A tapped colour block opens what it stands for: its colour floods the screen from
+   * where it sits, `act()` runs underneath (navigate, open a page), then the colour fades
+   * away. Resolves when the colour has gone. Reduced motion: `act()` runs at once.
    */
-  function start(el, { pick = () => {}, fallback = 0, win = defaultWin } = {}) {
-    if (!el) return Promise.resolve();
-    const doc = win.document;
-    const quick = reducedMotion(win);
-    el.classList.add("play");
-    return new Promise(resolve => {
-      const button = el.querySelector(".start-go") || el;
-      const blocks = [...el.querySelectorAll(".blk")];
-      let chosen = null;
-
-      // The cluster leans towards the finger or pointer.
-      const lean = event => {
-        if (quick || chosen) return;
-        const box = el.getBoundingClientRect();
-        const cluster = el.querySelector(".blocks");
-        if (!cluster || !box.width) return;
-        cluster.style.setProperty("--px", (((event.clientX - box.left) / box.width) - 0.5).toFixed(3));
-        cluster.style.setProperty("--py", (((event.clientY - box.top) / box.height) - 0.5).toFixed(3));
-      };
-      el.addEventListener("pointermove", lean);
-      el.addEventListener("pointerdown", lean);
-
-      const go = event => {
-        if (chosen) return;
-        const hit = event && event.target && event.target.closest ? event.target.closest(".blk") : null;
-        chosen = hit || blocks.find(b => Number(b.dataset.theme) === fallback) || blocks[0];
-        const index = chosen ? Number(chosen.dataset.theme) : fallback;
-        pick(index);
-        el.classList.add("leaving");
-        const finish = () => {
-          el.remove();
-          resolve(index);
-        };
-        if (quick || !chosen || typeof chosen.animate !== "function") {
-          el.animate ? el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: "forwards" }).finished.then(finish, finish) : finish();
-          return;
-        }
-        // The others fly off, away from the middle.
-        const mid = el.getBoundingClientRect();
-        const cx = mid.left + mid.width / 2;
-        const cy = mid.top + mid.height / 2;
-        blocks.filter(b => b !== chosen).forEach(b => {
-          const r = b.getBoundingClientRect();
-          const dx = r.left + r.width / 2 - cx;
-          const dy = r.top + r.height / 2 - cy;
-          const len = Math.hypot(dx, dy) || 1;
-          b.animate([
-            { transform: "none", opacity: 1 },
-            { transform: `translate(${(dx / len) * mid.width * 0.7}px, ${(dy / len) * mid.height * 0.6}px) scale(.6) rotate(${dx > 0 ? 25 : -25}deg)`, opacity: 0 }
-          ], { duration: 520, easing: "cubic-bezier(.5, 0, .75, 0)", fill: "forwards" });
-        });
-        // The picked one: a squeeze, then its colour floods out from where it sits.
-        const r = chosen.getBoundingClientRect();
-        const fx = r.left + r.width / 2;
-        const fy = r.top + r.height / 2;
-        const reach = Math.hypot(Math.max(fx, mid.width - fx), Math.max(fy, mid.height - fy));
-        const flood = doc.createElement("div");
-        flood.className = "start-flood";
-        flood.style.background = win.getComputedStyle(chosen).getPropertyValue("--c") || "#ffe27a";
-        flood.style.clipPath = `circle(0px at ${fx}px ${fy}px)`;
-        el.appendChild(flood);
-        chosen.animate([{ scale: 1 }, { scale: 1.12 }, { scale: 0.9 }], { duration: 300, easing: "ease-out", fill: "forwards" });
-        const grow = flood.animate([
-          { clipPath: `circle(${Math.min(r.width, r.height) / 2}px at ${fx}px ${fy}px)` },
-          { clipPath: `circle(${reach}px at ${fx}px ${fy}px)` }
-        ], { duration: 560, delay: 140, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" });
-        grow.finished.then(() => {
-          el.classList.add("revealing");
-          blocks.forEach(b => { b.style.visibility = "hidden"; });
-          return flood.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: "ease-out", fill: "forwards" }).finished;
-        }).then(finish, finish);
-      };
-      button.addEventListener("click", go);
-      // A tap anywhere on the screen counts too (between the blocks, on the wordmark).
-      el.addEventListener("click", event => { if (!button.contains(event.target)) go(event); });
-    });
+  function flood(from, act, { win = defaultWin } = {}) {
+    const doc = win && win.document;
+    if (!from || !doc || reducedMotion(win) || typeof from.animate !== "function") {
+      act();
+      return Promise.resolve();
+    }
+    const r = from.getBoundingClientRect();
+    const w = win.innerWidth;
+    const h = win.innerHeight;
+    const fx = r.left + r.width / 2;
+    const fy = r.top + r.height / 2;
+    const reach = Math.hypot(Math.max(fx, w - fx), Math.max(fy, h - fy));
+    const start = Math.min(r.width, r.height) / 2;
+    const layer = doc.createElement("div");
+    layer.className = "flood";
+    layer.style.background = win.getComputedStyle(from).backgroundColor;
+    layer.style.clipPath = `circle(${start}px at ${fx}px ${fy}px)`;
+    doc.body.appendChild(layer);
+    const done = () => layer.remove();
+    return layer.animate([
+      { clipPath: `circle(${start}px at ${fx}px ${fy}px)` },
+      { clipPath: `circle(${reach}px at ${fx}px ${fy}px)` }
+    ], { duration: 420, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" }).finished
+      .then(() => { act(); })
+      .then(() => layer.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: "ease-out", fill: "forwards" }).finished)
+      .then(done, error => { done(); throw error; });
   }
 
-  return { createNav, transition, start, reducedMotion };
+  return { createNav, transition, flood, reducedMotion };
 });

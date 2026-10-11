@@ -298,51 +298,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .mobile-nav {
-      display: none;
-      width: min(760px, 100%);
-      margin: 0 auto 18px;
-      /* Three labelled tabs, then the two icon-sized toggles (appearance, language). */
-      grid-template-columns: repeat(3, minmax(0, 1fr)) 48px 60px;
-      gap: 6px;
-    }
-
-    .mobile-nav .rail-btn {
-      width: auto;
-      min-height: 52px;
-      height: auto;
-      padding: 6px 2px;
-      font-size: 12px;
-    }
-
-    .mobile-nav .rail-btn.active {
-      border-color: transparent;
-      background: var(--selected-bg);
-      color: var(--selected-ink);
-    }
-
-    .mobile-nav .color-mode-btn,
-    .mobile-nav .lang-toggle {
-      align-self: center;
-      min-height: 44px;
-      border-color: var(--line);
-    }
-
-    @media (max-width: 360px) {
-      .mobile-nav {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) 44px 54px;
-        gap: 4px;
-      }
-
-      .mobile-nav .rail-btn {
-        font-size: 11px;
-      }
-
-      #practiceView > h1 {
-        font-size: 26px;
-      }
-    }
-
     .color-mode-btn .nav-icon {
       width: 22px;
       height: 22px;
@@ -1820,25 +1775,6 @@
         padding: 28px 18px calc(28px + var(--sab));
       }
 
-      /* Phones: navigation sits at the bottom, in reach of the thumb. */
-      .mobile-nav {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 20;
-        display: grid;
-        width: 100%;
-        margin: 0;
-        padding: 6px 10px calc(6px + var(--sab));
-        border-top: 1px solid var(--line);
-        background: var(--bg);
-      }
-
-      .main {
-        padding-bottom: calc(96px + var(--sab));
-      }
-
       .lesson {
         min-height: auto;
       }
@@ -2527,157 +2463,8 @@
     :root {
       --sat: max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px));
       --sab: max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px));
-      --tabbar-h: 72px;
       --spring: cubic-bezier(.34, 1.56, .64, 1);
       --glide: cubic-bezier(.2, .8, .2, 1);
-    }
-
-    /* Start screen. A bunch of big confetti blocks in the middle; tap one to start, and its
-       colour floods the screen and becomes the set colour. Drawn on fixed paper, the same
-       colour as the Android launch screen (res/values and values-night colors.xml), so the
-       system splash hands over without a colour jump. */
-    .start {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: grid;
-      grid-template-rows: 1fr auto auto 1fr;
-      justify-items: center;
-      padding: calc(24px + var(--sat)) 24px calc(32px + var(--sab));
-      background: #fffcf6;
-      overflow: hidden;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :root[data-color-mode="dark"] .start { background: #1f1e2e; }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-color-mode]) .start { background: #1f1e2e; }
-    }
-
-    .start-go {
-      grid-row: 2;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 0;
-      background: none;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .start-go:focus-visible { outline: none; }
-    .start-go:focus-visible .blocks { outline: 3px solid var(--blue); outline-offset: 12px; border-radius: 40px; }
-
-    .blocks {
-      --u: min(29vw, 25vh, 132px);
-      --px: 0;
-      --py: 0;
-      position: relative;
-      width: calc(var(--u) * 2.7);
-      height: calc(var(--u) * 2.7);
-      transition: scale 220ms var(--spring);
-    }
-
-    .start-go:active .blocks { scale: .95; }
-
-    .blk {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: calc(var(--u) * var(--w));
-      height: calc(var(--u) * var(--h));
-      translate:
-        calc(-50% + var(--u) * var(--x) + var(--px) * var(--z) * 1px)
-        calc(-50% + var(--u) * var(--y) + var(--py) * var(--z) * 1px);
-      rotate: var(--r);
-      transition: translate 500ms cubic-bezier(.2, .8, .2, 1);
-    }
-
-    .blk b {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border-radius: calc(var(--u) * .3);
-      background: var(--c);
-      box-shadow: 0 calc(var(--u) * .12) calc(var(--u) * .3) calc(var(--u) * -.16) rgba(80, 60, 30, .28);
-    }
-
-    .blk:nth-child(1) { --c: #ffe27a; --x: -.5;  --y: -.55; --w: 1.2;  --h: 1.12; --r: -9deg;  --z: -10; --d: 0ms;   --f: 3.6s; }
-    .blk:nth-child(2) { --c: #ffb4a2; --x: .58;  --y: -.42; --w: 1.02; --h: 1.28; --r: 11deg;  --z: 14;  --d: 70ms;  --f: 4.2s; }
-    .blk:nth-child(3) { --c: #a8d8ff; --x: -.62; --y: .6;   --w: 1.12; --h: 1.02; --r: 7deg;   --z: 18;  --d: 140ms; --f: 3.9s; }
-    .blk:nth-child(4) { --c: #9eebc4; --x: .52;  --y: .66;  --w: 1.24; --h: 1.06; --r: -6deg;  --z: -14; --d: 210ms; --f: 4.6s; }
-    .blk:nth-child(5) { --c: #d4c4ff; --x: .02;  --y: .04;  --w: .92;  --h: .92;  --r: 17deg;  --z: 24;  --d: 280ms; --f: 3.3s; }
-
-    .start.play .blk { animation: blk-in 760ms var(--spring) var(--d) both; }
-    .start.play .blk b { animation: blk-float var(--f) ease-in-out calc(var(--d) + 760ms) infinite alternate; }
-
-    @keyframes blk-in {
-      from { opacity: 0; scale: .2; rotate: calc(var(--r) * -3); }
-      60% { opacity: 1; }
-    }
-
-    @keyframes blk-float {
-      from { transform: translateY(0) rotate(0deg); }
-      to { transform: translateY(calc(var(--u) * -.06)) rotate(3deg); }
-    }
-
-    .start-word {
-      grid-row: 3;
-      display: flex;
-      margin: 26px 0 0;
-      color: var(--text);
-      font-family: var(--num-font);
-      font-size: 44px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .start-word i { font-style: normal; }
-    .start-word i:nth-child(1) { color: #ff7a59; }
-    .start-word i:nth-child(2) { color: #f5b800; }
-    .start-word i:nth-child(3) { color: #2ec27e; }
-    .start-word i:nth-child(4) { color: #3b82f6; }
-    .start.play .start-word i { animation: sp-letter 520ms var(--spring) calc(520ms + var(--k, 0) * 40ms) both; }
-
-    .start-hint {
-      grid-row: 4;
-      align-self: end;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 48px;
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .start-hint::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: hint-dot 1.6s ease-in-out infinite;
-    }
-
-    .start.play .start-hint { animation: sp-fade 500ms ease 1100ms both; }
-
-    @keyframes hint-dot { 50% { scale: 1.5; opacity: .55; } }
-
-    /* Leaving: the picked block's colour floods the screen (js), the rest fly off. */
-    .start.leaving { pointer-events: none; }
-    .start.leaving .start-word,
-    .start.leaving .start-hint { opacity: 0; transition: opacity 200ms ease; }
-    .start.revealing { background: transparent; }
-
-    .start-flood {
-      position: fixed;
-      inset: 0;
-      z-index: 101;
-      pointer-events: none;
     }
 
     @keyframes sp-pop { from { transform: scale(0); } }
@@ -2742,86 +2529,13 @@
     @keyframes vt-in-back { from { opacity: 0; transform: scale(.965); } }
     @keyframes vt-out-back { to { opacity: 0; transform: translateY(32px) scale(.985); } }
 
-    .mobile-nav.tab-bar-app { view-transition-name: tabbar; }
-
-    /* Tab bar (phones and tablets): three destinations, Material-style indicator pill. */
+    /* Phones: no tab bar. Home's blocks are the menu; every other page has its own way back. */
     @media (max-width: 1050px) {
-      .mobile-nav.tab-bar-app {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 0;
-        padding: 6px 8px calc(8px + var(--sab));
-        border-top: 1px solid var(--line);
-        background: color-mix(in srgb, var(--bg) 86%, transparent);
-        -webkit-backdrop-filter: saturate(1.4) blur(18px);
-        backdrop-filter: saturate(1.4) blur(18px);
-        z-index: 45;
-        transition: transform 320ms var(--glide), opacity 240ms ease;
-      }
-
-      body[data-screen="practice"] .mobile-nav.tab-bar-app,
-      body[data-screen="onboard"] .mobile-nav.tab-bar-app {
-        transform: translateY(110%);
-        opacity: 0;
-        pointer-events: none;
-      }
-
       .main {
         padding-top: calc(18px + var(--sat));
-        padding-bottom: calc(var(--tabbar-h) + 24px + var(--sab));
-      }
-
-      body[data-screen="practice"] .main {
         padding-bottom: calc(24px + var(--sab));
       }
     }
-
-    .tab-btn-app {
-      display: grid;
-      justify-items: center;
-      gap: 4px;
-      border: 0;
-      padding: 4px 0 2px;
-      color: var(--muted);
-      background: transparent;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .tab-btn-app .nav-icon {
-      box-sizing: content-box;
-      width: 24px;
-      height: 24px;
-      padding: 4px 20px;
-      border-radius: 999px;
-      transition: background-color 260ms var(--glide), transform 200ms var(--spring), color 200ms ease;
-    }
-
-    .tab-btn-app.active {
-      color: var(--text);
-    }
-
-    .tab-btn-app.active .nav-icon {
-      color: #2b2a3d;
-      background: var(--primary);
-      animation: tab-pop 360ms var(--spring);
-    }
-
-    .tab-btn-app:active .nav-icon {
-      transform: scale(.9);
-    }
-
-    .tab-btn-app:focus-visible {
-      outline: none;
-    }
-
-    .tab-btn-app:focus-visible .nav-icon {
-      outline: 3px solid var(--blue);
-      outline-offset: 2px;
-    }
-
-    @keyframes tab-pop { 0% { transform: scaleX(.6); } 100% { transform: none; } }
 
     .rail-btn[data-nav].active {
       border-color: transparent;
@@ -2830,57 +2544,46 @@
     }
 
     /* ---- Home ---- */
-    /* Home: one thing. The set colour as a big block that fills up with today's words,
-       one line under it, and the button in the thumb zone. Book and streak sit small on top. */
+    /* Home is the menu: every launch opens on a few colour blocks with real content
+       (today's words, the word book, add words, settings); tap one to do that thing. The
+       tapped block's colour floods the screen on the way in (js/shell.js flood). */
     .home {
       --home-h: calc(100vh - 64px);
-      width: min(520px, 100%);
+      width: min(480px, 100%);
       min-height: var(--home-h);
       margin: 0 auto;
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 16px;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
     }
 
     @media (max-width: 1050px) {
-      .home { --home-h: calc(100dvh - var(--tabbar-h) - 42px - var(--sat) - var(--sab)); }
+      .home { --home-h: calc(100dvh - 42px - var(--sat) - var(--sab)); }
     }
-
-    .home > * {
-      animation: home-rise 560ms var(--glide) both;
-    }
-
-    .home > :nth-child(2) { animation-delay: 60ms; }
-    .home > :nth-child(3) { animation-delay: 140ms; }
-
-    @keyframes home-rise { from { opacity: 0; transform: translateY(18px); } }
 
     .home-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      animation: home-rise 560ms var(--glide) both;
     }
 
-    .home-book {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      min-width: 0;
-      min-height: 48px;
-      padding: 0 6px 0 2px;
-      border: 0;
+    @keyframes home-rise { from { opacity: 0; transform: translateY(18px); } }
+
+    .home-word {
       color: var(--text);
-      background: none;
-      font: inherit;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
+      font-family: var(--num-font);
+      font-size: 24px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .home-book span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .home-book svg { flex: none; color: var(--dim); }
-    .home-book:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 12px; }
+    .home-word i { font-style: normal; }
+    .home-word i:nth-child(1) { color: #ff7a59; }
+    .home-word i:nth-child(2) { color: #f5b800; }
+    .home-word i:nth-child(3) { color: #2ec27e; }
+    .home-word i:nth-child(4) { color: #3b82f6; }
 
     .home-streak {
       display: inline-flex;
@@ -2897,91 +2600,184 @@
       font-weight: 700;
     }
 
+    .home-chips { display: flex; gap: 8px; }
+
+    /* Phones have no rail, so the interface language switch sits on Home. */
+    .home-lang {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--line);
+      font-family: var(--num-font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (min-width: 1051px) { .home-lang { display: none; } }
+
     .home-streak.lit {
       color: var(--ember-ink);
       box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ember-ink) 35%, transparent);
     }
 
-    .home-hero {
+    .tiles {
       align-self: center;
       display: grid;
-      justify-items: center;
-      text-align: center;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "go go" "lib add" "lib set";
+      gap: 12px;
+      padding: 8px 4px 16px;
     }
 
-    .hero-block {
-      --size: min(58vw, 34vh, 250px);
+    .tile {
       position: relative;
-      width: var(--size);
-      height: var(--size);
-      margin-bottom: 30px;
-      overflow: hidden;
-      border-radius: calc(var(--size) * .3);
-      background: var(--track);
-      rotate: -5deg;
-      box-shadow: 0 calc(var(--size) * .12) calc(var(--size) * .26) calc(var(--size) * -.14) var(--card-shadow);
-    }
-
-    /* Today's progress rises from the bottom in the set colour. */
-    .hero-fill {
-      position: absolute;
-      inset: auto 0 0;
-      z-index: 1;
-      overflow: hidden;
-      height: var(--fill, 0%);
-      font-style: normal;
-      background: var(--primary);
-      transition: height 1100ms var(--spring) 250ms;
-    }
-
-    .hero-center {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-content: center;
-      justify-items: center;
-      rotate: 5deg;
-      color: var(--text);
-    }
-
-    /* A copy of the number inside the fill, in ink: where the colour has risen the text
-       turns dark, so it reads on the pastel and (at night) on the dark track. */
-    .hero-fill .hero-center {
-      inset: auto 0 0;
-      height: var(--size);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      min-width: 0;
+      min-height: 96px;
+      padding: 18px;
+      border: 0;
+      border-radius: 28px;
       color: #2b2a3d;
+      background: var(--c, var(--primary));
+      box-shadow: 0 18px 30px -22px rgba(80, 60, 30, .55);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      rotate: var(--r, 0deg);
+      transition: scale 180ms var(--spring), rotate 300ms var(--spring);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .hero-center b {
+    :root[data-color-mode="dark"] .tile { box-shadow: 0 18px 30px -20px rgba(0, 0, 0, .6); }
+
+    .tile:active { scale: .96; rotate: 0deg; }
+    .tile:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+
+    /* Blocks grow with the screen so the menu fills a tall phone instead of floating in it. */
+    .tile-go { grid-area: go; --r: -1.5deg; min-height: clamp(196px, 28dvh, 260px); padding: 20px 22px 34px; }
+    .tile-add, .tile-set { min-height: clamp(96px, 16.5dvh, 150px); }
+    .tile-lib { grid-area: lib; --r: 2deg; }
+    .tile-add { grid-area: add; --r: -2.5deg; }
+    .tile-set { grid-area: set; --r: 1.5deg; }
+
+    /* Blocks drop in one after another, like confetti landing. */
+    .home .tile { animation: tile-in 620ms var(--spring) both; }
+    .home .tile-lib { animation-delay: 70ms; }
+    .home .tile-add { animation-delay: 130ms; }
+    .home .tile-set { animation-delay: 190ms; }
+
+    @keyframes tile-in {
+      from { opacity: 0; scale: .6; translate: 0 40px; rotate: calc(var(--r) * 4); }
+      55% { opacity: 1; }
+    }
+
+    .tile-kicker {
+      font-size: 16px;
+      font-weight: 800;
+      opacity: .75;
+    }
+
+    .tile-num {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .tile-num b {
       font-family: var(--num-font);
-      font-size: calc(var(--size) * .36);
+      font-size: 64px;
       font-weight: 700;
       line-height: 1;
     }
 
-    .hero-center svg {
-      width: calc(var(--size) * .34);
-      height: calc(var(--size) * .34);
-      animation: sp-pop 520ms var(--spring) 500ms both;
+    .tile-num span { font-size: 17px; font-weight: 800; }
+    .tile-num:has(b:empty) { display: none; }
+
+    .tile-num svg { width: 56px; height: 56px; }
+
+    .tile-sub {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      opacity: .75;
     }
 
-    .home-hero h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
+    .tile-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 10px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .tile-arrow { transition: translate 200ms var(--spring); }
+    .tile:hover .tile-arrow { translate: 4px 0; }
+
+    /* Today's progress along the bottom edge of the block. */
+    .tile-bar {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 14px;
+      height: 6px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(43, 42, 61, .12);
+    }
+
+    .tile-bar i {
+      display: block;
+      width: var(--fill, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: rgba(43, 42, 61, .55);
+      transition: width 1100ms var(--spring) 300ms;
+    }
+
+    .tile-icon { margin-bottom: 6px; }
+
+    .tile-title {
+      font-size: 20px;
+      font-weight: 800;
       line-height: 1.25;
     }
 
-    .home-hero p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.5;
+    .tile-name {
+      max-width: 100%;
+      overflow: hidden;
+      font-size: 15px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .today-go {
-      width: 100%;
-      min-height: 60px;
-      font-size: 19px;
+    /* The word count sits at the foot of the tall library block. */
+    .tile-lib .tile-num { margin-top: auto; }
+    .tile-num-s b { font-size: 44px; }
+    .tile-num-s span { font-size: 15px; }
+
+    /* First run: no numbers yet, so the welcome itself is the headline. */
+    .tile-go.is-setup .tile-kicker {
+      font-size: 28px;
+      line-height: 1.2;
+      opacity: 1;
+    }
+
+    .flood {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      pointer-events: none;
     }
 
     .onboard {
@@ -3221,12 +3017,12 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Phones: Library and Settings are full pages above the tab bar, not sheets. Over the
+    /* Phones: Library and Settings open from Home as full pages, not sheets. Over the
        board (opened from a set) they stay sheets with a close button. */
     @media (max-width: 1050px) {
       body:not([data-screen="practice"]) #libraryModal,
       body:not([data-screen="practice"]) #settingsModal {
-        bottom: calc(var(--tabbar-h) + var(--sab));
+        bottom: 0;
         padding: 0;
         place-items: stretch;
         background: var(--bg);
@@ -3238,7 +3034,7 @@
         height: 100%;
         max-height: none;
         padding-top: var(--sat);
-        padding-bottom: 0;
+        padding-bottom: var(--sab);
         border: 0;
         border-radius: 0;
         background: var(--bg);
@@ -3256,10 +3052,6 @@
         font-size: 30px;
       }
 
-      body:not([data-screen="practice"]) #closeLibrary,
-      body:not([data-screen="practice"]) #closeSettings {
-        display: none;
-      }
     }
 
     @keyframes page-in { from { opacity: 0; transform: translateY(14px); } }
@@ -3343,26 +3135,15 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .start *, .start-hint::before,
-      .home > *, .ob-page.active > *, .ob-bell svg,
-      .tab-btn-app.active .nav-icon,
-      .screen-enter, .screen-enter-back, .hero-center svg {
+      .home-top, .home .tile, .ob-page.active > *, .ob-bell svg,
+      .screen-enter, .screen-enter-back {
         animation: none !important;
       }
-      .ob-track, .hero-fill, .blk { transition: none; }
+      .ob-track, .tile, .tile-bar i, .tile-arrow { transition: none; }
     }
   </style>
 </head>
 <body data-screen="home">
-  <!-- Start screen: tap a colour block to start; it becomes the set colour (js/shell.js). -->
-  <section class="start" id="startScreen" aria-labelledby="startWord">
-    <button class="start-go" type="button" id="startGo" aria-describedby="startHint" aria-label="开始" data-en-aria="Start" data-zh-aria="开始">
-      <span class="blocks" aria-hidden="true"><i class="blk" data-theme="0"><b></b></i><i class="blk" data-theme="1"><b></b></i><i class="blk" data-theme="2"><b></b></i><i class="blk" data-theme="3"><b></b></i><i class="blk" data-theme="4"><b></b></i></span>
-    </button>
-    <h1 class="start-word" id="startWord" lang="en"><i style="--k:0">W</i><i style="--k:1">o</i><i style="--k:2">r</i><i style="--k:3">d</i><i style="--k:4">&#160;</i><i style="--k:5">S</i><i style="--k:6">n</i><i style="--k:7">a</i><i style="--k:8">p</i></h1>
-    <p class="start-hint" id="startHint" data-en="Tap a colour to start" data-zh="点一个颜色开始">点一个颜色开始</p>
-  </section>
-
   <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on Home. -->
   <section class="onboard" id="onboardScreen" aria-label="开始使用" data-en-aria="Get started" data-zh-aria="开始使用" hidden>
     <header class="ob-top">
@@ -3408,23 +3189,42 @@
     </aside>
 
     <main class="main">
-      <nav class="mobile-nav tab-bar-app" aria-label="主导航" data-en-aria="Main navigation" data-zh-aria="主导航">
-        <button class="tab-btn-app active" type="button" data-nav="home" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="nav-label" data-en="Home" data-zh="首页">首页</span></button>
-        <button class="tab-btn-app" type="button" data-nav="library"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
-        <button class="tab-btn-app" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
-      </nav>
 
-      <section class="home" id="homeScreen" aria-labelledby="todayTitle">
+      <section class="home" id="homeScreen" aria-label="Word Snap">
         <header class="home-top">
-          <button class="home-book" type="button" id="homeBook"><span id="bookTitle"></span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
+          <span class="home-word" lang="en" aria-hidden="true"><i>W</i><i>o</i><i>r</i><i>d</i> Snap</span>
+          <div class="home-chips">
+            <button class="home-lang lang-toggle" type="button" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
+            <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
+          </div>
         </header>
-        <div class="home-hero">
-          <div class="hero-block" role="img"><i class="hero-fill" id="heroFill"></i><div class="hero-center" id="heroCenter"></div></div>
-          <h1 id="todayTitle"></h1>
-          <p id="todaySub"></p>
+        <!-- The menu: a few colour blocks with real content; tap one to do that thing. -->
+        <div class="tiles" id="tiles">
+          <button class="tile tile-go" type="button" id="homeGo">
+            <span class="tile-kicker" id="todayTitle"></span>
+            <span class="tile-num"><b id="goNum"></b><span id="goUnit"></span></span>
+            <span class="tile-sub" id="todaySub"></span>
+            <span class="tile-action"><span id="goLabel"></span><svg class="tile-arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="tile-bar" aria-hidden="true"><i id="goBar"></i></span>
+          </button>
+          <button class="tile tile-lib" type="button" id="homeBook">
+            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span class="tile-title" data-zh="词库" data-en="Library">词库</span>
+            <span class="tile-name" id="bookTitle"></span>
+            <span class="tile-num tile-num-s"><b id="bookNum"></b><span id="bookUnit"></span></span>
+            <span class="tile-sub" id="bookSub"></span>
+          </button>
+          <button class="tile tile-add" type="button" id="homeAdd">
+            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+            <span class="tile-title" data-zh="加词" data-en="Add words">加词</span>
+            <span class="tile-sub" data-zh="粘贴词表或导入" data-en="Paste a list or import">粘贴词表或导入</span>
+          </button>
+          <button class="tile tile-set" type="button" id="homeSet">
+            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
+            <span class="tile-title" data-zh="设置" data-en="Settings">设置</span>
+            <span class="tile-sub" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span>
+          </button>
         </div>
-        <button class="duo-button today-go" type="button" id="homeGo"></button>
       </section>
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
@@ -4043,13 +3843,15 @@
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         home: {
           leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
-          doneTitle: "Today's goal is done", doneSub: "{n}-day streak. One more set never hurts.", doneSubNoStreak: "Nice work. One more set never hurts.",
+          doneTitle: "Today's goal is done", doneSub: "{n}-day streak. Fancy one more?", doneSubNoStreak: "Nice work. Fancy one more?",
           start: "Start practice", resume: "Continue the set", again: "One more set", nextSet: "Next set",
-          emptyTitle: "Your library is empty", emptySub: "Pick a word book or paste your own list to begin.", emptyBtn: "Add words", emptyUnit: "words",
-          trialTitle: "Try a set first", trialSub: "Ten sample words to learn the game; switch to your own words after.", trialBtn: "Play the sample set", trialUnit: "sample words",
-          chooseTitle: "Now pick your words", chooseSub: "You've played the samples. Choose a word book or import your own list.", chooseBtn: "Choose a word book",
-          bookMine: "My library", bookSamples: "Sample words", bookSub: "{n} words · {m} mastered",
-          streakTitle: "{n}-day streak"
+          emptyTitle: "Your library is empty", emptySub: "Pick a word book or paste a list", emptyBtn: "Add words", emptyUnit: "words",
+          trialTitle: "Try a set first", trialSub: "10 sample words to learn the game", trialBtn: "Play the sample set", trialUnit: "sample words",
+          chooseTitle: "Now pick your words", chooseSub: "Pick a word book or import a list", chooseBtn: "Choose a word book",
+          bookMine: "My library", bookSamples: "Sample words", bookSub: "{n} words · {m} mastered", bookUnit: "words", bookMastered: "{m} mastered",
+          streakTitle: "{n}-day streak",
+          setupTitle: "Welcome to Word Snap", setupSub: "Pick a word book and a daily goal", setupBtn: "Set up",
+          libTitle: "Library", addTitle: "Add words", addSub: "Paste a list or import", setTitle: "Settings", setSub: "Goal · reminders · look"
         },
         onboard: {
           sample: "Just try the sample words", sampleSub: "10 words to learn the game", words: "{n} words",
@@ -4288,13 +4090,15 @@
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         home: {
           leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
-          doneTitle: "今天的目标完成了", doneSub: "已经连续 {n} 天。想多练也可以再来一组。", doneSubNoStreak: "做得好。想多练也可以再来一组。",
+          doneTitle: "今天的目标完成了", doneSub: "已连续 {n} 天，想练可以再来", doneSubNoStreak: "做得好，想练可以再来",
           start: "开始练习", resume: "继续这一组", again: "再练一组", nextSet: "下一组",
-          emptyTitle: "词库还是空的", emptySub: "选一本词书，或者粘贴自己的词表，就能开始了。", emptyBtn: "添加单词", emptyUnit: "个词",
-          trialTitle: "先玩一组试试", trialSub: "用 10 个示例词熟悉玩法，之后再换成你要背的词。", trialBtn: "开始体验", trialUnit: "个示例词",
-          chooseTitle: "换成你要背的词吧", chooseSub: "示例词已经玩过了。选一本词书，或者导入自己的词表。", chooseBtn: "选一本词书",
-          bookMine: "我的词库", bookSamples: "示例词", bookSub: "{n} 个词 · 已掌握 {m}",
-          streakTitle: "连续 {n} 天"
+          emptyTitle: "词库还是空的", emptySub: "选一本词书或粘贴词表", emptyBtn: "添加单词", emptyUnit: "个词",
+          trialTitle: "先玩一组试试", trialSub: "10 个示例词，先熟悉玩法", trialBtn: "开始体验", trialUnit: "个示例词",
+          chooseTitle: "换成你要背的词吧", chooseSub: "选一本词书或导入词表", chooseBtn: "选一本词书",
+          bookMine: "我的词库", bookSamples: "示例词", bookSub: "{n} 个词 · 已掌握 {m}", bookUnit: "个词", bookMastered: "已掌握 {m}",
+          streakTitle: "连续 {n} 天",
+          setupTitle: "欢迎来到 Word Snap", setupSub: "选词书和每日目标，三步设好", setupBtn: "开始设置",
+          libTitle: "词库", addTitle: "加词", addSub: "粘贴词表或导入", setTitle: "设置", setSub: "目标 · 提醒 · 外观"
         },
         onboard: {
           sample: "先用示例词试试", sampleSub: "10 个词，熟悉一下玩法", words: "{n} 词",
@@ -4580,6 +4384,8 @@
       obWebNote: document.getElementById("obWebNote"),
       homeGo: document.getElementById("homeGo"),
       homeBook: document.getElementById("homeBook"),
+      homeAdd: document.getElementById("homeAdd"),
+      homeSet: document.getElementById("homeSet"),
       main: document.querySelector(".main"),
       librarySummary: document.getElementById("librarySummary"),
       newEnglish: document.getElementById("newEnglish"),
@@ -9000,7 +8806,7 @@
       const asPage = open.length > 0 && !open.includes(els.introModal) && document.body.dataset.screen !== "practice"
         && window.matchMedia("(max-width: 1050px)").matches;
       if (app) app.inert = open.length > 0 && !asPage;
-      document.querySelectorAll(".app > .rail, .main > :not(.mobile-nav)").forEach(el => { el.inert = asPage; });
+      document.querySelectorAll(".app > .rail, .main > *").forEach(el => { el.inert = asPage; });
       for (const modal of [els.introModal, els.settingsModal, els.libraryModal]) {
         if (!modal) continue;
         const isOpen = modal.classList.contains("open");
@@ -9174,8 +8980,6 @@
         if (on) btn.setAttribute("aria-current", "page");
         else btn.removeAttribute("aria-current");
       });
-      const tabBar = document.querySelector(".mobile-nav");
-      if (tabBar) tabBar.inert = screen !== "home";
       syncDialogs();
     }
 
@@ -9227,7 +9031,19 @@
     }
 
     /** The big button on Home: resume the paused set, or start the next one. */
+    // True until the first-run setup is finished or skipped: Home's big block opens it.
+    let needsSetup = false;
+
+    /** Tap a Home block: its colour floods the screen, and what it stands for opens. */
+    function tapTile(tile, act) {
+      if (document.body.classList.contains("flooding")) return;
+      WordSnapFx.haptic("tap");
+      document.body.classList.add("flooding");
+      WordSnapShell.flood(tile, act).catch(() => {}).then(() => document.body.classList.remove("flooding"));
+    }
+
     function startFromHome() {
+      if (needsSetup) { nav.go("onboard"); return; }
       if (!state.words.length) { openLibrary("add"); return; }
       if (awaitingTrialChoice()) { state.trialLibraryVisited = true; openLibrary("add"); return; }
       const setOver = els.completionView.classList.contains("show");
@@ -9236,7 +9052,6 @@
         saveWords();
         renderRound();
       }
-      WordSnapFx.haptic("tap");
       nav.go("practice");
     }
 
@@ -9253,7 +9068,10 @@
       els.homeStreak.setAttribute("aria-label", t("home.streakTitle", { n: streak }));
 
       let title, sub, btn, num, unit, pct = 0, done = false;
-      if (!state.words.length) {
+      if (needsSetup) {
+        title = t("home.setupTitle"); sub = t("home.setupSub"); btn = t("home.setupBtn");
+        num = ""; unit = "";
+      } else if (!state.words.length) {
         title = t("home.emptyTitle"); sub = t("home.emptySub"); btn = t("home.emptyBtn");
         num = "0"; unit = t("home.emptyUnit");
       } else if (awaitingTrialChoice()) {
@@ -9284,15 +9102,27 @@
       }
       els.todayTitle.textContent = title;
       els.todaySub.textContent = sub;
-      els.homeGo.textContent = btn;
+      els.goLabel.textContent = btn;
       const full = done && !awaitingTrialChoice();
-      // Only the number (or a check): the line under the block says what it counts.
-      els.heroCenter.innerHTML = full ? ICON_CHECK_BIG : "<b></b>";
-      if (!full) els.heroCenter.querySelector("b").textContent = num;
-      els.heroCenter.parentElement.setAttribute("aria-label", full ? t("home.unitDone") : `${num} ${unit}`);
-      els.heroFill.innerHTML = `<div class="hero-center">${els.heroCenter.innerHTML}</div>`;
-      // Next frame, so the colour rises from where it was.
-      requestAnimationFrame(() => { els.heroFill.style.setProperty("--fill", `${full ? 100 : Math.max(pct ? 6 : 0, pct)}%`); });
+      if (full) {
+        els.goNum.innerHTML = ICON_CHECK_BIG;
+        els.goUnit.textContent = t("home.unitDone");
+      } else {
+        els.goNum.textContent = num;
+        els.goUnit.textContent = unit;
+      }
+      els.homeGo.setAttribute("aria-label", [title, num && !full ? `${num} ${unit}` : "", sub, btn].filter(Boolean).join(". "));
+      // Next frame, so the bar grows from where it was.
+      requestAnimationFrame(() => { els.goBar.style.setProperty("--fill", `${full ? 100 : Math.max(pct ? 4 : 0, pct)}%`); });
+      els.goBar.parentElement.hidden = needsSetup || !state.words.length;
+      els.homeGo.classList.toggle("is-setup", needsSetup);
+
+      // The set colour on the big block; the other blocks take the next confetti colours.
+      const ti = themeIndexOf(state.settings.themeIndex);
+      els.homeGo.style.setProperty("--c", COLOR_THEMES[ti].fill);
+      [els.homeBook, els.homeAdd, els.homeSet].forEach((tile, i) => {
+        tile.style.setProperty("--c", COLOR_THEMES[(ti + 1 + i) % COLOR_THEMES.length].fill);
+      });
 
       const samplesOnly = state.words.length > 0 && !state.words.some(word => word.custom);
       let bookName = samplesOnly ? t("home.bookSamples") : t("home.bookMine");
@@ -9302,8 +9132,13 @@
         if (book && !samplesOnly) bookName = currentLang === "zh" ? book.zh : book.en;
         else if (id && !wordbookIndex && !samplesOnly) loadWordbookIndex().then(() => { if (document.body.dataset.screen === "home") renderHome(); }).catch(() => {});
       } catch (error) { /* private mode */ }
+      const mastered = state.words.filter(isMastered).length;
+      const counts = t("home.bookSub", { n: state.words.length, m: mastered });
       els.bookTitle.textContent = bookName;
-      els.homeBook.setAttribute("aria-label", `${bookName}, ${t("home.bookSub", { n: state.words.length, m: state.words.filter(isMastered).length })}`);
+      els.bookNum.textContent = String(state.words.length);
+      els.bookUnit.textContent = t("home.bookUnit");
+      els.bookSub.textContent = t("home.bookMastered", { m: mastered });
+      els.homeBook.setAttribute("aria-label", `${t("home.libTitle")}: ${bookName}, ${counts}`);
     }
 
     // ---- Onboarding ----
@@ -9398,6 +9233,7 @@
       saveWords();
       renderRound();
       // Home, not the board: the learner starts the first set when they choose to.
+      needsSetup = false;
       nav.reset("home");
     }
 
@@ -9422,6 +9258,7 @@
         if (native && ob.time) syncReminders({ ask: true });
         state.round = 1;
         renderRound();
+        needsSetup = false;
         nav.reset("home");
       } catch (error) {
         els.obWebNote.hidden = false;
@@ -9444,8 +9281,10 @@
     });
     els.obBack.addEventListener("click", () => obGo(ob.step - 1));
     els.obSkip.addEventListener("click", skipOnboarding);
-    els.homeGo.addEventListener("click", startFromHome);
-    els.homeBook.addEventListener("click", () => openLibrary());
+    els.homeGo.addEventListener("click", () => tapTile(els.homeGo, startFromHome));
+    els.homeBook.addEventListener("click", () => tapTile(els.homeBook, () => openLibrary()));
+    els.homeAdd.addEventListener("click", () => tapTile(els.homeAdd, () => openLibrary("add")));
+    els.homeSet.addEventListener("click", () => tapTile(els.homeSet, () => openSettings()));
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
@@ -9477,35 +9316,20 @@
         homeStreakN: document.getElementById("homeStreakN"),
         todayTitle: document.getElementById("todayTitle"),
         todaySub: document.getElementById("todaySub"),
-        heroFill: document.getElementById("heroFill"),
-        heroCenter: document.getElementById("heroCenter"),
-        bookTitle: document.getElementById("bookTitle")
+        goNum: document.getElementById("goNum"),
+        goUnit: document.getElementById("goUnit"),
+        goLabel: document.getElementById("goLabel"),
+        goBar: document.getElementById("goBar"),
+        bookTitle: document.getElementById("bookTitle"),
+        bookSub: document.getElementById("bookSub"),
+        bookNum: document.getElementById("bookNum"),
+        bookUnit: document.getElementById("bookUnit")
       });
-      const initial = firstRun ? "onboard" : "home";
-      nav = WordSnapShell.createNav({ initial, render: renderNav });
-      applyScreen(initial, "none");
+      needsSetup = firstRun;
+      // Every launch opens on Home's colour blocks; setup is one of them on the first run.
+      nav = WordSnapShell.createNav({ initial: "home", render: renderNav });
+      applyScreen("home", "none");
       syncSystemBars();
-      // Start screen on every launch: tap a colour and it becomes the set colour.
-      const app = [document.querySelector(".app"), els.onboardScreen];
-      app.forEach(el => { el.inert = true; });
-      WordSnapShell.start(document.getElementById("startScreen"), {
-        fallback: themeIndexOf(state.settings.themeIndex),
-        pick: index => {
-          WordSnapFx.haptic("tap");
-          applyTheme(index);
-          saveWords();
-          // The first screen rises in while the colour fades away.
-          const first = initial === "home" ? els.homeScreen : els.onboardScreen;
-          first.classList.remove("screen-enter");
-          void first.offsetWidth;
-          first.classList.add("screen-enter");
-        }
-      }).then(() => {
-        app.forEach(el => { el.inert = false; });
-        syncDialogs();
-        const target = initial === "home" ? els.homeGo : els.obBooks;
-        if (target && document.activeElement === document.body) target.focus({ preventScroll: true });
-      });
     }
 
     initInstallNudge();

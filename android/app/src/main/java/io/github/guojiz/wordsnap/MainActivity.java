@@ -16,7 +16,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // The system launch screen (AppTheme.NoActionBarLaunch) hands over to the web one.
+        // The system launch screen (AppTheme.NoActionBarLaunch) hands over to the web app's Home.
         SplashScreen.installSplashScreen(this);
         // App-local plugins must be registered before the bridge starts.
         registerPlugin(LlmPlugin.class);
