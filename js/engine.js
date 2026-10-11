@@ -9,8 +9,12 @@
  *   own recent times. Nobody has to rate themselves.
  * - Short-term learning steps count matched pairs (with a time fallback), so a
  *   missed word comes back a few cards later in an endless stream.
- * - Push policy: a Thompson-sampling bandit picks the target retention and the
- *   new-word capacity per block, rewarded by memory gained per minute.
+ * - Guessing: the matching board can be solved by elimination, so a right
+ *   answer is weaker evidence when few cards were left. Each log entry keeps the
+ *   chance of a lucky guess (q) and the fit predicts R + (1 − R)·q.
+ * - Push policy: a Thompson-sampling bandit picks the new-word capacity per
+ *   block (target retention is fixed at 0.9), rewarded by memory gained per minute, where the
+ *   minutes include the reviews each new word will cost over the next week.
  *
  * No DOM access. Works as a classic browser script (window.WordSnapEngine) and
  * as a CommonJS module for Node tests.
@@ -43,7 +47,10 @@
 
   const ARMS = (() => {
     const arms = [];
-    for (const r of [0.8, 0.85, 0.9]) for (const k of [8, 14, 24]) arms.push({ r, k });
+    // Target retention stays at 0.9. Letting the bandit lower it (0.8 = one word in
+    // five forgotten at review time) traded how well words are known for how many
+    // are seen; in tools/simulate.js only the new-word capacity was worth tuning.
+    for (const r of [0.9]) for (const k of [8, 14, 24]) arms.push({ r, k });
     return arms;
   })();
   const DEFAULT_ARM = ARMS.findIndex(a => a.r === 0.9 && a.k === 14);
@@ -51,6 +58,10 @@
   const LOG_MAX = 3000;
   const OPTIMIZE_EVERY = 100;
   const VALUE_HORIZON_DAYS = 7;
+  // Bump when ARMS change: saved bandit statistics for other arms no longer apply.
+  const BANDIT_VERSION = 2;
+  // Chance of a lucky guess for log entries written before q was recorded (a 4–5 pair board).
+  const LEGACY_GUESS = 0.25;
 
   // ---------- small helpers ----------
 
@@ -114,6 +125,22 @@
     return (S / factorOf(w)) * (Math.pow(r, 1 / decayOf(w)) - 1);
   }
 
+  /**
+   * Reviews a word with stability S and difficulty D will need within `days`,
+   * at target retention r, assuming each is answered right.
+   */
+  function reviewsWithin(w, S, D, r, days) {
+    let t = 0, n = 0;
+    while (n < 20) {
+      const gap = Math.max(intervalFor(w, S, r), 1 / 1440);
+      if (t + gap > days) break;
+      t += gap;
+      n += 1;
+      S = gap < 1 ? shortTermStability(w, S, GOOD) : recallStability(w, D, S, r, GOOD);
+    }
+    return n;
+  }
+
   function initStability(w, g) { return clamp(w[g - 1], S_MIN, S_MAX); }
   function initDifficulty(w, g) { return clamp(w[4] - Math.exp(w[5] * (g - 1)) + 1, 1, 10); }
 
@@ -171,7 +198,16 @@
     return byWord;
   }
 
-  /** Mean log-loss of cross-day predictions when the log is replayed with these multipliers. */
+  /** Chance of answering this entry right by elimination alone. */
+  function guessOf(e) {
+    return isNum(e.q) ? clamp(e.q, 0, 1) : LEGACY_GUESS;
+  }
+
+  /**
+   * Mean log-loss of cross-day predictions when the log is replayed with these
+   * multipliers. A right answer may be a lucky guess, so the predicted chance of
+   * a right answer is R + (1 − R)·q rather than R.
+   */
   function replayLoss(groups, theta) {
     const w = personalWeights(theta);
     let loss = 0, n = 0;
@@ -181,7 +217,8 @@
         const elapsed = card ? (e.t - last) / DAY_MS : 0;
         const next = step(w, card, elapsed, e.g);
         if (card && elapsed >= 1) {
-          const p = clamp(next.R, 1e-4, 1 - 1e-4);
+          const q = guessOf(e);
+          const p = clamp(next.R + (1 - next.R) * q, 1e-4, 1 - 1e-4);
           const y = e.g > AGAIN ? 1 : 0;
           loss -= y * Math.log(p) + (1 - y) * Math.log(1 - p);
           n += 1;
@@ -273,7 +310,7 @@
       lastFitLoss: null,
       rt: [],
       pairs: 0,
-      bandit: { arms: ARMS.map(() => ({ n: 0, sum: 0, sumSq: 0 })), cur: DEFAULT_ARM, all: { n: 0, sum: 0, sumSq: 0 } },
+      bandit: { v: BANDIT_VERSION, arms: ARMS.map(() => ({ n: 0, sum: 0, sumSq: 0 })), cur: DEFAULT_ARM, all: { n: 0, sum: 0, sumSq: 0 } },
       block: null
     };
   }
@@ -288,7 +325,8 @@
     if (Array.isArray(raw.rt)) s.rt = raw.rt.filter(x => isNum(x) && x > 0).slice(-80);
     if (isNum(raw.pairs)) s.pairs = raw.pairs;
     const b = raw.bandit;
-    if (b && Array.isArray(b.arms) && b.arms.length === ARMS.length) {
+    // Statistics from an older arm set are dropped once; word progress is untouched.
+    if (b && b.v === BANDIT_VERSION && Array.isArray(b.arms) && b.arms.length === ARMS.length) {
       s.bandit.arms = b.arms.map(a => ({ n: +a.n || 0, sum: +a.sum || 0, sumSq: +a.sumSq || 0 }));
       if (isNum(b.cur) && b.cur >= 0 && b.cur < ARMS.length) s.bandit.cur = b.cur;
       if (b.all) s.bandit.all = { n: +b.all.n || 0, sum: +b.all.sum || 0, sumSq: +b.all.sumSq || 0 };
@@ -398,7 +436,7 @@
 
     function ensureBlock(now) {
       if (!state.block) {
-        state.block = { startAt: now, pairs: 0, gain: 0, right: 0, wrong: 0, fresh: 0, missRun: 0, maxMissRun: 0, confusions: [] };
+        state.block = { startAt: now, pairs: 0, gain: 0, upkeep: 0, right: 0, wrong: 0, fresh: 0, missRun: 0, maxMissRun: 0, confusions: [] };
       }
       return state.block;
     }
@@ -406,6 +444,8 @@
     /**
      * Record one answer. `g` is 1–4 (use grade()). `ms` is the reaction time of
      * a correct match (used to adapt grading), `kind` is "match" | "spell" | "sentence".
+     * `guess` is the chance of getting it right by elimination (1 / pairs left on
+     * the board); typed answers default to 0, matches without it to LEGACY_GUESS.
      */
     function recordAnswer(word, g, now = Date.now(), info = {}) {
       g = clamp(Math.round(g), AGAIN, EASY);
@@ -443,10 +483,12 @@
       s.lastPair = state.pairs;
       word.srs = s;
 
-      state.log.push({ i: word.id, t: now, g });
+      const kind = info.kind || "match";
+      const q = isNum(info.guess) ? clamp(info.guess, 0, 1) : kind === "match" ? LEGACY_GUESS : 0;
+      state.log.push({ i: word.id, t: now, g, q: Math.round(q * 100) / 100 });
       if (state.log.length > LOG_MAX) state.log.splice(0, state.log.length - LOG_MAX);
       state.sinceFit += 1;
-      if (g > AGAIN && (info.kind || "match") === "match" && info.ms > 0) {
+      if (g > AGAIN && kind === "match" && info.ms > 0) {
         state.rt.push(Math.round(info.ms));
         if (state.rt.length > 80) state.rt.shift();
       }
@@ -454,7 +496,11 @@
       const block = ensureBlock(now);
       block.pairs += 1;
       block.gain += value(s.S) - before;
-      if (fresh) block.fresh += 1;
+      if (fresh) {
+        block.fresh += 1;
+        // A new word is not free: it brings reviews over the next week.
+        block.upkeep += reviewsWithin(w, s.S, s.D, arm().r, VALUE_HORIZON_DAYS);
+      }
       if (g === AGAIN) {
         block.wrong += 1;
         block.missRun += 1;
@@ -466,7 +512,11 @@
       return { grade: g, predicted: next.R, stage: stageOf(word, now) };
     }
 
-    /** The card picked by mistake: it was mixed up, so it loses some stability, without a log entry. */
+    /**
+     * The card picked by mistake: it was mixed up, so it loses some stability.
+     * Deliberately not logged: it is not a recall attempt of this word, and the
+     * small drift it adds to the fit is not worth a second kind of log entry.
+     */
     function penalizeWrongPick(word, now = Date.now()) {
       if (isNew(word)) return;
       const s = word.srs;
@@ -582,7 +632,10 @@
       state.block = null;
       if (!block || block.pairs < 5) return block;
       const minutes = Math.max(0.5, (activeMs > 0 ? activeMs : now - block.startAt) / MIN_MS);
-      const reward = block.gain / minutes - 0.05 * Math.max(0, block.maxMissRun - 2);
+      // Net memory per minute: future reviews of this block's new words cost the
+      // same time per answer as this block did.
+      const upkeepMinutes = (block.upkeep || 0) * minutes / block.pairs;
+      const reward = block.gain / (minutes + upkeepMinutes) - 0.05 * Math.max(0, block.maxMissRun - 2);
       const bandit = state.bandit;
       const a = bandit.arms[bandit.cur];
       a.n += 1; a.sum += reward; a.sumSq += reward * reward;
@@ -609,16 +662,26 @@
 
     function blockDue() { return !!state.block && state.block.pairs >= blockSize; }
 
-    /** Re-fit the personal multipliers when enough new reviews have come in. */
-    function maybeOptimize(force = false) {
-      if (!force && state.sinceFit < OPTIMIZE_EVERY) return false;
-      const result = fitTheta(state.log, state.theta);
+    /** Enough new reviews have come in to re-fit the personal multipliers. */
+    function fitDue() { return state.sinceFit >= OPTIMIZE_EVERY; }
+
+    /**
+     * Take a fitTheta() result computed elsewhere (the app runs the fit in a
+     * worker: on a phone it takes long enough to drop frames on the main thread).
+     */
+    function applyFit(result) {
       state.sinceFit = 0;
-      if (!result.fitted) return false;
-      state.theta = result.theta;
-      state.lastFitLoss = result.loss;
+      if (!result || !result.fitted || !Array.isArray(result.theta) || result.theta.length !== 3 || !result.theta.every(isNum)) return false;
+      state.theta = result.theta.map(x => clamp(x, -2.5, 2.5));
+      state.lastFitLoss = isNum(result.loss) ? result.loss : null;
       w = personalWeights(state.theta);
       return true;
+    }
+
+    /** Re-fit the personal multipliers in place when enough new reviews have come in. */
+    function maybeOptimize(force = false) {
+      if (!force && !fitDue()) return false;
+      return applyFit(fitTheta(state.log, state.theta));
     }
 
     /** How many reviews fall due on each of the next `days` learner-days (index 0 = today, incl. overdue). */
@@ -652,6 +715,8 @@
       endBlock,
       blockDue,
       maybeOptimize,
+      fitDue,
+      applyFit,
       forecast,
       stageOf,
       dueAt,
@@ -675,6 +740,7 @@
     personalWeights,
     retrievabilityAt,
     intervalFor,
+    reviewsWithin,
     step,
     dayKey,
     dayStartMs,
