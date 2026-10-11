@@ -24,6 +24,32 @@
 
         </activity>
 
+        <!-- Home-screen widget: today's goal and the day streak (habit/TodayWidget.kt). -->
+        <receiver
+            android:name=".habit.TodayWidget"
+            android:exported="false"
+            android:label="@string/widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/today_widget_info" />
+        </receiver>
+
+        <!-- The evening streak and review nudges, and the widget's 4 am turnover (habit/Nudges.kt).
+             Alarms are lost on reboot, app update and clock changes, so these set them again. -->
+        <receiver
+            android:name=".habit.NudgeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -40,4 +66,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- A short vibration on answers (Settings → Effects and vibration). -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Reminders and nudges (Android 13+ asks the learner first, when they turn one on). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Set the nudge alarms again after a restart. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 </manifest>

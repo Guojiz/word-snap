@@ -2,4 +2,31 @@
 <resources>
     <!-- Launch screen paper: the same colour the web launch screen starts on (DESIGN.md). -->
     <color name="splash_paper">#FFFCF6</color>
+
+    <!-- Home-screen widget (DESIGN.md, Home-screen widget): paper, ink, line, ember. -->
+    <color name="widget_paper">#FFFCF6</color>
+    <color name="widget_chip">#FFF7E8</color>
+    <color name="widget_line">#EFE9DE</color>
+    <color name="widget_track">#F1ECE3</color>
+    <color name="widget_text">#2B2A3D</color>
+    <color name="widget_muted">#55546A</color>
+    <color name="widget_dim">#6B6A80</color>
+    <color name="widget_ember">#B4530F</color>
+    <color name="widget_ember_line">#EBCBB3</color>
+    <!-- The confetti pastels and their ink are the same by day and at night. -->
+    <color name="confetti_peach">#FFB4A2</color>
+    <color name="confetti_peach_edge">#D0968C</color>
+    <color name="confetti_sky">#A8D8FF</color>
+    <color name="confetti_sky_edge">#8DB2D4</color>
+    <color name="confetti_lemon">#FFE27A</color>
+    <color name="confetti_mint">#9EEBC4</color>
+    <color name="confetti_mint_edge">#85C1A6</color>
+    <color name="confetti_lilac">#D4C4FF</color>
+    <color name="confetti_ink">#2B2A3D</color>
+    <!-- The goal lane: coral → gold → mint, the deeper confetti tones that read on paper. -->
+    <color name="lane_start">#FF7A59</color>
+    <color name="lane_mid">#FFD23F</color>
+    <color name="lane_end">#4FD69C</color>
+    <!-- Notification accent (also the LocalNotifications iconColor in capacitor.config.json). -->
+    <color name="notification_accent">#FF8A6B</color>
 </resources>

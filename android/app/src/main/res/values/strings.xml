@@ -4,4 +4,59 @@
     <string name="title_activity_main">Word Snap</string>
     <string name="package_name">io.github.guojiz.wordsnap</string>
     <string name="custom_url_scheme">io.github.guojiz.wordsnap</string>
+
+    <!-- Home-screen widget (habit/TodayWidget.kt). Chinese in values-zh; the app's own EN / 中 choice picks one. -->
+    <string name="widget_name">Word Snap · Today</string>
+    <string name="widget_description">Today\'s goal and your day streak</string>
+    <plurals name="widget_streak">
+        <item quantity="one">%d-day streak</item>
+        <item quantity="other">%d-day streak</item>
+    </plurals>
+    <plurals name="widget_words_left">
+        <item quantity="one">word left</item>
+        <item quantity="other">words left</item>
+    </plurals>
+    <plurals name="widget_words_left_full">
+        <item quantity="one">%d word left today</item>
+        <item quantity="other">%d words left today</item>
+    </plurals>
+    <string name="widget_minutes">About %d min</string>
+    <string name="widget_breakdown">%1$s · %2$d review · %3$d new</string>
+    <string name="widget_done">Done for today</string>
+    <string name="widget_done_streak">%s. See you tomorrow</string>
+    <string name="widget_done_sub">See you tomorrow</string>
+    <string name="widget_play">Play a set</string>
+    <string name="widget_play_sub">One set finishes today</string>
+    <string name="widget_start">Start learning</string>
+    <string name="widget_start_sub">Pick a word book to begin</string>
+    <string name="widget_card_review">Review</string>
+    <string name="widget_card_new">New</string>
+    <string name="widget_card_done" translatable="false">✓</string>
+    <!-- What the widget picker shows before the app has sent anything. -->
+    <string name="widget_preview_streak" translatable="false">12</string>
+    <string name="widget_preview_count" translatable="false">18</string>
+    <string name="widget_preview_review" translatable="false">12</string>
+    <string name="widget_preview_new" translatable="false">6</string>
+    <string name="widget_preview_unit">words left</string>
+    <string name="widget_preview_caption">About 6 min</string>
+
+    <!-- Nudges (habit/Nudges.kt). -->
+    <plurals name="nudge_streak_title">
+        <item quantity="one">Keep your %d-day streak</item>
+        <item quantity="other">Keep your %d-day streak</item>
+    </plurals>
+    <plurals name="nudge_streak_body">
+        <item quantity="one">%1$d word left today, about %2$d min to keep it.</item>
+        <item quantity="other">%1$d words left today, about %2$d min to keep it.</item>
+    </plurals>
+    <string name="nudge_streak_body_set">One set finishes today\'s goal.</string>
+    <plurals name="nudge_due_title">
+        <item quantity="one">%d word is ready for review</item>
+        <item quantity="other">%d words are ready for review</item>
+    </plurals>
+    <string name="nudge_due_body">Go over them while they\'re fresh, about %d min.</string>
+    <string name="channel_streak">Streak nudge</string>
+    <string name="channel_streak_desc">At 9 pm, when today\'s goal is open and a streak is at stake</string>
+    <string name="channel_due">Review nudge</string>
+    <string name="channel_due_desc">At 5:30 pm, when 10 or more words are due</string>
 </resources>

@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_paper">#1F1E2E</color>
+
+    <color name="widget_paper">#2A2940</color>
+    <color name="widget_chip">#25243A</color>
+    <color name="widget_line">#3A3954</color>
+    <color name="widget_track">#34334C</color>
+    <color name="widget_text">#F7F5EE</color>
+    <color name="widget_muted">#C9C6D8</color>
+    <color name="widget_dim">#A6A3BB</color>
+    <color name="widget_ember">#FFC08A</color>
+    <color name="widget_ember_line">#6B5045</color>
 </resources>

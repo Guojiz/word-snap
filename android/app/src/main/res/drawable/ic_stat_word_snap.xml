@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status bar icon: the two leaning cards as a white silhouette. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <group android:rotation="-12" android:pivotX="8" android:pivotY="13">
+        <path android:fillColor="#FFFFFFFF"
+            android:pathData="M4.5,5.5h6a2,2 0,0 1,2 2v10a2,2 0,0 1,-2 2h-6a2,2 0,0 1,-2 -2v-10a2,2 0,0 1,2 -2z" />
+    </group>
+    <group android:rotation="10" android:pivotX="16" android:pivotY="13">
+        <path android:fillColor="#FFFFFFFF"
+            android:pathData="M14,5.5h6a2,2 0,0 1,2 2v10a2,2 0,0 1,-2 2h-6a2,2 0,0 1,-2 -2v-10a2,2 0,0 1,2 -2z" />
+    </group>
+</vector>

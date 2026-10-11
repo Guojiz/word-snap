@@ -4,6 +4,7 @@
 
 ### Added
 
+- **Android home-screen widget and nudges**: a native widget (Kotlin, 2×2 and 4×2) shows today's words left, minutes and the day streak in the Confetti Cards look, turns over at 4 am by itself and opens the app on a tap. Two optional notifications join the daily reminder, both off by default: a 9 pm nudge when a streak is at stake, and a 5:30 pm one when 10 or more words are due. The page hands the native side a small snapshot (`js/native-habit.js`, plugin `NativeHabit`); pull requests that touch `android/` now build a debug APK in CI.
 - **CI and releases**: GitHub Actions run the tests and page checks on every pull request; `main` deploys only the built site (`www/`) to Pages with a per-commit cache name; a `v*` tag builds the Android APK and publishes it as a GitHub Release (signed when the release key secrets are set). See MAINTAINING.md.
 
 ### Changed

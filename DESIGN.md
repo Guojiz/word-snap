@@ -422,6 +422,12 @@ Three steps, each one question with one primary button pinned at the bottom: the
 ### Home
 A greeting by time of day over the date; today's card with a progress ring (words still to do, or a check when the goal is met), one line of what is due and how long it takes, and the big continue button (resume the paused set, start the next, or play the sample set); this week as seven dots (filled in a confetti colour when done, a blue ring when a freeze saved it, an empty ring when missed, today ringed in ink); and the word book card with a mastered bar. Leaving a set from its close button or Back pauses it and returns here.
 
+### Home-screen widget (Android)
+Native (`android/.../habit/TodayWidget.kt`, RemoteViews), drawn from the snapshot the app sends after each answer (`js/native-habit.js`, plugin `NativeHabit`). Panel paper (`#fffcf6`, night `#2a2940`) with the launcher's own corner radius from Android 12. Top left, the streak chip exactly as in the app: grey flame and Fredoka number until today's goal is done, then ember with an ember-tinted outline. Below, the words still to do in 40sp Fredoka with "words left" beside it and the minutes (plus review / new on the 2×2) under it; when the goal is met a mint check badge and "Done for today"; before any words are imported the two-card badge and "Start learning". At the bottom the goal lane, 10dp, filling coral → gold → mint against the track colour. The wide size (4×2 and up) adds today's reviews and new words as two leaning confetti cards, peach and sky, like the icon. A tap anywhere opens the app. Strings follow the app's EN / 中 choice, colours follow the system's dark mode; it turns over to the new day at 4 am without the app.
+
+### Nudges (Android)
+Besides the daily reminder at the learner's time, two native notifications, both off until turned on in Settings (the app asks for notification permission then): at 9 pm, "Keep your n-day streak" when a streak is at stake and today's goal is open; at 5:30 pm, "n words are ready for review" when 10 or more are due. Neither is sent once today's goal is done (and one already shown is taken back), nor within an hour of the daily reminder. Small icon: the two cards as a white silhouette; accent `#ff8a6b`, the same as the reminder.
+
 ### Dialogs
 Centred cards on desktop; on phones (≤640px) bottom sheets: full width, 22px top corners, rising 40px over 320ms (none under reduced motion). Dialogs sit above the bottom bar. The welcome sheet keeps its two choices pinned at the bottom while the steps scroll.
 

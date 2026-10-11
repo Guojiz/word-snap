@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The icon's two leaning cards, peach and sky, with a lemon dot. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp" android:height="32dp"
+    android:viewportWidth="32" android:viewportHeight="32">
+    <group android:rotation="-12" android:pivotX="11" android:pivotY="17">
+        <path android:fillColor="@color/confetti_peach" android:strokeColor="@color/confetti_peach_edge"
+            android:strokeWidth="1.5" android:pathData="M6,8h10a2.5,2.5 0,0 1,2.5 2.5v13a2.5,2.5 0,0 1,-2.5 2.5h-10a2.5,2.5 0,0 1,-2.5 -2.5v-13a2.5,2.5 0,0 1,2.5 -2.5z" />
+    </group>
+    <group android:rotation="10" android:pivotX="21" android:pivotY="17">
+        <path android:fillColor="@color/confetti_sky" android:strokeColor="@color/confetti_sky_edge"
+            android:strokeWidth="1.5" android:pathData="M16,8h10a2.5,2.5 0,0 1,2.5 2.5v13a2.5,2.5 0,0 1,-2.5 2.5h-10a2.5,2.5 0,0 1,-2.5 -2.5v-13a2.5,2.5 0,0 1,2.5 -2.5z" />
+    </group>
+    <path android:fillColor="@color/confetti_lemon" android:pathData="M27,2.5a2.5,2.5 0,1 1,0 5a2.5,2.5 0,1 1,0 -5z" />
+</vector>

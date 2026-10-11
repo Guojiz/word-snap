@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget corners: the launcher's own radius from Android 12 (values-v31). -->
+    <dimen name="widget_radius">24dp</dimen>
+    <dimen name="widget_inner_radius">16dp</dimen>
+    <dimen name="widget_padding">14dp</dimen>
+</resources>

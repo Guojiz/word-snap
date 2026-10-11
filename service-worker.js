@@ -11,6 +11,7 @@ const APP_SHELL = [
   "./js/engine.js",
   "./js/fit-worker.js",
   "./js/habit.js",
+  "./js/native-habit.js",
   "./js/wordbooks.js",
   "./js/fx.js",
   "./js/shell.js",
