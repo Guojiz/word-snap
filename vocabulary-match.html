@@ -1023,7 +1023,7 @@
       border-radius: 16px;
       color: var(--on-primary);
       background: var(--primary);
-      box-shadow: inset 0 -3px 0 var(--primary-dark), 0 6px 18px -10px var(--warn-shadow);
+      box-shadow: inset 0 -3px 0 var(--primary-dark), 0 6px 18px -10px var(--primary-shadow, var(--warn-shadow));
       cursor: pointer;
       padding: 12px 20px;
       font-size: 17px;
@@ -1040,7 +1040,7 @@
 
     .duo-button:active {
       transform: translateY(2px);
-      box-shadow: inset 0 -1px 0 var(--primary-dark), 0 2px 10px -8px var(--warn-shadow);
+      box-shadow: inset 0 -1px 0 var(--primary-dark), 0 2px 10px -8px var(--primary-shadow, var(--warn-shadow));
     }
 
     .duo-button.secondary {
@@ -3091,7 +3091,17 @@
     // (#2b2a3d on every one is >= 8:1), in both day and night.
     const CONFETTI = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff"];
     const CONFETTI_INK = "#2b2a3d";
-    const COLOR_THEMES = [{ id: "stage" }];
+    // The set's colour: every finished set moves to the next one, as the old skins did.
+    // It tints the paper, the lane track and the primary button, and the set's first
+    // matched pair starts the confetti run in it. Meaning colours (sky selected, coral
+    // wrong) never rotate. `confetti` is the theme's index in CONFETTI.
+    const COLOR_THEMES = [
+      { id: "lemon", fill: "#ffe27a", deep: "#f5c400", confetti: 2 },
+      { id: "peach", fill: "#ffb4a2", deep: "#ff8f74", confetti: 0 },
+      { id: "sky", fill: "#a8d8ff", deep: "#72bcff", confetti: 1 },
+      { id: "mint", fill: "#9eebc4", deep: "#5fd79f", confetti: 3 },
+      { id: "lilac", fill: "#d4c4ff", deep: "#b19bff", confetti: 4 }
+    ];
 
     // ---- i18n ----
     const LOCALE_KEY = "word_snap_lang";
@@ -4132,18 +4142,29 @@
       updateColorModeUI();
     }
 
+    function themeIndexOf(index) {
+      const n = Number(index) || 0;
+      return ((Math.round(n) % COLOR_THEMES.length) + COLOR_THEMES.length) % COLOR_THEMES.length;
+    }
+
+    function currentTheme() {
+      return COLOR_THEMES[themeIndexOf(state && state.settings ? state.settings.themeIndex : 0)];
+    }
+
     function applyTheme(index) {
-      const i = 0;
+      const i = themeIndexOf(index);
+      const mood = COLOR_THEMES[i];
       const light = resolveColorScheme() === "light";
       const base = light ? STAGE.light : STAGE.dark;
       const a = STAGE.accent;
-      const fixedBg = base.bg;
+      // Paper takes a whisper of the set's colour; panels (cards, dialogs) stay clean.
+      const fixedBg = mixHex(mood.fill, base.bg, light ? 0.16 : 0.07);
       const root = document.documentElement;
       root.setAttribute("data-color-mode", light ? "light" : "dark");
       const set = (name, value) => root.style.setProperty(name, value);
       set("--bg", fixedBg);
       set("--panel", base.panel);
-      set("--panel-2", base.panel2);
+      set("--panel-2", mixHex(mood.fill, base.panel, light ? 0.22 : 0.1));
       set("--line", base.line);
       set("--line-strong", base.lineStrong);
       set("--text", base.text);
@@ -4160,11 +4181,12 @@
       set("--blue-ink", base.blueInk);
       set("--red-ink", base.redInk);
       set("--yellow-ink", base.yellowInk);
-      set("--primary", base.primary);
-      set("--primary-dark", base.primaryDark);
-      set("--on-primary", base.onPrimary);
+      set("--primary", mood.fill);
+      set("--primary-dark", mood.deep);
+      set("--on-primary", CONFETTI_INK);
+      set("--primary-shadow", rgbaFromHex(mood.deep, 0.45));
       set("--panel-soft", mixHex(base.panel, fixedBg, 0.5));
-      set("--track", light ? "#f1ece3" : "#34334c");
+      set("--track", mixHex(mood.fill, light ? "#f1ece3" : "#34334c", light ? 0.3 : 0.12));
       set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.09 : 0.22));
       set("--selected-ink", light ? "#1b3f73" : base.text);
       const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
@@ -4181,7 +4203,7 @@
       set("--weak-wrong", base.redInk);
       set("--card-shadow", neutralShadow);
       set("--scrim", light ? "rgba(43, 42, 61, .38)" : "rgba(10, 10, 20, .6)");
-      set("--hover-soft", light ? "#fff7e8" : "#302f48");
+      set("--hover-soft", mixHex(mood.fill, base.panel, light ? 0.14 : 0.08));
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute("content", fixedBg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
@@ -4189,9 +4211,8 @@
       return i;
     }
 
-    /** The skin used to rotate after each level; one world now keeps colours meaningful. */
+    /** Each finished set (or endless block) moves to the next set colour. */
     function advanceThemeAfterLevel() {
-      return;
       const cur = state.settings && Number.isFinite(state.settings.themeIndex)
         ? state.settings.themeIndex
         : 0;
@@ -4323,7 +4344,8 @@
 
     /** The confetti colour of the set's nth match (0-based), and a deeper edge for its border. */
     function confettiFor(n) {
-      const fill = CONFETTI[((n % CONFETTI.length) + CONFETTI.length) % CONFETTI.length];
+      const k = n + (state.levelConfettiStart || 0);
+      const fill = CONFETTI[((k % CONFETTI.length) + CONFETTI.length) % CONFETTI.length];
       return { fill, edge: mixHex(fill, CONFETTI_INK, 0.78) };
     }
 
@@ -5449,6 +5471,7 @@
       state.levelBestStreak = 0;
       state.levelStreak = 0;
       state.levelJudgements = [];
+      state.levelConfettiStart = currentTheme().confetti;
       state.lastCompletion = null;
       updateCombo(0);
 
