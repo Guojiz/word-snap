@@ -49,7 +49,7 @@ GitHub Actions (`.github/workflows/`):
 - **Deploy site** (`pages.yml`) — every push to `main`: tests, checks, then `npm run build:site` and publishes only `www/` to GitHub Pages. The service worker's cache name is stamped with the commit, so `CACHE_NAME` in `service-worker.js` no longer has to be bumped by hand (the value in the file is only the local fallback).
   One-time switch, after this workflow is on `main`: Settings → Pages → Source → **GitHub Actions**, or
   `gh api -X PUT repos/Guojiz/word-snap/pages -f build_type=workflow`. Until then the old branch deployment keeps serving the site.
-- **Android APK** (`apk.yml`) — a tag `v1.2.3` builds the APK and publishes a GitHub Release with it; *Run workflow* builds one as a downloadable artifact. `versionCode` is the run number and `versionName` the tag.
+- **Android APK** (`apk.yml`) — pull requests that touch the app build a debug APK and attach it to the run (PR → Checks → *Android APK* → Artifacts, kept 30 days); a tag `v1.2.3` builds the APK and publishes a GitHub Release with it; *Run workflow* builds one as a downloadable artifact. `versionCode` is the run number and `versionName` the tag.
 
 ### Release signing (once, by the maintainer)
 

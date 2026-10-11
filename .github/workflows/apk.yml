@@ -1,5 +1,8 @@
-# Builds the Android APK. A tag "v1.2.3" publishes a GitHub Release with the APK attached;
-# "Run workflow" builds one to download from the run's artifacts.
+# Builds the Android APK.
+# - Pull requests that touch the app: the APK is attached to the run as an artifact
+#   (PR → Checks → "Android APK" → Artifacts), so reviewers can install it.
+# - A tag "v1.2.3": publishes a GitHub Release with the APK attached.
+# - "Run workflow": builds one to download from the run's artifacts.
 # Signed release builds need four repository secrets (see MAINTAINING.md):
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
 # Without them the workflow builds a debug APK instead.
@@ -8,6 +11,19 @@ name: Android APK
 on:
   push:
     tags: ["v*"]
+  pull_request:
+    paths:
+      - "android/**"
+      - "js/**"
+      - "vendor/**"
+      - "wordbooks/**"
+      - "vocabulary-match.html"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+      - "capacitor.config.json"
+      - "tools/build-www.mjs"
+      - ".github/workflows/apk.yml"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +36,8 @@ jobs:
       # versionCode grows with every run; versionName is the tag (or 0.0.<run>)
       WORD_SNAP_VERSION_CODE: ${{ github.run_number }}
       WORD_SNAP_VERSION_NAME: ${{ github.ref_type == 'tag' && github.ref_name || format('0.0.{0}', github.run_number) }}
-      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      # Pull requests always build the debug APK (fork PRs cannot read secrets anyway).
+      HAS_KEYSTORE: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -60,6 +77,7 @@ jobs:
         with:
           name: word-snap-apk
           path: word-snap-*.apk
+          retention-days: 30
       - name: GitHub Release
         if: github.ref_type == 'tag'
         env:
