@@ -1,6 +1,6 @@
 # Memory aids come from open data and the learner's own AI
 
-**Root breakdowns** and **Near-synonym notes** are built from ECDICT's `wordroot.txt` (611 roots and affixes, meanings translated to Chinese) and `resemble.txt` (1,331 near-synonym groups), both MIT. **AI mnemonics** are written only by the **Learner's own AI**. The maintainer does not pre-generate memory aids with his own hardware: the project stays free to run, and no generated content has to be checked and shipped for every word.
+**Root breakdowns** and **Near-synonym notes** are built from ECDICT's `wordroot.txt` (611 roots and affixes, meanings translated to Chinese) and `resemble.txt` (1,331 near-synonym groups), both MIT. **AI mnemonics** are written only by the **Learner's own AI**. The maintainer does not pre-generate memory aids on the maintainer's own hardware: the project stays free to run, and no generated content has to be checked and shipped for every word.
 
 ## Consequences
 
