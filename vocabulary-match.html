@@ -2830,32 +2830,57 @@
     }
 
     /* ---- Home ---- */
+    /* Home: one thing. The set colour as a big block that fills up with today's words,
+       one line under it, and the button in the thumb zone. Book and streak sit small on top. */
     .home {
-      width: min(560px, 100%);
+      --home-h: calc(100vh - 64px);
+      width: min(520px, 100%);
+      min-height: var(--home-h);
       margin: 0 auto;
       display: grid;
+      grid-template-rows: auto 1fr auto;
       gap: 16px;
-      align-content: start;
+    }
+
+    @media (max-width: 1050px) {
+      .home { --home-h: calc(100dvh - var(--tabbar-h) - 42px - var(--sat) - var(--sab)); }
     }
 
     .home > * {
       animation: home-rise 560ms var(--glide) both;
     }
 
-    .home > :nth-child(2) { animation-delay: 40ms; }
-    .home > :nth-child(3) { animation-delay: 70ms; }
-    .home > :nth-child(4) { animation-delay: 110ms; }
-    .home > :nth-child(5) { animation-delay: 170ms; }
-    .home > :nth-child(6) { animation-delay: 230ms; }
+    .home > :nth-child(2) { animation-delay: 60ms; }
+    .home > :nth-child(3) { animation-delay: 140ms; }
 
     @keyframes home-rise { from { opacity: 0; transform: translateY(18px); } }
 
     .home-top {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
+
+    .home-book {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      min-height: 48px;
+      padding: 0 6px 0 2px;
+      border: 0;
+      color: var(--text);
+      background: none;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .home-book span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .home-book svg { flex: none; color: var(--dim); }
+    .home-book:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 12px; }
 
     .home-streak {
       display: inline-flex;
@@ -2877,277 +2902,88 @@
       box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ember-ink) 35%, transparent);
     }
 
-    .home-date {
-      margin: 6px 0 2px;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 600;
+    .home-hero {
+      align-self: center;
+      display: grid;
+      justify-items: center;
+      text-align: center;
     }
 
-    .home-greeting {
-      margin: 0;
-      font-size: 32px;
-      line-height: 1.2;
-    }
-
-    .today-card {
+    .hero-block {
+      --size: min(58vw, 34vh, 250px);
       position: relative;
+      width: var(--size);
+      height: var(--size);
+      margin-bottom: 30px;
       overflow: hidden;
-      isolation: isolate;
-      display: grid;
-      gap: 20px;
-      padding: 22px;
-      border-radius: 28px;
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--line), 0 22px 44px -30px var(--card-shadow);
+      border-radius: calc(var(--size) * .3);
+      background: var(--track);
+      rotate: -5deg;
+      box-shadow: 0 calc(var(--size) * .12) calc(var(--size) * .26) calc(var(--size) * -.14) var(--card-shadow);
     }
 
-    .today-main {
-      display: grid;
-      grid-template-columns: 116px minmax(0, 1fr);
-      gap: 18px;
-      align-items: center;
+    /* Today's progress rises from the bottom in the set colour. */
+    .hero-fill {
+      position: absolute;
+      inset: auto 0 0;
+      z-index: 1;
+      overflow: hidden;
+      height: var(--fill, 0%);
+      font-style: normal;
+      background: var(--primary);
+      transition: height 1100ms var(--spring) 250ms;
     }
 
-    .today-ring {
-      position: relative;
-      width: 116px;
-      height: 116px;
-    }
-
-    .today-ring svg {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-
-    .ring-track,
-    .ring-fill {
-      fill: none;
-      stroke-width: 12;
-    }
-
-    .ring-track { stroke: var(--track); }
-
-    .ring-fill {
-      stroke: var(--primary-dark);
-      stroke-linecap: round;
-      stroke-dasharray: 100;
-      stroke-dashoffset: 100;
-      transition: stroke-dashoffset 1100ms var(--spring) 250ms, stroke 300ms ease;
-    }
-
-    .ring-center {
+    .hero-center {
       position: absolute;
       inset: 0;
       display: grid;
       place-content: center;
       justify-items: center;
-      text-align: center;
+      rotate: 5deg;
+      color: var(--text);
     }
 
-    .ring-center b {
+    /* A copy of the number inside the fill, in ink: where the colour has risen the text
+       turns dark, so it reads on the pastel and (at night) on the dark track. */
+    .hero-fill .hero-center {
+      inset: auto 0 0;
+      height: var(--size);
+      color: #2b2a3d;
+    }
+
+    .hero-center b {
       font-family: var(--num-font);
-      font-size: 38px;
+      font-size: calc(var(--size) * .36);
       font-weight: 700;
       line-height: 1;
     }
 
-    .ring-center span {
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .ring-center svg {
-      width: 44px;
-      height: 44px;
-      color: var(--green-ink);
+    .hero-center svg {
+      width: calc(var(--size) * .34);
+      height: calc(var(--size) * .34);
       animation: sp-pop 520ms var(--spring) 500ms both;
     }
 
-    .today-copy h2 {
+    .home-hero h1 {
       margin: 0 0 6px;
-      font-size: 21px;
-      line-height: 1.3;
+      font-size: 26px;
+      line-height: 1.25;
     }
 
-    .today-copy p {
+    .home-hero p {
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 16px;
       line-height: 1.5;
     }
 
     .today-go {
       width: 100%;
-      min-height: 58px;
+      min-height: 60px;
       font-size: 19px;
     }
 
-    .week-card {
-      padding: 16px 18px 18px;
-      border-radius: 24px;
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--line);
-    }
-
-    .card-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .card-head h2 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .card-head span {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .week-strip {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 4px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      text-align: center;
-    }
-
-    .week-strip li {
-      display: grid;
-      justify-items: center;
-      gap: 6px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .week-strip .dot {
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      color: #2b2a3d;
-      background: var(--track);
-    }
-
-    .week-strip .done .dot {
-      background: var(--c);
-      animation: sp-pop 520ms var(--spring) both;
-      animation-delay: calc(var(--i) * 60ms + 300ms);
-    }
-
-    .week-strip .frozen .dot {
-      color: var(--blue-ink);
-      background: transparent;
-      box-shadow: inset 0 0 0 2px var(--blue);
-    }
-
-    .week-strip .today {
-      color: var(--text);
-    }
-
-    .week-strip .today:not(.done) .dot {
-      background: transparent;
-      box-shadow: inset 0 0 0 2.5px var(--text);
-    }
-
-    /* A past day with no practice: an empty ring, so filled always means "done". */
-    .week-strip li:not(.done):not(.frozen):not(.today):not(.future) .dot {
-      background: transparent;
-      box-shadow: inset 0 0 0 2px var(--track);
-    }
-
-    .week-strip .future .dot {
-      background: transparent;
-      box-shadow: inset 0 0 0 2px var(--track);
-      opacity: .5;
-    }
-
-    .book-card {
-      display: grid;
-      grid-template-columns: 54px minmax(0, 1fr) 22px;
-      gap: 14px;
-      align-items: center;
-      width: 100%;
-      padding: 16px 16px 16px 18px;
-      border: 0;
-      border-radius: 24px;
-      color: var(--text);
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--line);
-      text-align: left;
-      cursor: pointer;
-      transition: transform 160ms var(--spring), box-shadow 200ms ease;
-    }
-
-    .book-card:active { transform: scale(.98); }
-    .book-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-
-    .book-cover {
-      position: relative;
-      width: 54px;
-      height: 54px;
-    }
-
-    .book-cover i {
-      position: absolute;
-      top: 6px;
-      width: 28px;
-      height: 40px;
-      border-radius: 8px;
-    }
-
-    .book-cover i:first-child { left: 4px; background: #ffb4a2; transform: rotate(-10deg); }
-    .book-cover i:last-child { right: 4px; background: var(--primary); transform: rotate(10deg); }
-
-    .book-copy {
-      display: grid;
-      gap: 4px;
-      min-width: 0;
-    }
-
-    .book-copy b {
-      font-size: 17px;
-    }
-
-    .book-copy > span {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .book-bar {
-      display: block;
-      height: 8px;
-      margin-top: 4px;
-      overflow: hidden;
-      border-radius: 99px;
-      background: var(--track);
-    }
-
-    .book-bar i {
-      display: block;
-      width: 0;
-      height: 100%;
-      border-radius: inherit;
-      background: #9eebc4;
-      transition: width 900ms var(--glide) 300ms;
-    }
-
-    .book-card .chev { color: var(--dim); }
-
-    /* ---- Onboarding ---- */
     .onboard {
       position: fixed;
       inset: 0;
@@ -3509,11 +3345,11 @@
     @media (prefers-reduced-motion: reduce) {
       .start *, .start-hint::before,
       .home > *, .ob-page.active > *, .ob-bell svg,
-      .week-strip .done .dot, .tab-btn-app.active .nav-icon,
-      .screen-enter, .screen-enter-back, .ring-center svg {
+      .tab-btn-app.active .nav-icon,
+      .screen-enter, .screen-enter-back, .hero-center svg {
         animation: none !important;
       }
-      .ob-track, .ring-fill, .book-bar i, .blk { transition: none; }
+      .ob-track, .hero-fill, .blk { transition: none; }
     }
   </style>
 </head>
@@ -3578,43 +3414,17 @@
         <button class="tab-btn-app" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
       </nav>
 
-      <section class="home" id="homeScreen" aria-labelledby="homeGreeting">
+      <section class="home" id="homeScreen" aria-labelledby="todayTitle">
         <header class="home-top">
-          <div>
-            <p class="home-date" id="homeDate"></p>
-            <h1 class="home-greeting" id="homeGreeting"></h1>
-          </div>
+          <button class="home-book" type="button" id="homeBook"><span id="bookTitle"></span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
         </header>
-
-        <article class="today-card" id="todayCard">
-          <div class="today-main">
-            <div class="today-ring" aria-hidden="true">
-              <svg viewBox="0 0 120 120"><circle class="ring-track" cx="60" cy="60" r="50"/><circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50" pathLength="100"/></svg>
-              <div class="ring-center"><b id="ringNum">0</b><span id="ringUnit"></span></div>
-            </div>
-            <div class="today-copy">
-              <h2 id="todayTitle"></h2>
-              <p id="todaySub"></p>
-            </div>
-          </div>
-          <button class="duo-button today-go" type="button" id="homeGo"></button>
-        </article>
-
-        <section class="week-card" aria-labelledby="weekTitle">
-          <div class="card-head"><h2 id="weekTitle" data-en="This week" data-zh="这一周">这一周</h2><span id="weekNote"></span></div>
-          <ol class="week-strip" id="weekStrip"></ol>
-        </section>
-
-        <button class="book-card" type="button" id="homeBook">
-          <span class="book-cover" aria-hidden="true"><i></i><i></i></span>
-          <span class="book-copy">
-            <b id="bookTitle"></b>
-            <span id="bookSub"></span>
-            <span class="book-bar" aria-hidden="true"><i id="bookBar"></i></span>
-          </span>
-          <svg class="chev" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <div class="home-hero">
+          <div class="hero-block" role="img"><i class="hero-fill" id="heroFill"></i><div class="hero-center" id="heroCenter"></div></div>
+          <h1 id="todayTitle"></h1>
+          <p id="todaySub"></p>
+        </div>
+        <button class="duo-button today-go" type="button" id="homeGo"></button>
       </section>
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
@@ -4232,14 +4042,12 @@
         fx: { combo: "{n} in a row", comboWord: "COMBO" },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         home: {
-          night: "Still up?", morning: "Good morning", noon: "Good afternoon", afternoon: "Good afternoon", evening: "Good evening",
           leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
           doneTitle: "Today's goal is done", doneSub: "{n}-day streak. One more set never hurts.", doneSubNoStreak: "Nice work. One more set never hurts.",
           start: "Start practice", resume: "Continue the set", again: "One more set", nextSet: "Next set",
           emptyTitle: "Your library is empty", emptySub: "Pick a word book or paste your own list to begin.", emptyBtn: "Add words", emptyUnit: "words",
           trialTitle: "Try a set first", trialSub: "Ten sample words to learn the game; switch to your own words after.", trialBtn: "Play the sample set", trialUnit: "sample words",
           chooseTitle: "Now pick your words", chooseSub: "You've played the samples. Choose a word book or import your own list.", chooseBtn: "Choose a word book",
-          week: "{n} of 7 days", weekDays: "M,T,W,T,F,S,S", weekToday: "today",
           bookMine: "My library", bookSamples: "Sample words", bookSub: "{n} words · {m} mastered",
           streakTitle: "{n}-day streak"
         },
@@ -4479,14 +4287,12 @@
         fx: { combo: "连对 {n} 次", comboWord: "连击" },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         home: {
-          night: "夜深了", morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好",
           leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
           doneTitle: "今天的目标完成了", doneSub: "已经连续 {n} 天。想多练也可以再来一组。", doneSubNoStreak: "做得好。想多练也可以再来一组。",
           start: "开始练习", resume: "继续这一组", again: "再练一组", nextSet: "下一组",
           emptyTitle: "词库还是空的", emptySub: "选一本词书，或者粘贴自己的词表，就能开始了。", emptyBtn: "添加单词", emptyUnit: "个词",
           trialTitle: "先玩一组试试", trialSub: "用 10 个示例词熟悉玩法，之后再换成你要背的词。", trialBtn: "开始体验", trialUnit: "个示例词",
           chooseTitle: "换成你要背的词吧", chooseSub: "示例词已经玩过了。选一本词书，或者导入自己的词表。", chooseBtn: "选一本词书",
-          week: "本周 {n}/7 天", weekDays: "一,二,三,四,五,六,日", weekToday: "今天",
           bookMine: "我的词库", bookSamples: "示例词", bookSub: "{n} 个词 · 已掌握 {m}",
           streakTitle: "连续 {n} 天"
         },
@@ -9436,22 +9242,9 @@
 
     // ---- Home ----
     const ICON_CHECK_BIG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="m7 12.5 3.2 3.2L17 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const ICON_DOT_CHECK = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="m5 10.5 3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const ICON_DOT_FROZEN = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M10 2v16M3 6l14 8M17 6 3 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-
-    function greetingKey(hour) {
-      if (hour < 5) return "home.night";
-      if (hour < 11) return "home.morning";
-      if (hour < 13) return "home.noon";
-      if (hour < 18) return "home.afternoon";
-      return "home.evening";
-    }
-
     function renderHome() {
       if (!els.homeScreen) return;
       const now = new Date();
-      els.homeGreeting.textContent = t(greetingKey(now.getHours()));
-      els.homeDate.textContent = now.toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "long", day: "numeric", weekday: "long" });
       settleHabit();
       const status = habitStatus(now.getTime());
       const streak = isTrial() ? 0 : status.streak;
@@ -9492,31 +9285,14 @@
       els.todayTitle.textContent = title;
       els.todaySub.textContent = sub;
       els.homeGo.textContent = btn;
-      const center = els.ringCenter || (els.ringCenter = els.ringNum.parentElement);
-      if (done && !awaitingTrialChoice()) {
-        center.innerHTML = ICON_CHECK_BIG + `<span>${escapeHtml(t("home.unitDone"))}</span>`;
-      } else {
-        center.innerHTML = `<b></b><span></span>`;
-        center.querySelector("b").textContent = num;
-        center.querySelector("span").textContent = unit;
-      }
-      // Next frame, so the ring sweeps from where it was.
-      requestAnimationFrame(() => { els.ringFill.style.strokeDashoffset = String(100 - Math.max(pct ? 4 : 0, pct)); });
-
-      // This week, Monday to Sunday: done days in confetti colours, frozen days as a ring.
-      const today = WordSnapHabit.dayKey(now.getTime());
-      const monday = today - ((today + 3) % 7);
-      const labels = t("home.weekDays").split(",");
-      let doneDays = 0;
-      els.weekStrip.innerHTML = labels.map((label, i) => {
-        const day = monday + i;
-        const mark = habit.days[day];
-        if (mark === "done") doneDays += 1;
-        const cls = [mark === "done" ? "done" : mark === "frozen" ? "frozen" : "", day === today ? "today" : "", day > today ? "future" : ""].filter(Boolean).join(" ");
-        const icon = mark === "done" ? ICON_DOT_CHECK : mark === "frozen" ? ICON_DOT_FROZEN : "";
-        return `<li class="${cls}" style="--i:${i};--c:${CONFETTI[i % CONFETTI.length]}"><span class="dot">${icon}</span><span>${day === today ? escapeHtml(t("home.weekToday")) : escapeHtml(label)}</span></li>`;
-      }).join("");
-      els.weekNote.textContent = t("home.week", { n: doneDays });
+      const full = done && !awaitingTrialChoice();
+      // Only the number (or a check): the line under the block says what it counts.
+      els.heroCenter.innerHTML = full ? ICON_CHECK_BIG : "<b></b>";
+      if (!full) els.heroCenter.querySelector("b").textContent = num;
+      els.heroCenter.parentElement.setAttribute("aria-label", full ? t("home.unitDone") : `${num} ${unit}`);
+      els.heroFill.innerHTML = `<div class="hero-center">${els.heroCenter.innerHTML}</div>`;
+      // Next frame, so the colour rises from where it was.
+      requestAnimationFrame(() => { els.heroFill.style.setProperty("--fill", `${full ? 100 : Math.max(pct ? 6 : 0, pct)}%`); });
 
       const samplesOnly = state.words.length > 0 && !state.words.some(word => word.custom);
       let bookName = samplesOnly ? t("home.bookSamples") : t("home.bookMine");
@@ -9526,10 +9302,8 @@
         if (book && !samplesOnly) bookName = currentLang === "zh" ? book.zh : book.en;
         else if (id && !wordbookIndex && !samplesOnly) loadWordbookIndex().then(() => { if (document.body.dataset.screen === "home") renderHome(); }).catch(() => {});
       } catch (error) { /* private mode */ }
-      const mastered = state.words.filter(isMastered).length;
       els.bookTitle.textContent = bookName;
-      els.bookSub.textContent = t("home.bookSub", { n: state.words.length, m: mastered });
-      requestAnimationFrame(() => { els.bookBar.style.width = `${state.words.length ? Math.max(mastered ? 3 : 0, Math.round(100 * mastered / state.words.length)) : 0}%`; });
+      els.homeBook.setAttribute("aria-label", `${bookName}, ${t("home.bookSub", { n: state.words.length, m: state.words.filter(isMastered).length })}`);
     }
 
     // ---- Onboarding ----
@@ -9699,19 +9473,13 @@
     function initShell(firstRun) {
       Object.assign(els, {
         homeScreen: document.getElementById("homeScreen"),
-        homeGreeting: document.getElementById("homeGreeting"),
-        homeDate: document.getElementById("homeDate"),
         homeStreak: document.getElementById("homeStreak"),
         homeStreakN: document.getElementById("homeStreakN"),
         todayTitle: document.getElementById("todayTitle"),
         todaySub: document.getElementById("todaySub"),
-        ringFill: document.getElementById("ringFill"),
-        ringNum: document.getElementById("ringNum"),
-        weekStrip: document.getElementById("weekStrip"),
-        weekNote: document.getElementById("weekNote"),
-        bookTitle: document.getElementById("bookTitle"),
-        bookSub: document.getElementById("bookSub"),
-        bookBar: document.getElementById("bookBar")
+        heroFill: document.getElementById("heroFill"),
+        heroCenter: document.getElementById("heroCenter"),
+        bookTitle: document.getElementById("bookTitle")
       });
       const initial = firstRun ? "onboard" : "home";
       nav = WordSnapShell.createNav({ initial, render: renderNav });
