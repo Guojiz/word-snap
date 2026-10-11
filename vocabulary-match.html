@@ -363,34 +363,6 @@
       margin-bottom: 54px;
     }
 
-    /* Focus mode: everything but the board goes away and the board glides to the
-       middle of the screen (js: enterFocus / exitFocus animate the move). */
-    body.focus-mode .rail,
-    body.focus-mode .streak-chip,
-    body.focus-mode .mobile-nav,
-    body.focus-mode .today-bar,
-    body.focus-mode .prompt-kicker,
-    body.focus-mode #practiceView > h1 {
-      display: none;
-    }
-
-    body.focus-mode .app {
-      grid-template-columns: 1fr;
-    }
-
-    .rail > *,
-    .mobile-nav,
-    .today-bar,
-    .prompt-kicker,
-    #practiceView > h1 {
-      animation: focus-back 0.4s ease;
-    }
-
-    @keyframes focus-back {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
     /* Effects layer (js/fx.js): sparks, combo badge, shockwave, confetti. */
     .fx-layer {
       position: fixed;
@@ -559,59 +531,6 @@
       .progress-fill { transition: none; }
     }
 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 30;
-      pointer-events: none;
-      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(43, 42, 61, 0.14) 100%);
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    body.focus-mode::after {
-      opacity: 1;
-    }
-
-    body.focus-mode .progress-fill {
-      box-shadow: none;
-    }
-
-    .focus-exit {
-      position: fixed;
-      right: 16px;
-      bottom: calc(16px + var(--sab));
-      z-index: 5;
-      border: 2px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 14px;
-      color: var(--muted);
-      background: var(--bg);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-      cursor: pointer;
-    }
-
-    @media (hover: none) {
-      .focus-exit .key-hint { display: none; }
-    }
-
-    body.focus-mode .focus-exit {
-      opacity: 0.75;
-      visibility: visible;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .rail > *, .mobile-nav, .today-bar, .prompt-kicker, #practiceView > h1, .focus-exit {
-        transition: none;
-        animation: none;
-      }
-    }
 
     .today-bar {
       grid-column: 1 / -1;
@@ -2613,97 +2532,155 @@
       --glide: cubic-bezier(.2, .8, .2, 1);
     }
 
-    /* Launch screen. Plays on its own from first paint; the shell only decides when it leaves. */
-    .splash {
+    /* Start screen. A bunch of big confetti blocks in the middle; tap one to start, and its
+       colour floods the screen and becomes the set colour. Drawn on fixed paper, the same
+       colour as the Android launch screen (res/values and values-night colors.xml), so the
+       system splash hands over without a colour jump. */
+    .start {
       position: fixed;
       inset: 0;
       z-index: 100;
       display: grid;
-      place-items: center;
-      /* Fixed paper, the same as the Android launch screen (res/values and values-night colors.xml), so the
-         system splash hands over without a colour jump; it then fades into the set's colour. */
+      grid-template-rows: 1fr auto auto 1fr;
+      justify-items: center;
+      padding: calc(24px + var(--sat)) 24px calc(32px + var(--sab));
       background: #fffcf6;
-      transition: opacity 420ms ease, visibility 0s linear 420ms;
+      overflow: hidden;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    :root[data-color-mode="dark"] .splash { background: #1f1e2e; }
+    :root[data-color-mode="dark"] .start { background: #1f1e2e; }
 
     @media (prefers-color-scheme: dark) {
-      :root:not([data-color-mode]) .splash { background: #1f1e2e; }
+      :root:not([data-color-mode]) .start { background: #1f1e2e; }
     }
 
-    .splash.leave {
-      opacity: 0;
-      visibility: hidden;
+    .start-go {
+      grid-row: 2;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .start-go:focus-visible { outline: none; }
+    .start-go:focus-visible .blocks { outline: 3px solid var(--blue); outline-offset: 12px; border-radius: 40px; }
+
+    .blocks {
+      --u: min(29vw, 25vh, 132px);
+      --px: 0;
+      --py: 0;
+      position: relative;
+      width: calc(var(--u) * 2.7);
+      height: calc(var(--u) * 2.7);
+      transition: scale 220ms var(--spring);
+    }
+
+    .start-go:active .blocks { scale: .95; }
+
+    .blk {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: calc(var(--u) * var(--w));
+      height: calc(var(--u) * var(--h));
+      translate:
+        calc(-50% + var(--u) * var(--x) + var(--px) * var(--z) * 1px)
+        calc(-50% + var(--u) * var(--y) + var(--py) * var(--z) * 1px);
+      rotate: var(--r);
+      transition: translate 500ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .blk b {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--u) * .3);
+      background: var(--c);
+      box-shadow: 0 calc(var(--u) * .12) calc(var(--u) * .3) calc(var(--u) * -.16) rgba(80, 60, 30, .28);
+    }
+
+    .blk:nth-child(1) { --c: #ffe27a; --x: -.5;  --y: -.55; --w: 1.2;  --h: 1.12; --r: -9deg;  --z: -10; --d: 0ms;   --f: 3.6s; }
+    .blk:nth-child(2) { --c: #ffb4a2; --x: .58;  --y: -.42; --w: 1.02; --h: 1.28; --r: 11deg;  --z: 14;  --d: 70ms;  --f: 4.2s; }
+    .blk:nth-child(3) { --c: #a8d8ff; --x: -.62; --y: .6;   --w: 1.12; --h: 1.02; --r: 7deg;   --z: 18;  --d: 140ms; --f: 3.9s; }
+    .blk:nth-child(4) { --c: #9eebc4; --x: .52;  --y: .66;  --w: 1.24; --h: 1.06; --r: -6deg;  --z: -14; --d: 210ms; --f: 4.6s; }
+    .blk:nth-child(5) { --c: #d4c4ff; --x: .02;  --y: .04;  --w: .92;  --h: .92;  --r: 17deg;  --z: 24;  --d: 280ms; --f: 3.3s; }
+
+    .start.play .blk { animation: blk-in 760ms var(--spring) var(--d) both; }
+    .start.play .blk b { animation: blk-float var(--f) ease-in-out calc(var(--d) + 760ms) infinite alternate; }
+
+    @keyframes blk-in {
+      from { opacity: 0; scale: .2; rotate: calc(var(--r) * -3); }
+      60% { opacity: 1; }
+    }
+
+    @keyframes blk-float {
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(calc(var(--u) * -.06)) rotate(3deg); }
+    }
+
+    .start-word {
+      grid-row: 3;
+      display: flex;
+      margin: 26px 0 0;
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .start-word i { font-style: normal; }
+    .start-word i:nth-child(1) { color: #ff7a59; }
+    .start-word i:nth-child(2) { color: #f5b800; }
+    .start-word i:nth-child(3) { color: #2ec27e; }
+    .start-word i:nth-child(4) { color: #3b82f6; }
+    .start.play .start-word i { animation: sp-letter 520ms var(--spring) calc(520ms + var(--k, 0) * 40ms) both; }
+
+    .start-hint {
+      grid-row: 4;
+      align-self: end;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .start-hint::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: hint-dot 1.6s ease-in-out infinite;
+    }
+
+    .start.play .start-hint { animation: sp-fade 500ms ease 1100ms both; }
+
+    @keyframes hint-dot { 50% { scale: 1.5; opacity: .55; } }
+
+    /* Leaving: the picked block's colour floods the screen (js), the rest fly off. */
+    .start.leaving { pointer-events: none; }
+    .start.leaving .start-word,
+    .start.leaving .start-hint { opacity: 0; transition: opacity 200ms ease; }
+    .start.revealing { background: transparent; }
+
+    .start-flood {
+      position: fixed;
+      inset: 0;
+      z-index: 101;
       pointer-events: none;
     }
 
-    .splash-mark {
-      display: grid;
-      justify-items: center;
-      gap: 14px;
-      transition: transform 420ms var(--glide);
-    }
-
-    .splash.leave .splash-mark {
-      transform: scale(1.08) translateY(-8px);
-    }
-
-    .splash-icon {
-      overflow: visible;
-      filter: drop-shadow(0 18px 30px rgba(80, 60, 30, .16));
-    }
-
-    .splash-icon * {
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-
-    .sp-tile { animation: sp-tile 520ms var(--spring) both; }
-    .sp-a { animation: sp-a 620ms var(--spring) 160ms both; }
-    .sp-b { animation: sp-b 620ms var(--spring) 160ms both; }
-    .splash-icon { animation: sp-snap 360ms ease-out 560ms both; }
-    .sp-dot { animation: sp-pop 420ms var(--spring) 600ms both; }
-    .sp-c1 { animation: sp-c1 700ms var(--spring) 640ms both; }
-    .sp-c2 { animation: sp-c2 700ms var(--spring) 680ms both; }
-    .sp-c3 { animation: sp-c3 700ms var(--spring) 720ms both; }
-
-    .splash-word {
-      display: flex;
-      font-family: var(--num-font);
-      font-size: 40px;
-      font-weight: 700;
-      line-height: 1;
-      color: var(--text);
-    }
-
-    .splash-word i {
-      font-style: normal;
-      animation: sp-letter 520ms var(--spring) both;
-    }
-
-    .splash-word i:nth-child(1) { color: #ff7a59; animation-delay: 620ms; }
-    .splash-word i:nth-child(2) { color: #f5b800; animation-delay: 660ms; }
-    .splash-word i:nth-child(3) { color: #2ec27e; animation-delay: 700ms; }
-    .splash-word i:nth-child(4) { color: #3b82f6; animation-delay: 740ms; }
-    .splash-word i:nth-child(n+5) { animation-delay: 780ms; }
-
-    .splash-tag {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-      font-weight: 600;
-      animation: sp-fade 500ms ease 900ms both;
-    }
-
-    @keyframes sp-tile { from { transform: scale(.6); opacity: 0; } }
-    @keyframes sp-a { from { transform: translate(-46px, 14px) rotate(-28deg); opacity: 0; } }
-    @keyframes sp-b { from { transform: translate(46px, -14px) rotate(28deg); opacity: 0; } }
-    @keyframes sp-snap { 0% { transform: scale(1); } 35% { transform: scale(1.07, .95); } 100% { transform: scale(1); } }
     @keyframes sp-pop { from { transform: scale(0); } }
-    @keyframes sp-c1 { from { transform: translate(28px, 34px) scale(0); } }
-    @keyframes sp-c2 { from { transform: translate(-34px, -34px) scale(0); } }
-    @keyframes sp-c3 { from { transform: translate(-30px, 40px) scale(0) rotate(90deg); } }
     @keyframes sp-letter { from { transform: translateY(22px) scale(.7); opacity: 0; } }
     @keyframes sp-fade { from { opacity: 0; transform: translateY(6px); } }
 
@@ -2711,6 +2688,30 @@
     body:not([data-screen="practice"]) .lesson,
     body:not([data-screen="home"]) .home {
       display: none !important;
+    }
+
+    /* Practice is its own full screen: the top bar and the board, nothing else. The board
+       sits in the middle of the space and never moves while you play. */
+    body[data-screen="practice"] .rail,
+    body[data-screen="practice"] .today-bar {
+      display: none !important;
+    }
+
+    body[data-screen="practice"] .app { grid-template-columns: 1fr; }
+
+    body[data-screen="practice"] .lesson {
+      min-height: calc(100dvh - 64px - var(--sat) - var(--sab));
+    }
+
+    body[data-screen="practice"] #practiceView { align-self: center; }
+
+    #practiceView > h1 {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
     }
 
     .screen-enter {
@@ -2851,35 +2852,10 @@
 
     .home-top {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 12px;
     }
-
-    .home-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .home-brand svg {
-      border-radius: 10px;
-      box-shadow: 0 6px 14px -8px var(--card-shadow);
-    }
-
-    .wordmark {
-      color: var(--text);
-      font-family: var(--num-font);
-      font-size: 22px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .wordmark i { font-style: normal; }
-    .wordmark i:nth-child(1) { color: #ff7a59; }
-    .wordmark i:nth-child(2) { color: #f5b800; }
-    .wordmark i:nth-child(3) { color: #2ec27e; }
-    .wordmark i:nth-child(4) { color: #3b82f6; }
 
     .home-streak {
       display: inline-flex;
@@ -2902,7 +2878,7 @@
     }
 
     .home-date {
-      margin: 6px 0 -10px;
+      margin: 6px 0 2px;
       color: var(--muted);
       font-size: 15px;
       font-weight: 600;
@@ -2925,20 +2901,6 @@
       background: var(--panel);
       box-shadow: inset 0 0 0 2px var(--line), 0 22px 44px -30px var(--card-shadow);
     }
-
-    .today-card .deco {
-      position: absolute;
-      z-index: -1;
-      border-radius: 50%;
-      opacity: .9;
-      animation: deco-float 7s ease-in-out infinite;
-    }
-
-    .deco-1 { top: -78px; right: -66px; width: 132px; height: 132px; background: var(--primary); opacity: .4 !important; }
-    .deco-2 { top: 22px; right: 96px; width: 12px; height: 12px; background: #ffb4a2; animation-delay: -2s !important; }
-    .deco-3 { bottom: 92px; right: 22px; width: 16px; height: 16px; border-radius: 4px !important; background: #9eebc4; transform: rotate(20deg); animation-delay: -4s !important; }
-
-    @keyframes deco-float { 50% { translate: 0 -6px; } }
 
     .today-main {
       display: grid;
@@ -3286,65 +3248,6 @@
       line-height: 1.55;
     }
 
-    .ob-hero {
-      position: relative;
-      height: 120px;
-    }
-
-    .ob-card {
-      position: absolute;
-      top: 34px;
-      display: grid;
-      place-items: center;
-      width: 132px;
-      height: 54px;
-      border-radius: 18px;
-      color: var(--text);
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--line), 0 10px 22px -14px var(--card-shadow);
-      font-size: 19px;
-      font-weight: 700;
-      animation: ob-meet-a 3.4s var(--glide) infinite;
-    }
-
-    .ob-card-a { left: calc(50% - 150px); }
-    .ob-card-b { left: calc(50% + 18px); animation-name: ob-meet-b; }
-
-    @keyframes ob-meet-a {
-      0%, 12% { transform: none; background: var(--panel); }
-      30% { transform: translateX(10px) rotate(-4deg); background: var(--panel); }
-      38%, 78% { transform: translateX(10px) rotate(-4deg); color: #2b2a3d; background: #9eebc4; box-shadow: inset 0 0 0 2px #7bc8a3; }
-      100% { transform: none; background: var(--panel); }
-    }
-
-    @keyframes ob-meet-b {
-      0%, 12% { transform: none; background: var(--panel); }
-      30% { transform: translateX(-10px) rotate(4deg); background: var(--panel); }
-      38%, 78% { transform: translateX(-10px) rotate(4deg); color: #2b2a3d; background: #9eebc4; box-shadow: inset 0 0 0 2px #7bc8a3; }
-      100% { transform: none; background: var(--panel); }
-    }
-
-    .ob-spark {
-      position: absolute;
-      top: 60px;
-      left: 50%;
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      opacity: 0;
-      animation: ob-spark 3.4s ease-out infinite;
-    }
-
-    .ob-spark-1 { background: #ffe27a; --dx: -40px; --dy: -46px; }
-    .ob-spark-2 { background: #ffb4a2; --dx: 44px; --dy: -40px; border-radius: 50%; }
-    .ob-spark-3 { background: #d4c4ff; --dx: 6px; --dy: -58px; }
-
-    @keyframes ob-spark {
-      0%, 34% { opacity: 0; transform: translate(-50%, 0) scale(.4); }
-      40% { opacity: 1; }
-      62%, 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), var(--dy)) scale(1) rotate(140deg); }
-    }
-
     .ob-options {
       display: grid;
       gap: 10px;
@@ -3604,36 +3507,27 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .splash *, .splash-word i, .splash-tag,
-      .home > *, .ob-page.active > *, .ob-card, .ob-spark, .ob-bell svg,
-      .today-card .deco, .week-strip .done .dot, .tab-btn-app.active .nav-icon,
+      .start *, .start-hint::before,
+      .home > *, .ob-page.active > *, .ob-bell svg,
+      .week-strip .done .dot, .tab-btn-app.active .nav-icon,
       .screen-enter, .screen-enter-back, .ring-center svg {
         animation: none !important;
       }
-      .ob-track, .ring-fill, .book-bar i { transition: none; }
-      .ob-spark { display: none; }
+      .ob-track, .ring-fill, .book-bar i, .blk { transition: none; }
     }
   </style>
 </head>
 <body data-screen="home">
-  <!-- Launch screen: the icon's two cards snap together, then the first screen rises in (js/shell.js). -->
-  <div class="splash" id="splash" aria-hidden="true">
-    <div class="splash-mark">
-      <svg class="splash-icon" viewBox="0 0 120 120" width="132" height="132">
-        <rect class="sp-tile" width="120" height="120" rx="30" fill="#fff7e8"/>
-        <g class="sp-card sp-a"><rect x="22" y="32" width="42" height="56" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/></g>
-        <g class="sp-card sp-b"><rect x="56" y="32" width="42" height="56" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/></g>
-        <circle class="sp-dot" cx="60" cy="60" r="6" fill="#ffffff"/>
-        <circle class="sp-c sp-c1" cx="30" cy="24" r="4" fill="#ffe27a"/>
-        <circle class="sp-c sp-c2" cx="96" cy="96" r="5" fill="#9eebc4"/>
-        <rect class="sp-c sp-c3" x="88" y="18" width="8" height="8" rx="2" fill="#d4c4ff" transform="rotate(20 92 22)"/>
-      </svg>
-      <div class="splash-word" lang="en"><i>W</i><i>o</i><i>r</i><i>d</i><i>&#160;</i><i>S</i><i>n</i><i>a</i><i>p</i></div>
-      <p class="splash-tag" data-en="Learning words can be easy." data-zh="背单词，可以很轻松。">背单词，可以很轻松。</p>
-    </div>
-  </div>
+  <!-- Start screen: tap a colour block to start; it becomes the set colour (js/shell.js). -->
+  <section class="start" id="startScreen" aria-labelledby="startWord">
+    <button class="start-go" type="button" id="startGo" aria-describedby="startHint" aria-label="开始" data-en-aria="Start" data-zh-aria="开始">
+      <span class="blocks" aria-hidden="true"><i class="blk" data-theme="0"><b></b></i><i class="blk" data-theme="1"><b></b></i><i class="blk" data-theme="2"><b></b></i><i class="blk" data-theme="3"><b></b></i><i class="blk" data-theme="4"><b></b></i></span>
+    </button>
+    <h1 class="start-word" id="startWord" lang="en"><i style="--k:0">W</i><i style="--k:1">o</i><i style="--k:2">r</i><i style="--k:3">d</i><i style="--k:4">&#160;</i><i style="--k:5">S</i><i style="--k:6">n</i><i style="--k:7">a</i><i style="--k:8">p</i></h1>
+    <p class="start-hint" id="startHint" data-en="Tap a colour to start" data-zh="点一个颜色开始">点一个颜色开始</p>
+  </section>
 
-  <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on the board. -->
+  <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on Home. -->
   <section class="onboard" id="onboardScreen" aria-label="开始使用" data-en-aria="Get started" data-zh-aria="开始使用" hidden>
     <header class="ob-top">
       <button class="icon-button ob-back" type="button" id="obBack" aria-label="上一步" data-en-aria="Back" data-zh-aria="上一步"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -3643,10 +3537,6 @@
     <div class="ob-viewport">
       <div class="ob-track" id="obTrack">
         <div class="ob-page" data-step="0">
-          <div class="ob-hero" aria-hidden="true">
-            <span class="ob-card ob-card-a">文学</span><span class="ob-card ob-card-b" lang="en">literature</span>
-            <span class="ob-spark ob-spark-1"></span><span class="ob-spark ob-spark-2"></span><span class="ob-spark ob-spark-3"></span>
-          </div>
           <h1 data-en="What are you studying for?" data-zh="你在准备什么？">你在准备什么？</h1>
           <p class="ob-lead" data-en="Pick a word book. Word Snap plans the words for each day; you just match the pairs." data-zh="选一本词书，每天要背哪些词交给 Word Snap 安排，你只管配对。">选一本词书，每天要背哪些词交给 Word Snap 安排，你只管配对。</p>
           <div class="ob-options ob-books" id="obBooks" role="radiogroup" aria-label="词书" data-en-aria="Word book" data-zh-aria="词书"></div>
@@ -3690,17 +3580,14 @@
 
       <section class="home" id="homeScreen" aria-labelledby="homeGreeting">
         <header class="home-top">
-          <div class="home-brand" aria-hidden="true">
-            <svg viewBox="0 0 120 120" width="34" height="34"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg>
-            <span class="wordmark" lang="en"><i>W</i><i>o</i><i>r</i><i>d</i> Snap</span>
+          <div>
+            <p class="home-date" id="homeDate"></p>
+            <h1 class="home-greeting" id="homeGreeting"></h1>
           </div>
           <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
         </header>
-        <p class="home-date" id="homeDate"></p>
-        <h1 class="home-greeting" id="homeGreeting"></h1>
 
         <article class="today-card" id="todayCard">
-          <span class="deco deco-1" aria-hidden="true"></span><span class="deco deco-2" aria-hidden="true"></span><span class="deco deco-3" aria-hidden="true"></span>
           <div class="today-main">
             <div class="today-ring" aria-hidden="true">
               <svg viewBox="0 0 120 120"><circle class="ring-track" cx="60" cy="60" r="50"/><circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50" pathLength="100"/></svg>
@@ -3915,10 +3802,6 @@
               <select id="colorModeSelect"></select>
             </label>
           </div>
-          <label class="check-row">
-            <input id="focusMode" type="checkbox" />
-            <span data-en="Focus mode: hide everything but the board while you are matching" data-zh="专注模式：连续答题时只留下棋盘">专注模式：连续答题时只留下棋盘</span>
-          </label>
           <label class="check-row">
             <input id="effectsOn" type="checkbox" />
             <span data-en="Effects and vibration" data-zh="动画特效和震动">动画特效和震动</span>
@@ -4178,7 +4061,6 @@
   </div>
 
   <p class="sr-only" id="feedback" role="status" aria-live="polite"></p>
-  <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus<span class=&quot;key-hint&quot;> · Esc</span>" data-zh="退出专注<span class=&quot;key-hint&quot;> · Esc</span>">退出专注<span class="key-hint"> · Esc</span></button>
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
@@ -4365,7 +4247,7 @@
           sample: "Just try the sample words", sampleSub: "10 words to learn the game", words: "{n} words",
           goal: "{n} new words", goalEasy: "Easy", goalNormal: "Recommended", goalSerious: "Serious", goalSprint: "Sprint", goalMin: "about {m} min a day",
           morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", none: "No reminders", noneSub: "You can turn them on later",
-          next: "Continue", finish: "Start the first set", preparing: "Preparing your words…", failed: "Could not load that word book. Check the connection and try again, or skip for now."
+          next: "Continue", finish: "Done", preparing: "Preparing your words…", failed: "Could not load that word book. Check the connection and try again, or skip for now."
         },
         today: {
           done: "Today's goal done", streak: "{n}-day streak",
@@ -4612,7 +4494,7 @@
           sample: "先用示例词试试", sampleSub: "10 个词，熟悉一下玩法", words: "{n} 词",
           goal: "{n} 个新词", goalEasy: "轻松", goalNormal: "推荐", goalSerious: "认真", goalSprint: "冲刺", goalMin: "每天约 {m} 分钟",
           morning: "早上", noon: "中午", evening: "晚上", night: "睡前", none: "先不用提醒", noneSub: "以后可以在设置里打开",
-          next: "继续", finish: "开始第一组", preparing: "正在准备词书……", failed: "词书没加载出来。检查一下网络再试，或者先跳过。"
+          next: "继续", finish: "完成", preparing: "正在准备词书……", failed: "词书没加载出来。检查一下网络再试，或者先跳过。"
         },
         today: {
           done: "今日完成", streak: "连续 {n} 天",
@@ -4818,7 +4700,6 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
-      focus: true,
       effects: true,
       reminder: "",
       langPair: { a: "English", b: "中文" },
@@ -4963,9 +4844,7 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
-      focusMode: document.getElementById("focusMode"),
       effectsOn: document.getElementById("effectsOn"),
-      focusExitBtn: document.getElementById("focusExitBtn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
       focusPairsBtn: document.getElementById("focusPairsBtn"),
@@ -5142,7 +5021,6 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
-        focus: raw.focus !== false,
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
         reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
@@ -6052,7 +5930,6 @@
       clearLevelTimers();
       clearSelection();
       state.levelEndsAt = 0;
-      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       setResultWord("clear");
@@ -6404,99 +6281,8 @@
       WordSnapFx.countUp(box.querySelector('[data-result="time"]'), Math.round((state.lastLevelActiveMs || 0) / 1000), n => WordSnapFx.clock(n * 1000), { delay: 480 });
     }
 
-    // ---- Focus mode (automatic) ----
-    // After a few answers in a row everything but the board goes away (navigation,
-    // today bar, title) and the board glides to the middle of the screen. It comes
-    // back after a pause without a pick, at the end of a set, when a window opens,
-    // with Esc, the "Exit focus" button, or pointing at the top or left edge.
-    // Settings can turn it off.
-    const FOCUS_AFTER_ANSWERS = 3;
-    // Long enough to think about a hard word: coming back moves the board, so it must
-    // not happen while someone is about to tap (testers mis-tapped at 10 s).
-    const FOCUS_IDLE_MS = 60000;
-    // Enter after the match's ripple has played, so it does not stay behind as a ghost.
-    const FOCUS_ENTER_DELAY_MS = 520;
-    let focusEnterTimer = null;
-    let focusAnswers = 0;
-    let focusIdleTimer = null;
-
-    function focusOn() {
-      return document.body.classList.contains("focus-mode");
-    }
-
-    /** A pick (answered = false) or an answer on the board. */
-    function focusActivity(answered) {
-      if (state.settings.focus === false) return;
-      clearTimeout(focusIdleTimer);
-      if (answered) focusAnswers += 1;
-      const playing = !els.completionView.classList.contains("show") && !shouldPauseLevel();
-      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS && !focusEnterTimer) {
-        focusEnterTimer = setTimeout(() => {
-          focusEnterTimer = null;
-          const stillPlaying = !els.completionView.classList.contains("show") && !shouldPauseLevel();
-          if (!focusOn() && stillPlaying && focusAnswers >= FOCUS_AFTER_ANSWERS) enterFocus();
-        }, FOCUS_ENTER_DELAY_MS);
-      }
-      focusIdleTimer = setTimeout(exitFocus, FOCUS_IDLE_MS);
-    }
-
-    const lessonEl = document.querySelector(".lesson");
-    const lessonTopEl = document.querySelector(".lesson-top");
-
-    function reducedMotion() {
-      return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    }
-
-    /** Vertical shift that puts the progress bar + board in the middle of the screen (layout without transform). */
-    function focusOffset() {
-      lessonEl.style.transition = "none";
-      lessonEl.style.transform = "";
-      const top = lessonTopEl.getBoundingClientRect().top;
-      const bottom = els.matchGrid.getBoundingClientRect().bottom;
-      return Math.max(0, Math.round(window.innerHeight / 2 - (top + bottom) / 2));
-    }
-
-    /** FLIP: start where the board was, then glide to `transform`. */
-    function glideLesson(from, transform) {
-      const to = els.matchGrid.getBoundingClientRect();
-      lessonEl.style.transition = "none";
-      lessonEl.style.transform = `translate(${Math.round(from.left - to.left)}px, ${Math.round(from.top - to.top)}px)`;
-      void lessonEl.offsetWidth;
-      if (!reducedMotion()) lessonEl.style.transition = "transform 0.5s cubic-bezier(.2, .8, .2, 1)";
-      lessonEl.style.transform = transform;
-    }
-
-    function enterFocus() {
-      const from = els.matchGrid.getBoundingClientRect();
-      document.body.classList.add("focus-mode");
-      const dy = focusOffset();
-      glideLesson(from, dy ? `translateY(${dy}px)` : "");
-    }
-
-    /** instant: no glide (a window or the set summary is about to cover the board). */
-    function exitFocus(options) {
-      clearTimeout(focusIdleTimer);
-      clearTimeout(focusEnterTimer);
-      focusEnterTimer = null;
-      focusAnswers = 0;
-      if (!focusOn()) return;
-      const from = els.matchGrid.getBoundingClientRect();
-      document.body.classList.remove("focus-mode");
-      lessonEl.style.transition = "none";
-      lessonEl.style.transform = "";
-      if (options && options.instant === true) return;
-      glideLesson(from, "");
-    }
-
-    window.addEventListener("resize", () => {
-      if (!focusOn()) return;
-      const dy = focusOffset();
-      lessonEl.style.transform = dy ? `translateY(${dy}px)` : "";
-    });
-
     /** Freeze the countdown while the library is open or the tab/app is in the background. */
     function pauseLevel() {
-      exitFocus({ instant: true });
       const boardLive = state.levelEndsAt > 0 || (isEndless() && !els.completionView.classList.contains("show"));
       if (state.pausedAt || !boardLive) return;
       state.pausedAt = performance.now();
@@ -6917,7 +6703,6 @@
       // Only the pair that is mid-clear is inert; every other card stays clickable
       // so a tap during the vanish animation is not lost.
       if (state.locked || card.disabled || card.classList.contains("correct") || isLevelOver()) return;
-      focusActivity(false);
       clearWrong();
       // DOM may have been recreated by refill — rebind instead of dropping selection.
       if (state.selected && !rebindSelection()) {
@@ -7001,7 +6786,6 @@
 
     function markCorrect(first, second) {
       if (isLevelOver()) return;
-      focusActivity(true);
       // Credit the word whose answer-side (right column) card was picked.
       const rightSel = first.side === "right" ? first : second;
       const word = slotWord(rightSel) || slotWord(first);
@@ -7147,7 +6931,6 @@
 
     function markWrong(first, second) {
       if (isLevelOver()) return;
-      focusActivity(true);
       const firstWord = slotWord(first);
       const secondWord = slotWord(second);
       if (!firstWord || !secondWord) return;
@@ -7245,7 +7028,6 @@
     }
 
     function showCompletion(allDone, reason = "queue") {
-      exitFocus({ instant: true });
       stopLevelCountdown();
       clearLevelTimers();
       clearSelection();
@@ -8289,7 +8071,6 @@
       state.levelMisses = new Map();
       state.lastCompletion = null;
       renderReviewList();
-      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
       setResultWord("start");
@@ -8812,7 +8593,6 @@
       els.pauseRefillWhileSelected.checked = state.settings.pauseRefillWhileSelected;
       els.recycleMastered.checked = state.settings.recycleMastered;
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
-      if (els.focusMode) els.focusMode.checked = state.settings.focus !== false;
       if (els.effectsOn) els.effectsOn.checked = state.settings.effects !== false;
       WordSnapFx.setEnabled(state.settings.effects !== false);
       syncLangPairUI();
@@ -8851,7 +8631,6 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
-        focus: els.focusMode ? els.focusMode.checked : true,
         effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
@@ -9054,12 +8833,8 @@
     });
     document.getElementById("quitBtn").addEventListener("click", () => {
       if (!state.words.length) return;
-      // Endless: × ends the current set early and shows its summary.
-      if (isEndless() && state.completedThisRun > 0 && !els.completionView.classList.contains("show")) {
-        showCompletion(false, "block");
-        return;
-      }
-      // Otherwise × goes home; the set waits, paused, until you come back.
+      // × always goes Home, like closing any full-screen task in an app; the set waits,
+      // paused, and Home's big button resumes it.
       goHome();
     });
     if (els.langPairSelect) {
@@ -9409,12 +9184,6 @@
       renderRound();
     });
 
-    els.focusExitBtn.addEventListener("click", () => exitFocus());
-    // Pointing at the navigation (top or left edge) brings it back; mouse only, not touch.
-    document.addEventListener("pointermove", event => {
-      if (focusOn() && event.pointerType === "mouse" && (event.clientX < 110 || event.clientY < 60)) exitFocus();
-    });
-
     // ---- Dialog focus: move in, keep the page behind inert, return on close ----
     const dialogReturnFocus = new Map();
     function syncDialogs() {
@@ -9463,10 +9232,6 @@
     pressedObserver.observe(els.matchGrid, { attributes: true, attributeFilter: ["class"], subtree: true });
 
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && focusOn()) {
-        exitFocus();
-        return;
-      }
       if (els.introModal.classList.contains("open")) {
         // Enter belongs to the focused button; only Esc closes from anywhere.
         if (event.key === "Escape") {
@@ -9484,6 +9249,9 @@
         return;
       }
       if (event.target && event.target.closest && event.target.closest("#drill")) return;
+      // The board's keys only work on the board (it stays in the page, hidden, on Home).
+      if (document.body.dataset.screen !== "practice") return;
+      if (event.key === "Escape") { goHome(); return; }
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
         // A shortcut for "Continue" only when no other control has focus.
         const onControl = event.target && event.target.closest && event.target.closest("button, a, input, select, textarea, summary");
@@ -9855,8 +9623,8 @@
       try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
       saveWords();
       renderRound();
+      // Home, not the board: the learner starts the first set when they choose to.
       nav.reset("home");
-      nav.go("practice");
     }
 
     async function finishOnboarding() {
@@ -9881,7 +9649,6 @@
         state.round = 1;
         renderRound();
         nav.reset("home");
-        nav.go("practice");
       } catch (error) {
         els.obWebNote.hidden = false;
         els.obWebNote.textContent = t("onboard.failed");
@@ -9909,7 +9676,6 @@
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
       if (els.introModal.classList.contains("open")) { closeIntro(); return true; }
-      if (focusOn()) { exitFocus(); return true; }
       if (nav && nav.current().screen === "onboard" && ob.step > 0) { obGo(ob.step - 1); return true; }
       return Boolean(nav && nav.back());
     };
@@ -9951,7 +9717,27 @@
       nav = WordSnapShell.createNav({ initial, render: renderNav });
       applyScreen(initial, "none");
       syncSystemBars();
-      WordSnapShell.splash(document.getElementById("splash"), { holdMs: firstRun ? 1500 : 1150 });
+      // Start screen on every launch: tap a colour and it becomes the set colour.
+      const app = [document.querySelector(".app"), els.onboardScreen];
+      app.forEach(el => { el.inert = true; });
+      WordSnapShell.start(document.getElementById("startScreen"), {
+        fallback: themeIndexOf(state.settings.themeIndex),
+        pick: index => {
+          WordSnapFx.haptic("tap");
+          applyTheme(index);
+          saveWords();
+          // The first screen rises in while the colour fades away.
+          const first = initial === "home" ? els.homeScreen : els.onboardScreen;
+          first.classList.remove("screen-enter");
+          void first.offsetWidth;
+          first.classList.add("screen-enter");
+        }
+      }).then(() => {
+        app.forEach(el => { el.inert = false; });
+        syncDialogs();
+        const target = initial === "home" ? els.homeGo : els.obBooks;
+        if (target && document.activeElement === document.body) target.focus({ preventScroll: true });
+      });
     }
 
     initInstallNudge();
