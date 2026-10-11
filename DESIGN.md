@@ -217,10 +217,10 @@ components:
     rounded: "{rounded.dialog}"
     padding: "20px"
   bottom-nav-item:
-    backgroundColor: "{colors.stage-panel-soft}"
+    backgroundColor: "transparent"
     textColor: "{colors.stage-muted}"
     rounded: "{rounded.card}"
-    height: "44px"
+    height: "52px"
 ---
 
 # Design System: Word Snap
@@ -300,7 +300,7 @@ The CSS custom properties keep legacy names from the previous look. The mapping 
 
 ## Layout
 
-Phone first. Below 1050px the desktop rail disappears and navigation becomes a fixed bottom bar of five equal buttons (Practice, Library, Settings, Appearance, EN / 中) with a 1px top line, 8px gap and safe-area padding; the page gets 18px side gutters and 96px of bottom room for the bar. Above 1050px a 96px left rail holds the logo tile and the same controls stacked, and the content column is centred at max 760px with 36px padding.
+Phone first. Below 1050px the desktop rail disappears and navigation becomes a fixed bottom bar: three icon-over-label tabs (Practice, Library, Settings) and two compact outlined toggles (Appearance as a sun / moon / half-circle icon, EN / 中), with a 1px top line, 6px gap and safe-area padding; the page gets 18px side gutters and 96px of bottom room for the bar. Above 1050px a 96px left rail holds the logo tile and the same controls stacked, and the content column is centred at max 760px with 36px padding.
 
 The practice view is one column: a top row (quit icon 44px, lane, count, streak), today's line beneath it, the instruction headline, then the board. The board is a 2×5 grid filled by column: meanings on the left, words on the right, keys 1–5 and 6–0. On desktop columns are max 255px with a 10px row gap and a 30px column gap; on phones (≤640px) the columns share the width with a 10px gap and rows are 58px. In focus mode (after three answers in a row) everything but the lane and board is hidden and the board glides to the vertical centre.
 
@@ -379,8 +379,14 @@ Library, Settings and the intro open as centred cards (max 720px wide, 18px corn
 After a delete, a 14px-cornered toast centred above the bottom edge: ink-button fill with on-ink text, and an Undo button inverted (on-ink fill, ink text, 10px corners, 40px tall).
 
 ### Navigation
-- **Phones (≤1050px):** fixed bottom bar on the ground colour; five equal 44px buttons with line outline, panel-soft fill and 13px muted text; the active one takes the ink colour and carries `aria-current="page"`.
-- **Desktop:** a 96px rail with the logo tile (ink fill, "W", 14px corners) and 60px-wide stacked buttons; active and hover get a line outline and panel-soft fill.
+- **Phones (≤1050px):** fixed bottom bar on the ground colour; three 52px tabs with a 22px line icon over a 12px label (11px at ≤360px), no outline; the active tab takes the selected fill and ink and carries `aria-current="page"`. Appearance (48px) and EN / 中 (60px) are 44px outlined toggles. Labels never break inside a word: they are `nowrap` and shrink, never `overflow-wrap: anywhere`.
+- **Desktop:** a 96px rail with the logo tile (ink fill, "W", 14px corners) and 60px-wide stacked icon-over-label buttons; active and hover get a line outline and panel-soft fill.
+
+### Dialogs
+Centred cards on desktop; on phones (≤640px) bottom sheets: full width, 22px top corners, rising 40px over 320ms (none under reduced motion). Dialogs sit above the bottom bar. The welcome sheet keeps its two choices pinned at the bottom while the steps scroll.
+
+### Board sizing
+Card labels wrap to two lines (smaller type) when they would not fit the card at the current board width, never cut off with "…". Above 1200 × 760 the board grows to 310px columns, 70px cards and 23px words.
 
 ### Motion
 One easing for state (`cubic-bezier(.2, .8, .2, 1)`) and one spring for rewards (`cubic-bezier(.34, 1.56, .64, 1)`). Card and button feedback is 90ms; theme changes cross-fade over 420ms. Rewards scale with meaning: every match gets a judgement and a ripple; milestones get a pop and stars; today's goal gets confetti and a banner. All effects run in one pointer-transparent layer and are skipped when the system asks for reduced motion or the learner turns effects off. Under `prefers-reduced-motion: reduce` a global rule also collapses every CSS animation and transition to 0.01ms; the judgement word and the banner still appear, static.

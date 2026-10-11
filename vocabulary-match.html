@@ -235,12 +235,36 @@
       font-weight: 800;
       text-align: center;
       line-height: 1.12;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
+      /* Labels never break inside a word ("PRAC/TICE"); a label that does not fit shrinks instead. */
+      white-space: nowrap;
       overflow: hidden;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      hyphens: auto;
-      transition: border-color 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease);
+      transition: border-color 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease), transform 160ms var(--ease);
+    }
+
+    .rail-btn:has(.nav-icon) {
+      gap: 4px;
+      align-content: center;
+    }
+
+    .rail-btn .nav-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .rail-btn .nav-label {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rail-btn:active {
+      transform: scale(.94);
+    }
+
+    .rail-btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
     }
 
     .rail-btn.active,
@@ -268,18 +292,50 @@
       display: none;
       width: min(760px, 100%);
       margin: 0 auto 18px;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
+      /* Three labelled tabs, then the two icon-sized toggles (appearance, language). */
+      grid-template-columns: repeat(3, minmax(0, 1fr)) 48px 60px;
+      gap: 6px;
     }
 
     .mobile-nav .rail-btn {
       width: auto;
-      min-height: 44px;
+      min-height: 52px;
       height: auto;
-      padding: 6px 4px;
+      padding: 6px 2px;
+      font-size: 12px;
+    }
+
+    .mobile-nav .rail-btn.active {
+      border-color: transparent;
+      background: var(--selected-bg);
+      color: var(--selected-ink);
+    }
+
+    .mobile-nav .color-mode-btn,
+    .mobile-nav .lang-toggle {
+      align-self: center;
+      min-height: 44px;
       border-color: var(--line);
-      background: var(--panel-soft);
-      font-size: 13px;
+    }
+
+    @media (max-width: 360px) {
+      .mobile-nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) 44px 54px;
+        gap: 4px;
+      }
+
+      .mobile-nav .rail-btn {
+        font-size: 11px;
+      }
+
+      #practiceView > h1 {
+        font-size: 26px;
+      }
+    }
+
+    .color-mode-btn .nav-icon {
+      width: 22px;
+      height: 22px;
     }
 
     .lesson {
@@ -742,6 +798,31 @@
       gap: 10px 30px;
     }
 
+    /* Wide desktops: a larger board instead of a narrow column in a sea of space. */
+    @media (min-width: 1200px) and (min-height: 760px) {
+      .prompt {
+        width: min(660px, 100%);
+      }
+
+      .match-grid {
+        grid-template-columns: repeat(2, minmax(0, 310px));
+        grid-template-rows: repeat(5, 70px);
+        gap: 12px 36px;
+      }
+
+      .match-card.match-card {
+        height: 70px;
+      }
+
+      .match-grid .word {
+        font-size: 23px;
+      }
+
+      .match-grid .word.long {
+        font-size: 17px;
+      }
+    }
+
     .match-card {
       height: 60px;
       border: 2px solid var(--line);
@@ -869,6 +950,7 @@
     }
 
     .word.long {
+      text-wrap: balance;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -927,7 +1009,8 @@
 
     .duo-button {
       min-width: 150px;
-      height: 54px;
+      min-height: 54px;
+      height: auto;
       display: inline-grid;
       place-items: center;
       border: 0;
@@ -936,12 +1019,12 @@
       background: var(--primary);
       box-shadow: 0 4px 18px -8px var(--card-shadow);
       cursor: pointer;
-      padding: 0 18px;
+      padding: 12px 20px;
       font-size: 17px;
-      font-weight: 1000;
-      text-transform: uppercase;
+      font-weight: 800;
       text-align: center;
-      line-height: 1.15;
+      line-height: 1.2;
+      text-wrap: balance;
       transition: transform 90ms var(--ease), box-shadow 90ms var(--ease), filter 90ms var(--ease);
     }
 
@@ -979,12 +1062,6 @@
 
     .danger-zone p b {
       color: var(--text);
-    }
-
-    .duo-button.warning {
-      color: var(--warn-ink);
-      background: var(--yellow);
-      box-shadow: 0 6px 16px -6px var(--warn-shadow);
     }
 
     .duo-button[disabled] {
@@ -1114,7 +1191,6 @@
       padding: 8px 10px;
       font-size: 14px;
       font-weight: 900;
-      text-transform: uppercase;
       text-align: center;
       line-height: 1.2;
       overflow-wrap: anywhere;
@@ -1129,7 +1205,8 @@
     .modal {
       position: fixed;
       inset: 0;
-      z-index: 10;
+      /* Above the phone tab bar (z-index 20). */
+      z-index: 40;
       display: none;
       place-items: center;
       padding: 20px;
@@ -1143,6 +1220,7 @@
     .modal-card {
       width: min(720px, 100%);
       max-height: min(760px, calc(100vh - 40px));
+      max-height: min(760px, calc(100dvh - 40px));
       overflow: auto;
       touch-action: pan-y;
       -webkit-overflow-scrolling: touch;
@@ -1150,6 +1228,52 @@
       border-radius: 18px;
       background: var(--panel);
       box-shadow: 0 24px 80px rgba(0, 0, 0, .4);
+    }
+
+    .modal.open .modal-card {
+      animation: modal-in 260ms var(--ease) both;
+    }
+
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Phones: dialogs are sheets that rise from the bottom edge, in thumb reach. */
+    @media (max-width: 640px) {
+      .modal {
+        place-items: end stretch;
+        padding: 12px 0 0;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-height: calc(100vh - 12px);
+        max-height: calc(100dvh - 12px);
+        border-width: 2px 0 0;
+        border-radius: 22px 22px 0 0;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .modal.open .modal-card {
+        animation-name: sheet-in;
+        animation-duration: 320ms;
+      }
+
+      .intro-actions {
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      }
+    }
+
+    @keyframes sheet-in {
+      from { transform: translateY(40px); opacity: .4; }
+      to { transform: none; opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .modal.open .modal-card {
+        animation: none;
+      }
     }
 
     .modal-top,
@@ -1201,8 +1325,7 @@
       gap: 7px;
       color: var(--muted);
       font-size: 14px;
-      font-weight: 900;
-      text-transform: uppercase;
+      font-weight: 800;
     }
 
     input,
@@ -1765,7 +1888,7 @@
         display: grid;
         width: 100%;
         margin: 0;
-        padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+        padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
         border-top: 1px solid var(--line);
         background: var(--bg);
       }
@@ -1939,12 +2062,24 @@
       font-weight: 1000;
     }
 
+    /* The choice stays in view while the steps scroll under it. */
     .intro-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      position: sticky;
+      bottom: 0;
+      display: grid;
       gap: 10px;
-      padding: 20px;
+      margin-top: 8px;
+      padding: 16px 20px 20px;
+      background: linear-gradient(to bottom, transparent, var(--panel) 18px);
+    }
+
+    .intro-actions .duo-button {
+      width: 100%;
+    }
+
+    .intro-actions #introStartBtn,
+    .intro-actions #introOkBtn {
+      order: -1;
     }
 
     .intro-demo {
@@ -1952,7 +2087,7 @@
       grid-template-columns: 1fr auto 1fr;
       gap: 10px;
       align-items: center;
-      margin: 0 20px 18px;
+      margin: 18px 20px;
       font-weight: 800;
       text-align: center;
     }
@@ -2443,18 +2578,18 @@
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
       <div class="logo" aria-hidden="true">W</div>
-      <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
-      <button class="rail-btn" type="button" id="openLibraryRail" data-en="Library" data-zh="词库">词库</button>
-      <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
+      <button class="rail-btn active" type="button" data-nav-practice aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Practice" data-zh="练习">练习</span></button>
+      <button class="rail-btn" type="button" id="openLibraryRail"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
+      <button class="rail-btn" type="button" data-open-settings><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
       <button class="rail-btn lang-toggle" type="button" id="langToggleRail" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
     </aside>
 
     <main class="main">
       <nav class="mobile-nav" aria-label="窄屏导航" data-en-aria="Mobile navigation" data-zh-aria="窄屏导航">
-        <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
-        <button class="rail-btn" type="button" id="openLibraryMobile" data-en="Library" data-zh="词库">词库</button>
-        <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
+        <button class="rail-btn active" type="button" data-nav-practice aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Practice" data-zh="练习">练习</span></button>
+        <button class="rail-btn" type="button" id="openLibraryMobile"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
+        <button class="rail-btn" type="button" data-open-settings><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
         <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
         <button class="rail-btn lang-toggle" type="button" id="langToggleMobile" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
       </nav>
@@ -3419,6 +3554,11 @@
       return vars ? String(val).replace(/\{(\w+)\}/g, (_, k) => (vars[k] != null ? vars[k] : "")) : val;
     }
 
+    /** Sentences run together in Chinese (。 ends them); English needs a space. */
+    function joinSentences(parts) {
+      return parts.filter(Boolean).join(currentLang === "zh" ? "" : " ");
+    }
+
     function applyStaticI18n() {
       document.documentElement.lang = currentLang;
       document.querySelectorAll("[data-en]").forEach(el => {
@@ -3942,11 +4082,17 @@
       return t("appearance." + (mode === "system" ? "auto" : mode));
     }
 
+    const COLOR_MODE_ICONS = {
+      system: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
+      light: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+      dark: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'
+    };
+
     function updateColorModeUI() {
       document.querySelectorAll("[data-color-mode-btn]").forEach(btn => {
         // The button names the control; the current mode is in its accessible name and tooltip.
-        btn.textContent = t("appearance.btn");
-        btn.title = `${t("appearance.btn")}：${colorModeLabel(colorMode)}`;
+        btn.innerHTML = COLOR_MODE_ICONS[colorMode] || COLOR_MODE_ICONS.system;
+        btn.title = `${t("appearance.btn")}${currentLang === "zh" ? "：" : ": "}${colorModeLabel(colorMode)}`;
         btn.setAttribute("aria-label", btn.title);
       });
       const select = document.getElementById("colorModeSelect");
@@ -4120,11 +4266,16 @@
       word.mastered = isMastered(word);
     }
 
+    /** Chance of matching this pair by elimination alone: one in the pairs still on the board. */
+    function guessChance() {
+      return 1 / Math.max(1, activeSlotPairs());
+    }
+
     /** Right answer on the board. `ms` = reaction time for this pair. */
     function recordCorrect(word, ms) {
       const wasNew = engine.isNew(word);
       const grade = engine.grade(true, ms);
-      engine.recordAnswer(word, grade, Date.now(), { ms, kind: "match" });
+      engine.recordAnswer(word, grade, Date.now(), { ms, kind: "match", guess: guessChance() });
       syncMastered(word);
       recordHabit(wasNew, ms, word.id);
       return grade;
@@ -4133,7 +4284,7 @@
     /** The word being answered was missed. */
     function recordWrong(word) {
       const wasNew = engine.isNew(word);
-      engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
+      engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match", guess: guessChance() });
       syncMastered(word);
       recordHabit(wasNew, 0, word.id);
     }
@@ -4292,8 +4443,36 @@
       syncMastered(word);
     }
 
-    /** Re-fit the learner's personal parameters when the browser is idle. */
+    /**
+     * Re-fit the learner's personal parameters. A full log takes most of a second
+     * on a laptop and several on a phone, so it runs in a worker; the main thread
+     * only sends the log and applies the result. No worker → idle-time fallback.
+     */
+    let fitWorker = null;
+    let fitRunning = false;
+    let fitFor = null; // the engine the running fit was started for (progress can be reset meanwhile)
     function scheduleEngineFit() {
+      if (fitRunning || !engine.fitDue()) return;
+      if (window.Worker && fitWorker !== false) {
+        try {
+          if (!fitWorker) {
+            fitWorker = new Worker("./js/fit-worker.js");
+            fitWorker.onmessage = event => {
+              fitRunning = false;
+              if (fitFor === engine && engine.applyFit(event.data)) saveWords();
+            };
+            fitWorker.onerror = () => { fitRunning = false; fitWorker = false; };
+          }
+          fitRunning = true;
+          fitFor = engine;
+          const { log, theta } = engine.state;
+          fitWorker.postMessage({ log, theta });
+          return;
+        } catch (error) {
+          fitWorker = false;
+          fitRunning = false;
+        }
+      }
       const run = () => { if (engine.maybeOptimize()) saveWords(); };
       if (window.requestIdleCallback) window.requestIdleCallback(run, { timeout: 5000 });
       else setTimeout(run, 500);
@@ -5400,7 +5579,22 @@
       for (const ch of String(label)) width += /[\u2E80-\uFFEF]/.test(ch) ? 2 : 1;
       // phones have narrower cards (and the larger type), so wrap a little earlier there
       const narrow = typeof window.matchMedia === "function" && window.matchMedia("(max-width: 640px)").matches;
-      return width > (narrow ? 12 : 14);
+      return width > (labelCapacity(narrow) || (narrow ? 12 : 14));
+    }
+
+    /**
+     * How many half-width units fit on one line of a card at the current board
+     * width (a CJK glyph = 2), so 毕业；毕业生 wraps on a 320px phone instead of
+     * being cut off with "…". Mirrors the .match-grid / .match-card metrics.
+     */
+    function labelCapacity(narrow) {
+      const width = els.matchGrid ? els.matchGrid.clientWidth : 0;
+      if (!width) return 0;
+      const wide = width > 600; // the larger desktop board
+      const column = (width - (narrow ? 10 : wide ? 36 : 30)) / 2;
+      const text = column - (narrow ? 28 + 18 + 4 : 40 + 28 + 4);
+      const fontPx = narrow ? 18 : wide ? 23 : 21;
+      return Math.max(6, Math.floor(text / (fontPx * 0.55)));
     }
 
     function getSlot(side, index) {
@@ -5873,11 +6067,11 @@
       if (trial) {
         els.completionTitle.textContent = t("trial.doneTitle");
         // After a reload there are no level stats to report — just the choice.
-        els.completionText.textContent = [
+        els.completionText.textContent = joinSentences([
           state.completedThisRun ? summary : "",
           t("trial.doneText"),
           state.trialLibraryVisited ? t("trial.notYet") : ""
-        ].filter(Boolean).join(" ");
+        ]);
         els.continueBtn.textContent = t("trial.importBtn");
         if (els.completionStats) els.completionStats.hidden = true;
         renderReviewList();
@@ -5890,11 +6084,11 @@
         const block = state.lastBlock || {};
         const dueToday = engine.forecast(state.words, 1)[0];
         els.completionTitle.textContent = t("timeouts.blockTitle");
-        els.completionText.textContent = [
+        els.completionText.textContent = joinSentences([
           t("timeouts.blockSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0, fresh: block.fresh || 0 }),
           dueToday && habitStatus().done ? t("timeouts.blockGoalDone", { n: dueToday })
             : dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
-        ].join(" ");
+        ]);
         renderReviewList();
         return;
       }
@@ -5902,8 +6096,8 @@
       els.completionText.textContent = allDone
         ? t("timeouts.allDoneText")
         : reason === "timeout"
-          ? `${summary} ${t("timeouts.timeUpText")}`
-          : `${summary} ${remaining ? t("timeouts.stillLearning", { n: remaining }) : t("timeouts.allStable")}`;
+          ? joinSentences([summary, t("timeouts.timeUpText")])
+          : joinSentences([summary, remaining ? t("timeouts.stillLearning", { n: remaining }) : t("timeouts.allStable")]);
       renderReviewList();
     }
 

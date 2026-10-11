@@ -15,6 +15,13 @@
 
 ### Fixed
 
+- **Review engine fit no longer mistakes lucky matches for memory.** The board can be solved by elimination, so each answer now logs its chance of a lucky guess (1 / pairs left; typed cards 0; old entries 0.25) and the fit predicts R + (1 − R)·guess. In `tools/simulate.js` the learners' fitted memory multiplier is no longer ~+0.9 too high for everyone.
+- **New words are no longer free for the push policy.** The bandit's reward now counts the reviews each new word will need over the next week, and target retention stays at 0.9 (only the new-word pace is tuned); saved bandit statistics reset once, word progress is kept. In simulation the engine now matches or beats fixed FSRS on words recalled at ≥ 0.9 instead of trailing it by 21–39 %.
+- **The personal fit runs in a worker** (`js/fit-worker.js`): a full 3,000-answer log took ~0.8 s on a laptop's main thread.
+- **Grammar libraries survive app updates**: `vendor/` files live in their own cache named by library versions, so a release no longer re-downloads ~8 MB.
+- **Phones**: bottom-bar labels no longer break mid-word ("PRAC/TICE", "E/N") — tabs are icon over label, appearance is an icon; dialogs are bottom sheets above the bar (they used to slide under it); the welcome sheet keeps its buttons in view; card meanings wrap instead of being cut off with "…" on 320px screens.
+- **No more forced capitals** on English buttons and form labels; Chinese summary sentences no longer have a stray space between them.
+- **Wide desktops** get a larger board instead of a narrow column.
 - From an /impeccable critique (25/40) and simulated-learner tests: dialogs move focus in, keep the page behind inert and return focus; visible keyboard focus; screen-reader announcements and `aria-pressed` on cards; Enter no longer hijacked on the summary and intro; a wrong match highlights the right partner; deleting a word can be undone; rules-only sentence checks no longer praise; the last practice card says "Done"; 44 px close buttons; reduced motion covers every animation.
 
 ## 2026-10-07
