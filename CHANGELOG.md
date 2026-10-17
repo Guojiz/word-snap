@@ -8,13 +8,28 @@
 
 ### Changed
 
+- **It opens like an app now.** Every launch opens on Home, a menu of four colour blocks with real content: today's words (how many are left, what is due, about how long, a progress bar; tap to start or resume), the word book (its name and word count; opens Library), Add words and Settings. Tapping a block floods the screen with its colour and opens that thing. First run the big block offers setup: three short questions (word book, new words a day, reminder time; skippable) that end back on Home, never on the board. Practice and setup are full screen; Library and Settings are full pages on phones with a close button (no bottom tab bar any more); EN / 中 is a chip on Home. Screens slide in and out with View Transitions.
+- **No more automatic focus mode.** Practice is now its own full screen with only the top bar and the board, centred; nothing hides, appears or moves mid-set any more (the board used to glide to the middle after three answers). The setting is gone. × (and Esc) always goes back to Home with the set paused, instead of ending it with a summary.
+- **Back works everywhere**: one navigation stack (`js/shell.js`) behind the in-app close buttons, the browser back button and the Android back gesture; at the first screen Android back puts the app in the background. Closing a set pauses it on Home.
+- **Android**: the system launch screen uses the Android 12 SplashScreen API on the app's paper (the old Capacitor splash images are gone), the app draws edge to edge with dark status-bar icons on light paper, and the page pads itself with the safe-area insets.
+- **Phone board**: touch phones hide the 1–0 keyboard hints and give the words the room; on tall phones the cards are 70px so the board fills the screen.
+
+- **New brand: Confetti Cards (彩纸卡)**, replacing the heavy indigo stage. Warm near-white paper by day (the default) and soft ink-blue by night; every matched pair is filled with the next of five pastel confetti colours (peach, sky, lemon, mint, lilac) with ink text, and the progress lane repeats them, so a finished set looks like a strip of confetti. Judgements are pastel stickers; FULL COMBO is drawn in the wordmark's colours. Fredoka (OFL, bundled, Latin only) replaces Saira Condensed for English, numbers and judgements; Chinese keeps the system face. New icon (two cards leaning together, with confetti) for the web app, PWA, iOS and Android launcher.
+- **The set colour rotates again**, as the old skins did: each finished set (or endless block) moves to the next of lemon, peach, sky, mint and lilac. It tints the paper, the lane track and the primary buttons, and that set's confetti run starts in it; selected (sky) and wrong (coral) never change. Stored as before in `themeIndex` / `word_snap_theme_index`; a first visit starts on a random one, and the paper is tinted before first paint.
 - **New look: the rhythm-game stage** (replaces the borrowed Duolingo palette and 3D buttons; see DESIGN.md). Indigo stage at night, lavender by day; one fixed palette (no per-set skin rotation) where each colour has one meaning — violet selected, teal correct / GREAT, gold PERFECT only, rose wrong / MISS, indigo-ink buttons; text colours meet 4.5:1; Saira Condensed (OFL, bundled) for numbers and judgements; drawn SVG icons instead of emoji; new app icon.
 - **Every match is judged** PERFECT / GREAT / GOOD / MISS from the engine's reaction-time grade; the progress bar is a lane filled with each match's judgement colour; the set ends with CLEAR / FULL COMBO / TIME UP and the judgement counts, max combo, accuracy and time.
-- **Phones**: navigation moved to the bottom (thumb zone); today's remaining words as the big number.
+- **Phones**: today's remaining words as the big number.
 - **Settings** grouped into Learning plan / Pace / Feedback and look (+ AI); colliding and technical names rewritten; GitHub link moved into Settings.
 
 ### Fixed
 
+- **Review engine fit no longer mistakes lucky matches for memory.** The board can be solved by elimination, so each answer now logs its chance of a lucky guess (1 / pairs left; typed cards 0; old entries 0.25) and the fit predicts R + (1 − R)·guess. In `tools/simulate.js` the learners' fitted memory multiplier is no longer ~+0.9 too high for everyone.
+- **New words are no longer free for the push policy.** The bandit's reward now counts the reviews each new word will need over the next week, and target retention stays at 0.9 (only the new-word pace is tuned); saved bandit statistics reset once, word progress is kept. In simulation the engine now matches or beats fixed FSRS on words recalled at ≥ 0.9 instead of trailing it by 21–39 %.
+- **The personal fit runs in a worker** (`js/fit-worker.js`): a full 3,000-answer log took ~0.8 s on a laptop's main thread.
+- **Grammar libraries survive app updates**: `vendor/` files live in their own cache named by library versions, so a release no longer re-downloads ~8 MB.
+- **Phones**: bottom-bar labels no longer break mid-word ("PRAC/TICE", "E/N") — tabs are icon over label, appearance is an icon; dialogs are bottom sheets above the bar (they used to slide under it); the welcome sheet keeps its buttons in view; card meanings wrap instead of being cut off with "…" on 320px screens.
+- **No more forced capitals** on English buttons and form labels; Chinese summary sentences no longer have a stray space between them.
+- **Wide desktops** get a larger board instead of a narrow column.
 - From an /impeccable critique (25/40) and simulated-learner tests: dialogs move focus in, keep the page behind inert and return focus; visible keyboard focus; screen-reader announcements and `aria-pressed` on cards; Enter no longer hijacked on the summary and intro; a wrong match highlights the right partner; deleting a word can be undone; rules-only sentence checks no longer praise; the last practice card says "Done"; 44 px close buttons; reduced motion covers every animation.
 
 ## 2026-10-07

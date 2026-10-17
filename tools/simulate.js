@@ -77,7 +77,7 @@ function runEngine(learner, rng, { fixed }) {
       if (board.length > 4) board.shift();
       const res = learner.answer(word.id, now);
       const g = eng.grade(res.correct, res.ms);
-      eng.recordAnswer(word, g, now, { ms: res.ms });
+      eng.recordAnswer(word, g, now, { ms: res.ms, guess: GUESS });
       now += res.ms + (res.correct ? 800 : 2500);
       if (eng.blockDue()) eng.endBlock(now);
       if (!fixed && p % 25 === 0) eng.maybeOptimize();

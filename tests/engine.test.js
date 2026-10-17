@@ -140,7 +140,7 @@ test("the personal fit lowers growth for a fast forgetter and raises it for a sl
         t += Math.max(1, gap) * DAY;
         const R = card ? E.retrievabilityAt(trueW, (t - log[log.length - 1].t) / DAY, card.S) : 1;
         const g = !card ? GOOD : rng() < R ? GOOD : AGAIN;
-        log.push({ i: `w${i}`, t, g });
+        log.push({ i: `w${i}`, t, g, q: 0 }); // typed-style answers: no lucky guesses
         const next = E.step(trueW, card, card ? (t - log[log.length - 2].t) / DAY : 0, g);
         card = { S: next.S, D: next.D };
       }
@@ -152,6 +152,86 @@ test("the personal fit lowers growth for a fast forgetter and raises it for a sl
   assert.ok(fast.fitted && slow.fitted);
   assert.ok(fast.theta[0] + fast.theta[1] < 0, `fast theta ${fast.theta}`);
   assert.ok(slow.theta[0] + slow.theta[1] > 0, `slow theta ${slow.theta}`);
+});
+
+/** Review log of a learner whose true multipliers are `theta`, answering on a board where a forgotten word is matched by luck with chance `guess`. */
+function guessingLog(theta, guess, seed) {
+  const rng = E.makeRng(seed);
+  const trueW = E.personalWeights(theta);
+  const log = [];
+  for (let i = 0; i < 300; i++) {
+    let t = T0 + i * 1000, card = null, last = 0;
+    for (let r = 0; r < 6; r++) {
+      const gap = card ? E.intervalFor(E.DEFAULT_W, card.S, 0.9) * (0.5 + rng()) : 0;
+      t += Math.max(1, gap) * DAY;
+      const R = card ? E.retrievabilityAt(trueW, (t - last) / DAY, card.S) : 1;
+      const knows = !card || rng() < R;
+      const right = knows || rng() < guess;
+      log.push({ i: `w${i}`, t, g: right ? GOOD : AGAIN, q: guess });
+      // The learner's real memory follows what they actually knew, not the lucky match.
+      const next = E.step(trueW, card, card ? (t - last) / DAY : 0, knows ? GOOD : AGAIN);
+      card = { S: next.S, D: next.D };
+      last = t;
+    }
+  }
+  return log;
+}
+
+test("lucky guesses on the board do not inflate the personal fit", () => {
+  const log = guessingLog([0, 0, 0], 0.25, 21);
+  const aware = E.fitTheta(log, [0, 0, 0], { iterations: 40 });
+  const naive = E.fitTheta(log.map(e => ({ ...e, q: 0 })), [0, 0, 0], { iterations: 40 });
+  const memory = th => th[0] + th[1];
+  assert.ok(memory(naive.theta) > memory(aware.theta) + 0.2, `naive ${naive.theta} vs aware ${aware.theta}`);
+  assert.ok(Math.abs(memory(aware.theta)) < 0.4, `aware ${aware.theta}`);
+});
+
+test("log entries keep the chance of a lucky guess", () => {
+  const eng = E.create(null);
+  const [a, b, c] = words(3);
+  eng.recordAnswer(a, GOOD, T0, { kind: "match", guess: 0.2 });
+  eng.recordAnswer(b, GOOD, T0, { kind: "match" });
+  eng.recordAnswer(c, GOOD, T0, { kind: "spell" });
+  assert.deepEqual(eng.state.log.map(e => e.q), [0.2, 0.25, 0]);
+});
+
+test("a fit computed elsewhere is applied, a broken one is ignored", () => {
+  const eng = E.create(null);
+  eng.state.sinceFit = 100;
+  assert.ok(eng.fitDue());
+  assert.equal(eng.applyFit({ fitted: true, theta: [NaN, 0, 0] }), false);
+  assert.equal(eng.fitDue(), false);
+  assert.deepEqual(eng.state.theta, [0, 0, 0]);
+  assert.equal(eng.applyFit({ fitted: true, theta: [-0.5, 0.2, 9], loss: 0.3 }), true);
+  assert.deepEqual(eng.state.theta, [-0.5, 0.2, 2.5]);
+  assert.notDeepEqual(eng.weights(), E.personalWeights([0, 0, 0]));
+});
+
+test("new words charge the reviews they will need next week", () => {
+  const w = E.DEFAULT_W;
+  assert.ok(E.reviewsWithin(w, 0.5, 5, 0.9, 7) > E.reviewsWithin(w, 20, 5, 0.9, 7));
+  assert.ok(E.reviewsWithin(w, 2, 5, 0.95, 7) >= E.reviewsWithin(w, 2, 5, 0.85, 7));
+  const eng = E.create(null, { blockSize: 5 });
+  const lib = words(6);
+  let now = T0;
+  for (const word of lib) { eng.recordAnswer(word, GOOD, now, { ms: 1500 }); now += 4000; }
+  assert.ok(eng.currentBlock().upkeep > 0);
+  const summary = eng.endBlock(now);
+  assert.ok(summary.reward < summary.gain / summary.minutes);
+});
+
+test("bandit statistics from an older arm set are dropped, word progress is kept", () => {
+  const eng = E.create(null);
+  eng.endBlock(T0);
+  const saved = JSON.parse(JSON.stringify(eng.serialize()));
+  saved.bandit.arms[0].n = 5;
+  saved.theta = [0.1, 0, 0];
+  const same = E.create(saved);
+  assert.equal(same.state.bandit.arms[0].n, 5);
+  const old = { ...saved, bandit: { ...saved.bandit, v: undefined } };
+  const migrated = E.create(old);
+  assert.equal(migrated.state.bandit.arms[0].n, 0);
+  assert.deepEqual(migrated.state.theta, [0.1, 0, 0]);
 });
 
 test("forecast counts reviews per learner day", () => {

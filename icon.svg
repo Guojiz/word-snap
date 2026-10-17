@@ -1,7 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Word Snap">
-  <rect width="512" height="512" rx="112" fill="#24205a"/>
-  <rect x="86" y="388" width="340" height="30" rx="15" fill="#3a3480"/>
-  <rect x="86" y="388" width="214" height="30" rx="15" fill="#18c6b5"/>
-  <path d="M120 128h52l30 158 40-158h44l40 158 30-158h52l-54 222h-54l-36-138-36 138h-54z" fill="#f3f1ff"/>
-  <path transform="translate(392 36) scale(5)" d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z" fill="#ffc933"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Word Snap">
+  <rect width="120" height="120" rx="30" fill="#fff7e8"/>
+  <rect x="22" y="32" width="42" height="56" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/>
+  <rect x="56" y="32" width="42" height="56" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/>
+  <circle cx="60" cy="60" r="6" fill="#ffffff"/>
+  <circle cx="30" cy="24" r="4" fill="#ffe27a"/>
+  <circle cx="96" cy="96" r="5" fill="#9eebc4"/>
+  <rect x="88" y="18" width="8" height="8" rx="2" fill="#d4c4ff" transform="rotate(20 92 22)"/>
 </svg>
