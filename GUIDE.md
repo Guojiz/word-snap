@@ -82,6 +82,19 @@ A word counts as **new** until you have answered it once (right or wrong); just 
 
 The library is meant to keep growing; you don't need to clear it. Mastered words simply come up rarely.
 
+## Focus mode, judgements and effects
+
+- **Focus mode** (automatic, on by default): after three answers in a row, navigation, today's line and the title go away, the board glides to the middle of the screen, and a soft vignette frames it. It comes back after 10 seconds without a pick, at the end of a set, when a window opens, with **Esc**, the *Exit focus* button, or by pointing at the top or left edge. *Settings → Focus mode* turns it off.
+- **Judgements, rhythm-game style**: every match shows PERFECT / GREAT / GOOD above the pair (a miss shows MISS), with your time — taken from the engine's own grade, which compares your reaction time with your usual pace. The progress bar is a lane with beat ticks that fills with one segment per match in its judgement colour; from 3 correct in a row the combo count rolls at the lane's right end, and milestones (5 / 10 / 20 / 50) pop with a few stars. A set ends with **CLEAR** (or **FULL COMBO** with no mistakes, **TIME UP** when a timed level runs out) and the counts of PERFECT / GREAT / GOOD / MISS, max combo, accuracy and time. Colours keep one meaning: violet = selected, teal = correct / GREAT, gold = PERFECT only, rose = wrong / MISS. Confetti when today's goal is done, a short vibration on answers in the app. *Settings → Effects and vibration* turns the motion off (judgements still show); with reduced motion nothing animates.
+
+## Daily goal and streak
+
+- **Today's goal**: clear the words that are due, and learn the day's new words (*Settings → New words per day*, default 10; fewer if your list has fewer new words left). The bar above the board says what is left and about how long it takes (from your own pace), and turns into **✓ Today's goal done** when it is met.
+- **Day streak**: days in a row with the goal done. Days change at 4 am, like the review schedule. The side panel shows it next to *Combo* (correct pairs in a row in this session).
+- **Streak freeze**: one missed day per week (Monday–Sunday) is bridged automatically; the bar says when it was used. A frozen day keeps the streak but does not add to it.
+- **Daily reminder** (Android app): *Settings → Daily reminder* sends one notification a day at the time you pick, and skips today once the goal is done. A web page cannot remind you.
+- The trial level does not count.
+
 ## Spelling and sentence cards
 
 After each set of 25 pairs, the summary can show up to three short cards (Settings → *Cards after each set*):
@@ -93,12 +106,31 @@ After each set of 25 pairs, the summary can show up to three short cards (Settin
 
 ## On-device AI (optional)
 
-**Settings → On-device AI (optional)** appears only on devices with WebGPU (recent desktop Chrome/Edge, Android Chrome, Safari on iOS 26+). It is off by default.
+The **On-device model** part of *Settings → AI (optional)* appears only on devices with WebGPU (recent desktop Chrome/Edge, Android Chrome, Safari on iOS 26+). It is off by default.
 
 - **Download and turn on** fetches a small model (Qwen2.5 1.5B, about 870 MB) once from Hugging Face through WebLLM; progress is shown, an interrupted download can be continued, and **Delete** frees the storage. Afterwards it works offline.
+- Devices that report under 8 GB of memory do not offer it (a hint suggests an API key instead), and it is offered for English → Chinese only.
 - What it does: suggests a Chinese situation when you press *I have no idea* on a sentence card, and writes example sentences for words in the current set that have none. Each AI example must pass the grammar check and contain the word before it is saved; the library marks it as AI-generated.
 - What it does **not** do: judge whether a sentence uses the word with the right meaning. We tested models up to 1.7B on 60 labelled sentences (`tools/ai-eval.html`) and none was reliable enough, so the sentence card asks you to check the meaning yourself.
 - Every request has an 8-second limit; on any failure the app falls back silently to the rule-based check.
+
+### In the Android app: Qwen3.5 4B on the phone
+
+In the app, *On-device model* is **Qwen3.5 4B** (4-bit, run by [MNN](https://github.com/alibaba/MNN)), offered only on phones with **12 GB of memory or more** (others get a hint to use an API key). It downloads once (about 2.7 GB, resumable, from ModelScope) and then works offline. It is strong enough for everything the API key does — sentence feedback with meaning, pair contrast, examples, word lists (up to 30 words) — in any language pair, and nothing leaves the phone. Answers take a few seconds; the API key is used first when both are on.
+
+## AI with your own API key (optional)
+
+**Settings → AI (optional) → Your own API key** works on every device (no WebGPU needed) and for **any language pair**: explanations are written in side B (the meaning side). The **Use AI features** switch at the top turns every AI feature off at once.
+
+- Pick a provider (DeepSeek, Qwen, Kimi, GLM, SiliconFlow, OpenAI, Claude, OpenRouter, or any OpenAI-compatible server such as a local Ollama), paste a key, and press **Save and test**. Model and base URL can stay empty to use the provider's defaults.
+- With a key on, **sentence cards get a full check**: grammar still comes from the on-device checker, and the model adds whether the meaning is right — *where* the mistake is, *why* (in Chinese) and *how to fix it* (one tap to use the fix). A grammatical sentence with the wrong meaning (e.g. *water* where the word means particles in the air) stays open and counts as Again; a correct one shows a more natural version if there is one.
+- **Mixed-up pairs** in the set summary get an *AI* button that explains the difference with an example for each word.
+- Example sentences are filled for up to 10 words per set (instead of 3); English ones are still checked by the grammar checker.
+- **Other languages than English**: sentence cards also appear (the grammar checker is English-only, so the model checks grammar and meaning); without a key they stay English-only.
+- **Make a list with AI** (Library → Add words): describe what you want (“IELTS verbs, 30”, “日语 N3 常用词”, “Spanish food words”). The list, with examples, lands in the bulk box in the import format — check it and tap *Bulk add*. If the request names another language, the list switches the language pair too.
+- The key is stored only on this device, under its own storage key: it is never in backups or exports. What you write on sentence cards is sent to the provider you chose, billed to your key. **Pause** keeps the key; **Remove key** deletes it.
+- Browsers block some providers (CORS); the message says so. In the Android app every provider works.
+- If both are on, the API key is used first and the on-device model is the fallback.
 
 ## Library word list
 
@@ -124,6 +156,10 @@ index.html
 Online: open the [live URL](https://guojiz.github.io/word-snap/vocabulary-match.html).
 
 On iPhone/iPad: Safari → Share → **Add to Home Screen**. The PWA name is **Word Snap**. After updates, if you still see an old Chinese-only UI, fully quit Safari and reopen so the new service worker (`word-snap-v9+`) can replace the cache.
+
+## Word books
+
+*Library → Add words → From a word book* has built-in English → Chinese books: middle school (zhongkao), high school (gaokao), CET-4, CET-6, postgraduate (kaoyan), TOEFL, IELTS and GRE. They come from the open-source [ECDICT](https://github.com/skywind3000/ECDICT) (MIT) exam tags, ordered most frequent first, with a short meaning. Each import adds the next words you don't have yet (20 to all); the line under the menu says how many you already have. A book is downloaded the first time you open it, then works offline. Rebuild them with `node tools/build-wordbooks.mjs path/to/ecdict.csv`.
 
 ## Bulk import format
 
@@ -235,6 +271,19 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 
 一个词在你第一次作答（答对或答错）之前都算「新词」；只是出现在棋盘上不算。新词**先学你自己的词**（按添加顺序），示例词排在后面。词库是越积越多的，不需要清空；已掌握的词只是很少出现。
 
+## 专注模式、判定和动效
+
+- **专注模式**（自动，默认开启）：连续答对或答错三题后，导航、今日横条和标题会收起，棋盘平滑地移到屏幕正中间，四周加一圈柔和的暗角。停下 10 秒不点、一组结束、打开任何窗口、按 **Esc**、点「退出专注」或者把鼠标移到顶部或左边，界面就会回来。**设置 → 专注模式** 可以关掉。
+- **音游判定**：每次配对，在这对卡上方弹出 PERFECT / GREAT / GOOD（配错是 MISS），旁边是你这次的用时。判定来自复习引擎自己的评级：拿你的反应时间和你平时的速度比。进度条是一条带节拍刻度的轨道，每配对一组就多一段，颜色就是那次的判定色；连对 3 次起，连击数在轨道右端逐位滚动，到 5、10、20、50 时弹一下并迸出几颗星。一组结束是 **CLEAR**（全对是 **FULL COMBO**，限时关超时是 **TIME UP**），下面是 PERFECT / GREAT / GOOD / MISS 的次数、最大连击、正确率和用时。每种颜色只表示一件事：紫色 = 选中，青色 = 答对 / GREAT，金色只表示 PERFECT，玫红 = 答错 / MISS。完成今日目标时撒彩纸；App 里答题有轻微震动。**设置 → 动画特效和震动** 可以关掉动画（判定字照常显示）；系统开了「减少动态效果」时一律不播放。
+
+## 每日目标和连续天数
+
+- **今日目标**：把到期的词复习完，再学当天的新词（**设置 → 每天新词数**，默认 10 个；词库里新词不够就按剩下的算）。棋盘上方的横条会写还剩多少、大约几分钟（按你自己的速度估算），完成后变成 **✓ 今日完成**。
+- **连续天数**：连续完成目标的天数，和复习计划一样凌晨 4 点换日。侧栏里和「本局连对」（这次练习连续配对正确的次数）放在一起。
+- **免断签**：每周（周一到周日）自动补上一天没练的日子，横条上会提示用掉了。补上的那天保住连续天数，但不计入天数。
+- **每日提醒**（安卓 App）：**设置 → 每日提醒** 每天在选定的时间发一条通知，今天的目标完成后当天就不再提醒。网页版没法提醒。
+- 体验关不计入。
+
 ## 拼写卡和造句卡
 
 每组 25 对结束后，小结里最多出 3 张小练习（设置 →「每组后的练习卡」）：
@@ -246,12 +295,31 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 
 ## 端侧 AI（可选）
 
-**设置 → 端侧 AI（可选）** 只在支持 WebGPU 的设备上出现（较新的桌面 Chrome/Edge、Android Chrome、iOS 26 及以上的 Safari），默认关闭。
+**设置 → AI（可选）** 里的「端侧模型」只在支持 WebGPU 的设备上出现（较新的桌面 Chrome/Edge、Android Chrome、iOS 26 及以上的 Safari），默认关闭。
 
 - **下载并开启**：通过 WebLLM 从 Hugging Face 下载一个小模型（Qwen2.5 1.5B，约 870MB），只需一次；显示进度，中断后可以继续下载，**删除模型**可释放空间。下载完之后离线可用。
+- 内存低于 8GB 的设备不提供（会提示改用 API Key），而且只用于英语→中文。
 - 它做什么：造句卡点「我没有思路」时给一句中文情景；为当前这一组里没有例句的词补例句。AI 例句必须通过语法检查、并且确实用到这个词，才会保存，词库里会标明是 AI 生成。
 - 它**不**做什么：判断句子里这个词的意思用得对不对。我们用 60 条标注句子（`tools/ai-eval.html`）测试了 1.7B 以内的模型，没有一个足够可靠，所以造句卡会提醒你自己对照释义。
 - 每次请求限时 8 秒，出任何问题都会静默回退到规则检查。
+
+### 安卓 App 里：手机上跑 Qwen3.5 4B
+
+App 里的「端侧模型」是 **Qwen3.5 4B**（4bit，用 [MNN](https://github.com/alibaba/MNN) 运行），只在**内存 12GB 及以上**的手机上提供（其他手机会提示改用 API Key）。模型从魔搭（ModelScope）下载一次（约 2.7GB，可断点续传），之后离线可用。它能做 API Key 能做的所有事：造句批改（连意思一起查）、混淆辨析、补例句、生成词表（每次最多 30 个），任何语言对都可以，内容不出手机。每次回答要几秒钟；两者都开时优先用 API Key。
+
+## 用自己的 API Key（可选）
+
+**设置 → AI（可选）→ 用自己的 API Key** 在所有设备上可用（不需要 WebGPU），**任何语言对都可以**：讲解用 B 侧（释义那一侧）的语言写。最上面的**使用 AI 功能**开关可以一次关掉所有 AI 功能。
+
+- 选服务商（DeepSeek、通义千问、Kimi、智谱 GLM、硅基流动、OpenAI、Claude、OpenRouter，或任何 OpenAI 兼容接口，比如本地 Ollama），粘贴 Key，点**保存并测试**。模型和接口地址留空就用服务商的默认值。
+- 开启后，**造句卡会得到完整批改**：语法仍由本机检查器判断，模型补上意思是否正确——**错在哪**、**为什么**（中文）、**怎么改**（点一下就能用改好的句子）。语法对但意思错的句子（比如把指空气中颗粒物的词用在 water 上）不会通过，记为 Again；意思也对时，如果有更地道的说法会一并给出。
+- 每组小结里的**混淆对**多了一个「AI 辨析」按钮，讲清两个词的区别，并各给一个例句。
+- 每组最多为 10 个词补例句（原来是 3 个），英语例句仍要通过语法检查。
+- **英语以外的语言**也会出造句卡（语法检查器只支持英语，所以语法和意思都由模型检查）；没有 Key 时仍只限英语。
+- **用 AI 生成词表**（词库 → 添加单词）：写下想背什么（「雅思高频动词 30 个」「日语 N3 常用词」「西班牙语食物词汇」），带例句的词表会按导入格式放进批量录入框，检查后点「批量添加」。需求里提到别的语言时，语言对也会一起切换。
+- Key 只保存在这台设备上，单独存放，不会进备份和导出。造句卡里写的内容会发给你选的服务商，费用从你的 Key 扣。**暂停使用**会保留 Key，**清除 Key** 会删除它。
+- 浏览器会拦截部分服务商（CORS），界面会提示；安卓 App 里所有服务商都能用。
+- 两种都开启时，优先用 API Key，端侧模型作为备用。
 
 ## 词库列表
 
@@ -263,6 +331,10 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 4. **已掌握**：稳定性达到 21 天以上，且跨过至少三天；偶尔抽查。
 
 列表上方的小图显示未来 7 天每天的复习量。点开一个词可以看到例句和「我的例句」。阶段标签可以筛选（带数量），搜索框可搜单词或释义，排序还可以选「最近添加在前」和「按字母」。
+
+## 词书
+
+**词库 → 添加单词 → 从词书导入** 内置英语→中文词书：中考、高考、四级、六级、考研、托福、雅思、GRE。词表来自开源的 [ECDICT](https://github.com/skywind3000/ECDICT)（MIT 协议）的考试标注，按词频从常用到少用排列，释义取简短的几项。每次导入都接着加你还没有的词（20 个到全部），下拉框下面会写你已经有多少个。词书第一次打开时下载，之后可以离线使用。重新生成：`node tools/build-wordbooks.mjs path/to/ecdict.csv`。
 
 ## 批量导入
 

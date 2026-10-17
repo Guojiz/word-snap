@@ -26,3 +26,17 @@ For visible changes, note:
 - mobile layout changes;
 - data format changes;
 - known limitations.
+## Android app (APK)
+
+The app is the same site wrapped with Capacitor; there is no Google Play listing, only APKs.
+
+Requirements: Node 20+, JDK 21 (`brew install openjdk@21`), the Android SDK (platform 36, build-tools 36, NDK 27 and CMake for the on-device model).
+
+```bash
+npm install
+npm run build:www        # copies the site into www/
+npx cap sync android     # copies www/ and plugins into android/
+cd android && ./gradlew assembleDebug   # → android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+`www/` and Android build outputs are not committed. After changing web files, run `npm run cap:sync` again.

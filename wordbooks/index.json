@@ -1,0 +1,53 @@
+{
+  "source": "ECDICT (MIT) https://github.com/skywind3000/ECDICT",
+  "books": [
+    {
+      "id": "zk",
+      "zh": "中考",
+      "en": "Middle school (zhongkao)",
+      "count": 1553
+    },
+    {
+      "id": "gk",
+      "zh": "高考",
+      "en": "High school (gaokao)",
+      "count": 3575
+    },
+    {
+      "id": "cet4",
+      "zh": "大学英语四级",
+      "en": "CET-4",
+      "count": 3811
+    },
+    {
+      "id": "cet6",
+      "zh": "大学英语六级",
+      "en": "CET-6",
+      "count": 5362
+    },
+    {
+      "id": "ky",
+      "zh": "考研",
+      "en": "Postgraduate exam (kaoyan)",
+      "count": 4779
+    },
+    {
+      "id": "toefl",
+      "zh": "托福",
+      "en": "TOEFL",
+      "count": 6924
+    },
+    {
+      "id": "ielts",
+      "zh": "雅思",
+      "en": "IELTS",
+      "count": 4958
+    },
+    {
+      "id": "gre",
+      "zh": "GRE",
+      "en": "GRE",
+      "count": 7460
+    }
+  ]
+}

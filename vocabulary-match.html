@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#131f24" />
+  <meta name="theme-color" content="#24205a" />
   <meta name="color-scheme" content="dark light" />
   <script>
     (function () {
@@ -23,60 +23,104 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <style>
+    @font-face {
+      font-family: "Saira Condensed";
+      font-weight: 700;
+      font-display: swap;
+      src: url("./vendor/fonts/saira-condensed-700.woff2") format("woff2");
+    }
+
+    @font-face {
+      font-family: "Saira Condensed";
+      font-weight: 800;
+      font-display: swap;
+      src: url("./vendor/fonts/saira-condensed-800.woff2") format("woff2");
+    }
+
+    /* Stage (dark): an indigo rhythm-game stage. Day (light): lavender.
+       Violet (--blue) is for the selected card and focus only; teal = correct (GREAT),
+       gold = PERFECT, rose = MISS / wrong; buttons are indigo ink (--primary).
+       *-ink variants are the same hues dark/light enough for text (≥ 4.5:1). */
     :root {
-      --bg: #131f24;
-      --panel: #202f36;
-      --panel-2: #1a2a30;
-      --line: #37464f;
-      --line-strong: #52656d;
-      --text: #f1f7fb;
-      --muted: #8fa5af;
-      --dim: #52656d;
-      --green: #58cc02;
-      --green-dark: #46a302;
-      --blue: #1cb0f6;
-      --blue-deep: #1899d6;
-      --red: #ff4b4b;
-      --red-deep: #ea2b2b;
-      --yellow: #ffc800;
-      --panel-soft: #17282e;
-      --track: #283940;
-      --card-shadow: #26363d;
-      --selected-bg: #14394a;
-      --selected-ink: #ddf4ff;
-      --selected-shadow: #0e719d;
-      --correct-bg: #183d22;
-      --correct-ink: #eaffdf;
-      --correct-shadow: #2d7f12;
-      --wrong-bg: #461f22;
-      --wrong-ink: #ffe8e8;
-      --wrong-shadow: #9d2828;
-      --on-accent: #102015;
+      --bg: #24205a;
+      --panel: #2f2a6e;
+      --panel-2: #29246a;
+      --line: #463f8f;
+      --line-strong: #6a62b5;
+      --text: #f3f1ff;
+      --muted: #b8b2e8;
+      --dim: #9690d6;
+      --green: #18c6b5;
+      --green-dark: #0e9c8f;
+      --green-ink: #5ef0e2;
+      --blue: #7c5cff;
+      --blue-deep: #6545e6;
+      --blue-ink: #b9a8ff;
+      --red: #ff5c8a;
+      --red-deep: #c9285a;
+      --red-ink: #ff8fb0;
+      --yellow: #ffc933;
+      --yellow-ink: #ffd666;
+      --ember-ink: #ffa45c;
+      --good: #7ad151;
+      --good-ink: #8fe36a;
+      --primary: #c9c1ff;
+      --primary-dark: #a99cff;
+      --on-primary: #24205a;
+      --panel-soft: #2a2565;
+      --track: #3a3480;
+      --card-shadow: rgba(5, 3, 30, .55);
+      --selected-bg: #2e2580;
+      --selected-ink: #f3f1ff;
+      --selected-shadow: rgba(5, 3, 30, .55);
+      --correct-bg: #123e4a;
+      --correct-ink: #dffcf8;
+      --correct-shadow: rgba(5, 3, 30, .55);
+      --wrong-bg: #4a1a3a;
+      --wrong-ink: #ffe4ec;
+      --wrong-shadow: rgba(5, 3, 30, .55);
+      --on-accent: #24205a;
       --warn-ink: #2b1800;
-      --warn-shadow: #d99f00;
-      --weak-wrong: #ff9a9a;
-      --scrim: rgba(10, 18, 21, .72);
-      --hover-soft: #20343b;
-      --radius: 12px;
+      --warn-shadow: rgba(255, 201, 51, .4);
+      --weak-wrong: #ff8fb0;
+      --scrim: rgba(8, 6, 32, .72);
+      --hover-soft: #363075;
+      --radius: 14px;
       --ease: cubic-bezier(.2, .8, .2, 1);
       --theme-shift: 420ms;
+      --num-font: "Saira Condensed", "Arial Narrow", sans-serif;
     }
 
     :root[data-color-mode="light"] {
       color-scheme: light;
-      --bg: #f4f7f9;
+      --bg: #f5f3ff;
       --panel: #ffffff;
-      --panel-2: #eef3f6;
-      --line: #d5dee4;
-      --line-strong: #b3c1ca;
-      --text: #1b2a31;
-      --muted: #5d727d;
-      --dim: #9fb0b9;
-      --panel-soft: #f7fafb;
-      --track: #e3eaee;
-      --card-shadow: #d5dee4;
-      --scrim: rgba(10, 18, 21, .45);
-      --hover-soft: #f0f5f7;
+      --panel-2: #ece8ff;
+      --line: #dcd6fb;
+      --line-strong: #b7aeef;
+      --text: #1d1a4a;
+      --muted: #514b88;
+      --dim: #6c66a6;
+      --green-ink: #0a7a70;
+      --blue-ink: #5a3fe0;
+      --red-ink: #c0245a;
+      --yellow-ink: #8a5a00;
+      --ember-ink: #b4530f;
+      --good-ink: #2b7a2f;
+      --primary: #2b2470;
+      --primary-dark: #1d1856;
+      --on-primary: #ffffff;
+      --panel-soft: #faf9ff;
+      --track: #e4e0ff;
+      --card-shadow: rgba(36, 32, 90, .16);
+      --selected-bg: #efeaff;
+      --selected-ink: #2b1d8f;
+      --correct-bg: #e3faf7;
+      --correct-ink: #075e56;
+      --wrong-bg: #ffe9f0;
+      --wrong-ink: #8c1840;
+      --scrim: rgba(29, 26, 74, .45);
+      --hover-soft: #f1eeff;
     }
     :root[data-color-mode="dark"] { color-scheme: dark; }
 
@@ -93,8 +137,8 @@
       font-weight: 800;
       color: var(--muted);
     }
-    .import-status.good { color: var(--green); }
-    .import-status.bad { color: var(--red); }
+    .import-status.good { color: var(--green-ink); }
+    .import-status.bad { color: var(--red-ink); }
 
     body,
     .rail,
@@ -131,7 +175,7 @@
       margin: 0;
       color: var(--text);
       background: var(--bg);
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
       letter-spacing: 0;
     }
 
@@ -167,11 +211,11 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      color: var(--on-accent);
-      background: var(--green);
+      color: var(--on-primary);
+      background: var(--primary);
       font-size: 26px;
       font-weight: 1000;
-      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .14);
+      box-shadow: 0 10px 24px -10px var(--card-shadow);
     }
 
     .rail-btn {
@@ -189,7 +233,6 @@
       padding: 6px 2px;
       font-size: 12px;
       font-weight: 800;
-      text-transform: uppercase;
       text-align: center;
       line-height: 1.12;
       letter-spacing: -0.02em;
@@ -203,7 +246,7 @@
     .rail-btn.active,
     .rail-btn:hover {
       border-color: var(--line);
-      color: var(--green);
+      color: var(--primary);
       background: var(--panel-soft);
     }
 
@@ -248,15 +291,318 @@
 
     .lesson-top {
       display: grid;
-      grid-template-columns: 36px minmax(0, 1fr) auto;
+      grid-template-columns: 44px minmax(0, 1fr) auto auto;
       gap: 18px;
       align-items: center;
       margin-bottom: 54px;
     }
 
+    /* Focus mode: everything but the board goes away and the board glides to the
+       middle of the screen (js: enterFocus / exitFocus animate the move). */
+    body.focus-mode .rail,
+    body.focus-mode .streak-chip,
+    body.focus-mode .mobile-nav,
+    body.focus-mode .today-bar,
+    body.focus-mode .prompt-kicker,
+    body.focus-mode #practiceView > h1 {
+      display: none;
+    }
+
+    body.focus-mode .app {
+      grid-template-columns: 1fr;
+    }
+
+    .rail > *,
+    .mobile-nav,
+    .today-bar,
+    .prompt-kicker,
+    #practiceView > h1 {
+      animation: focus-back 0.4s ease;
+    }
+
+    @keyframes focus-back {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Effects layer (js/fx.js): sparks, combo badge, shockwave, confetti. */
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .fx-ripple,
+    .fx-star,
+    .fx-confetti {
+      position: absolute;
+      will-change: transform, opacity;
+    }
+
+    .fx-ripple {
+      border: 3px solid;
+      box-sizing: border-box;
+    }
+
+    .fx-star {
+      line-height: 0;
+    }
+
+    /* The judgement word: rhythm-game feedback on every match. */
+    .fx-judge {
+      position: absolute;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: var(--num-font);
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      padding: 0 10px;
+      border-radius: 12px;
+      background: var(--panel);
+      box-shadow: 0 10px 24px -8px var(--card-shadow);
+      transform: translate(-50%, -100%) rotate(-4deg);
+    }
+
+    .fx-judge small {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .fx-judge-perfect { color: var(--yellow-ink); }
+    .fx-judge-great { color: var(--green-ink); }
+    .fx-judge-good { color: var(--good-ink); }
+    .fx-judge-miss { color: var(--red-ink); }
+
+    .fx-confetti {
+      border-radius: 2px;
+    }
+
+    .fx-banner {
+      position: absolute;
+      left: 50%;
+      top: 16%;
+      padding: 10px 20px;
+      border-radius: 999px;
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 12px 30px -10px rgba(10, 8, 40, 0.45);
+      font-size: 17px;
+      font-weight: 1000;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+
+    /* Day streak, always next to the progress: grey until today's goal is done, then orange. */
+    .streak-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--muted);
+      font-family: var(--num-font);
+      font-size: 22px;
+      font-weight: 800;
+      filter: grayscale(1);
+      opacity: 0.75;
+      transition: filter 0.4s ease, opacity 0.4s ease, color 0.4s ease;
+    }
+
+    .streak-chip.lit {
+      color: var(--ember-ink);
+      filter: none;
+      opacity: 1;
+    }
+
+    .completion.show .completion-badge {
+      animation: badge-pop 650ms cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    @keyframes badge-pop {
+      0% { transform: scale(0.3) rotate(-12deg); opacity: 0; }
+      60% { transform: scale(1.12) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    /* Set result: the judgement counts, as a rhythm game ends a song. */
+    .completion-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px 12px;
+      margin: 18px 0 6px;
+      font-family: var(--num-font);
+      font-weight: 800;
+    }
+
+    .result-cell {
+      display: grid;
+      justify-items: center;
+      animation: tile-in 520ms cubic-bezier(.34, 1.56, .64, 1) both;
+    }
+
+    .result-cell:nth-child(2) { animation-delay: 90ms; }
+    .result-cell:nth-child(3) { animation-delay: 180ms; }
+    .result-cell:nth-child(4) { animation-delay: 270ms; }
+
+    .result-cell b {
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .result-cell span {
+      color: var(--text);
+      font-size: 38px;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-line {
+      grid-column: 1 / -1;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .result-line b {
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    @keyframes tile-in {
+      from { transform: translateY(14px) scale(0.85); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .result-cell, .completion.show .completion-badge, .match-card.correct { animation: none; }
+      .progress-fill { transition: none; }
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(8, 6, 32, 0.2) 100%);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    body.focus-mode::after {
+      opacity: 1;
+    }
+
+    body.focus-mode .progress-fill {
+      box-shadow: none;
+    }
+
+    .focus-exit {
+      position: fixed;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 5;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 14px;
+      color: var(--muted);
+      background: var(--bg);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      cursor: pointer;
+    }
+
+    @media (hover: none) {
+      .focus-exit .key-hint { display: none; }
+    }
+
+    body.focus-mode .focus-exit {
+      opacity: 0.75;
+      visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rail > *, .mobile-nav, .today-bar, .prompt-kicker, #practiceView > h1, .focus-exit {
+        transition: none;
+        animation: none;
+      }
+    }
+
+    .today-bar {
+      grid-column: 1 / -1;
+      padding: 2px 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .today-bar b {
+      color: var(--text);
+    }
+
+    .today-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 10px;
+    }
+
+    .today-num {
+      color: var(--text);
+      font-family: var(--num-font);
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 0.9;
+    }
+
+    .today-done {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .today-bar small {
+      flex-basis: 100%;
+    }
+
+    .today-bar.done {
+      border-color: var(--green);
+      color: var(--green-ink);
+    }
+
+    .today-bar.celebrate {
+      animation: today-pop 0.6s ease;
+    }
+
+    .today-bar small {
+      display: block;
+      margin-top: 2px;
+      font-weight: 700;
+    }
+
+    @keyframes today-pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
     .icon-button {
-      width: 36px;
-      height: 36px;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
       border: 0;
       border-radius: 50%;
       color: var(--dim);
@@ -273,30 +619,101 @@
     }
 
     .progress {
+      position: relative;
       height: 16px;
       overflow: hidden;
       border-radius: 999px;
       background: var(--track);
     }
 
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      border-radius: inherit;
-      background: var(--green);
-      transition: width 260ms var(--ease);
+    /* Beat ticks: the set as a rhythm lane, one tick every fifth of the way. */
+    .progress::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 2px), rgba(255, 255, 255, 0.55) calc(20% - 2px) 20%);
+      pointer-events: none;
     }
 
+    .progress-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    /* Room above the bar for the streak label, so it never covers the navigation. */
+    .lesson-top {
+      padding-top: 22px;
+    }
+
+    /* The lane: a springy fill coloured by each match's judgement (see laneGradient). */
+    .progress-fill {
+      position: relative;
+      width: 0%;
+      min-width: 16px;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--primary);
+      overflow: hidden;
+      transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
+    }
+
+    /* Combo count at the right end of the lane: a big rolling number and its word. */
+    .combo-label {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 4px);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      color: var(--text);
+      font-family: var(--num-font);
+      font-weight: 800;
+      white-space: nowrap;
+      transform-origin: right bottom;
+      opacity: 0;
+      transform: translateY(6px) scale(0.8);
+      transition: opacity 250ms ease, transform 350ms cubic-bezier(.34, 1.56, .64, 1), color 300ms ease;
+      pointer-events: none;
+    }
+
+    .combo-label b {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .combo-label span {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .combo-label.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* The combo stays one colour: gold means PERFECT and nothing else. */
+
     .top-count {
-      min-width: 68px;
+      min-width: 56px;
       color: var(--muted);
-      font-size: 20px;
-      font-weight: 900;
+      font-family: var(--num-font);
+      font-size: 22px;
+      font-weight: 800;
       text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fx-digit {
+      display: inline-block;
+    }
+
+    .icon {
+      flex: none;
+      vertical-align: -2px;
     }
 
     .top-count.time-low {
-      color: var(--red);
+      color: var(--red-ink);
     }
 
     .prompt {
@@ -305,11 +722,8 @@
     }
 
     .prompt-kicker {
-      color: var(--green);
-      font-size: 17px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      text-transform: uppercase;
+      /* Set number and trial count live in the progress row (top-count); no label above the title. */
+      display: none;
     }
 
     h1 {
@@ -333,8 +747,8 @@
       border: 2px solid var(--line);
       border-radius: var(--radius);
       color: var(--text);
-      background: transparent;
-      box-shadow: 0 4px 0 var(--card-shadow);
+      background: var(--panel);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
       cursor: pointer;
       display: grid;
       grid-template-columns: 40px 1fr;
@@ -351,14 +765,14 @@
 
     .match-card:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--card-shadow);
+      box-shadow: 0 3px 16px -6px var(--card-shadow);
     }
 
     .match-card.selected {
       border-color: var(--blue);
       color: var(--selected-ink);
       background: var(--selected-bg);
-      box-shadow: 0 4px 0 var(--selected-shadow);
+      box-shadow: 0 6px 16px -6px var(--selected-shadow);
     }
 
     .match-card.paired {
@@ -367,12 +781,39 @@
       transform: scale(.98);
     }
 
+    .match-card .num {
+      color: var(--muted);
+      font-family: var(--num-font);
+      font-weight: 700;
+    }
+
+    /* On coloured card states the hint takes the card's own ink (always ≥ 4.5:1). */
+    .match-card.selected .num,
+    .match-card.correct .num,
+    .match-card.wrong .num {
+      color: inherit;
+    }
+
+    .match-card .reading {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .reading-inline {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
     .match-card.correct {
       border-color: var(--green);
       color: var(--correct-ink);
       background: var(--correct-bg);
-      box-shadow: 0 4px 0 var(--correct-shadow);
-      animation: correctPulse 300ms ease;
+      box-shadow: 0 6px 16px -6px var(--correct-shadow);
+      animation: correctPulse 420ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
     .match-card.replacing {
@@ -398,7 +839,7 @@
       border-color: var(--red);
       color: var(--wrong-ink);
       background: var(--wrong-bg);
-      box-shadow: 0 4px 0 var(--wrong-shadow);
+      box-shadow: 0 6px 16px -6px var(--wrong-shadow);
       animation: shake 220ms ease;
     }
 
@@ -473,7 +914,7 @@
 
     .review-heading {
       margin: 0 0 10px;
-      color: var(--red);
+      color: var(--red-ink);
       font-size: 15px;
       font-weight: 900;
       text-align: left;
@@ -491,9 +932,9 @@
       place-items: center;
       border: 0;
       border-radius: 16px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: 0 4px 0 var(--green-dark);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 4px 18px -8px var(--card-shadow);
       cursor: pointer;
       padding: 0 18px;
       font-size: 17px;
@@ -510,20 +951,20 @@
 
     .duo-button:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--green-dark);
+      box-shadow: 0 1px 18px -8px var(--card-shadow);
     }
 
     .duo-button.secondary {
-      color: var(--blue);
+      color: var(--blue-ink);
       background: transparent;
       border: 2px solid var(--line);
-      box-shadow: 0 4px 0 var(--card-shadow);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
     }
 
     .duo-button.danger {
       color: #fff;
       background: var(--red-deep);
-      box-shadow: 0 4px 0 var(--wrong-shadow);
+      box-shadow: 0 6px 16px -6px var(--wrong-shadow);
     }
 
     .danger-zone {
@@ -533,7 +974,7 @@
     }
 
     .danger-zone h2 {
-      color: var(--red);
+      color: var(--red-ink);
     }
 
     .danger-zone p b {
@@ -543,13 +984,13 @@
     .duo-button.warning {
       color: var(--warn-ink);
       background: var(--yellow);
-      box-shadow: 0 4px 0 var(--warn-shadow);
+      box-shadow: 0 6px 16px -6px var(--warn-shadow);
     }
 
     .duo-button[disabled] {
       color: var(--dim);
       background: var(--track);
-      box-shadow: 0 4px 0 var(--card-shadow);
+      box-shadow: 0 6px 16px -6px var(--card-shadow);
       cursor: not-allowed;
       filter: none;
       transform: none;
@@ -667,7 +1108,7 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: var(--radius);
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--bg);
       cursor: pointer;
       padding: 8px 10px;
@@ -752,7 +1193,7 @@
       width: 18px;
       height: 18px;
       flex: 0 0 auto;
-      accent-color: var(--green);
+      accent-color: var(--blue);
     }
 
     label {
@@ -780,6 +1221,93 @@
     select:focus,
     textarea:focus {
       border-color: var(--blue);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    ::selection {
+      color: var(--text);
+      background: rgba(124, 92, 255, 0.28);
+    }
+
+    input,
+    textarea {
+      caret-color: var(--blue);
+    }
+
+    html {
+      scrollbar-color: var(--line-strong) transparent;
+    }
+
+    /* Keyboard focus is always visible (mouse clicks do not show it). */
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 1px;
+    }
+
+    /* #feedback gets its class replaced by code ("feedback good"), so it is hidden by id. */
+    .sr-only,
+    #feedback {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: calc(100vw - 32px);
+      padding: 10px 10px 10px 18px;
+      border-radius: 14px;
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      font-weight: 800;
+      transform: translateX(-50%);
+    }
+
+    .undo-toast button {
+      min-height: 40px;
+      border: 0;
+      border-radius: 10px;
+      padding: 0 14px;
+      color: var(--primary);
+      background: var(--on-primary);
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .match-card.hint-correct {
+      border-color: var(--green);
+      animation: hint-pulse 900ms ease-out;
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { box-shadow: 0 6px 16px -6px var(--card-shadow); }
+      35% { box-shadow: 0 0 0 4px var(--green), 0 6px 16px -6px var(--card-shadow); }
     }
 
     textarea {
@@ -880,7 +1408,7 @@
       border-bottom: 2px solid #111;
       padding-bottom: 6px;
       margin-bottom: 10px;
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-head h1 {
@@ -896,7 +1424,7 @@
     }
 
     .ps-body {
-      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-body.cols-2 {
@@ -986,9 +1514,9 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: 50%;
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--panel);
-      box-shadow: 0 2px 0 var(--card-shadow);
+      box-shadow: 0 4px 16px -6px var(--card-shadow);
       cursor: pointer;
       padding: 0;
     }
@@ -1017,7 +1545,7 @@
 
     .link-button.intro-link {
       margin: 6px 0 0 -8px;
-      color: var(--blue);
+      color: var(--blue-ink);
     }
 
     .link-button {
@@ -1025,7 +1553,7 @@
       min-height: 32px;
       place-items: center;
       border: 0;
-      color: var(--red);
+      color: var(--red-ink);
       background: transparent;
       cursor: pointer;
       padding: 0 8px;
@@ -1044,18 +1572,24 @@
       display: block;
     }
 
+    /* The set's result, as a rhythm game ends a song: CLEAR / FULL COMBO / TIME UP. */
     .completion-badge {
-      width: 104px;
-      height: 104px;
-      display: grid;
-      place-items: center;
-      margin: 16px auto 18px;
-      border-radius: 30px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: inset 0 -8px 0 rgba(0, 0, 0, .16);
-      font-size: 56px;
-      font-weight: 1000;
+      margin: 18px auto 8px;
+      color: var(--primary);
+      font-family: var(--num-font);
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      transform: rotate(-4deg);
+    }
+
+    .completion-badge.full-combo {
+      color: var(--green-ink);
+    }
+
+    .completion-badge.time-up {
+      color: var(--red-ink);
     }
 
     .completion h2 {
@@ -1083,7 +1617,7 @@
       border-radius: 18px;
       color: var(--text);
       background: var(--panel-soft);
-      box-shadow: 0 22px 60px rgba(0, 0, 0, .38), 0 5px 0 var(--card-shadow);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, .38);
       opacity: 0;
       pointer-events: none;
       transform: translateY(18px) scale(.98);
@@ -1109,9 +1643,9 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .16);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 10px 24px -10px var(--card-shadow);
       font-size: 24px;
       font-weight: 1000;
     }
@@ -1133,10 +1667,10 @@
 
     .install-close {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
+      top: 4px;
+      right: 4px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
       border: 0;
@@ -1167,7 +1701,7 @@
       place-items: center;
       border: 2px solid var(--line);
       border-radius: var(--radius);
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--bg);
       cursor: pointer;
       padding: 0 14px;
@@ -1179,9 +1713,9 @@
 
     .install-small.primary {
       border-color: transparent;
-      color: var(--on-accent);
-      background: var(--green);
-      box-shadow: 0 4px 0 var(--green-dark);
+      color: var(--on-primary);
+      background: var(--primary);
+      box-shadow: 0 4px 18px -8px var(--card-shadow);
     }
 
     @keyframes shake {
@@ -1191,8 +1725,9 @@
     }
 
     @keyframes correctPulse {
-      0%, 100% { filter: brightness(1); }
-      45% { filter: brightness(1.45); }
+      0% { transform: scale(1); filter: brightness(1); }
+      40% { transform: scale(1.045); filter: brightness(1.25); }
+      100% { transform: scale(1); filter: brightness(1); }
     }
 
     @keyframes cardEnter {
@@ -1220,8 +1755,23 @@
         padding: 28px 18px calc(28px + env(safe-area-inset-bottom));
       }
 
+      /* Phones: navigation sits at the bottom, in reach of the thumb. */
       .mobile-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
         display: grid;
+        width: 100%;
+        margin: 0;
+        padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--line);
+        background: var(--bg);
+      }
+
+      .main {
+        padding-bottom: calc(96px + env(safe-area-inset-bottom));
       }
 
       .lesson {
@@ -1236,13 +1786,14 @@
 
     @media (max-width: 640px) {
       .lesson-top {
-        grid-template-columns: 36px 1fr;
+        grid-template-columns: 44px minmax(0, 1fr) auto auto;
+        gap: 10px;
         margin-bottom: 30px;
       }
 
       .top-count {
-        grid-column: 1 / -1;
-        text-align: left;
+        min-width: 0;
+        font-size: 16px;
       }
 
       h1 {
@@ -1323,11 +1874,11 @@
       gap: 3px;
     }
     .lang-toggle .lang-opt {
-      opacity: .45;
+      opacity: .8;
     }
     .lang-toggle .lang-opt.on {
       opacity: 1;
-      color: var(--green);
+      color: var(--primary);
     }
     .lang-toggle .sep {
       opacity: .35;
@@ -1383,8 +1934,8 @@
       display: grid;
       place-items: center;
       border-radius: 10px;
-      color: var(--on-accent);
-      background: var(--green);
+      color: var(--on-primary);
+      background: var(--primary);
       font-weight: 1000;
     }
 
@@ -1415,7 +1966,7 @@
     }
 
     .intro-demo b {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     /* `label { display: grid }` would otherwise beat the hidden attribute */
@@ -1449,7 +2000,7 @@
 
     .tab-btn[aria-selected="true"] {
       border-color: var(--line);
-      color: var(--green);
+      color: var(--primary);
       background: var(--panel-soft);
       margin-bottom: -2px;
       padding-bottom: 2px;
@@ -1526,7 +2077,7 @@
     }
 
     .sample-note .link-button {
-      color: var(--blue);
+      color: var(--blue-ink);
       padding: 0;
     }
 
@@ -1562,7 +2113,7 @@
     }
 
     .custom-row .cr-own {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .custom-row .stage-tag {
@@ -1576,7 +2127,7 @@
     }
 
     .custom-row .stage-tag.is-mastered {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .list-foot {
@@ -1607,7 +2158,68 @@
     .ai-section progress {
       width: 100%;
       height: 10px;
-      accent-color: var(--green);
+      accent-color: var(--blue);
+    }
+
+    .wordbook .option-grid {
+      margin-top: 8px;
+    }
+
+    .settings-group + .settings-group {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 2px solid var(--line);
+    }
+
+    .settings-group h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .settings-group .option-grid {
+      margin-top: 10px;
+    }
+
+    .ai-wordlist {
+      margin-bottom: 14px;
+    }
+
+    .ai-section label > span,
+    .ai-section .small-button {
+      text-transform: none;
+    }
+
+    .ai-section h3 {
+      margin: 14px 0 6px;
+      font-size: 16px;
+    }
+
+    .ai-section .option-grid input {
+      min-width: 0;
+    }
+
+    .drill-ai {
+      margin: 8px 0 0;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+
+    .drill-ai p {
+      margin: 4px 0;
+    }
+
+    .drill-ai b {
+      margin-right: 6px;
+    }
+
+    .review-list li.ai-contrast {
+      display: block;
+      font-size: 15px;
+    }
+
+    .review-list li.ai-contrast p {
+      margin: 4px 0;
     }
 
     .ai-tag {
@@ -1659,7 +2271,7 @@
       width: 100%;
       max-width: 28px;
       border-radius: 6px 6px 2px 2px;
-      background: var(--blue);
+      background: var(--green);
     }
 
     .forecast-label {
@@ -1672,7 +2284,8 @@
     }
 
     .drill {
-      margin: 0 0 22px;
+      position: relative;
+      margin: 22px 0;
       border: 2px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
@@ -1681,11 +2294,13 @@
     }
 
     .drill-kicker {
-      margin: 0 0 6px;
-      color: var(--blue);
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      margin: 0;
+      color: var(--muted);
       font-size: 13px;
-      font-weight: 900;
-      text-transform: uppercase;
+      font-weight: 800;
     }
 
     .drill-title {
@@ -1695,7 +2310,7 @@
     }
 
     .drill-title b {
-      color: var(--green);
+      color: var(--green-ink);
     }
 
     .drill-prompt {
@@ -1726,12 +2341,12 @@
     }
 
     .drill-ok {
-      color: var(--green);
+      color: var(--green-ink);
       font-weight: 900;
     }
 
     .drill-bad {
-      color: var(--red);
+      color: var(--red-ink);
       font-weight: 900;
     }
 
@@ -1746,8 +2361,12 @@
       overflow-wrap: anywhere;
     }
 
+    .drill-hint-text {
+      margin-bottom: 6px;
+    }
+
     .drill-sentence mark {
-      color: var(--red);
+      color: var(--red-ink);
       background: transparent;
       text-decoration: underline wavy var(--red);
       text-underline-offset: 3px;
@@ -1783,7 +2402,7 @@
       border: 2px solid var(--line);
       border-radius: 999px;
       padding: 2px 10px;
-      color: var(--blue);
+      color: var(--blue-ink);
       background: var(--panel);
       cursor: pointer;
       font: inherit;
@@ -1804,7 +2423,7 @@
     }
 
     .drill-actions .link-button {
-      color: var(--blue);
+      color: var(--blue-ink);
     }
 
     .drill-actions #drillSkip {
@@ -1824,17 +2443,16 @@
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
       <div class="logo" aria-hidden="true">W</div>
-      <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
+      <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
       <button class="rail-btn" type="button" id="openLibraryRail" data-en="Library" data-zh="词库">词库</button>
       <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
-      <a class="rail-btn" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer">GitHub</a>
       <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
       <button class="rail-btn lang-toggle" type="button" id="langToggleRail" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
     </aside>
 
     <main class="main">
       <nav class="mobile-nav" aria-label="窄屏导航" data-en-aria="Mobile navigation" data-zh-aria="窄屏导航">
-        <button class="rail-btn active" type="button" data-nav-practice data-en="Practice" data-zh="练习">练习</button>
+        <button class="rail-btn active" type="button" data-nav-practice aria-current="page" data-en="Practice" data-zh="练习">练习</button>
         <button class="rail-btn" type="button" id="openLibraryMobile" data-en="Library" data-zh="词库">词库</button>
         <button class="rail-btn" type="button" data-open-settings data-en="Settings" data-zh="设置">设置</button>
         <button class="rail-btn color-mode-btn" type="button" data-color-mode-btn aria-label="切换外观" data-en-aria="Switch appearance" data-zh-aria="切换外观"></button>
@@ -1843,21 +2461,32 @@
 
       <section class="lesson" aria-label="单词配对练习" data-en-aria="Vocabulary matching practice" data-zh-aria="单词配对练习">
         <div class="lesson-top">
-          <button class="icon-button" type="button" id="quitBtn" aria-label="重新开始" data-en-aria="Start over" data-zh-aria="重新开始">×</button>
-          <div class="progress" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
+          <button class="icon-button" type="button" id="quitBtn" aria-label="结束本组" title="结束本组" data-en-aria="End this set" data-zh-aria="结束本组"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <div class="progress-wrap">
+            <div class="combo-label" id="comboLabel" aria-live="polite"></div>
+            <div class="progress" id="progressBar" aria-label="本关进度" data-en-aria="Level progress" data-zh-aria="本关进度"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
           <div class="top-count" id="topCount">10</div>
+          <div class="streak-chip" id="streakChip" hidden><svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="streakChipN">0</b></div>
+          <div class="today-bar" id="todayBar" hidden></div>
         </div>
 
         <div class="prompt" id="practiceView">
-          <div class="prompt-kicker" id="roundLabel">第 1 轮</div>
-          <h1 data-en="Match the pairs" data-zh="选择配对">选择配对</h1>
+          <div class="prompt-kicker" id="roundLabel">第 1 组</div>
+          <h1 data-en="Match each meaning to its word" data-zh="把意思和单词配成对">把意思和单词配成对</h1>
           <div class="match-grid" id="matchGrid"></div>
         </div>
 
         <div class="completion" id="completionView">
-          <div class="completion-badge">✓</div>
-          <h2 id="completionTitle" data-en="Round complete" data-zh="这一轮结束">这一轮结束</h2>
-          <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
+          <div class="completion-badge" aria-hidden="true">CLEAR</div>
+          <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
+          <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
+          <div class="completion-stats" id="completionStats" hidden></div>
+          <div class="completion-actions">
+            <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
+            <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
+          </div>
           <section class="drill" id="drill" hidden aria-live="polite">
             <p class="drill-kicker" id="drillKicker"></p>
             <h3 class="drill-title" id="drillTitle"></h3>
@@ -1866,7 +2495,7 @@
             <textarea id="drillSentence" rows="3" autocomplete="off" spellcheck="false" hidden></textarea>
             <div class="drill-result" id="drillResult"></div>
             <div class="drill-actions">
-              <button class="duo-button" type="button" id="drillSubmit"></button>
+              <button class="duo-button secondary" type="button" id="drillSubmit"></button>
               <button class="link-button" type="button" id="drillHint" data-en="I have no idea" data-zh="我没有思路">我没有思路</button>
               <button class="link-button" type="button" id="drillWrongMeaning" hidden data-en="I used the wrong meaning" data-zh="我用错了意思">我用错了意思</button>
               <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
@@ -1874,11 +2503,7 @@
           </section>
           <p class="review-heading" id="reviewHeading"></p>
           <ul class="review-list" id="reviewList"></ul>
-          <div class="completion-actions">
-            <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
-            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
-            <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
-          </div>
+
         </div>
 
       </section>
@@ -1891,7 +2516,8 @@
         <div class="stats">
           <div class="stat"><strong id="score">0</strong><span data-en="Correct" data-zh="正确配对">正确配对</span></div>
           <div class="stat"><strong id="mistakes">0</strong><span data-en="Mistakes" data-zh="错选">错选</span></div>
-          <div class="stat"><strong id="streak">0</strong><span data-en="Streak" data-zh="连对">连对</span></div>
+          <div class="stat"><strong id="streak">0</strong><span data-en="Combo" data-zh="本局连对">本局连对</span></div>
+          <div class="stat"><strong id="dayStreak">0</strong><span data-en="Day streak" data-zh="连续天数">连续天数</span></div>
           <div class="stat"><strong id="remaining">0</strong><span data-en="Unmastered" data-zh="未掌握">未掌握</span></div>
         </div>
         <div class="weak-list" id="weakList"></div>
@@ -1904,8 +2530,8 @@
     </main>
   </div>
 
-  <div class="install-nudge" id="installNudge" role="dialog" aria-live="polite" aria-labelledby="installTitle" aria-describedby="installText">
-    <button class="install-close" type="button" id="closeInstallNudge" aria-label="关闭安装提醒" data-en-aria="Close install prompt" data-zh-aria="关闭安装提醒">×</button>
+  <div class="install-nudge" id="installNudge" role="dialog" aria-live="polite" aria-labelledby="installTitle" aria-describedby="installText" inert>
+    <button class="install-close" type="button" id="closeInstallNudge" aria-label="关闭安装提醒" data-en-aria="Close install prompt" data-zh-aria="关闭安装提醒"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="install-nudge-body">
       <div class="install-icon" aria-hidden="true">W</div>
       <div class="install-copy">
@@ -1949,75 +2575,107 @@
           <h2 id="settingsTitle" data-en="Settings" data-zh="设置">设置</h2>
           <p data-en="Changes save automatically and apply from the next set." data-zh="修改会自动保存，下一组生效。">修改会自动保存，下一组生效。</p>
           <button class="link-button intro-link" type="button" id="showIntroBtn" data-en="How to play" data-zh="玩法说明">玩法说明</button>
+          <a class="link-button intro-link" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer" data-en="Source code (GitHub)" data-zh="源代码（GitHub）">源代码（GitHub）</a>
         </div>
-        <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+        <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <section class="modal-section" id="settingsSection">
-        <div class="option-grid">
-          <label>
-            <span data-en="Language pair" data-zh="语言对">语言对</span>
-            <select id="langPairSelect"></select>
-          </label>
-          <label class="lang-pair-custom" id="langPairCustomRow" hidden>
-            <span data-en="Side A" data-zh="左侧">左侧</span>
-            <input id="langPairA" type="text" autocomplete="off" />
-          </label>
-          <label class="lang-pair-custom" id="langPairCustomRow2" hidden>
-            <span data-en="Side B" data-zh="右侧">右侧</span>
-            <input id="langPairB" type="text" autocomplete="off" />
-          </label>
-          <label>
-            <span data-en="How to practice" data-zh="练习方式">练习方式</span>
-            <select id="flowSelect"></select>
-          </label>
-          <label>
-            <span data-en="Practice mode" data-zh="练习模式">练习模式</span>
-            <select id="modeSelect"></select>
-          </label>
-          <label>
-            <span data-en="Cards after each set (spelling / sentence)" data-zh="每组后的练习卡（拼写 / 造句）">每组后的练习卡（拼写 / 造句）</span>
-            <select id="drillsSelect"></select>
-          </label>
-          <label>
-            <span data-en="Appearance" data-zh="外观">外观</span>
-            <select id="colorModeSelect"></select>
-          </label>
-          <label data-levels-only>
-            <span data-en="Max words per level" data-zh="每关最多单词数">每关最多单词数</span>
-            <input id="roundSize" type="number" min="5" max="200" step="1" />
-          </label>
-          <label data-levels-only>
-            <span data-en="Base level time (sec)" data-zh="基础每关时间（秒）">基础每关时间（秒）</span>
-            <input id="levelSeconds" type="number" min="20" max="900" step="5" />
+        <!-- Four groups, each a single kind of decision. -->
+        <div class="settings-group">
+          <h3 data-en="Learning plan" data-zh="学习计划">学习计划</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Language pair" data-zh="语言对">语言对</span>
+              <select id="langPairSelect"></select>
+            </label>
+            <label>
+              <span data-en="New words per day" data-zh="每天学几个新词">每天学几个新词</span>
+              <select id="dailyNewSelect"></select>
+            </label>
+            <label class="lang-pair-custom" id="langPairCustomRow" hidden>
+              <span data-en="Side A (the language you learn)" data-zh="左侧（要学的语言）">左侧（要学的语言）</span>
+              <input id="langPairA" type="text" autocomplete="off" />
+            </label>
+            <label class="lang-pair-custom" id="langPairCustomRow2" hidden>
+              <span data-en="Side B (meanings)" data-zh="右侧（释义用的语言）">右侧（释义用的语言）</span>
+              <input id="langPairB" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span data-en="Which words come up" data-zh="先出哪些词">先出哪些词</span>
+              <select id="modeSelect"></select>
+            </label>
+            <label id="reminderRow">
+              <span data-en="Daily reminder" data-zh="每日提醒">每日提醒</span>
+              <select id="reminderSelect"></select>
+            </label>
+            <p class="import-hint" id="reminderNote" hidden data-en="Daily reminders need the Android app (a web page cannot remind you)." data-zh="每日提醒需要安卓 App（网页没法定时提醒）。">每日提醒需要安卓 App（网页没法定时提醒）。</p>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3 data-en="Pace" data-zh="练习节奏">练习节奏</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Practice" data-zh="练法">练法</span>
+              <select id="flowSelect"></select>
+            </label>
+            <label>
+              <span data-en="Cards after each set" data-zh="每组后的拼写 / 造句卡">每组后的拼写 / 造句卡</span>
+              <select id="drillsSelect"></select>
+            </label>
+            <label data-levels-only>
+              <span data-en="Max words per level" data-zh="每关最多几个词">每关最多几个词</span>
+              <input id="roundSize" type="number" min="5" max="200" step="1" />
+            </label>
+            <label data-levels-only>
+              <span data-en="Time per level (sec)" data-zh="每关时间（秒）">每关时间（秒）</span>
+              <input id="levelSeconds" type="number" min="20" max="900" step="5" />
+            </label>
+          </div>
+          <label class="check-row" data-levels-only>
+            <input id="adaptiveLevelTime" type="checkbox" />
+            <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
           </label>
         </div>
-        <label class="check-row" data-levels-only>
-          <input id="adaptiveLevelTime" type="checkbox" />
-          <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
-        </label>
-        <label class="check-row">
-          <input id="streakTones" type="checkbox" />
-          <span data-en="Piano notes for a streak of correct matches" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
-        </label>
+        <div class="settings-group">
+          <h3 data-en="Feedback and look" data-zh="反馈与外观">反馈与外观</h3>
+          <div class="option-grid">
+            <label>
+              <span data-en="Appearance" data-zh="外观">外观</span>
+              <select id="colorModeSelect"></select>
+            </label>
+          </div>
+          <label class="check-row">
+            <input id="focusMode" type="checkbox" />
+            <span data-en="Focus mode: hide everything but the board while you are matching" data-zh="专注模式：连续答题时只留下棋盘">专注模式：连续答题时只留下棋盘</span>
+          </label>
+          <label class="check-row">
+            <input id="effectsOn" type="checkbox" />
+            <span data-en="Effects and vibration" data-zh="动画特效和震动">动画特效和震动</span>
+          </label>
+          <label class="check-row">
+            <input id="streakTones" type="checkbox" />
+            <span data-en="Piano notes for a streak" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
+          </label>
+        </div>
         <details class="advanced">
           <summary data-en="Advanced" data-zh="高级选项">高级选项</summary>
           <div class="option-grid">
             <label data-levels-only>
-              <span data-en="Time tolerance (e.g. 0.2)" data-zh="时间容错（如 0.2）">时间容错（如 0.2）</span>
+              <span data-en="Extra time on timed levels (0.2 = 20% more)" data-zh="限时关卡多给的时间（0.2 = 多 20%）">限时关卡多给的时间（0.2 = 多 20%）</span>
               <input id="levelTimeTolerance" type="number" min="0" max="2" step="0.05" />
             </label>
             <label>
-              <span data-en="Refill min delay (sec)" data-zh="补词最短延迟（秒）">补词最短延迟（秒）</span>
+              <span data-en="Shortest wait before a new card (sec)" data-zh="新卡出现前最短等几秒">新卡出现前最短等几秒</span>
               <input id="refillMinSeconds" type="number" min="0.1" max="10" step="0.1" />
             </label>
             <label>
-              <span data-en="Refill max delay (sec)" data-zh="补词最长延迟（秒）">补词最长延迟（秒）</span>
+              <span data-en="Longest wait before a new card (sec)" data-zh="新卡出现前最长等几秒">新卡出现前最长等几秒</span>
               <input id="refillMaxSeconds" type="number" min="0.1" max="15" step="0.1" />
             </label>
           </div>
           <label class="check-row">
             <input id="pauseRefillWhileSelected" type="checkbox" />
-            <span data-en="Pause refill while a card is selected" data-zh="选中卡片时暂停补词，不打断当前选择">选中卡片时暂停补词，不打断当前选择</span>
+            <span data-en="Wait with new cards while I have one selected" data-zh="选中卡片时先不补新卡">选中卡片时先不补新卡</span>
           </label>
           <label class="check-row">
             <input id="recycleMastered" type="checkbox" />
@@ -2028,13 +2686,51 @@
       </section>
 
       <section class="modal-section ai-section" id="aiSection" aria-labelledby="aiTitle" hidden>
-        <h2 id="aiTitle" data-en="On-device AI (optional)" data-zh="端侧 AI（可选）">端侧 AI（可选）</h2>
-        <p id="aiAbout"></p>
-        <progress id="aiProgress" max="1" value="0" hidden></progress>
-        <p class="import-status" id="aiStatus" role="status" aria-live="polite"></p>
-        <div class="form-actions">
-          <button class="duo-button" type="button" id="aiToggleBtn"></button>
-          <button class="small-button" type="button" id="aiDeleteBtn" data-en="Delete model" data-zh="删除模型" hidden>删除模型</button>
+        <h2 id="aiTitle" data-en="AI (optional)" data-zh="AI（可选）">AI（可选）</h2>
+        <label class="check-row">
+          <input id="aiEnabled" type="checkbox" />
+          <span data-en="Use AI features" data-zh="使用 AI 功能">使用 AI 功能</span>
+        </label>
+        <div id="aiApiBlock">
+          <h3 data-en="Your own API key" data-zh="用自己的 API Key">用自己的 API Key</h3>
+          <p id="aiApiAbout"></p>
+          <div class="option-grid">
+            <label>
+              <span data-en="Provider" data-zh="服务商">服务商</span>
+              <select id="aiApiProvider"></select>
+            </label>
+            <label>
+              <span>API Key</span>
+              <input id="aiApiKey" type="password" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>
+              <span data-en="Model" data-zh="模型">模型</span>
+              <input id="aiApiModel" type="text" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>
+              <span data-en="Base URL" data-zh="接口地址">接口地址</span>
+              <input id="aiApiBase" type="url" autocomplete="off" spellcheck="false" />
+            </label>
+          </div>
+          <p class="import-status" id="aiApiStatus" role="status" aria-live="polite"></p>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="aiApiSaveBtn" data-en="Save and test" data-zh="保存并测试">保存并测试</button>
+            <button class="small-button" type="button" id="aiApiToggleBtn" hidden></button>
+            <button class="small-button" type="button" id="aiApiClearBtn" data-en="Remove key" data-zh="清除 Key" hidden>清除 Key</button>
+            <a class="link-button" id="aiApiKeyLink" target="_blank" rel="noopener" data-en="Get a key" data-zh="获取 Key">获取 Key</a>
+          </div>
+        </div>
+        <p class="import-hint" id="aiWeakNote" hidden></p>
+        <div id="aiLocalBlock" hidden>
+          <h3 data-en="Model on this device" data-zh="本机模型（不联网）">本机模型（不联网）</h3>
+          <p id="aiAbout"></p>
+          <progress id="aiProgress" max="1" value="0" hidden></progress>
+          <p class="import-status" id="aiStatus" role="status" aria-live="polite"></p>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="aiToggleBtn"></button>
+            <button class="small-button" type="button" id="aiDeleteBtn" data-en="Delete model" data-zh="删除模型" hidden>删除模型</button>
+            <a class="link-button" id="aiEvalLink" href="./tools/ai-eval.html?model=native" hidden data-en="Test its accuracy" data-zh="测一测准确率">测一测准确率</a>
+          </div>
         </div>
       </section>
 
@@ -2055,7 +2751,7 @@
           <h2 id="libraryTitle" data-en="Library" data-zh="词库">词库</h2>
           <p id="librarySummary"></p>
         </div>
-        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
+        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="tab-bar" role="tablist" aria-label="词库" data-en-aria="Library" data-zh-aria="词库">
         <button class="tab-btn" type="button" role="tab" data-tab="list" data-en="My words" data-zh="我的词库">我的词库</button>
@@ -2079,6 +2775,26 @@
       </section>
 
       <section class="modal-section" data-tab-panel="add">
+        <h2 data-en="From a word book" data-zh="从词书导入">从词书导入</h2>
+        <div class="wordbook" id="wordbookRow">
+          <div class="option-grid">
+            <label>
+              <span data-en="Word book" data-zh="词书">词书</span>
+              <select id="bookSelect"></select>
+            </label>
+            <label>
+              <span data-en="How many" data-zh="导入多少个">导入多少个</span>
+              <select id="bookCount"></select>
+            </label>
+          </div>
+          <p class="import-hint" id="bookInfo"></p>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="bookImportBtn" data-en="Add from the book" data-zh="从词书导入">从词书导入</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="modal-section" data-tab-panel="add">
         <label class="check-row drop-samples" id="dropSamplesRow" hidden>
           <input id="dropSamples" type="checkbox" checked />
           <span id="dropSamplesText"></span>
@@ -2087,7 +2803,7 @@
         <div class="form-grid">
           <label>
             <span id="sideLabelA">英文</span>
-            <input id="newEnglish" autocomplete="off" placeholder="example" data-en-ph="example" data-zh-ph="example" />
+            <input id="newEnglish" autocomplete="off" placeholder="单词" data-en-ph="word" data-zh-ph="单词" />
           </label>
           <label>
             <span id="sideLabelB">中文</span>
@@ -2101,6 +2817,15 @@
       </section>
 
       <section class="modal-section" data-tab-panel="add">
+        <div class="ai-wordlist" id="aiWordListRow" hidden>
+          <label>
+            <span data-en="Make a list with AI" data-zh="用 AI 生成词表">用 AI 生成词表</span>
+            <input id="aiWordListInput" type="text" autocomplete="off" placeholder="雅思高频动词 30 个 / 日语 N3 常用词 / 初二 Unit 1–3" data-en-ph="IELTS verbs, 30 / Japanese N3 words / Spanish food words" data-zh-ph="雅思高频动词 30 个 / 日语 N3 常用词 / 初二 Unit 1–3" />
+          </label>
+          <div class="form-actions">
+            <button class="duo-button" type="button" id="aiWordListBtn" data-en="Generate with AI" data-zh="AI 生成">AI 生成</button>
+          </div>
+        </div>
         <label>
           <span data-en="Bulk input" data-zh="批量录入">批量录入</span>
           <textarea id="bulkInput" placeholder="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织" data-en-ph="One per line: literature,文学&#10;Or: UNESCO = 联合国教科文组织" data-zh-ph="每行一个：literature,文学&#10;也可以：UNESCO = 联合国教科文组织"></textarea>
@@ -2172,8 +2897,6 @@
           <button class="duo-button danger" type="button" id="clearCustomBtn" data-en="Clear all words" data-zh="清空全部词">清空全部词</button>
         </div>
       </section>
-        <button class="icon-button" type="button" id="closeLibrary" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
-      </div>
 
 
 
@@ -2183,77 +2906,36 @@
     </div>
   </div>
 
+  <p class="sr-only" id="feedback" role="status" aria-live="polite"></p>
+  <button class="focus-exit" type="button" id="focusExitBtn" data-en="Exit focus<span class=&quot;key-hint&quot;> · Esc</span>" data-zh="退出专注<span class=&quot;key-hint&quot;> · Esc</span>">退出专注<span class="key-hint"> · Esc</span></button>
   <script src="./js/engine.js"></script>
+  <script src="./js/habit.js"></script>
+  <script src="./js/fx.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
     const THEME_KEY = "word_snap_theme_index";
     const COLOR_MODE_KEY = "word_snap_color_mode";
-    // Light base for bg/panels/text. Accent colors still come from COLOR_THEMES.
-    const LIGHT_BASE = {
-      bg: "#f4f7f9", panel: "#ffffff", panel2: "#eef3f6",
-      line: "#d5dee4", lineStrong: "#b3c1ca", text: "#1b2a31", muted: "#5d727d", dim: "#9fb0b9"
+    // One visual world (the rhythm-game stage). Colours keep their meaning everywhere:
+    // violet = selected, teal = correct, gold = perfect, rose = wrong; the skin no longer
+    // rotates per set. :root holds the pre-JS fallbacks; applyTheme() derives the mixed
+    // tones (selected / correct / wrong grounds, track) at runtime — DESIGN.md records those.
+    const STAGE = {
+      dark: {
+        bg: "#24205a", panel: "#2f2a6e", panel2: "#29246a", line: "#463f8f", lineStrong: "#6a62b5",
+        text: "#f3f1ff", muted: "#b8b2e8", dim: "#9690d6",
+        greenInk: "#5ef0e2", blueInk: "#b9a8ff", redInk: "#ff8fb0", yellowInk: "#ffd666",
+        primary: "#c9c1ff", primaryDark: "#a99cff", onPrimary: "#24205a"
+      },
+      light: {
+        bg: "#f5f3ff", panel: "#ffffff", panel2: "#ece8ff", line: "#dcd6fb", lineStrong: "#b7aeef",
+        text: "#1d1a4a", muted: "#514b88", dim: "#6c66a6",
+        greenInk: "#0a7a70", blueInk: "#5a3fe0", redInk: "#c0245a", yellowInk: "#8a5a00",
+        primary: "#2b2470", primaryDark: "#1d1856", onPrimary: "#ffffff"
+      },
+      accent: { green: "#18c6b5", greenDark: "#0e9c8f", blue: "#7c5cff", blueDeep: "#6545e6", red: "#ff5c8a", redDeep: "#c9285a", yellow: "#ffc933" }
     };
-
-    // Soft accent themes — full skin (bg + accent) rotates after each finished level.
-    const COLOR_THEMES = [
-      {
-        id: "forest",
-        bg: "#131f24", panel: "#202f36", panel2: "#1a2a30",
-        line: "#37464f", lineStrong: "#52656d", text: "#f1f7fb", muted: "#8fa5af", dim: "#52656d",
-        green: "#58cc02", greenDark: "#46a302", blue: "#1cb0f6", blueDeep: "#1899d6",
-        red: "#ff4b4b", redDeep: "#ea2b2b", yellow: "#ffc800"
-      },
-      {
-        id: "ocean",
-        bg: "#0f1c2e", panel: "#1a2d45", panel2: "#15263a",
-        line: "#2e4a66", lineStrong: "#4a6d8c", text: "#eef6ff", muted: "#8fb0c9", dim: "#4a6d8c",
-        green: "#2dd4bf", greenDark: "#14b8a6", blue: "#38bdf8", blueDeep: "#0ea5e9",
-        red: "#fb7185", redDeep: "#e11d48", yellow: "#fbbf24"
-      },
-      {
-        id: "violet",
-        bg: "#1a1428", panel: "#2a2040", panel2: "#221a35",
-        line: "#3f3358", lineStrong: "#5c4d7a", text: "#f5f0ff", muted: "#a898c4", dim: "#5c4d7a",
-        green: "#a78bfa", greenDark: "#8b5cf6", blue: "#c084fc", blueDeep: "#a855f7",
-        red: "#f472b6", redDeep: "#db2777", yellow: "#fcd34d"
-      },
-      {
-        id: "sunset",
-        bg: "#1f1410", panel: "#332018", panel2: "#2a1a14",
-        line: "#4a3228", lineStrong: "#6b4a3a", text: "#fff7f0", muted: "#c4a090", dim: "#6b4a3a",
-        green: "#fb923c", greenDark: "#ea580c", blue: "#fbbf24", blueDeep: "#f59e0b",
-        red: "#f87171", redDeep: "#dc2626", yellow: "#fde047"
-      },
-      {
-        id: "rose",
-        bg: "#1f1218", panel: "#331f2a", panel2: "#2a1822",
-        line: "#4a3040", lineStrong: "#6b4860", text: "#fff0f5", muted: "#c498b0", dim: "#6b4860",
-        green: "#f472b6", greenDark: "#db2777", blue: "#fb7185", blueDeep: "#e11d48",
-        red: "#fb923c", redDeep: "#ea580c", yellow: "#fcd34d"
-      },
-      {
-        id: "slate",
-        bg: "#12141a", panel: "#1e222c", panel2: "#181b24",
-        line: "#323846", lineStrong: "#4b5563", text: "#f3f4f6", muted: "#9ca3af", dim: "#4b5563",
-        green: "#34d399", greenDark: "#10b981", blue: "#60a5fa", blueDeep: "#3b82f6",
-        red: "#f87171", redDeep: "#ef4444", yellow: "#facc15"
-      },
-      {
-        id: "mint",
-        bg: "#0f1f1c", panel: "#1a322e", panel2: "#142824",
-        line: "#2d4a44", lineStrong: "#3d665c", text: "#ecfdf8", muted: "#8fb8ae", dim: "#3d665c",
-        green: "#4ade80", greenDark: "#22c55e", blue: "#2dd4bf", blueDeep: "#14b8a6",
-        red: "#fb7185", redDeep: "#e11d48", yellow: "#fbbf24"
-      },
-      {
-        id: "amber",
-        bg: "#1a160c", panel: "#2e2818", panel2: "#242014",
-        line: "#453c28", lineStrong: "#635632", text: "#fffbeb", muted: "#b8a878", dim: "#635632",
-        green: "#fbbf24", greenDark: "#d97706", blue: "#f59e0b", blueDeep: "#b45309",
-        red: "#f87171", redDeep: "#dc2626", yellow: "#fde68a"
-      }
-    ];
+    const COLOR_THEMES = [{ id: "stage" }];
 
     // ---- i18n ----
     const LOCALE_KEY = "word_snap_lang";
@@ -2270,7 +2952,7 @@
         lesson: {
           roundN: "Round {n}", roundLevel: "Level {n} · {done}/{total}", trialLevel: "Trial level · {done}/{total}",
           endlessLabel: "Set {n} · endless",
-          choosePair: "Match the pairs", continueBtn: "Continue",
+          choosePair: "Match each meaning to its word", continueBtn: "Continue",
           emptyTitle: "No words yet", emptyText: "Open the Library to add words first, then start matching.",
           emptyAddBtn: "Add words"
         },
@@ -2286,7 +2968,7 @@
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
           addOne: "Add one", bulkLabel: "Bulk input",
-          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning\nWith an example: word,meaning | Example sentence. | Translation",
+          bulkPlaceholder: "One per line: {a} word,{b} meaning\nOr: word = meaning\nWith an example: word,meaning | Example sentence | Translation",
           addBulk: "Bulk add", clearAll: "Clear all words",
           optionsTitle: "Practice options",
           optLevelSeconds: "Base level time (sec)", optLevelTimeTolerance: "Time tolerance (e.g. 0.2)",
@@ -2299,7 +2981,7 @@
           saveOptions: "Save options",
           listTitle: "Word list",
           listBlurb: "All words in your library. You can re-add after clearing.",
-          deleteBtn: "Delete", speak: "Listen to {w}", stageNew: "New", stageMastered: "Mastered",
+          deleteBtn: "Delete", deleted: "Deleted {w}", undo: "Undo", speak: "Listen to {w}", stageNew: "New", stageMastered: "Mastered",
           emptyListA: "No words yet", emptyListB: "Add some above",
           dueNow: "Due now", dueToday: "Later today", dueTomorrow: "Tomorrow", dueInDays: "In {n} days",
           forecastTitle: "Reviews in the next 7 days", dayToday: "Today", dayTomorrow: "Tmrw",
@@ -2326,6 +3008,7 @@
           pickAll: "Select all", pickNone: "Select none", missedN: "×{n}"
         },
         feedback: {
+          pairMismatch: "{n} words in your library are not {a}. They stay in the library — delete them in My words, or switch the pair back.",
           pickPair: "Pick one card from each side.", pickMatch: "Now pick its match.",
           correct: "Matched!", allDoneCheck: "All matched. Now check.",
           wrong: "Wrong: {a} = {b}", timeChallenge: "Timed challenge: {t}. Correct answers refill fast; wrong words roll back.",
@@ -2363,11 +3046,30 @@
           blockSummary: "{done} pairs, {m} mistakes, {fresh} new words.",
           blockDue: "{n} reviews are due today; they come first in the next set.",
           blockClear: "Nothing is due right now — the next set brings new words.",
-          confusedPairs: "Mixed up: {list}. They will appear side by side again."
+          blockGoalDone: "Today's goal is done ✓. {n} more words come due later today — keep going if you like.",
+          confusedPairs: "Mixed up: {list}. They will appear side by side again.",
+          contrastBtn: "AI: {a} vs {b}", contrastLoading: "Asking AI…", contrastFailed: "AI couldn't explain this pair right now."
         },
         settings: {
           flow_endless: "Endless (recommended)", flow_levels: "Timed levels",
-          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards"
+          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards",
+          dailyNew: "{n} new words"
+        },
+        reminder: {
+          off: "Off", at: "Every day at {time}",
+          body: "Today's words are waiting — a few minutes is enough.",
+          bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
+          denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
+        },
+        fx: { combo: "{n} in a row", comboWord: "COMBO" },
+        summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
+        today: {
+          done: "Today's goal done", streak: "{n}-day streak",
+          left: "Today: {list} left, about {m} min", leftNum: "to go today · about {m} min", due: "{n} due", new: "{n} new", practice: "a little practice",
+          frozen: "You missed a day — this week's streak freeze kept your streak.",
+          broken: "Your {n}-day streak ended. Start a new one today (best: {best} days).",
+          doneBanner: "Today's goal done · {n}-day streak",
+          chipTitle: "Day streak: {n} (best {best}). Grey until today's goal is done."
         },
         aiSettings: {
           about: "Runs a small language model ({name}) on this device: when you have no idea for a sentence card it suggests a situation in Chinese, and it writes example sentences for words that have none (each one passes the grammar check first). Free, no account, nothing you write leaves the device. It needs English–Chinese words and a download of about {mb} MB, once.",
@@ -2375,25 +3077,48 @@
           downloading: "Downloading… {pct}% — keep this page open. It works offline afterwards.", loading: "Starting the model…",
           on: "On. The model is on this device.", offCached: "Off. The model is still on this device ({mb} MB).", off: "Off.",
           failed: "The model could not be downloaded or started. You can try again; everything else keeps working without it.",
-          deleted: "Model deleted, storage freed.", confirmDelete: "Delete the downloaded model (~{mb} MB)? You can download it again later."
+          deleted: "Model deleted, storage freed.", confirmDelete: "Delete the downloaded model (~{mb} MB)? You can download it again later.",
+          apiAbout: "With a key from an AI provider, sentence cards get a full check — where the mistake is, why, and how to fix it, meaning included — mixed-up pairs get explained, words get example sentences, and Add words can make a whole list — in any language pair. The key stays on this device (never in backups or exports); what you write on sentence cards is sent to the provider you choose, and it bills your key.",
+          apiDefault: "Default: {v}", apiTesting: "Testing the key…",
+          apiOk: "Connected to {name}. AI is on.", apiOn: "On: {name} · {model}", apiPaused: "Saved but paused.", apiNone: "No key yet.",
+          apiNeedKey: "Paste an API key first.", apiNeedCustom: "A custom provider needs a base URL (http…) and a model name.",
+          apiAuth: "The provider rejected the key ({msg}).", apiQuota: "Out of balance or rate-limited ({msg}).",
+          apiModel: "Model not found — check the model name ({msg}).",
+          apiNetwork: "Could not reach the provider. Browsers block some providers; try another one here, or use the Android app where every provider works.",
+          apiHttp: "The provider returned an error ({msg}).",
+          apiPause: "Pause", apiResume: "Turn on", apiCleared: "Key removed from this device.",
+          apiLocalNote: "The API key is used first; the on-device model is the fallback.",
+          aboutNative: "Runs {name} on this phone (about {mb} MB, downloaded once, then offline): it checks sentence cards (where / why / fix, meaning included), explains mixed-up pairs, writes example sentences and word lists — in any language pair. Free, and nothing you write leaves the phone. Answers take a few seconds.",
+          weakNative: "This phone has less than 12 GB of memory, so the on-device model would be too slow. Use an API key instead.",
+          weakWeb: "This device is not powerful enough for an on-device model; use an API key instead."
         },
         drill: {
-          kicker: "Practice {i}/{n} · {type}", type_spell: "Spelling", type_sentence: "Make a sentence",
+          kicker: "{type} · {i}/{n}", type_spell: "Spelling", type_sentence: "Make a sentence",
           check: "Check", next: "Next",
           spellPrompt: "Type the word for this meaning.", spellPlaceholder: "Type the word",
           spellRight: "Right!", spellWrong: "The answer is <b>{w}</b>. Type it once to remember it.", copyAgain: "Not quite — type <b>{w}</b> exactly.",
           sentenceTitle: "Make a sentence with {w}",
-          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (ran, tubers…).",
+          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (past tense, plural…).",
           sentencePlaceholder: "A sentence using {w}",
           loadingEngine: "Loading the grammar checker (about 8 MB, only the first time; it then works offline)…",
           checking: "Checking…",
           engineFailed: "The grammar checker could not load. It needs a connection the first time — you can skip this card.",
           sentenceOk: "Grammatical — nice sentence!",
-          checkMeaning: "Grammar is checked on your device; meaning is not. Make sure {w} means “{m}” here.",
+          sentenceBasicOk: "No obvious grammar problems found.",
+          finish: "Done",
+          checkMeaning: "This device only does a basic grammar check — meaning and some grammar are not checked. Make sure {w} means “{m}” here, or turn on AI in Settings for a full check.",
           notUsed: "The sentence doesn't use {w} yet (any form is fine).",
           short: "Write at least 4 words.", onlyWord: "Write a whole sentence, not just the word.",
           noVerb: "Tip: the sentence may be missing a verb.",
-          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
+          aiChecking: "AI is checking the meaning…", aiMeaningOk: "AI checked: the meaning is right too.",
+          aiMeaningBad: "Grammatical, but the meaning is off.", aiWhere: "Where", aiWhy: "Why", aiFix: "Fix",
+          aiBetter: "More natural", aiUse: "Use this",
+          aiWrong: "Not quite yet — here is the AI's check.",
+          aiUnavailable: "AI could not check this sentence right now. Try again, or skip this card.",
+          aiOff: "AI is off, so this sentence cannot be checked — skip the card (sentence cards in this language need AI).",
+          sentenceRuleAi: "Any word order and any form of the word is fine; AI checks grammar and meaning.",
+          noIdea: "No example for this word yet — skip the card if nothing comes to mind.",
+          idea: "Idea: “{text}” — now say it using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
           kind_Agreement: "Agreement", kind_MissingVerb: "Missing verb", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
           kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
           kind_WordChoice: "Word choice", kind_Usage: "Usage", kind_Repetition: "Repeated word", kind_Regionalism: "British spelling (fine)",
@@ -2411,10 +3136,10 @@
           textSaveDesktop: "This works as a web app. When your browser shows an install prompt, add it to your desktop or home screen.",
           actionGotIt: "Got it", noRemind: "Don't remind me", closeInstall: "Close install prompt"
         },
-        appearance: { auto: "Auto", light: "Light", dark: "Dark" },
+        appearance: { auto: "Auto", light: "Light", dark: "Dark", btn: "Look" },
         trial: {
           doneTitle: "Trial complete!",
-          doneText: "Those were sample words. Now bring in the words you actually need — type them, paste a list, or let any AI make one.",
+          doneText: "Those were sample words. Now bring in the words you actually need — pick a word book (zhongkao, gaokao, CET-4/6, IELTS…), paste a list, or let AI make one.",
           importBtn: "Import my words",
           notYet: "No words imported yet — tap “Import my words”, or keep practicing with the samples for now."
         },
@@ -2423,6 +3148,10 @@
           copyFailed: "Couldn't copy automatically. The prompt is in the box above: copy it manually, then clear the box.",
           nothing: "Nothing recognised. Paste the AI's answer (one “word,meaning” per line).",
           imported: "Added {n} words.", dupOnly: "No new words (already in the library).",
+          listNeedRequest: "Say what you want to learn first, e.g. “IELTS verbs, 30”.",
+          listMaking: "AI is writing the list… (up to a minute)",
+          listFailed: "AI could not make the list. Check the API key in Settings, or try a shorter request.",
+          listReady: "{n} words are now in the Bulk input box. Check them, then tap Bulk add.",
           examplesAdded: "Added example sentences to {n} words already in the library.",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
@@ -2430,6 +3159,13 @@
           backupCopied: "Backup of {n} words copied. Keep it somewhere safe (e.g. a note).",
           backupFailed: "Couldn't copy automatically. The backup is in the Bulk input box above: copy it manually.",
           backupEmpty: "The library is empty; nothing to back up."
+        },
+        wordbook: {
+          count: "Next {n} words", all: "All the rest",
+          info: "{n} words, most frequent first; {have} already in your library. Each import adds the next ones you don't have.",
+          allIn: "Every word of this book is already in your library.",
+          failed: "Couldn't load the word books. They need a connection the first time.",
+          wrongPair: "The word books are English → 中文. Switch the language pair in Settings first."
         },
         langToggle: { en: "EN", zh: "中" }
       },
@@ -2443,9 +3179,9 @@
           langToggle: "切换语言"
         },
         lesson: {
-          roundN: "第 {n} 轮", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
+          roundN: "第 {n} 组", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
           endlessLabel: "第 {n} 组 · 无限练习",
-          choosePair: "选择配对", continueBtn: "继续",
+          choosePair: "把意思和单词配成对", continueBtn: "继续",
           emptyTitle: "还没有单词", emptyText: "请先进入词库添加单词。添加后就可以开始配对练习。",
           emptyAddBtn: "去添加单词"
         },
@@ -2461,10 +3197,10 @@
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
           addOne: "添加一个", bulkLabel: "批量录入",
-          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义\n带例句：单词,释义 | 例句 | 例句翻译",
+          bulkPlaceholder: "每行一个：{a}词,{b}释义\n也可以：单词 = 释义\n带例句：单词,释义 | 例句 | 例句翻译",
           addBulk: "批量添加", clearAll: "清空全部词",
           optionsTitle: "练习选项",
-          optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "时间容错（如 0.2）",
+          optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "限时关卡多给的时间（0.2 = 多 20%）",
           optRefillTrigger: "消掉几组后补词",
           optRefillMin: "补词最短延迟（秒）", optRefillMax: "补词最长延迟（秒）",
           optAdaptiveLevelTime: "按上次实际通关配速自适应本关时间（加容错）",
@@ -2474,11 +3210,11 @@
           saveOptions: "保存选项",
           listTitle: "词库列表",
           listBlurb: "这里显示当前词库里的全部单词。清空后可以重新录入。",
-          deleteBtn: "删除", speak: "朗读 {w}", stageNew: "新词", stageMastered: "已掌握",
+          deleteBtn: "删除", deleted: "已删除 {w}", undo: "撤销", speak: "朗读 {w}", stageNew: "新词", stageMastered: "已掌握",
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
           dueNow: "待复习", dueToday: "今天稍后", dueTomorrow: "明天", dueInDays: "{n} 天后",
           forecastTitle: "未来 7 天复习量", dayToday: "今天", dayTomorrow: "明天",
-          mySentences: "我的例句：", aiExample: "由端侧 AI 生成，已通过语法检查",
+          mySentences: "我的例句：", aiExample: "由本机 AI 生成，已通过语法检查",
           langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
           stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
           groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
@@ -2501,6 +3237,7 @@
           pickAll: "全选", pickNone: "全不选", missedN: "错 {n}"
         },
         feedback: {
+          pairMismatch: "词库里有 {n} 个词不是 {a}，它们会留在词库里。可以在「我的词库」里删掉，或者把语言对切回去。",
           pickPair: "选择一个中文和一个英文。", pickMatch: "再选它的配对。",
           correct: "配对成功。", allDoneCheck: "全部配完了。现在检查。",
           wrong: "不对：{a} = {b}", timeChallenge: "限时挑战：{t}。答对快速补位，错词会回滚。",
@@ -2511,7 +3248,7 @@
           nextLevel: "继续进入下一关。",
           wrongWithReplay: "不对：{a} = {b}。错词会回滚再出现。",
           optionsSaved: "练习选项已保存，下一关生效。",
-          addedOne: "新词已加入下一轮。", addedN: "已加入 {n} 个新词。",
+          addedOne: "新词会在下一组出现。", addedN: "已加入 {n} 个新词。",
           emptyLib: "词库为空，请先补充单词。",
           needBoth: "请同时填写单词和释义。",
           alreadyInLibrary: "这个词已经在词库里了。",
@@ -2523,13 +3260,13 @@
           removeSamples: "移除全部 {n} 个内置示例词及其进度？你自己添加的词不受影响。"
         },
         timeouts: {
-          allPass: "全部过关", timeUp: "时间到", levelComplete: "这一关完成", roundOver: "这一轮结束",
+          allPass: "全部过关", timeUp: "时间到", levelComplete: "这一关完成", roundOver: "这一组结束",
           allDoneText: "所有词都连续答对过。可以清空进度再来一次，或者录入新词。",
-          remainingUnstable: "还有 {n} 个词没有稳定。下一轮会优先出现错过、慢过或只答对一次的词。",
+          remainingUnstable: "还有 {n} 个词没有稳定。下一组会先出错过、慢过或只答对一次的词。",
           queueCleared: "本关队列已清空。错词已经回滚练过，还有 {n} 个词没有稳定。",
           allStable: "本关完成。所有词都稳定了，继续后会进入循环复习。",
           levelMatched: "这一关配对 {n} 组。继续后会重新洗牌，并优先出现不熟的词。",
-          nextRoundPriority: "下一轮会优先出现你不熟的词。",
+          nextRoundPriority: "下一组会先出你最不熟的词。",
           levelSummary: "本关配对 {done} 组，错 {m} 次。",
           stillLearning: "还有 {n} 个词需要巩固，接下来会优先出现。",
           timeUpText: "没配完的词仍在练习队列里。",
@@ -2538,11 +3275,30 @@
           blockSummary: "配对 {done} 组，错 {m} 次，新学 {fresh} 个词。",
           blockDue: "今天还有 {n} 个词到期，下一组会先复习它们。",
           blockClear: "现在没有到期的词，下一组会学新词。",
-          confusedPairs: "混淆过：{list}。之后它们会再次同时出现。"
+          blockGoalDone: "今天的目标已经完成 ✓。今天晚些时候还有 {n} 个词到期，想多练可以继续。",
+          confusedPairs: "混淆过：{list}。之后它们会再次同时出现。",
+          contrastBtn: "AI 辨析：{a} / {b}", contrastLoading: "正在问 AI……", contrastFailed: "AI 暂时没能辨析这一对。"
         },
         settings: {
           flow_endless: "无限练习（推荐）", flow_levels: "限时关卡",
-          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张"
+          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张",
+          dailyNew: "{n} 个"
+        },
+        reminder: {
+          off: "不提醒", at: "每天 {time}",
+          body: "今天的单词还没练，几分钟就好。",
+          bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
+          denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
+        },
+        fx: { combo: "连对 {n} 次", comboWord: "连击" },
+        summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
+        today: {
+          done: "今日完成", streak: "连续 {n} 天",
+          left: "今天还剩 {list}，约 {m} 分钟", leftNum: "个词今天要练 · 约 {m} 分钟", due: "{n} 个到期", new: "{n} 个新词", practice: "一点练习",
+          frozen: "昨天没练，本周的免断签保住了连续天数。",
+          broken: "连续 {n} 天中断了，今天重新开始吧（最长纪录 {best} 天）。",
+          doneBanner: "今日完成 · 连续 {n} 天",
+          chipTitle: "连续 {n} 天（最长 {best} 天）。今天的目标完成前是灰色的。"
         },
         aiSettings: {
           about: "在这台设备上运行一个小语言模型（{name}）：造句卡没有思路时，给你一句中文情景；没有例句的词，自动补上例句（每句都先过语法检查）。免费，不用账号，你写的内容不会离开这台设备。需要词库是英文–中文，并下载约 {mb}MB，只需一次。",
@@ -2550,25 +3306,48 @@
           downloading: "正在下载…… {pct}%，请不要关闭页面。下载完之后可以离线使用。", loading: "正在启动模型……",
           on: "已开启，模型已保存在这台设备上。", offCached: "已关闭，模型仍保存在这台设备上（{mb}MB）。", off: "未开启。",
           failed: "模型下载或启动失败。可以再试一次；不开 AI 其他功能都照常可用。",
-          deleted: "模型已删除，存储空间已释放。", confirmDelete: "删除已下载的模型（约 {mb}MB）？以后可以重新下载。"
+          deleted: "模型已删除，存储空间已释放。", confirmDelete: "删除已下载的模型（约 {mb}MB）？以后可以重新下载。",
+          apiAbout: "填入 AI 服务商的 Key 后：造句卡会得到完整批改（错在哪、为什么、怎么改，意思也一起查），混淆的词会得到辨析，还会给单词补例句，「添加单词」里还能直接生成词表——任何语言对都可以。Key 只存在这台设备上（不进备份和导出）；你在造句卡里写的内容会发给你选的服务商，费用从你的 Key 扣。",
+          apiDefault: "默认：{v}", apiTesting: "正在测试 Key……",
+          apiOk: "已连接 {name}，AI 已开启。", apiOn: "已开启：{name} · {model}", apiPaused: "已保存，暂停使用中。", apiNone: "还没有填 Key。",
+          apiNeedKey: "请先粘贴 API Key。", apiNeedCustom: "自定义服务商需要填接口地址（http 开头）和模型名。",
+          apiAuth: "服务商拒绝了这个 Key（{msg}）。", apiQuota: "余额不足或请求太频繁（{msg}）。",
+          apiModel: "找不到这个模型，请检查模型名（{msg}）。",
+          apiNetwork: "连不上服务商。浏览器会拦截部分服务商，可以换一家试试，或者用安卓 App（所有服务商都能用）。",
+          apiHttp: "服务商返回了错误（{msg}）。",
+          apiPause: "暂停使用", apiResume: "开启", apiCleared: "已从本机删除 Key。",
+          apiLocalNote: "优先使用 API Key，本机模型作为备用。",
+          aboutNative: "在这台手机上运行 {name}（约 {mb}MB，下载一次，之后离线可用）：批改造句卡（错在哪、为什么、怎么改，意思也一起查），讲解混淆的词，补例句，生成词表，任何语言对都可以。免费，你写的内容不出手机。每次回答要几秒钟。",
+          weakNative: "这台手机内存不到 12GB，跑本机模型会很卡，建议改用 API Key。",
+          weakWeb: "这台设备性能不够跑本机模型，可以改用 API Key。"
         },
         drill: {
-          kicker: "小练习 {i}/{n} · {type}", type_spell: "拼写", type_sentence: "造句",
+          kicker: "{type} · {i}/{n}", type_spell: "拼写", type_sentence: "造句",
           check: "检查", next: "下一题",
           spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
           spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
-          sentenceTitle: "用 {w} 造一个英文句子",
-          sentenceRule: "语序不限，语法正确就行；任何词形都算（ran、tubers……）。",
+          sentenceTitle: "用 {w} 造一个句子",
+          sentenceRule: "语序不限，语法正确就行；这个词的任何形式都算（过去式、复数……）。",
           sentencePlaceholder: "写一个用到 {w} 的句子",
           loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
           checking: "正在检查……",
           engineFailed: "语法检查引擎加载失败。第一次使用需要联网下载，可以先跳过这题。",
-          sentenceOk: "语法正确，句子不错！",
-          checkMeaning: "语法在本机检查，意思检查不了：请确认这里的 {w} 是「{m}」的意思。",
+          sentenceOk: "语法和意思都对，句子不错！",
+          sentenceBasicOk: "没发现明显的语法问题。",
+          finish: "完成",
+          checkMeaning: "本机只做基础语法检查，意思和部分语法查不了。请确认这里的 {w} 是「{m}」的意思；想要完整批改，可以在设置里开启 AI。",
           notUsed: "句子里还没有用到 {w}（任何词形都可以）。",
           short: "至少写 4 个词。", onlyWord: "请写一个完整的句子，不要只写这个词。",
           noVerb: "提示：句子可能缺少谓语动词。",
-          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
+          aiChecking: "AI 正在检查意思……", aiMeaningOk: "AI 已检查：意思也对。",
+          aiMeaningBad: "语法没问题，但意思不对。", aiWhere: "错在哪", aiWhy: "为什么", aiFix: "怎么改",
+          aiBetter: "更地道的说法", aiUse: "用这句",
+          aiWrong: "还不太对，看看 AI 的批改：",
+          aiUnavailable: "AI 暂时没能检查这句话。可以再试一次，或者跳过这张卡。",
+          aiOff: "AI 已关闭，这句话没法检查，请跳过这张卡（这种语言的造句卡需要 AI）。",
+          sentenceRuleAi: "语序不限，任何词形都算；AI 会检查语法和意思。",
+          noIdea: "这个词还没有例句，实在没思路就跳过这张卡。",
+          idea: "思路：「{text}」——试着用 {w} 把它写出来。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
           kind_Agreement: "主谓一致", kind_MissingVerb: "缺少谓语", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
           kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
           kind_WordChoice: "用词", kind_Usage: "用法", kind_Repetition: "重复", kind_Regionalism: "英式拼写（没问题）",
@@ -2586,10 +3365,10 @@
           textSaveDesktop: "这个练习可以作为网页 App 使用。浏览器出现安装入口时，可以把它放到桌面或主屏幕。",
           actionGotIt: "知道了", noRemind: "不再提示", closeInstall: "关闭安装提醒"
         },
-        appearance: { auto: "自动", light: "浅色", dark: "深色" },
+        appearance: { auto: "自动", light: "浅色", dark: "深色", btn: "外观" },
         trial: {
           doneTitle: "体验完成！",
-          doneText: "刚才是示例词。现在换成你真正要背的词吧：手动输入、粘贴词表，或者让 AI 帮你生成。",
+          doneText: "刚才是示例词。现在换成你真正要背的词吧：选一本词书（中考、高考、四六级、考研、雅思……）、粘贴词表，或者让 AI 帮你生成。",
           importBtn: "导入我的单词",
           notYet: "还没有导入单词。点「导入我的单词」继续，或者先用示例词练。"
         },
@@ -2598,6 +3377,10 @@
           copyFailed: "无法自动复制，提示词已放进上面的输入框，请手动复制后再清空输入框。",
           nothing: "没有识别到内容。请粘贴 AI 的回答（每行一个“单词,释义”）。",
           imported: "已添加 {n} 个单词。", dupOnly: "没有新增单词（都已在词库里）。",
+          listNeedRequest: "先写想背什么，比如「雅思高频动词 30 个」。",
+          listMaking: "AI 正在生成词表……（最多一分钟左右）",
+          listFailed: "AI 没能生成词表。请检查设置里的 API Key，或者把需求写短一点。",
+          listReady: "{n} 个词已经放进「批量录入」框，检查一下再点「批量添加」。",
           examplesAdded: "已为词库里已有的 {n} 个词补上例句。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
@@ -2605,6 +3388,13 @@
           backupCopied: "已复制 {n} 个词的备份，请存到安全的地方（比如备忘录）。",
           backupFailed: "无法自动复制，备份已放进上方「批量录入」框，请手动复制。",
           backupEmpty: "词库是空的，没有可备份的内容。"
+        },
+        wordbook: {
+          count: "接下来 {n} 个", all: "剩下全部",
+          info: "共 {n} 个词，按词频从常用到少用；你的词库里已有 {have} 个。每次导入都接着加你还没有的词。",
+          allIn: "这本词书的词都已经在你的词库里了。",
+          failed: "词书加载失败，第一次使用需要联网。",
+          wrongPair: "词书是 English → 中文 的，请先在设置里把语言对改过来。"
         },
         langToggle: { en: "EN", zh: "中" }
       }
@@ -2665,7 +3455,7 @@
       els.modeBtn.textContent = t("stats.modeBtn", { label: modeLabel(state.mode) });
       if (els.completionView && els.completionView.classList.contains("show")) {
         if (!state.words.length) {
-          els.completionBadge.textContent = "+";
+          setResultWord("start");
           els.completionTitle.textContent = t("lesson.emptyTitle");
           els.completionText.textContent = t("lesson.emptyText");
           els.continueBtn.textContent = t("lesson.emptyAddBtn");
@@ -2682,6 +3472,7 @@
       flow: "endless",
       // Spelling / sentence cards shown after each set (0–3).
       drills: 2,
+      dailyNew: 10,
       levelDurationMs: 120000,
       roundSize: 30,
       adaptiveLevelTime: true,
@@ -2699,15 +3490,20 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
+      focus: true,
+      effects: true,
+      reminder: "",
       langPair: { a: "English", b: "中文" },
       // On-device model (js/ai.js). Off until the learner downloads it in Settings.
-      ai: { on: false }
+      ai: { on: false, enabled: true }
     };
     const LANG_PAIR_PRESETS = [
       { a: "English", b: "中文" },
       { a: "English", b: "日本語" },
       { a: "English", b: "Español" },
-      { a: "中文", b: "English" }
+      { a: "中文", b: "English" },
+      { a: "日本語", b: "中文" },
+      { a: "한국어", b: "中文" }
     ];
     let deferredInstallPrompt = null;
 
@@ -2735,6 +3531,9 @@
 
     const els = {
       progressFill: document.getElementById("progressFill"),
+      progressBar: document.getElementById("progressBar"),
+      comboLabel: document.getElementById("comboLabel"),
+      completionStats: document.getElementById("completionStats"),
       topCount: document.getElementById("topCount"),
       roundLabel: document.getElementById("roundLabel"),
       matchGrid: document.getElementById("matchGrid"),
@@ -2766,6 +3565,14 @@
       modeSelect: document.getElementById("modeSelect"),
       flowSelect: document.getElementById("flowSelect"),
       drillsSelect: document.getElementById("drillsSelect"),
+      dailyNewSelect: document.getElementById("dailyNewSelect"),
+      reminderRow: document.getElementById("reminderRow"),
+      reminderSelect: document.getElementById("reminderSelect"),
+      reminderNote: document.getElementById("reminderNote"),
+      todayBar: document.getElementById("todayBar"),
+      dayStreak: document.getElementById("dayStreak"),
+      streakChip: document.getElementById("streakChip"),
+      streakChipN: document.getElementById("streakChipN"),
       drill: document.getElementById("drill"),
       drillKicker: document.getElementById("drillKicker"),
       drillTitle: document.getElementById("drillTitle"),
@@ -2785,6 +3592,28 @@
       aiStatus: document.getElementById("aiStatus"),
       aiToggleBtn: document.getElementById("aiToggleBtn"),
       aiDeleteBtn: document.getElementById("aiDeleteBtn"),
+      aiEnabled: document.getElementById("aiEnabled"),
+      aiWeakNote: document.getElementById("aiWeakNote"),
+      aiWordListRow: document.getElementById("aiWordListRow"),
+      bookSelect: document.getElementById("bookSelect"),
+      bookCount: document.getElementById("bookCount"),
+      bookInfo: document.getElementById("bookInfo"),
+      bookImportBtn: document.getElementById("bookImportBtn"),
+      aiWordListInput: document.getElementById("aiWordListInput"),
+      aiWordListBtn: document.getElementById("aiWordListBtn"),
+      aiEvalLink: document.getElementById("aiEvalLink"),
+      aiApiBlock: document.getElementById("aiApiBlock"),
+      aiLocalBlock: document.getElementById("aiLocalBlock"),
+      aiApiAbout: document.getElementById("aiApiAbout"),
+      aiApiProvider: document.getElementById("aiApiProvider"),
+      aiApiKey: document.getElementById("aiApiKey"),
+      aiApiModel: document.getElementById("aiApiModel"),
+      aiApiBase: document.getElementById("aiApiBase"),
+      aiApiStatus: document.getElementById("aiApiStatus"),
+      aiApiSaveBtn: document.getElementById("aiApiSaveBtn"),
+      aiApiToggleBtn: document.getElementById("aiApiToggleBtn"),
+      aiApiClearBtn: document.getElementById("aiApiClearBtn"),
+      aiApiKeyLink: document.getElementById("aiApiKeyLink"),
       addOneStatus: document.getElementById("addOneStatus"),
       reviewHeading: document.getElementById("reviewHeading"),
       reviewList: document.getElementById("reviewList"),
@@ -2793,6 +3622,9 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
+      focusMode: document.getElementById("focusMode"),
+      effectsOn: document.getElementById("effectsOn"),
+      focusExitBtn: document.getElementById("focusExitBtn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
       focusPairsBtn: document.getElementById("focusPairsBtn"),
@@ -2891,7 +3723,25 @@
         lastDrawRound: 0
       };
       setExample(word, extra && extra.ex, extra && extra.exZh, extra && extra.exAi === true);
+      setReading(word, extra && extra.reading);
       return word;
+    }
+
+    /** Optional reading of side A (kana for Japanese, pinyin for Chinese), shown small on the card. */
+    function setReading(word, reading) {
+      const value = typeof reading === "string" ? reading.trim().slice(0, 60) : "";
+      if (value && value !== word.en) word.reading = value; else delete word.reading;
+    }
+
+    /** "食べる（たべる）" / "学校 (xuéxiào)" → ["食べる", "たべる"]; other words unchanged. */
+    function splitReading(text) {
+      const m = String(text).match(/^(.+?)\s*[（(\[]([^（）()\[\]]+)[）)\]]$/);
+      if (!m) return [text, ""];
+      const [, base, reading] = m;
+      // Only for words written in Han / kana / hangul, with a phonetic reading inside.
+      if (!/[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(base)) return [text, ""];
+      if (!/^[\u3040-\u30ffー・\s]+$|^[a-zA-Zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü\s'0-9-]+$|^[\uac00-\ud7af\s]+$/.test(reading.trim())) return [text, ""];
+      return [base.trim(), reading.trim()];
     }
 
     /**
@@ -2935,6 +3785,7 @@
       return {
         flow: raw.flow === "levels" ? "levels" : "endless",
         drills: Math.round(clampNumber(raw.drills, 0, 3, DEFAULT_SETTINGS.drills)),
+        dailyNew: Math.round(clampNumber(raw.dailyNew, 0, 50, DEFAULT_SETTINGS.dailyNew)),
         levelDurationMs: clampNumber(raw.levelDurationMs, 20000, 900000, DEFAULT_SETTINGS.levelDurationMs),
         roundSize: Math.round(clampNumber(raw.roundSize, 5, 200, DEFAULT_SETTINGS.roundSize)),
         adaptiveLevelTime: raw.adaptiveLevelTime !== false,
@@ -2950,8 +3801,12 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
+        focus: raw.focus !== false,
+        effects: raw.effects !== false,
+        // "HH:MM" (24 h) or "" for off. Used by the Android app only.
+        reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
         langPair: normalizeLangPair(raw.langPair),
-        ai: { on: Boolean(raw.ai && raw.ai.on === true) }
+        ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
     }
 
@@ -3017,6 +3872,7 @@
           words: state.words,
           settings: state.settings,
           engine: engine.serialize(),
+          habit,
           drawHistory: state.drawHistory,
           mode: state.mode,
           onboarding: state.onboarding,
@@ -3088,7 +3944,10 @@
 
     function updateColorModeUI() {
       document.querySelectorAll("[data-color-mode-btn]").forEach(btn => {
-        btn.textContent = colorModeLabel(colorMode);
+        // The button names the control; the current mode is in its accessible name and tooltip.
+        btn.textContent = t("appearance.btn");
+        btn.title = `${t("appearance.btn")}：${colorModeLabel(colorMode)}`;
+        btn.setAttribute("aria-label", btn.title);
       });
       const select = document.getElementById("colorModeSelect");
       if (select) {
@@ -3107,47 +3966,55 @@
     }
 
     function applyTheme(index) {
-      const i = ((Number(index) % COLOR_THEMES.length) + COLOR_THEMES.length) % COLOR_THEMES.length;
-      const theme = COLOR_THEMES[i] || COLOR_THEMES[0];
-      const darkBase = COLOR_THEMES[0] || theme;
+      const i = 0;
       const light = resolveColorScheme() === "light";
-      const base = light ? LIGHT_BASE : darkBase;
+      const base = light ? STAGE.light : STAGE.dark;
+      const a = STAGE.accent;
       const fixedBg = base.bg;
       const root = document.documentElement;
       root.setAttribute("data-color-mode", light ? "light" : "dark");
-      root.style.setProperty("--bg", fixedBg);
-      root.style.setProperty("--panel", base.panel);
-      root.style.setProperty("--panel-2", base.panel2);
-      root.style.setProperty("--line", base.line);
-      root.style.setProperty("--line-strong", base.lineStrong);
-      root.style.setProperty("--text", base.text);
-      root.style.setProperty("--muted", base.muted);
-      root.style.setProperty("--dim", base.dim);
-      root.style.setProperty("--green", theme.green);
-      root.style.setProperty("--green-dark", theme.greenDark);
-      root.style.setProperty("--blue", theme.blue);
-      root.style.setProperty("--blue-deep", theme.blueDeep);
-      root.style.setProperty("--red", theme.red);
-      root.style.setProperty("--red-deep", theme.redDeep);
-      root.style.setProperty("--yellow", theme.yellow);
-      root.style.setProperty("--panel-soft", mixHex(base.panel, fixedBg, 0.62));
-      root.style.setProperty("--track", mixHex(base.text, base.panel, 0.1));
-      root.style.setProperty("--card-shadow", mixHex(base.line, fixedBg, 0.55));
-      root.style.setProperty("--selected-bg", mixHex(theme.blue, fixedBg, 0.2));
-      root.style.setProperty("--selected-ink", mixHex(base.text, theme.blue, 0.84));
-      root.style.setProperty("--selected-shadow", mixHex(theme.blueDeep, fixedBg, 0.72));
-      root.style.setProperty("--correct-bg", mixHex(theme.green, fixedBg, 0.18));
-      root.style.setProperty("--correct-ink", mixHex(base.text, theme.green, 0.88));
-      root.style.setProperty("--correct-shadow", mixHex(theme.greenDark, fixedBg, 0.72));
-      root.style.setProperty("--wrong-bg", mixHex(theme.red, fixedBg, 0.2));
-      root.style.setProperty("--wrong-ink", mixHex(base.text, theme.red, 0.88));
-      root.style.setProperty("--wrong-shadow", mixHex(theme.redDeep, fixedBg, 0.72));
-      root.style.setProperty("--on-accent", mixHex(darkBase.bg, "#000000", 0.42));
-      root.style.setProperty("--warn-ink", mixHex(darkBase.bg, "#000000", 0.28));
-      root.style.setProperty("--warn-shadow", mixHex(theme.yellow, fixedBg, 0.62));
-      root.style.setProperty("--weak-wrong", mixHex(theme.red, base.text, 0.72));
-      root.style.setProperty("--scrim", rgbaFromHex(mixHex(darkBase.bg, "#000000", 0.35), light ? 0.45 : 0.72));
-      root.style.setProperty("--hover-soft", mixHex(base.text, base.panel, 0.06));
+      const set = (name, value) => root.style.setProperty(name, value);
+      set("--bg", fixedBg);
+      set("--panel", base.panel);
+      set("--panel-2", base.panel2);
+      set("--line", base.line);
+      set("--line-strong", base.lineStrong);
+      set("--text", base.text);
+      set("--muted", base.muted);
+      set("--dim", base.dim);
+      set("--green", a.green);
+      set("--green-dark", a.greenDark);
+      set("--blue", a.blue);
+      set("--blue-deep", a.blueDeep);
+      set("--red", a.red);
+      set("--red-deep", a.redDeep);
+      set("--yellow", a.yellow);
+      set("--green-ink", base.greenInk);
+      set("--blue-ink", base.blueInk);
+      set("--red-ink", base.redInk);
+      set("--yellow-ink", base.yellowInk);
+      set("--primary", base.primary);
+      set("--primary-dark", base.primaryDark);
+      set("--on-primary", base.onPrimary);
+      set("--panel-soft", mixHex(base.panel, fixedBg, 0.62));
+      set("--track", mixHex(a.blue, base.panel, light ? 0.14 : 0.22));
+      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.1 : 0.32));
+      set("--selected-ink", light ? "#2b1d8f" : base.text);
+      const neutralShadow = light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)";
+      set("--selected-shadow", neutralShadow);
+      set("--correct-bg", mixHex(a.green, base.panel, light ? 0.12 : 0.24));
+      set("--correct-ink", light ? "#075e56" : "#dffcf8");
+      set("--correct-shadow", neutralShadow);
+      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.1 : 0.24));
+      set("--wrong-ink", light ? "#8c1840" : "#ffe4ec");
+      set("--wrong-shadow", neutralShadow);
+      set("--on-accent", base.onPrimary);
+      set("--warn-ink", "#2b1800");
+      set("--warn-shadow", rgbaFromHex(a.yellow, 0.4));
+      set("--weak-wrong", base.redInk);
+      set("--card-shadow", light ? "rgba(36, 32, 90, .16)" : "rgba(5, 3, 30, .55)");
+      set("--scrim", light ? "rgba(29, 26, 74, .45)" : "rgba(8, 6, 32, .72)");
+      set("--hover-soft", mixHex(a.blue, base.panel, light ? 0.05 : 0.12));
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute("content", fixedBg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
@@ -3155,8 +4022,9 @@
       return i;
     }
 
-    /** Advance skin after a finished level (complete or timeout). */
+    /** The skin used to rotate after each level; one world now keeps colours meaningful. */
     function advanceThemeAfterLevel() {
+      return;
       const cur = state.settings && Number.isFinite(state.settings.themeIndex)
         ? state.settings.themeIndex
         : 0;
@@ -3254,14 +4122,168 @@
 
     /** Right answer on the board. `ms` = reaction time for this pair. */
     function recordCorrect(word, ms) {
-      engine.recordAnswer(word, engine.grade(true, ms), Date.now(), { ms, kind: "match" });
+      const wasNew = engine.isNew(word);
+      const grade = engine.grade(true, ms);
+      engine.recordAnswer(word, grade, Date.now(), { ms, kind: "match" });
       syncMastered(word);
+      recordHabit(wasNew, ms, word.id);
+      return grade;
     }
 
     /** The word being answered was missed. */
     function recordWrong(word) {
+      const wasNew = engine.isNew(word);
       engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
       syncMastered(word);
+      recordHabit(wasNew, 0, word.id);
+    }
+
+    const ICON_FLAME = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg>';
+    const ICON_CHECK = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>';
+
+    const RESULT_WORDS = { clear: "CLEAR", fullCombo: "FULL COMBO", timeUp: "TIME UP", start: "START" };
+    function setResultWord(kind) {
+      const badge = els.completionBadge;
+      badge.textContent = RESULT_WORDS[kind] || RESULT_WORDS.clear;
+      badge.classList.toggle("full-combo", kind === "fullCombo");
+      badge.classList.toggle("time-up", kind === "timeUp");
+    }
+
+    // The lane is the set's judgement history: one segment per match, in its judgement colour.
+    const JUDGE_COLORS = { perfect: "#ffc933", great: "#18c6b5", good: "#7ad151" }; // = --yellow / --green / --good
+    function laneGradient() {
+      const list = state.levelJudgements || [];
+      if (!list.length) return "none";
+      const step = 100 / list.length;
+      return `linear-gradient(90deg, ${list.map((kind, i) => `${JUDGE_COLORS[kind] || JUDGE_COLORS.good} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
+    }
+
+    // ---- Daily goal and day streak (js/habit.js) ----
+    // Today's goal: no words due right now, plus the day's new words (Settings).
+    // Days change at 4 am. One missed day a week is bridged by the streak freeze.
+    let habit = WordSnapHabit.normalize(null);
+    let habitCelebrate = false;
+
+    function recordHabit(wasNew, ms, id) {
+      if (isTrial()) return;
+      WordSnapHabit.recordAnswer(habit, { wasNew, ms, id });
+    }
+
+    function habitStatus(now = Date.now()) {
+      let due = 0, newAvailable = 0;
+      for (const word of state.words) {
+        if (engine.isNew(word)) newAvailable += 1;
+        else if (engine.dueAt(word, now) <= now && !WordSnapHabit.learnedToday(habit, word.id, now)) due += 1;
+      }
+      return WordSnapHabit.today(habit, { due, newAvailable, goalNew: state.settings.dailyNew, now });
+    }
+
+    /** Once a day: bridge a missed day with the weekly freeze, or note that the streak broke. */
+    function settleHabit() {
+      const before = JSON.stringify(habit.notice);
+      WordSnapHabit.settle(habit);
+      if (JSON.stringify(habit.notice) !== before) saveWords();
+    }
+
+    function renderToday() {
+      if (!els.todayBar) return;
+      els.todayBar.hidden = isTrial() || !state.words.length;
+      if (els.streakChip && els.todayBar.hidden) els.streakChip.hidden = true;
+      if (els.todayBar.hidden) return;
+      settleHabit(); // once a day, also when the page stays open past 4 am
+      const status = habitStatus();
+      if (status.justDone) {
+        habitCelebrate = true;
+        saveWords();
+        WordSnapFx.confetti();
+        WordSnapFx.banner(t("today.doneBanner", { n: status.streak }));
+      }
+      const streakText = status.streak ? t("today.streak", { n: status.streak }) : "";
+      let html;
+      if (status.done) {
+        html = `<span class="today-done">${ICON_CHECK}<b>${t("today.done")}</b></span>${streakText ? `<span class="today-text">${streakText}</span>` : ""}`;
+      } else {
+        const parts = [];
+        if (status.dueLeft) parts.push(t("today.due", { n: status.dueLeft }));
+        if (status.newLeft) parts.push(t("today.new", { n: status.newLeft }));
+        const left = status.dueLeft + status.newLeft;
+        html = left
+          ? `<span class="today-num" data-today-num></span><span class="today-text">${t("today.leftNum", { list: parts.join(currentLang === "zh" ? "、" : ", "), m: status.minutes })}</span>`
+          : `<span class="today-text">${t("today.left", { list: t("today.practice"), m: status.minutes })}</span>`;
+      }
+      const notice = status.notice;
+      if (notice && !status.done) {
+        html += `<small>${escapeHtml(notice.kind === "frozen" ? t("today.frozen") : t("today.broken", { n: notice.n, best: status.best }))}</small>`;
+      }
+      const prevNum = els.todayBar.querySelector("[data-today-num]");
+      const prevText = prevNum ? prevNum.dataset.rollText : null;
+      els.todayBar.innerHTML = html;
+      const num = els.todayBar.querySelector("[data-today-num]");
+      if (num) {
+        if (prevText != null) num.dataset.rollText = prevText;
+        WordSnapFx.roll(num, String(status.dueLeft + status.newLeft));
+      }
+      els.todayBar.classList.toggle("done", status.done);
+      if (habitCelebrate) {
+        habitCelebrate = false;
+        els.todayBar.classList.remove("celebrate");
+        void els.todayBar.offsetWidth; // restart the animation
+        els.todayBar.classList.add("celebrate");
+      }
+      if (els.dayStreak) els.dayStreak.textContent = status.streak;
+      if (els.streakChip) {
+        els.streakChip.hidden = false;
+        WordSnapFx.roll(els.streakChipN, String(status.streak));
+        els.streakChip.classList.toggle("lit", status.done);
+        els.streakChip.title = t("today.chipTitle", { n: status.streak, best: status.best });
+        if (status.justDone) {
+          WordSnapFx.pop(els.streakChip, 1.35);
+          WordSnapFx.burst(els.streakChip, 10);
+        }
+      }
+      if (status.justDone) syncReminders();
+    }
+
+    // ---- Daily reminder (Android app: @capacitor/local-notifications) ----
+    // One notification a day for the next week at the chosen time, rebuilt on every
+    // start and when today's goal is done (today's is then dropped).
+    const REMINDER_IDS = [7100, 7101, 7102, 7103, 7104, 7105, 7106];
+
+    function notificationsPlugin() {
+      if (!isNativeApp()) return null;
+      const cap = window.Capacitor;
+      try {
+        return (cap.Plugins && cap.Plugins.LocalNotifications) || (cap.registerPlugin && cap.registerPlugin("LocalNotifications")) || null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function syncReminders({ ask = false } = {}) {
+      const plugin = notificationsPlugin();
+      if (!plugin) return true;
+      try {
+        await plugin.cancel({ notifications: REMINDER_IDS.map(id => ({ id })) });
+        const time = state.settings.reminder;
+        if (!time) return true;
+        let permission = await plugin.checkPermissions();
+        if (permission.display !== "granted" && ask) permission = await plugin.requestPermissions();
+        if (permission.display !== "granted") return false;
+        const [hour, minute] = time.split(":").map(Number);
+        const streak = WordSnapHabit.streak(habit);
+        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0] });
+        await plugin.schedule({
+          notifications: plan.map(item => ({
+            id: item.id,
+            title: "Word Snap",
+            body: streak ? t("reminder.bodyStreak", { n: streak }) : t("reminder.body"),
+            schedule: { at: new Date(item.at), allowWhileIdle: true }
+          }))
+        });
+        return true;
+      } catch (error) {
+        return false;
+      }
     }
 
     /** The card picked by mistake: mixed up, so it loses some stability (no review logged). */
@@ -3496,15 +4518,35 @@
       [/^(deutsch|german|德语|de)$/i, "de-DE"], [/^(한국어|korean|韩语|ko)$/i, "ko-KR"], [/^(русский|russian|俄语|ru)$/i, "ru-RU"],
       [/^(italiano|italian|意大利语|it)$/i, "it-IT"], [/^(português|portugues|portuguese|葡萄牙语|pt)$/i, "pt-BR"]
     ];
+    /** Whether a word's script fits a language name (unknown languages: anything fits). */
+    function fitsLanguage(text, label) {
+      const tag = speechLang(label, "") || "";
+      const s = String(text || "");
+      const kana = /[\u3040-\u30ff]/.test(s), hangul = /[\uac00-\ud7af]/.test(s);
+      const han = /[\u4e00-\u9fff]/.test(s), cyrillic = /[\u0400-\u04ff]/.test(s), latin = /[A-Za-z\u00c0-\u024f]/.test(s);
+      const known = SPEECH_LANGS.some(([re]) => re.test(String(label || "").trim()));
+      if (!known) return true;
+      if (tag.startsWith("ja")) return kana || han;
+      if (tag.startsWith("zh")) return han && !kana;
+      if (tag.startsWith("ko")) return hangul;
+      if (tag.startsWith("ru")) return cyrillic;
+      return latin && !kana && !hangul && !han && !cyrillic;
+    }
+
     function speechLang(label, text) {
       const name = String(label || "").trim();
-      for (const [re, tag] of SPEECH_LANGS) if (re.test(name)) return tag;
       const s = String(text || "");
+      // The script wins when it is unmistakable: a Japanese word left in the library
+      // after switching the pair back to English must not be read with an English voice.
       if (/[\u3040-\u30ff]/.test(s)) return "ja-JP";
       if (/[\uac00-\ud7af]/.test(s)) return "ko-KR";
-      if (/[\u4e00-\u9fff]/.test(s)) return "zh-CN";
       if (/[\u0400-\u04ff]/.test(s)) return "ru-RU";
-      return "en-US";
+      let fromLabel = null;
+      for (const [re, tag] of SPEECH_LANGS) if (re.test(name)) { fromLabel = tag; break; }
+      const han = /[\u4e00-\u9fff]/.test(s);
+      // Han text under a non-CJK label is Chinese (or kanji-only Japanese under 日本語).
+      if (han && !(fromLabel && /^(zh|ja)/.test(fromLabel))) return "zh-CN";
+      return fromLabel || (han ? "zh-CN" : "en-US");
     }
 
     // prefer natural voices for the language; skip the novelty voices some systems ship (Albert, Zarvox, Bells…)
@@ -3612,9 +4654,10 @@
       clearLevelTimers();
       clearSelection();
       state.levelEndsAt = 0;
+      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "✓";
+      setResultWord("clear");
       els.main.scrollTop = 0;
       state.lastCompletion = { allDone: false, reason: "queue", trial: true };
       stopDrills();
@@ -3665,7 +4708,7 @@
       return `
           <div class="custom-row">
             ${speakButton(word.en) || "<span></span>"}
-            <b title="${escapeHtml(word.en)}">${escapeHtml(word.en)}</b>
+            <b title="${escapeHtml(word.en)}">${escapeHtml(word.en)}${word.reading ? ` <small class="reading-inline">${escapeHtml(word.reading)}</small>` : ""}</b>
             <span class="cr-mean" title="${escapeHtml(word.zh)}">${escapeHtml(word.zh)}</span>
             ${stageTag(word)}
             <button class="link-button" type="button" data-delete="${escapeHtml(word.id)}">${t("library.deleteBtn")}</button>
@@ -3914,8 +4957,147 @@
         || els.introModal.classList.contains("open");
     }
 
+    // ---- Combo count and lane ----
+    // From 3 correct in a row the combo count sits at the lane's right end and rolls;
+    // milestones (5 / 10 / 20 / 50) pop with a few stars.
+    function updateCombo(streak) {
+      if (!els.comboLabel) return;
+      const tier = WordSnapFx.tierFor(streak);
+      if (streak < 3) {
+        els.comboLabel.classList.remove("show");
+        return;
+      }
+      els.comboLabel.dataset.tier = tier.name;
+      els.comboLabel.innerHTML = `<b data-combo-n></b><span>${escapeHtml(t("fx.comboWord"))}</span>`;
+      const n = els.comboLabel.querySelector("[data-combo-n]");
+      n.dataset.rollText = String(Math.max(0, streak - 1));
+      WordSnapFx.roll(n, String(streak));
+      const wasShown = els.comboLabel.classList.contains("show");
+      els.comboLabel.classList.add("show");
+      if (WordSnapFx.isMilestone(streak)) {
+        WordSnapFx.pop(els.comboLabel, 1.3);
+        WordSnapFx.burst(els.comboLabel, streak);
+      } else if (wasShown) {
+        WordSnapFx.pop(els.comboLabel, 1.1);
+      }
+    }
+
+    /** Accuracy, time and best streak of the set, as tiles that pop in and count up. */
+    function renderCompletionStats() {
+      const box = els.completionStats;
+      if (!box) return;
+      const correct = state.completedThisRun || 0;
+      const wrong = state.levelMistakes || 0;
+      if (!correct) { box.hidden = true; return; }
+      const accuracy = Math.round(correct / (correct + wrong) * 100);
+      const counts = { perfect: 0, great: 0, good: 0 };
+      (state.levelJudgements || []).forEach(kind => { if (kind in counts) counts[kind] += 1; });
+      box.hidden = false;
+      const cells = [["perfect", counts.perfect], ["great", counts.great], ["good", counts.good], ["miss", wrong]];
+      box.innerHTML = cells.map(([kind]) =>
+        `<div class="result-cell"><b class="fx-judge-${kind}">${kind.toUpperCase()}</b><span data-result="${kind}"></span></div>`).join("")
+        + `<p class="result-line">${t("summary.line", {
+          combo: `<b data-result="combo"></b>`, acc: `<b data-result="acc"></b>`, time: `<b data-result="time"></b>`
+        })}</p>`;
+      cells.forEach(([kind, n], i) => WordSnapFx.countUp(box.querySelector(`[data-result="${kind}"]`), n, String, { delay: 120 + i * 90 }));
+      WordSnapFx.countUp(box.querySelector('[data-result="combo"]'), state.levelBestStreak || 0, String, { delay: 480 });
+      WordSnapFx.countUp(box.querySelector('[data-result="acc"]'), accuracy, n => `${n}%`, { delay: 480 });
+      WordSnapFx.countUp(box.querySelector('[data-result="time"]'), Math.round((state.lastLevelActiveMs || 0) / 1000), n => WordSnapFx.clock(n * 1000), { delay: 480 });
+    }
+
+    // ---- Focus mode (automatic) ----
+    // After a few answers in a row everything but the board goes away (navigation,
+    // today bar, title) and the board glides to the middle of the screen. It comes
+    // back after a pause without a pick, at the end of a set, when a window opens,
+    // with Esc, the "Exit focus" button, or pointing at the top or left edge.
+    // Settings can turn it off.
+    const FOCUS_AFTER_ANSWERS = 3;
+    // Long enough to think about a hard word: coming back moves the board, so it must
+    // not happen while someone is about to tap (testers mis-tapped at 10 s).
+    const FOCUS_IDLE_MS = 60000;
+    // Enter after the match's ripple has played, so it does not stay behind as a ghost.
+    const FOCUS_ENTER_DELAY_MS = 520;
+    let focusEnterTimer = null;
+    let focusAnswers = 0;
+    let focusIdleTimer = null;
+
+    function focusOn() {
+      return document.body.classList.contains("focus-mode");
+    }
+
+    /** A pick (answered = false) or an answer on the board. */
+    function focusActivity(answered) {
+      if (state.settings.focus === false) return;
+      clearTimeout(focusIdleTimer);
+      if (answered) focusAnswers += 1;
+      const playing = !els.completionView.classList.contains("show") && !shouldPauseLevel();
+      if (!focusOn() && playing && focusAnswers >= FOCUS_AFTER_ANSWERS && !focusEnterTimer) {
+        focusEnterTimer = setTimeout(() => {
+          focusEnterTimer = null;
+          const stillPlaying = !els.completionView.classList.contains("show") && !shouldPauseLevel();
+          if (!focusOn() && stillPlaying && focusAnswers >= FOCUS_AFTER_ANSWERS) enterFocus();
+        }, FOCUS_ENTER_DELAY_MS);
+      }
+      focusIdleTimer = setTimeout(exitFocus, FOCUS_IDLE_MS);
+    }
+
+    const lessonEl = document.querySelector(".lesson");
+    const lessonTopEl = document.querySelector(".lesson-top");
+
+    function reducedMotion() {
+      return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+
+    /** Vertical shift that puts the progress bar + board in the middle of the screen (layout without transform). */
+    function focusOffset() {
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = "";
+      const top = lessonTopEl.getBoundingClientRect().top;
+      const bottom = els.matchGrid.getBoundingClientRect().bottom;
+      return Math.max(0, Math.round(window.innerHeight / 2 - (top + bottom) / 2));
+    }
+
+    /** FLIP: start where the board was, then glide to `transform`. */
+    function glideLesson(from, transform) {
+      const to = els.matchGrid.getBoundingClientRect();
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = `translate(${Math.round(from.left - to.left)}px, ${Math.round(from.top - to.top)}px)`;
+      void lessonEl.offsetWidth;
+      if (!reducedMotion()) lessonEl.style.transition = "transform 0.5s cubic-bezier(.2, .8, .2, 1)";
+      lessonEl.style.transform = transform;
+    }
+
+    function enterFocus() {
+      const from = els.matchGrid.getBoundingClientRect();
+      document.body.classList.add("focus-mode");
+      const dy = focusOffset();
+      glideLesson(from, dy ? `translateY(${dy}px)` : "");
+    }
+
+    /** instant: no glide (a window or the set summary is about to cover the board). */
+    function exitFocus(options) {
+      clearTimeout(focusIdleTimer);
+      clearTimeout(focusEnterTimer);
+      focusEnterTimer = null;
+      focusAnswers = 0;
+      if (!focusOn()) return;
+      const from = els.matchGrid.getBoundingClientRect();
+      document.body.classList.remove("focus-mode");
+      lessonEl.style.transition = "none";
+      lessonEl.style.transform = "";
+      if (options && options.instant === true) return;
+      glideLesson(from, "");
+    }
+
+    window.addEventListener("resize", () => {
+      if (!focusOn()) return;
+      const dy = focusOffset();
+      lessonEl.style.transform = dy ? `translateY(${dy}px)` : "";
+    });
+
     /** Freeze the countdown while the library is open or the tab/app is in the background. */
     function pauseLevel() {
+      exitFocus({ instant: true });
       const boardLive = state.levelEndsAt > 0 || (isEndless() && !els.completionView.classList.contains("show"));
       if (state.pausedAt || !boardLive) return;
       state.pausedAt = performance.now();
@@ -4059,7 +5241,11 @@
       state.levelMisses = new Map();
       state.levelDemoted = new Set();
       state.levelMistakes = 0;
+      state.levelBestStreak = 0;
+      state.levelStreak = 0;
+      state.levelJudgements = [];
       state.lastCompletion = null;
+      updateCombo(0);
 
       if (!state.words.length) {
         showEmptyLibraryPrompt();
@@ -4083,7 +5269,8 @@
       state.lastPairAt = 0;
       state.levelTimeLeftMs = null;
       state.levelDurationMs = endless ? 0 : computeLevelDurationMs(state.sessionTotal);
-      state.levelEndsAt = endless ? 0 : now + state.levelDurationMs;
+      // The trial has no clock: a first-timer should learn the board, not race it.
+      state.levelEndsAt = endless || isTrial() ? 0 : now + state.levelDurationMs;
       state.levelTimeIsAdaptive = Boolean(
         state.settings.adaptiveLevelTime
         && resolveMsPerPair(state.settings) > 0
@@ -4195,12 +5382,14 @@
       button.dataset.side = slot.side;
       button.dataset.index = String(slot.index);
       button.dataset.id = slot.word ? slot.word.id : "";
+      if (slot.word) button.setAttribute("aria-pressed", "false");
       button.disabled = !slot.word;
       const label = slot.word
         ? (slot.side === "left" ? slot.word.zh : slot.word.en)
         : "";
       if (label) button.title = label;
-      button.innerHTML = `<span class="num">${slot.key}</span><span class="word${isLongLabel(label) ? " long" : ""}">${escapeHtml(label)}</span>`;
+      const reading = slot.word && slot.side === "right" && slot.word.reading ? slot.word.reading : "";
+      button.innerHTML = `<span class="num">${slot.key}</span><span class="word${isLongLabel(label) ? " long" : ""}">${escapeHtml(label)}${reading ? `<small class="reading">${escapeHtml(reading)}</small>` : ""}</span>`;
       button.addEventListener("click", () => selectCard(button, slot.side, slot.index));
       return button;
     }
@@ -4313,6 +5502,7 @@
       // Only the pair that is mid-clear is inert; every other card stays clickable
       // so a tap during the vanish animation is not lost.
       if (state.locked || card.disabled || card.classList.contains("correct") || isLevelOver()) return;
+      focusActivity(false);
       clearWrong();
       // DOM may have been recreated by refill — rebind instead of dropping selection.
       if (state.selected && !rebindSelection()) {
@@ -4396,6 +5586,7 @@
 
     function markCorrect(first, second) {
       if (isLevelOver()) return;
+      focusActivity(true);
       // Credit the word whose answer-side (right column) card was picked.
       const rightSel = first.side === "right" ? first : second;
       const word = slotWord(rightSel) || slotWord(first);
@@ -4408,7 +5599,8 @@
       word.correct += 1;
       word.streak += 1;
       word.lastMs = elapsed;
-      recordCorrect(word, elapsed);
+      const grade = recordCorrect(word, elapsed);
+      (state.levelJudgements || (state.levelJudgements = [])).push(WordSnapFx.judgementFor(grade));
       state.blockWords.add(word.id);
 
       state.score += 1;
@@ -4423,6 +5615,12 @@
       first.card.classList.remove("selected");
       first.card.classList.add("correct");
       second.card.classList.add("correct");
+      state.levelStreak = (state.levelStreak || 0) + 1;
+      state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
+      WordSnapFx.ripple([first.card, second.card], JUDGE_COLORS[WordSnapFx.judgementFor(grade)] || JUDGE_COLORS.great);
+      WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
+      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
+      updateCombo(state.streak);
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
       saveWords();
@@ -4529,6 +5727,7 @@
 
     function markWrong(first, second) {
       if (isLevelOver()) return;
+      focusActivity(true);
       const firstWord = slotWord(first);
       const secondWord = slotWord(second);
       if (!firstWord || !secondWord) return;
@@ -4557,7 +5756,11 @@
 
       state.mistakes += 1;
       state.streak = 0;
+      state.levelStreak = 0;
       playMistakeTone();
+      WordSnapFx.haptic("wrong");
+      WordSnapFx.judge([first.card, second.card], "miss", 0);
+      updateCombo(0);
       state.selected = null;
 
       if (first.card) {
@@ -4565,6 +5768,16 @@
         first.card.classList.add("wrong");
       }
       if (second.card) second.card.classList.add("wrong");
+      // Show where the first card's real partner is, so a miss teaches something.
+      if (first.card && firstWord) {
+        const partner = els.matchGrid.querySelector(`.match-card[data-id="${CSS.escape(firstWord.id)}"]:not([data-side="${first.side}"])`);
+        if (partner && partner !== second.card) {
+          partner.classList.remove("hint-correct");
+          void partner.offsetWidth;
+          partner.classList.add("hint-correct");
+          setTimeout(() => partner.classList.remove("hint-correct"), 950);
+        }
+      }
       els.feedback.className = "feedback bad";
       els.feedback.textContent = t("feedback.wrong", { a: firstWord.en, b: firstWord.zh });
       saveWords();
@@ -4612,6 +5825,7 @@
     }
 
     function showCompletion(allDone, reason = "queue") {
+      exitFocus({ instant: true });
       stopLevelCountdown();
       clearLevelTimers();
       clearSelection();
@@ -4622,13 +5836,14 @@
       // Close the engine's block (rewards the push policy with memory gained per
       // minute of actual play — paused time is already shifted out of levelStartedAt).
       const activeMs = Math.max(0, (state.lastPairAt || performance.now()) - state.levelStartedAt);
+      state.lastLevelActiveMs = activeMs;
       state.lastBlock = engine.endBlock(Date.now(), activeMs) || null;
       scheduleEngineFit();
       // Each finished level rotates the color skin.
       advanceThemeAfterLevel();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "✓";
+      setResultWord(reason === "timeout" ? "timeUp" : !state.levelMistakes && state.completedThisRun > 0 ? "fullCombo" : "clear");
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
       const trial = isTrial();
@@ -4636,6 +5851,7 @@
       state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
       if (!trial) startDrills();
+      if (installNudgeWaiting) setTimeout(showInstallNudge, 1200);
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
       saveWords();
@@ -4663,18 +5879,21 @@
           state.trialLibraryVisited ? t("trial.notYet") : ""
         ].filter(Boolean).join(" ");
         els.continueBtn.textContent = t("trial.importBtn");
+        if (els.completionStats) els.completionStats.hidden = true;
         renderReviewList();
         return;
       }
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.focusPairsBtn.hidden = !(reason === "block" && confusedWords().length >= 2);
+      renderCompletionStats();
       if (reason === "block") {
         const block = state.lastBlock || {};
         const dueToday = engine.forecast(state.words, 1)[0];
         els.completionTitle.textContent = t("timeouts.blockTitle");
         els.completionText.textContent = [
           t("timeouts.blockSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0, fresh: block.fresh || 0 }),
-          dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
+          dueToday && habitStatus().done ? t("timeouts.blockGoalDone", { n: dueToday })
+            : dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
         ].join(" ");
         renderReviewList();
         return;
@@ -4705,7 +5924,38 @@
         .join("")
         + (pairs.length
           ? `<li class="confusion-note">${t("timeouts.confusedPairs", { list: pairs.map(([a, b]) => `${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}`).join(currentLang === "zh" ? "；" : "; ") })}</li>`
+          : "")
+        + (strongAiOn() && !isTrial()
+          ? pairs.map(([a, b]) => contrastItem(a, b)).join("")
           : "");
+    }
+
+    // AI explanations of mixed-up pairs (API key only), kept for this visit.
+    const aiContrasts = new Map(); // "idA|idB" → { diff, aEx, bEx } | "loading" | "failed"
+
+    function contrastItem(a, b) {
+      const key = `${a.id}|${b.id}`;
+      const found = aiContrasts.get(key);
+      if (!found || found === "failed") {
+        return `<li class="ai-contrast"><button class="small-button" type="button" data-contrast="${escapeHtml(key)}">${t("timeouts.contrastBtn", { a: escapeHtml(a.en), b: escapeHtml(b.en) })}</button>`
+          + (found === "failed" ? ` <span class="drill-muted">${t("timeouts.contrastFailed")}</span>` : "") + "</li>";
+      }
+      if (found === "loading") return `<li class="ai-contrast drill-muted">${t("timeouts.contrastLoading")}</li>`;
+      return `<li class="ai-contrast"><p><b>${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}</b></p><p>${escapeHtml(found.diff)}</p>`
+        + (found.aEx ? `<p class="drill-muted">${escapeHtml(found.aEx)}</p>` : "")
+        + (found.bEx ? `<p class="drill-muted">${escapeHtml(found.bEx)}</p>` : "") + "</li>";
+    }
+
+    async function explainContrast(key) {
+      const pair = (state.levelConfusions || []).find(([a, b]) => `${a.id}|${b.id}` === key);
+      if (!pair || aiContrasts.get(key) === "loading") return;
+      const [a, b] = pair;
+      aiContrasts.set(key, "loading");
+      renderReviewList();
+      const ai = await aiReady();
+      const result = ai && ai.strong ? await ai.contrast(a.en, a.zh, b.en, b.zh, aiLang()) : null;
+      aiContrasts.set(key, result || "failed");
+      renderReviewList();
     }
 
     // ---- Practice cards after a set: spelling and sentence making ----
@@ -4719,7 +5969,10 @@
     // words without one; every example must pass the grammar check before it is kept.
     // It never grades: the model eval found no small model that judges meaning reliably.
     // Any failure or timeout falls back to the rules layer silently.
-    const aiState = { support: null, ai: null, busy: false, progress: 0, cached: false, message: "", messageKind: "" };
+    // With the learner's own API key (js/ai-api.js) a strong model is used first: it
+    // also checks sentence meaning (where / why / fix) and explains mixed-up pairs.
+    // The key lives under its own storage key, never in the word library or exports.
+    const aiState = { support: null, ai: null, native: false, busy: false, progress: 0, cached: false, message: "", messageKind: "" };
     let aiModule = null;
     let aiInitPromise = null;
 
@@ -4728,16 +5981,49 @@
       return aiModule;
     }
 
-    function aiLanguageOk() {
-      const { a, b } = state.settings.langPair;
-      return /^(english|英语|英文)$/i.test(a) && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    /** The small on-device models were only tested for English → Chinese. API models take any pair. */
+    function localLanguageOk() {
+      if (aiState.native) return true; // the app's 4B model handles any pair
+      const { b } = state.settings.langPair;
+      return targetIsEnglish() && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    }
+
+    /** Side A is English: the on-device grammar checker (Harper) applies. */
+    function targetIsEnglish() {
+      return /^(english|英语|英文)$/i.test(state.settings.langPair.a);
+    }
+
+    /** The language pair for AI prompts: study A, explain in B. */
+    function aiLang() {
+      return { a: state.settings.langPair.a, b: state.settings.langPair.b };
+    }
+
+    function aiEnabled() {
+      return state.settings.ai.enabled !== false;
+    }
+
+    /** Below 8 GB (Chrome reports at most 8) an on-device model is too slow to be worth it. */
+    function weakDevice() {
+      return typeof navigator.deviceMemory === "number" && navigator.deviceMemory < 8;
+    }
+
+    /** Whether the text uses the word (or a form of it: comí for comer, 食べた for 食べる). */
+    function usesWord(text, word) {
+      const t1 = String(text).toLowerCase(), w = String(word).toLowerCase().trim();
+      if (!w) return false;
+      if (t1.includes(w)) return true;
+      const cjk = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(w);
+      const stem = cjk ? (w.length >= 3 ? w.slice(0, -1) : w) : (w.length >= 5 ? w.slice(0, -2) : w);
+      return t1.includes(stem);
     }
 
     /** Checks WebGPU and whether the model is already on this device. Runs once. */
     function aiInit() {
       if (!aiInitPromise) {
         aiInitPromise = (async () => {
+          if (isNativeApp()) return initNativeAi();
           if (!("gpu" in navigator)) { aiState.support = { webgpu: false }; return; }
+          if (weakDevice()) { aiState.support = { webgpu: false, weak: true }; return; }
           const mod = await loadAiModule();
           aiState.support = await mod.detect();
           if (!aiState.support.webgpu) return;
@@ -4745,7 +6031,7 @@
           aiState.cached = await aiState.ai.isCached();
           if (state.settings.ai.on && !aiState.cached) {
             // The browser evicted the model (or it was never finished): ask again in Settings.
-            state.settings.ai = { on: false };
+            state.settings.ai = { ...state.settings.ai, on: false };
             saveWords();
           }
         })().catch(() => { aiState.support = { webgpu: false }; });
@@ -4753,13 +6039,60 @@
       return aiInitPromise;
     }
 
+    /** The Android app: Qwen3.5 4B through MNN, only on phones with 12 GB of memory or more. */
+    async function initNativeAi() {
+      const nmod = await import("./js/ai-native.js");
+      const plugin = nmod.nativePlugin();
+      if (!plugin) { aiState.support = { webgpu: false }; return; }
+      const info = await plugin.deviceInfo();
+      if (!info.native || !info.capable) {
+        aiState.support = { webgpu: false, weak: true, native: true };
+        return;
+      }
+      aiState.support = { native: true };
+      aiState.native = true;
+      aiState.ai = nmod.nativeAI(plugin);
+      aiState.cached = await aiState.ai.isCached();
+      if (state.settings.ai.on && !aiState.cached) {
+        state.settings.ai = { ...state.settings.ai, on: false };
+        saveWords();
+      }
+    }
+
+    /** A strong model is on: an API key, or the app's on-device 4B model. */
+    function strongAiOn() {
+      return aiApiOn() || (aiEnabled() && state.settings.ai.on && aiState.native);
+    }
+
+    /** The strong model for jobs only it can do (word lists); works in the trial too. */
+    async function strongAiReady() {
+      const api = await aiApiReady();
+      if (api) return api;
+      if (!aiEnabled() || !state.settings.ai.on) return null;
+      await aiInit();
+      const ai = aiState.ai;
+      if (!aiState.native || !ai || !aiState.cached) return null;
+      if (!ai.ready) {
+        try { await ai.load(); } catch (error) { return null; }
+      }
+      return ai;
+    }
+
     function syncAiUI() {
       if (!els.aiSection) return;
+      els.aiSection.hidden = false;
+      const enabled = aiEnabled();
+      els.aiEnabled.checked = enabled;
+      els.aiApiBlock.hidden = !enabled;
+      syncAiWordListUI();
+      if (enabled) syncAiApiUI();
       const ai = aiState.ai;
-      els.aiSection.hidden = !ai || !aiLanguageOk();
-      if (els.aiSection.hidden) return;
+      els.aiWeakNote.hidden = !enabled || !(aiState.support && aiState.support.weak);
+      if (!els.aiWeakNote.hidden) els.aiWeakNote.textContent = t(aiState.support.native ? "aiSettings.weakNative" : "aiSettings.weakWeb");
+      els.aiLocalBlock.hidden = !enabled || !ai || !localLanguageOk();
+      if (els.aiLocalBlock.hidden) return;
       const mb = ai.model.downloadMB;
-      els.aiAbout.textContent = t("aiSettings.about", { name: ai.model.name, mb });
+      els.aiAbout.textContent = t(aiState.native ? "aiSettings.aboutNative" : "aiSettings.about", { name: ai.model.name, mb });
       const on = state.settings.ai.on;
       els.aiProgress.hidden = !aiState.busy;
       els.aiProgress.value = aiState.progress;
@@ -4768,6 +6101,7 @@
         : aiState.cached ? t("aiSettings.turnOn")
           : aiState.progress > 0 ? t("aiSettings.resume", { mb }) : t("aiSettings.enable", { mb });
       els.aiDeleteBtn.hidden = !aiState.cached || aiState.busy;
+      if (els.aiEvalLink) els.aiEvalLink.hidden = !aiState.native || !aiState.cached || aiState.busy;
       let message = aiState.message, kind = aiState.messageKind;
       if (aiState.busy) {
         message = aiState.progress < 1 && !aiState.cached
@@ -4776,6 +6110,7 @@
         kind = "";
       } else if (!message) {
         message = on ? t("aiSettings.on") : aiState.cached ? t("aiSettings.offCached", { mb }) : t("aiSettings.off");
+        if (on && aiApiOn()) message += " " + t("aiSettings.apiLocalNote");
       }
       els.aiStatus.textContent = message;
       els.aiStatus.className = `import-status${kind ? " " + kind : ""}`;
@@ -4787,7 +6122,7 @@
       if (!ai || aiState.busy) return;
       aiState.message = "";
       if (state.settings.ai.on) {
-        state.settings.ai = { on: false };
+        state.settings.ai = { ...state.settings.ai, on: false };
         saveWords();
         await ai.unload();
         syncAiUI();
@@ -4804,7 +6139,7 @@
         });
         aiState.cached = true;
         aiState.progress = 1;
-        state.settings.ai = { on: true };
+        state.settings.ai = { ...state.settings.ai, on: true };
         saveWords();
       } catch (error) {
         aiState.message = t("aiSettings.failed");
@@ -4830,14 +6165,221 @@
       aiState.progress = 0;
       aiState.message = aiState.cached ? t("aiSettings.failed") : t("aiSettings.deleted");
       aiState.messageKind = aiState.cached ? "bad" : "good";
-      state.settings.ai = { on: false };
+      state.settings.ai = { ...state.settings.ai, on: false };
       saveWords();
       syncAiUI();
     }
 
+    // ---- AI through the learner's own API key ----
+    const AI_API_STORAGE_KEY = "word-snap-ai-api";
+    let aiApiModule = null;
+    let aiApiConfig = loadAiApiConfig();
+    let aiApiInstance = null; // { signature, ai }
+    const aiApiUI = { busy: false, message: "", messageKind: "" };
+
+    function loadAiApiModule() {
+      if (!aiApiModule) aiApiModule = import("./js/ai-api.js").catch(error => { aiApiModule = null; throw error; });
+      return aiApiModule;
+    }
+
+    /** The stored settings as saved ({ provider, baseURL, model, key, on }); cleaned by ai-api.js when used. */
+    function loadAiApiConfig() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(AI_API_STORAGE_KEY) || "null");
+        return raw && typeof raw === "object" ? raw : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveAiApiConfig(config) {
+      aiApiConfig = config;
+      aiApiInstance = null;
+      try {
+        if (config && config.key) localStorage.setItem(AI_API_STORAGE_KEY, JSON.stringify(config));
+        else localStorage.removeItem(AI_API_STORAGE_KEY);
+      } catch (error) { /* private mode: works for this visit only */ }
+    }
+
+    /** Cheap, synchronous: is a key saved and switched on? */
+    function aiApiOn() {
+      return aiEnabled() && Boolean(aiApiConfig && aiApiConfig.on === true && aiApiConfig.key);
+    }
+
+    /** Whether any AI is meant to run (API key on, or the on-device model on). */
+    function aiWanted() {
+      return aiApiOn() || (aiEnabled() && state.settings.ai.on && localLanguageOk());
+    }
+
+    /** The API-backed AI, or null when no key is on. Never throws. */
+    async function aiApiReady() {
+      if (!aiApiOn()) return null;
+      try {
+        const mod = await loadAiApiModule();
+        const config = mod.resolveConfig(aiApiConfig);
+        if (!config) return null;
+        const signature = JSON.stringify([config.provider, config.baseURL, config.model, config.key]);
+        if (!aiApiInstance || aiApiInstance.signature !== signature) {
+          const aiMod = await loadAiModule();
+          const engine = mod.createApiEngine(config);
+          const ai = aiMod.createAI({ model: aiMod.API_MODEL, createEngine: async () => engine, timeoutMs: 25000 });
+          await ai.load();
+          aiApiInstance = { signature, ai };
+        }
+        return aiApiInstance.ai;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function fillAiApiProviders(mod) {
+      if (els.aiApiProvider.options.length) return;
+      els.aiApiProvider.innerHTML = mod.PROVIDERS
+        .map(provider => `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.name)}</option>`).join("");
+    }
+
+    /** Placeholders and the key link follow the selected provider. */
+    function syncAiApiProviderHints(mod) {
+      const provider = mod.providerById(els.aiApiProvider.value);
+      const custom = provider.id === "custom";
+      els.aiApiModel.placeholder = provider.model ? t("aiSettings.apiDefault", { v: provider.model }) : (custom ? "qwen3:4b" : "");
+      els.aiApiBase.placeholder = provider.baseURL ? t("aiSettings.apiDefault", { v: provider.baseURL }) : "http://localhost:11434/v1";
+      els.aiApiKeyLink.hidden = !provider.keyUrl;
+      if (provider.keyUrl) els.aiApiKeyLink.href = provider.keyUrl;
+    }
+
+    async function syncAiApiUI() {
+      if (!els.aiApiBlock) return;
+      els.aiApiAbout.textContent = t("aiSettings.apiAbout");
+      let mod;
+      try { mod = await loadAiApiModule(); } catch (error) { els.aiApiBlock.hidden = true; return; }
+      fillAiApiProviders(mod);
+      const config = mod.normalizeConfig(aiApiConfig);
+      // Keep what the learner is typing; fill the form only when it is not in use.
+      if (!els.aiApiBlock.contains(document.activeElement) && !aiApiUI.busy) {
+        els.aiApiProvider.value = config.provider;
+        els.aiApiKey.value = config.key;
+        els.aiApiModel.value = config.model;
+        els.aiApiBase.value = config.baseURL;
+      }
+      syncAiApiProviderHints(mod);
+      const saved = Boolean(config.key);
+      els.aiApiSaveBtn.disabled = aiApiUI.busy;
+      // After a failed test the key needs fixing, not switching on.
+      els.aiApiToggleBtn.hidden = !saved || aiApiUI.busy || (!config.on && aiApiUI.messageKind === "bad");
+      els.aiApiToggleBtn.textContent = config.on ? t("aiSettings.apiPause") : t("aiSettings.apiResume");
+      els.aiApiClearBtn.hidden = !saved || aiApiUI.busy;
+      let message = aiApiUI.message, kind = aiApiUI.messageKind;
+      if (aiApiUI.busy) {
+        message = t("aiSettings.apiTesting");
+        kind = "";
+      } else if (!message) {
+        const resolved = mod.resolveConfig(config);
+        message = !saved ? t("aiSettings.apiNone")
+          : config.on && resolved ? t("aiSettings.apiOn", { name: resolved.name, model: resolved.model })
+            : t("aiSettings.apiPaused");
+      }
+      els.aiApiStatus.textContent = message;
+      els.aiApiStatus.className = `import-status${kind ? " " + kind : ""}`;
+    }
+
+    function aiApiFormConfig(on) {
+      return {
+        provider: els.aiApiProvider.value,
+        key: els.aiApiKey.value.trim(),
+        model: els.aiApiModel.value.trim(),
+        baseURL: els.aiApiBase.value.trim(),
+        on
+      };
+    }
+
+    async function aiApiSave() {
+      if (aiApiUI.busy) return;
+      const mod = await loadAiApiModule();
+      const form = aiApiFormConfig(true);
+      aiApiUI.message = "";
+      aiApiUI.messageKind = "bad";
+      if (!form.key) {
+        aiApiUI.message = t("aiSettings.apiNeedKey");
+        return syncAiApiUI();
+      }
+      if (!mod.resolveConfig(form)) {
+        aiApiUI.message = t("aiSettings.apiNeedCustom");
+        return syncAiApiUI();
+      }
+      aiApiUI.busy = true;
+      syncAiApiUI();
+      const result = await mod.testConnection(form);
+      aiApiUI.busy = false;
+      if (result.ok) {
+        saveAiApiConfig(mod.normalizeConfig(form));
+        aiApiUI.message = t("aiSettings.apiOk", { name: mod.resolveConfig(form).name });
+        aiApiUI.messageKind = "good";
+      } else {
+        // Keep the key (paused) so a typo does not have to be pasted again.
+        saveAiApiConfig(mod.normalizeConfig({ ...form, on: false }));
+        const msg = String(result.message || "").slice(0, 120);
+        const key = { auth: "apiAuth", quota: "apiQuota", model: "apiModel", network: "apiNetwork" }[result.kind] || "apiHttp";
+        aiApiUI.message = t(`aiSettings.${key}`, { msg });
+      }
+      syncAiApiUI();
+      syncAiUI();
+    }
+
+    function aiApiToggle() {
+      if (!aiApiConfig.key) return;
+      saveAiApiConfig({ ...aiApiConfig, on: !aiApiOn() });
+      aiApiUI.message = "";
+      syncAiUI();
+    }
+
+    function aiApiClear() {
+      saveAiApiConfig({});
+      els.aiApiKey.value = "";
+      aiApiUI.message = t("aiSettings.apiCleared");
+      aiApiUI.messageKind = "good";
+      syncAiUI();
+    }
+
+    function syncAiWordListUI() {
+      if (els.aiWordListRow) els.aiWordListRow.hidden = !strongAiOn();
+    }
+
+    /** "Make a list with AI": writes the list into the bulk box in the import format; the learner checks it and taps Bulk add. */
+    async function aiMakeWordList() {
+      const request = els.aiWordListInput.value.trim();
+      if (!request) {
+        setImportStatus(t("ai.listNeedRequest"), "bad");
+        els.aiWordListInput.focus();
+        return;
+      }
+      els.aiWordListBtn.disabled = true;
+      setImportStatus(t("ai.listMaking"), "");
+      try {
+        const ai = await strongAiReady();
+        // The phone's model writes about 10 words a minute; keep its lists short.
+        const list = ai ? await ai.wordList(request, aiLang(), ai.model.native ? 30 : 60) : null;
+        if (!list) {
+          setImportStatus(t("ai.listFailed"), "bad");
+          return;
+        }
+        const mod = await loadAiModule();
+        els.bulkInput.value = mod.wordListToImport(list);
+        setImportStatus(t("ai.listReady", { n: list.items.length }), "good");
+        els.bulkInput.scrollIntoView({ block: "center", behavior: "smooth" });
+      } catch (error) {
+        setImportStatus(t("ai.listFailed"), "bad");
+      } finally {
+        els.aiWordListBtn.disabled = false;
+      }
+    }
+
     /** The model, started if it is on and already downloaded; null otherwise. Never downloads. */
     async function aiReady() {
-      if (!state.settings.ai.on || !aiLanguageOk() || isTrial()) return null;
+      if (!aiEnabled() || isTrial()) return null;
+      const api = await aiApiReady();
+      if (api) return api;
+      if (!state.settings.ai.on || !localLanguageOk()) return null;
       await aiInit();
       const ai = aiState.ai;
       if (!ai || !aiState.cached || !state.settings.ai.on) return null;
@@ -4855,12 +6397,18 @@
       try {
         ai = ai || await aiReady();
         if (!ai) return null;
-        mod = mod || await loadSentenceModule();
-        const example = await ai.example(word.en, word.zh);
-        if (!example || !example.zh || word.ex) return null;
-        const check = await mod.checkSentence(word.en, example.en);
-        if (!check.ok || !check.target.found) return null;
-        setExample(word, example.en, example.zh, true);
+        const english = targetIsEnglish();
+        if (!english && !ai.strong) return null;
+        const example = await ai.example(word.en, word.zh, aiLang());
+        if (!example || !example.tr || word.ex) return null;
+        if (english) {
+          mod = mod || await loadSentenceModule();
+          const check = await mod.checkSentence(word.en, example.text);
+          if (!check.ok || !check.target.found) return null;
+        } else if (!usesWord(example.text, word.en)) {
+          return null;
+        }
+        setExample(word, example.text, example.tr, true);
         saveWords();
         return example;
       } catch (error) {
@@ -4869,15 +6417,18 @@
     }
 
     let aiFilling = false;
-    /** Writes example sentences for up to `limit` words of this set that have none. */
-    async function aiFillExamples(limit = 3) {
+    /** Writes example sentences for words of this set that have none (more with an API key). */
+    async function aiFillExamples() {
       if (aiFilling) return;
       aiFilling = true;
       try {
         const ai = await aiReady();
         if (!ai) return;
-        const mod = await loadSentenceModule();
-        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && latinWord(word)).slice(0, limit);
+        const english = targetIsEnglish();
+        if (!english && !ai.strong) return;
+        const mod = english ? await loadSentenceModule() : null;
+        const limit = ai.strong ? 10 : 3;
+        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && (!english || latinWord(word))).slice(0, limit);
         for (const word of words) {
           await aiExampleFor(word, ai, mod);
         }
@@ -4915,9 +6466,11 @@
       const lastSentenceAt = word => Math.max(0, ...(word.sentences || []).map(x => x.at || 0));
       // Sentences: words that are recognised but not yet well used — answered more than once,
       // out of the short-term steps, stability around a few days. English side A only (the checker is English).
-      const sentence = /^english$/i.test(state.settings.langPair.a)
+      // Other languages: only with an API key, which then checks the whole sentence.
+      const english = targetIsEnglish();
+      const sentence = english || strongAiOn()
         ? state.words
-          .filter(word => word.srs && latinWord(word) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
+          .filter(word => word.srs && (!english || latinWord(word)) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
           .sort((a, b) => Number(state.blockWords.has(b.id)) - Number(state.blockWords.has(a.id))
             || Math.abs(Math.log(a.srs.S / 3)) - Math.abs(Math.log(b.srs.S / 3)))
         : [];
@@ -4939,7 +6492,7 @@
       drill.index = 0;
       renderDrill();
       // Background: examples for this set's words feed the next spelling cards.
-      if (state.settings.ai.on) aiFillExamples();
+      if (aiWanted()) aiFillExamples();
     }
 
     function stopDrills() {
@@ -5004,7 +6557,7 @@
         focusDrill(els.drillSpell);
       } else {
         els.drillTitle.innerHTML = t("drill.sentenceTitle", { w: `<b>${escapeHtml(card.word.en)}</b>` });
-        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t("drill.sentenceRule"))}</small>`;
+        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t(targetIsEnglish() ? "drill.sentenceRule" : "drill.sentenceRuleAi"))}</small>`;
         els.drillSpell.hidden = true;
         els.drillSentence.hidden = false;
         els.drillHint.hidden = false;
@@ -5021,7 +6574,9 @@
       card.grade = grade;
       engine.recordAnswer(card.word, grade, Date.now(), { kind: card.type });
       syncMastered(card.word);
+      recordHabit(false, 0);
       saveWords();
+      renderToday();
     }
 
     /** A sentence grade waits until the card is left, so "I used the wrong meaning" can still change it. */
@@ -5064,7 +6619,7 @@
       if (right) {
         card.phase = "done";
         els.drillResult.innerHTML = `<p class="drill-ok">${t("drill.spellRight")}</p>`;
-        els.drillSubmit.textContent = t("drill.next");
+        els.drillSubmit.textContent = t(drill.index >= drill.list.length - 1 ? "drill.finish" : "drill.next");
         els.drillSubmit.focus();
       } else {
         card.phase = "copy";
@@ -5080,12 +6635,37 @@
       return label === "drill.kind_" + kind ? kind : label;
     }
 
+    /** The sentence with `where` (the model's quote of the wrong part) highlighted. */
+    function markQuote(text, where) {
+      const at = where ? text.toLowerCase().indexOf(where.toLowerCase()) : -1;
+      if (at < 0) return escapeHtml(text);
+      return escapeHtml(text.slice(0, at)) + `<mark>${escapeHtml(text.slice(at, at + where.length))}</mark>` + escapeHtml(text.slice(at + where.length));
+    }
+
+    /** Where / why / fix from the model, the fix one tap away. */
+    function aiFeedbackHtml(feedback) {
+      const rows = [];
+      if (feedback.where) rows.push(`<p><b>${t("drill.aiWhere")}</b>${escapeHtml(feedback.where)}</p>`);
+      if (feedback.why) rows.push(`<p><b>${t("drill.aiWhy")}</b>${escapeHtml(feedback.why)}</p>`);
+      if (feedback.fix) rows.push(`<p><b>${t("drill.aiFix")}</b>${escapeHtml(feedback.fix)} <button class="drill-fix" type="button" data-fill="${escapeHtml(feedback.fix)}">${t("drill.aiUse")}</button></p>`);
+      return rows.length ? `<div class="drill-ai">${rows.join("")}</div>` : "";
+    }
+
     function renderSentenceResult(card) {
-      const { result, text } = card;
+      const { result, text, feedback } = card;
       const parts = [];
-      if (result.ok) {
-        parts.push(`<p class="drill-ok">${t("drill.sentenceOk")}</p>`);
-        parts.push(`<p class="drill-muted">${t("drill.checkMeaning", { w: escapeHtml(card.word.en), m: escapeHtml(card.word.zh) })}</p>`);
+      if (feedback && !feedback.ok && (result.ok || result.aiOnly)) {
+        parts.push(`<p class="drill-sentence">${markQuote(text, feedback.where)}</p>`);
+        parts.push(`<p class="drill-bad">${t(result.aiOnly ? "drill.aiWrong" : "drill.aiMeaningBad")}</p>`);
+        parts.push(aiFeedbackHtml(feedback));
+      } else if (result.ok) {
+        parts.push(`<p class="drill-ok">${t(feedback ? "drill.sentenceOk" : "drill.sentenceBasicOk")}</p>`);
+        if (feedback) {
+          parts.push(`<p class="drill-muted">${t("drill.aiMeaningOk")}</p>`);
+          if (feedback.better) parts.push(`<div class="drill-ai"><p><b>${t("drill.aiBetter")}</b>${escapeHtml(feedback.better)}</p></div>`);
+        } else {
+          parts.push(`<p class="drill-muted">${t("drill.checkMeaning", { w: escapeHtml(card.word.en), m: escapeHtml(card.word.zh) })}</p>`);
+        }
       } else {
         // The sentence with the problem spots underlined.
         let html = "", at = 0;
@@ -5106,6 +6686,7 @@
           `<button class="drill-fix" type="button" data-issue="${result.issues.indexOf(issue)}" data-fix="${escapeHtml(sug)}">${escapeHtml(sug)}</button>`).join(" ")}` : ""}<small>${escapeHtml(issue.message)}</small></li>`).join("")}</ul>`);
       }
       if (result.structure.includes("noVerb") && !result.ok) parts.push(`<p class="drill-muted">${t("drill.noVerb")}</p>`);
+      if (!result.ok && !result.aiOnly && feedback && !feedback.ok) parts.push(aiFeedbackHtml(feedback));
       els.drillResult.innerHTML = parts.join("");
     }
 
@@ -5114,32 +6695,61 @@
       const text = els.drillSentence.value.trim();
       if (!text) return;
       els.drillSubmit.disabled = true;
-      els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
-      let mod;
-      try {
-        mod = await loadSentenceModule();
-      } catch (error) {
-        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
-        els.drillSubmit.disabled = false;
-        return;
+      // English: the on-device checker decides grammar. Other languages: the API model checks everything.
+      const english = targetIsEnglish();
+      let result = null;
+      if (english) {
+        els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
+        let mod;
+        try {
+          mod = await loadSentenceModule();
+        } catch (error) {
+          els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+          els.drillSubmit.disabled = false;
+          return;
+        }
+        result = await mod.checkSentence(card.word.en, text);
+        if (drill.list[drill.index] !== card) return; // moved on while checking
       }
-      const result = await mod.checkSentence(card.word.en, text);
-      if (drill.list[drill.index] !== card) return; // moved on while checking
+      // A strong model (API key) also checks the meaning and explains mistakes.
+      // Grammar stays the checker's call; the model adds where / why / fix.
+      let feedback = null;
+      const ai = !english || (result.target.found && !result.structure.includes("onlyWord")) ? await aiReady() : null;
+      if (ai && ai.strong) {
+        els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.aiChecking")}</p>`;
+        const note = english ? result.issues.filter(issue => !issue.minor)
+          .map(issue => `${text.slice(issue.start, issue.end)}: ${issue.message}${issue.suggestions.length ? ` → ${issue.suggestions.join(" / ")}` : ""}`)
+          .join("; ") : "";
+        feedback = await ai.feedback(card.word.en, card.word.zh, text, note, aiLang());
+        if (drill.list[drill.index] !== card) return;
+      }
       els.drillSubmit.disabled = false;
+      if (!english) {
+        if (!feedback) {
+          // No grade without a check; the card can be skipped.
+          els.drillResult.innerHTML = `<p class="drill-bad">${t(strongAiOn() ? "drill.aiUnavailable" : "drill.aiOff")}</p>`;
+          return;
+        }
+        result = { ok: feedback.ok, aiOnly: true, issues: [], structure: [], target: { found: true } };
+      }
       card.attempts += 1;
       card.result = result;
       card.text = text;
+      card.feedback = feedback;
+      const meaningBad = Boolean(result.ok && feedback && !feedback.ok);
+      const passed = result.ok && !meaningBad;
       if (card.attempts === 1) {
         const { AGAIN, HARD, EASY } = WordSnapEngine.GRADES;
-        card.pending = result.ok ? EASY : !result.target.found ? AGAIN : HARD;
+        card.pending = passed ? EASY : !result.target.found || meaningBad ? AGAIN : HARD;
       }
       renderSentenceResult(card);
-      if (result.ok) {
+      if (passed) {
         card.phase = "done";
         card.word.sentences = [...(card.word.sentences || []), { text, at: Date.now(), ok: true }].slice(-10);
         saveWords();
-        els.drillSubmit.textContent = t("drill.next");
-        els.drillWrongMeaning.hidden = false;
+        els.drillSubmit.textContent = t(drill.index >= drill.list.length - 1 ? "drill.finish" : "drill.next");
+        // Once a model has checked the meaning, the self-report button is not needed.
+        els.drillWrongMeaning.hidden = Boolean(feedback && feedback.ok);
         els.drillHint.hidden = true;
       }
     }
@@ -5162,28 +6772,46 @@
     els.drillHint.addEventListener("click", async () => {
       const card = drill.list[drill.index];
       if (!card || card.type !== "sentence") return;
+      // The hint goes above whatever is shown (an AI correction must not disappear).
+      const showHint = html => {
+        els.drillResult.querySelectorAll(".drill-hint-text").forEach(el => el.remove());
+        els.drillResult.insertAdjacentHTML("afterbegin", `<div class="drill-hint-text">${html}</div>`);
+      };
       try {
-        if (!card.word.exZh && state.settings.ai.on) {
-          els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.thinking")}</p>`;
+        if (!card.word.exZh && aiWanted()) {
+          showHint(`<p class="drill-muted">${t("drill.thinking")}</p>`);
           // The idea is the translation of a model-written example that passed the grammar
           // check (the model's free-form ideas were too thin); the example is kept for later cards.
           const idea = await aiExampleFor(card.word);
           if (drill.list[drill.index] !== card) return;
           if (idea) {
-            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.zh), w: escapeHtml(card.word.en) })}</p>`;
+            showHint(`<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.tr), w: escapeHtml(card.word.en) })}</p>`);
             return;
           }
         }
+        if (!targetIsEnglish()) {
+          // Sentence frames exist for English only.
+          showHint(`<p class="drill-muted">${card.word.exZh
+            ? t("drill.idea", { text: escapeHtml(card.word.exZh), w: escapeHtml(card.word.en) })
+            : t("drill.noIdea")}</p>`);
+          return;
+        }
         const mod = await loadSentenceModule();
         const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
-        els.drillResult.innerHTML = `<p class="drill-muted">${hint.kind === "idea"
+        showHint(`<p class="drill-muted">${hint.kind === "idea"
           ? t("drill.idea", { text: escapeHtml(hint.text), w: escapeHtml(card.word.en) })
-          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`;
+          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`);
       } catch (error) {
-        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+        showHint(`<p class="drill-bad">${t("drill.engineFailed")}</p>`);
       }
     });
     els.drillResult.addEventListener("click", event => {
+      const fill = event.target.closest("[data-fill]");
+      if (fill) {
+        els.drillSentence.value = fill.dataset.fill;
+        els.drillSentence.focus();
+        return;
+      }
       const button = event.target.closest("[data-fix]");
       const card = drill.list[drill.index];
       if (!button || !card || !card.result) return;
@@ -5194,6 +6822,33 @@
     });
     if (els.aiToggleBtn) els.aiToggleBtn.addEventListener("click", aiToggle);
     if (els.aiDeleteBtn) els.aiDeleteBtn.addEventListener("click", aiDelete);
+    if (els.aiEnabled) {
+      els.aiEnabled.addEventListener("change", async () => {
+        state.settings.ai = { ...state.settings.ai, enabled: els.aiEnabled.checked };
+        saveWords();
+        // Off frees the on-device model's memory right away.
+        if (!els.aiEnabled.checked && aiState.ai) await aiState.ai.unload();
+        syncAiUI();
+        renderReviewList();
+      });
+    }
+    if (els.aiWordListBtn) {
+      els.aiWordListBtn.addEventListener("click", aiMakeWordList);
+      els.aiWordListInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); aiMakeWordList(); }
+      });
+    }
+    if (els.aiApiBlock) {
+      els.aiApiSaveBtn.addEventListener("click", aiApiSave);
+      els.aiApiToggleBtn.addEventListener("click", aiApiToggle);
+      els.aiApiClearBtn.addEventListener("click", aiApiClear);
+      els.aiApiProvider.addEventListener("change", async () => {
+        // A new provider starts from its own defaults.
+        els.aiApiModel.value = "";
+        els.aiApiBase.value = "";
+        syncAiApiProviderHints(await loadAiApiModule());
+      });
+    }
     els.drillSpell.addEventListener("keydown", event => {
       if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
     });
@@ -5214,9 +6869,10 @@
       state.levelMisses = new Map();
       state.lastCompletion = null;
       renderReviewList();
+      exitFocus({ instant: true });
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
-      els.completionBadge.textContent = "+";
+      setResultWord("start");
       els.completionTitle.textContent = t("lesson.emptyTitle");
       els.completionText.textContent = t("lesson.emptyText");
       els.continueBtn.textContent = t("lesson.emptyAddBtn");
@@ -5230,8 +6886,9 @@
     /** Countdown only — runs every timer tick, so it must stay cheap. */
     function renderTimer() {
       // Endless: no clock, show progress through the current set instead.
-      if (isEndless()) {
-        els.topCount.textContent = `${Math.min(state.completedThisRun || 0, BLOCK_SIZE)}/${BLOCK_SIZE}`;
+      if (isEndless() || isTrial() || (state.lastCompletion && state.lastCompletion.trial)) {
+        const total = state.sessionTotal || BLOCK_SIZE;
+        WordSnapFx.roll(els.topCount, `${Math.min(state.completedThisRun || 0, total)}/${total}`);
         els.topCount.classList.remove("time-low");
         return;
       }
@@ -5259,12 +6916,14 @@
           ? Math.min(100, Math.round((state.completedThisRun || 0) / targetTotal * 100))
           : 0;
       els.progressFill.style.width = `${pct}%`;
+      els.progressFill.style.backgroundImage = laneGradient();
       renderTimer();
       els.roundLabel.textContent = levelLabel(state.completedThisRun || 0, targetTotal);
       els.score.textContent = state.score;
       els.mistakes.textContent = state.mistakes;
       els.streak.textContent = state.streak;
       els.remaining.textContent = remaining;
+      renderToday();
 
       const weak = state.words
         .filter(word => !isNewWord(word) && !isMastered(word))
@@ -5307,7 +6966,8 @@
       if (!pair) return null;
       ex = ex.trim();
       exZh = exZh.trim();
-      return ex ? [...pair, ex, exZh] : pair;
+      const [word, reading] = splitReading(pair[0]);
+      return [word, pair[1], ex, ex ? exZh : "", reading];
     }
 
     function splitWordMeaning(trimmed) {
@@ -5505,9 +7165,10 @@
         if (known) {
           // Re-importing a word with an example sentence adds the sentence (progress is kept).
           if (pair[2] && !known.ex) { setExample(known, pair[2], pair[3]); withExample += 1; }
+          if (pair[4] && !known.reading) setReading(known, pair[4]);
           return;
         }
-        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3] });
+        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3], reading: pair[4] });
         existing.set(key, word);
         state.words.push(word);
         added += 1;
@@ -5576,7 +7237,7 @@
       els.libraryModal.querySelector(".modal-card").scrollTop = 0;
       if (libraryTab === "list") renderCustomList();
       if (libraryTab === "print") { setPrintStatus(""); renderPrintPanel(); }
-      if (libraryTab === "add") syncDropSamplesRow();
+      if (libraryTab === "add") { syncDropSamplesRow(); syncAiWordListUI(); syncWordbookUI(); }
       // Don't pop the on-screen keyboard over the library on phones.
       if (libraryTab === "add" && (!window.matchMedia || !matchMedia("(pointer: coarse)").matches)) els.newEnglish.focus();
     }
@@ -5602,6 +7263,7 @@
       pauseLevel();
       if (els.optionsStatus) els.optionsStatus.textContent = "";
       syncOptionsUI();
+      aiApiUI.message = "";
       aiInit().then(syncAiUI);
     }
 
@@ -5692,6 +7354,22 @@
         els.drillsSelect.innerHTML = [0, 1, 2, 3].map(n => `<option value="${n}">${t("settings.drills_" + n)}</option>`).join("");
         els.drillsSelect.value = String(state.settings.drills);
       }
+      if (els.reminderSelect) {
+        const native = isNativeApp();
+        els.reminderRow.hidden = !native;
+        els.reminderNote.hidden = native;
+        const times = ["", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+        if (state.settings.reminder && !times.includes(state.settings.reminder)) times.push(state.settings.reminder);
+        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
+        els.reminderSelect.value = state.settings.reminder;
+      }
+      if (els.dailyNewSelect) {
+        els.dailyNewSelect.innerHTML = [0, 5, 10, 15, 20, 30].map(n => `<option value="${n}">${t("settings.dailyNew", { n })}</option>`).join("");
+        if (![0, 5, 10, 15, 20, 30].includes(state.settings.dailyNew)) {
+          els.dailyNewSelect.insertAdjacentHTML("beforeend", `<option value="${state.settings.dailyNew}">${t("settings.dailyNew", { n: state.settings.dailyNew })}</option>`);
+        }
+        els.dailyNewSelect.value = String(state.settings.dailyNew);
+      }
       // Level length and timer only matter for timed levels.
       els.settingsModal.querySelectorAll("[data-levels-only]").forEach(el => { el.hidden = state.settings.flow !== "levels"; });
       els.levelSeconds.value = Math.round(state.settings.levelDurationMs / 1000);
@@ -5713,6 +7391,9 @@
       els.pauseRefillWhileSelected.checked = state.settings.pauseRefillWhileSelected;
       els.recycleMastered.checked = state.settings.recycleMastered;
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
+      if (els.focusMode) els.focusMode.checked = state.settings.focus !== false;
+      if (els.effectsOn) els.effectsOn.checked = state.settings.effects !== false;
+      WordSnapFx.setEnabled(state.settings.effects !== false);
       syncLangPairUI();
       syncAiUI();
     }
@@ -5728,9 +7409,12 @@
         const idx = Number(select.value);
         if (LANG_PAIR_PRESETS[idx]) langPair = { ...LANG_PAIR_PRESETS[idx] };
       }
+      const previousReminder = state.settings.reminder;
+      const previousPair = state.settings.langPair;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
+        dailyNew: els.dailyNewSelect ? Number(els.dailyNewSelect.value) : state.settings.dailyNew,
         levelDurationMs: Number(els.levelSeconds.value) * 1000,
         roundSize: Number(els.roundSize.value),
         adaptiveLevelTime: els.adaptiveLevelTime ? els.adaptiveLevelTime.checked : true,
@@ -5746,6 +7430,9 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
+        focus: els.focusMode ? els.focusMode.checked : true,
+        effects: els.effectsOn ? els.effectsOn.checked : true,
+        reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
         ai: state.settings.ai
       });
@@ -5754,11 +7441,27 @@
         state.mode = els.modeSelect.value;
         els.modeBtn.textContent = t("stats.modeBtn", { label: modeLabel(state.mode) });
       }
+      const reminderChanged = nextSettings.reminder !== previousReminder;
       syncOptionsUI();
       saveWords();
       if (els.optionsStatus) {
         els.optionsStatus.textContent = t("feedback.optionsSaved");
         els.optionsStatus.className = "import-status good";
+      }
+      if (previousPair.a !== nextSettings.langPair.a || previousPair.b !== nextSettings.langPair.b) {
+        // Words stay in the library when the pair changes; say so if some do not fit the new side A.
+        const foreign = state.words.filter(word => word.custom && !fitsLanguage(word.en, nextSettings.langPair.a)).length;
+        if (foreign && els.optionsStatus) {
+          els.optionsStatus.textContent = t("feedback.pairMismatch", { n: foreign, a: nextSettings.langPair.a });
+          els.optionsStatus.className = "import-status bad";
+        }
+      }
+      if (reminderChanged) {
+        syncReminders({ ask: Boolean(nextSettings.reminder) }).then(ok => {
+          if (ok || !els.optionsStatus) return;
+          els.optionsStatus.textContent = t("reminder.denied");
+          els.optionsStatus.className = "import-status bad";
+        });
       }
       renderStats();
     }
@@ -5773,8 +7476,13 @@
       return /safari/.test(ua) && !/chrome|crios|fxios|edgios|android/.test(ua);
     }
 
+    /** Running inside the Capacitor app shell (Android/iOS), not a browser. */
+    function isNativeApp() {
+      return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+    }
+
     function isStandaloneApp() {
-      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      return isNativeApp() || window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     }
 
     function hasHiddenInstallNudge() {
@@ -5813,17 +7521,27 @@
       els.installAction.textContent = t("install.actionGotIt");
     }
 
+    let installNudgeWaiting = false;
+
     function showInstallNudge() {
       if (!els.installNudge || isStandaloneApp() || hasHiddenInstallNudge()) return;
+      // Never over a board in play: wait for the end of the set.
+      if (!els.completionView.classList.contains("show") && !els.practiceView.classList.contains("hidden")) {
+        installNudgeWaiting = true;
+        return;
+      }
+      installNudgeWaiting = false;
       // One overlay at a time: the intro re-offers this when it closes.
       if (document.querySelector(".modal.open")) return;
       setInstallNudgeCopy();
+      els.installNudge.inert = false;
       els.installNudge.classList.add("show");
     }
 
     function closeInstallNudge(remember = false) {
       if (!els.installNudge) return;
       els.installNudge.classList.remove("show");
+      els.installNudge.inert = true;
       if (remember) rememberInstallNudgeHidden();
     }
 
@@ -5842,7 +7560,7 @@
       els.hideInstallNudge.addEventListener("click", () => closeInstallNudge(true));
       els.installAction.addEventListener("click", async () => {
         if (!deferredInstallPrompt) {
-          closeInstallNudge(false);
+          closeInstallNudge(true); // "Got it": instructions read, do not show them again
           return;
         }
 
@@ -5858,7 +7576,8 @@
     }
 
     function registerServiceWorker() {
-      if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
+      // The app shell already ships every file offline; a service worker there only adds stale caches.
+      if (!("serviceWorker" in navigator) || location.protocol === "file:" || isNativeApp()) return;
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("./service-worker.js").catch(() => {});
       });
@@ -5956,7 +7675,8 @@
         (en ? els.newChinese : els.newEnglish).focus();
         return;
       }
-      if (!addWords([[en, zh]])) {
+      const [word, reading] = splitReading(en);
+      if (!addWords([[word, zh, "", "", reading]])) {
         setAddOneStatus(t("feedback.alreadyInLibrary"), "bad");
         return;
       }
@@ -6002,6 +7722,111 @@
       setImportStatus(messages.join(" "), added || configParts.length || lastExamplesAdded ? "good" : "");
     });
 
+    // ---- Built-in word books (wordbooks/*.json from ECDICT, loaded on demand) ----
+    const BOOK_KEY = "word-snap-book"; // the last book picked, preselected next time
+    let wordbookIndex = null;
+    const wordbookCache = new Map();
+    let wordbookModule = null;
+
+    function loadWordbookModule() {
+      if (!wordbookModule) wordbookModule = import("./js/wordbooks.js").catch(error => { wordbookModule = null; throw error; });
+      return wordbookModule;
+    }
+
+    async function loadWordbookIndex() {
+      if (!wordbookIndex) {
+        const response = await fetch("./wordbooks/index.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        wordbookIndex = (await response.json()).books;
+      }
+      return wordbookIndex;
+    }
+
+    async function loadBook(id) {
+      if (!wordbookCache.has(id)) {
+        const response = await fetch(`./wordbooks/${encodeURIComponent(id)}.json`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        wordbookCache.set(id, (await response.json()).words);
+      }
+      return wordbookCache.get(id);
+    }
+
+    /** Lower-cased words that will still be in the library after this import (samples may be dropped). */
+    function libraryWordSet() {
+      const dropping = els.dropSamples.checked && !els.dropSamplesRow.hidden && sampleWords().length > 0;
+      return new Set(state.words.filter(word => !dropping || word.custom).map(word => word.en.toLowerCase()));
+    }
+
+    function bookPairOk() {
+      const { a, b } = state.settings.langPair;
+      return /^english$/i.test(a) && b === "中文";
+    }
+
+    async function syncWordbookUI() {
+      if (!els.bookSelect) return;
+      try {
+        const books = await loadWordbookIndex();
+        if (!els.bookSelect.options.length) {
+          els.bookSelect.innerHTML = books.map(book =>
+            `<option value="${escapeHtml(book.id)}">${escapeHtml(currentLang === "zh" ? book.zh : book.en)} · ${book.count}</option>`).join("");
+          els.bookCount.innerHTML = [20, 50, 100, 200, 500].map(n => `<option value="${n}">${t("wordbook.count", { n })}</option>`).join("")
+            + `<option value="0">${t("wordbook.all")}</option>`;
+          els.bookCount.value = "50";
+          try {
+            const last = localStorage.getItem(BOOK_KEY);
+            if (last && books.some(b => b.id === last)) els.bookSelect.value = last;
+          } catch (error) { /* private mode */ }
+        }
+        const book = books.find(b => b.id === els.bookSelect.value) || books[0];
+        const words = await loadBook(book.id);
+        const mod = await loadWordbookModule();
+        const have = mod.bookProgress(words, libraryWordSet());
+        els.bookInfo.textContent = t("wordbook.info", { n: book.count, have });
+      } catch (error) {
+        els.bookInfo.textContent = t("wordbook.failed");
+      }
+    }
+
+    async function importFromBook() {
+      const id = els.bookSelect.value;
+      if (!id) return;
+      if (!bookPairOk() && state.words.some(word => word.custom)) {
+        setImportStatus(t("wordbook.wrongPair"), "bad");
+        return;
+      }
+      els.bookImportBtn.disabled = true;
+      try {
+        const [words, mod] = await Promise.all([loadBook(id), loadWordbookModule()]);
+        const count = Number(els.bookCount.value) || words.length;
+        const pairs = mod.nextFromBook(words, libraryWordSet(), count);
+        if (!pairs.length) {
+          setImportStatus(t("wordbook.allIn"), "good");
+          return;
+        }
+        // The books are English → Chinese; a library of samples only can switch over.
+        const configParts = bookPairOk() ? [] : applyImportConfig({ lang: { a: "English", b: "中文" } });
+        const added = addWords(pairs);
+        const messages = [t("ai.imported", { n: added })];
+        if (lastRemovedSamples) messages.push(t("ai.samplesRemoved", { n: lastRemovedSamples }));
+        if (configParts.length) messages.push(t("ai.config", { list: configParts.join(currentLang === "zh" ? "、" : ", ") }));
+        setImportStatus(messages.join(" "), "good");
+        syncDropSamplesRow();
+        syncWordbookUI();
+      } catch (error) {
+        setImportStatus(t("wordbook.failed"), "bad");
+      } finally {
+        els.bookImportBtn.disabled = false;
+      }
+    }
+
+    if (els.bookSelect) {
+      els.bookSelect.addEventListener("change", () => {
+        try { localStorage.setItem(BOOK_KEY, els.bookSelect.value); } catch (error) { /* private mode */ }
+        syncWordbookUI();
+      });
+      els.bookImportBtn.addEventListener("click", importFromBook);
+    }
+
     document.getElementById("copyAiPromptBtn").addEventListener("click", async () => {
       const prompt = buildAiPrompt();
       if (await copyText(prompt)) {
@@ -6033,6 +7858,10 @@
     }
 
     els.reviewList.addEventListener("click", onSpeakClick);
+    els.reviewList.addEventListener("click", event => {
+      const button = event.target.closest("[data-contrast]");
+      if (button) explainContrast(button.dataset.contrast);
+    });
 
     (function wirePrintPanel() {
       const section = document.getElementById("printSection");
@@ -6066,10 +7895,36 @@
       if (onSpeakClick(event)) return;
       const button = event.target.closest("[data-delete]");
       if (!button) return;
-      state.words = state.words.filter(word => word.id !== button.dataset.delete);
+      const index = state.words.findIndex(word => word.id === button.dataset.delete);
+      if (index < 0) return;
+      const [removed] = state.words.splice(index, 1);
       saveWords();
       renderRound();
+      showUndo(t("library.deleted", { w: removed.en }), () => {
+        state.words.splice(Math.min(index, state.words.length), 0, removed);
+        saveWords();
+        renderRound();
+      });
     });
+
+    // One undo at a time: "Deleted apple · Undo" for a few seconds.
+    let undoToast = null;
+    function showUndo(text, undo) {
+      if (undoToast) undoToast.remove();
+      const toast = document.createElement("div");
+      toast.className = "undo-toast";
+      toast.setAttribute("role", "status");
+      const label = document.createElement("span");
+      label.textContent = text;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = t("library.undo");
+      button.addEventListener("click", () => { undo(); toast.remove(); undoToast = null; });
+      toast.append(label, button);
+      document.body.appendChild(toast);
+      undoToast = toast;
+      setTimeout(() => { if (undoToast === toast) { toast.remove(); undoToast = null; } }, 7000);
+    }
 
     function setDangerStatus(text, kind = "") {
       const el = document.getElementById("dangerStatus");
@@ -6081,7 +7936,7 @@
     function buildBackupText() {
       const { a, b } = state.settings.langPair;
       return [`@lang: ${a} | ${b}`, ...state.words.map(word =>
-        [word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
+        [word.reading ? `${word.en}（${word.reading}）` : word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
     }
 
     document.getElementById("copyBackupBtn").addEventListener("click", async () => {
@@ -6138,9 +7993,62 @@
       renderRound();
     });
 
+    els.focusExitBtn.addEventListener("click", () => exitFocus());
+    // Pointing at the navigation (top or left edge) brings it back; mouse only, not touch.
+    document.addEventListener("pointermove", event => {
+      if (focusOn() && event.pointerType === "mouse" && (event.clientX < 110 || event.clientY < 60)) exitFocus();
+    });
+
+    // ---- Dialog focus: move in, keep the page behind inert, return on close ----
+    const dialogReturnFocus = new Map();
+    function syncDialogs() {
+      const open = [els.introModal, els.settingsModal, els.libraryModal].filter(m => m && m.classList.contains("open"));
+      const app = document.querySelector(".app");
+      if (app) app.inert = open.length > 0;
+      for (const modal of [els.introModal, els.settingsModal, els.libraryModal]) {
+        if (!modal) continue;
+        const isOpen = modal.classList.contains("open");
+        if (isOpen && !dialogReturnFocus.has(modal)) {
+          dialogReturnFocus.set(modal, document.activeElement);
+          // Move focus in unless the dialog already placed it (the intro focuses its main button).
+          // After the open transition has made the dialog visible (hidden elements cannot take focus).
+          setTimeout(() => {
+            if (!modal.classList.contains("open") || modal.contains(document.activeElement)) return;
+            const target = ["[autofocus]", ".modal-top .icon-button", "button, [href], input, select, textarea"]
+              .map(selector => modal.querySelector(selector)).find(Boolean);
+            if (target) target.focus({ preventScroll: true });
+          }, 80);
+        } else if (!isOpen && dialogReturnFocus.has(modal)) {
+          const back = dialogReturnFocus.get(modal);
+          dialogReturnFocus.delete(modal);
+          if (!open.length && back && back.isConnected && typeof back.focus === "function") back.focus({ preventScroll: true });
+        }
+      }
+    }
+    const dialogObserver = new MutationObserver(syncDialogs);
+    [els.introModal, els.settingsModal, els.libraryModal].forEach(modal => {
+      if (modal) dialogObserver.observe(modal, { attributes: true, attributeFilter: ["class"] });
+    });
+
+    // Cards report their selected state to screen readers.
+    const pressedObserver = new MutationObserver(records => {
+      for (const record of records) {
+        const card = record.target;
+        if (card.classList && card.classList.contains("match-card")) {
+          card.setAttribute("aria-pressed", String(card.classList.contains("selected")));
+        }
+      }
+    });
+    pressedObserver.observe(els.matchGrid, { attributes: true, attributeFilter: ["class"], subtree: true });
+
     document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && focusOn()) {
+        exitFocus();
+        return;
+      }
       if (els.introModal.classList.contains("open")) {
-        if (event.key === "Escape" || event.key === "Enter") {
+        // Enter belongs to the focused button; only Esc closes from anywhere.
+        if (event.key === "Escape") {
           event.preventDefault();
           closeIntro();
         }
@@ -6156,7 +8064,9 @@
       }
       if (event.target && event.target.closest && event.target.closest("#drill")) return;
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
-        if (event.target !== els.continueBtn) {
+        // A shortcut for "Continue" only when no other control has focus.
+        const onControl = event.target && event.target.closest && event.target.closest("button, a, input, select, textarea, summary");
+        if (!onControl) {
           event.preventDefault();
           els.continueBtn.click();
         }
@@ -6204,6 +8114,7 @@
     const savedState = readSavedState();
     state.settings = normalizeSettings(loadSettings(savedState));
     engine = WordSnapEngine.create(savedState && savedState.engine, { blockSize: BLOCK_SIZE });
+    habit = WordSnapHabit.normalize(savedState && savedState.habit);
     state.words = loadWords(savedState);
     state.words.forEach(syncMastered);
     state.drawHistory = Array.isArray(savedState && savedState.drawHistory) ? savedState.drawHistory : [];
@@ -6240,6 +8151,8 @@
     applyTheme(themeIdx);
     updateColorModeUI();
     syncOptionsUI();
+    syncReminders(); // the app: reschedule the week's reminders on every start
+    if (isNativeApp() && state.settings.ai.on) aiInit(); // so the 4B model's features show without opening Settings
     renderRound();
     if (!hasSeenIntro() && !savedState) openIntro();
   </script>

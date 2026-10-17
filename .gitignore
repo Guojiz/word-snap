@@ -1,0 +1,23 @@
+node_modules/
+www/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor-cordova-android-plugins/
+android/app/.cxx/
+*.apk
+.DS_Store
+dist/
+.impeccable/live/
+.impeccable/config.local.json
+# impeccable working files: the direction contract and sketches must not be served by Pages (.nojekyll)
+.impeccable/surfaces/
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/review/
+.impeccable/build/
