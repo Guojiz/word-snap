@@ -2,13 +2,16 @@
   "name": "word-snap",
   "version": "1.0.0",
   "private": true,
-  "description": "Word Snap — vocabulary matching with a personal review engine. Web app plus an Android (Capacitor) build.",
+  "description": "Word Snap \u2014 vocabulary matching with a personal review engine. Web app plus an Android (Capacitor) build.",
   "license": "MIT",
   "scripts": {
     "test": "node --test tests/*.test.*",
+    "check": "node tools/check-page.mjs",
     "build:www": "node tools/build-www.mjs",
+    "build:site": "node tools/build-www.mjs --site",
     "cap:sync": "npm run build:www && npx cap sync android",
-    "apk:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug"
+    "apk:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug",
+    "apk:release": "npm run cap:sync && cd android && ./gradlew assembleRelease"
   },
   "devDependencies": {
     "@capacitor/android": "^8.0.0",

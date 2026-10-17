@@ -1,0 +1,25 @@
+# Tests and page checks on every pull request and on main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: npm test
+      - name: Page checks (scripts parse, precache files exist, markup, i18n keys)
+        run: npm run check
+      - name: Site build
+        run: npm run build:site

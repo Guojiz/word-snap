@@ -7,8 +7,9 @@ android {
         applicationId "io.github.guojiz.wordsnap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // CI sets these (apk.yml: run number and tag); local builds stay 1 / "1.0-dev".
+        versionCode((System.getenv("WORD_SNAP_VERSION_CODE") ?: "1").toInteger())
+        versionName(System.getenv("WORD_SNAP_VERSION_NAME") ?: "1.0-dev")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The on-device model (MNN prebuilt libraries) is arm64 only, like every recent phone.
         ndk {
@@ -32,8 +33,21 @@ android {
             version = "3.22.1"
         }
     }
+    // Release signing comes from the environment only (CI secrets); the key never enters the repo.
+    signingConfigs {
+        release {
+            def keystore = System.getenv("ANDROID_KEYSTORE_FILE")
+            if (keystore) {
+                storeFile file(keystore)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
+            if (System.getenv("ANDROID_KEYSTORE_FILE")) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
