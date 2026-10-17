@@ -1548,6 +1548,23 @@
       text-transform: none;
     }
 
+    .custom-row .cr-ex {
+      grid-column: 2 / -1;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .custom-row .cr-ex small {
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .custom-row .cr-own {
+      color: var(--green);
+    }
+
     .custom-row .stage-tag {
       color: var(--muted);
       font-size: 14px;
@@ -1585,6 +1602,221 @@
 
     .lang-pair-custom {
       grid-column: 1 / -1;
+    }
+
+    .ai-section progress {
+      width: 100%;
+      height: 10px;
+      accent-color: var(--green);
+    }
+
+    .ai-tag {
+      margin-left: 4px;
+      padding: 0 5px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--dim);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .forecast {
+      margin-bottom: 14px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 14px 8px;
+    }
+
+    .forecast-title {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .forecast-bars {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+      align-items: end;
+    }
+
+    .forecast-day {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .forecast-n {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .forecast-bar {
+      width: 100%;
+      max-width: 28px;
+      border-radius: 6px 6px 2px 2px;
+      background: var(--blue);
+    }
+
+    .forecast-label {
+      max-width: 100%;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .drill {
+      margin: 0 0 22px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--panel-soft);
+      text-align: left;
+    }
+
+    .drill-kicker {
+      margin: 0 0 6px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .drill-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-title b {
+      color: var(--green);
+    }
+
+    .drill-prompt {
+      margin: 0 0 12px;
+      font-size: 17px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-prompt small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .drill textarea {
+      min-height: 84px;
+    }
+
+    .drill-result {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .drill-result p {
+      margin: 8px 0 0;
+    }
+
+    .drill-ok {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .drill-bad {
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .drill-muted {
+      color: var(--muted);
+    }
+
+    .drill-sentence {
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: var(--bg);
+      overflow-wrap: anywhere;
+    }
+
+    .drill-sentence mark {
+      color: var(--red);
+      background: transparent;
+      text-decoration: underline wavy var(--red);
+      text-underline-offset: 3px;
+    }
+
+    .drill-issues {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .drill-issues li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .drill-issues li.minor {
+      color: var(--muted);
+    }
+
+    .drill-issues small {
+      flex-basis: 100%;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .drill-fix {
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 10px;
+      color: var(--blue);
+      background: var(--panel);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+    }
+
+    .drill-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-top: 14px;
+    }
+
+    .drill-actions .duo-button {
+      min-width: 120px;
+      height: 46px;
+    }
+
+    .drill-actions .link-button {
+      color: var(--blue);
+    }
+
+    .drill-actions #drillSkip {
+      margin-left: auto;
+      color: var(--muted);
+    }
+
+    .review-list li.confusion-note {
+      display: block;
+      border-style: dashed;
+      color: var(--muted);
+      font-size: 15px;
     }
   </style>
 </head>
@@ -1626,10 +1858,25 @@
           <div class="completion-badge">✓</div>
           <h2 id="completionTitle" data-en="Round complete" data-zh="这一轮结束">这一轮结束</h2>
           <p id="completionText" data-en="Next round prioritizes words you don't know well." data-zh="下一轮会优先出现你不熟的词。">下一轮会优先出现你不熟的词。</p>
+          <section class="drill" id="drill" hidden aria-live="polite">
+            <p class="drill-kicker" id="drillKicker"></p>
+            <h3 class="drill-title" id="drillTitle"></h3>
+            <p class="drill-prompt" id="drillPrompt"></p>
+            <input id="drillSpell" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" hidden />
+            <textarea id="drillSentence" rows="3" autocomplete="off" spellcheck="false" hidden></textarea>
+            <div class="drill-result" id="drillResult"></div>
+            <div class="drill-actions">
+              <button class="duo-button" type="button" id="drillSubmit"></button>
+              <button class="link-button" type="button" id="drillHint" data-en="I have no idea" data-zh="我没有思路">我没有思路</button>
+              <button class="link-button" type="button" id="drillWrongMeaning" hidden data-en="I used the wrong meaning" data-zh="我用错了意思">我用错了意思</button>
+              <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
+            </div>
+          </section>
           <p class="review-heading" id="reviewHeading"></p>
           <ul class="review-list" id="reviewList"></ul>
           <div class="completion-actions">
             <button class="duo-button" type="button" id="continueBtn" data-en="Continue" data-zh="继续">继续</button>
+            <button class="duo-button secondary" type="button" id="focusPairsBtn" hidden data-en="Practice the mixed-up pairs" data-zh="专项练混淆过的词">专项练混淆过的词</button>
             <button class="link-button trial-keep" type="button" id="trialKeepBtn" hidden data-en="Keep practicing with the sample words for now" data-zh="先用示例词继续练">先用示例词继续练</button>
           </div>
         </div>
@@ -1639,7 +1886,7 @@
       <aside class="panel" aria-label="练习状态" data-en-aria="Practice status" data-zh-aria="练习状态">
         <div class="panel-head">
           <h2 data-en="Word training" data-zh="单词训练">单词训练</h2>
-          <p data-en="Missed words come back next round; correct ones come back after longer and longer gaps." data-zh="答错的词下一轮再来，答对的词隔得越来越久再来。">答错的词下一轮再来，答对的词隔得越来越久再来。</p>
+          <p data-en="Missed words come back a few cards later; known words come back just before you'd forget them." data-zh="答错的词几张卡后就会再来；记住的词会在你快忘的时候再来。">答错的词几张卡后就会再来；记住的词会在你快忘的时候再来。</p>
         </div>
         <div class="stats">
           <div class="stat"><strong id="score">0</strong><span data-en="Correct" data-zh="正确配对">正确配对</span></div>
@@ -1683,8 +1930,8 @@
       <div class="intro-demo" aria-hidden="true"><span>文学</span><b>↔</b><span>literature</span></div>
       <ol class="intro-steps">
         <li data-en="Left: meanings. Right: words. Tap one card, then its match on the other side. On a keyboard, use 1–0." data-zh="左边是释义，右边是单词。先点一张，再点另一侧对应的那张。电脑上也可以按数字键 1–0。">左边是释义，右边是单词。先点一张，再点另一侧对应的那张。电脑上也可以按数字键 1–0。</li>
-        <li data-en="Each level is timed. Matched pairs disappear and new words slide in." data-zh="每关有时间限制。配对成功的卡片会消失，新词随即补上。">每关有时间限制。配对成功的卡片会消失，新词随即补上。</li>
-        <li data-en="Words you miss come back next round; words you get right come back after longer and longer gaps. New words arrive in small batches." data-zh="答错的词下一轮再来，答对的词隔得越来越久再来；新词每轮放一小批。每关结束还会列出你混淆的词。">答错的词下一轮再来，答对的词隔得越来越久再来；新词每轮放一小批。每关结束还会列出你混淆的词。</li>
+        <li data-en="Matched pairs disappear and new words slide in — endlessly, no timer. Every 25 pairs you get a short summary. (Prefer timed levels? Switch in Settings.)" data-zh="配对成功的卡片会消失，新词随即补上，一直练下去，不计时。每 25 组给一次小结。（喜欢限时关卡？可以在设置里切换。）">配对成功的卡片会消失，新词随即补上，一直练下去，不计时。每 25 组给一次小结。（喜欢限时关卡？可以在设置里切换。）</li>
+        <li data-en="Every word you pick is picked for you: a missed word comes back a few cards later, a known word right before you'd forget it, and words you mix up show up side by side. It learns how fast you remember — no buttons to rate yourself." data-zh="每个出现的词都是为你挑的：答错的词几张卡后再来，记住的词在你快忘时再来，混淆过的词会同时出现。它会学习你自己的记忆速度，不需要你给自己打分。">每个出现的词都是为你挑的：答错的词几张卡后再来，记住的词在你快忘时再来，混淆过的词会同时出现。它会学习你自己的记忆速度，不需要你给自己打分。</li>
         <li data-en="Start with a short trial level of sample words, then import the words you actually need (or let any AI make the list for you). Everything stays in this browser." data-zh="先用示例词玩一关体验，再导入你自己要背的词（也可以让 AI 帮你生成词表）。数据只保存在这个浏览器里。">先用示例词玩一关体验，再导入你自己要背的词（也可以让 AI 帮你生成词表）。数据只保存在这个浏览器里。</li>
       </ol>
       <div class="intro-actions">
@@ -1700,7 +1947,7 @@
       <div class="modal-top">
         <div>
           <h2 id="settingsTitle" data-en="Settings" data-zh="设置">设置</h2>
-          <p data-en="Changes save automatically and apply from the next level." data-zh="修改会自动保存，下一关生效。">修改会自动保存，下一关生效。</p>
+          <p data-en="Changes save automatically and apply from the next set." data-zh="修改会自动保存，下一组生效。">修改会自动保存，下一组生效。</p>
           <button class="link-button intro-link" type="button" id="showIntroBtn" data-en="How to play" data-zh="玩法说明">玩法说明</button>
         </div>
         <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭">×</button>
@@ -1720,23 +1967,31 @@
             <input id="langPairB" type="text" autocomplete="off" />
           </label>
           <label>
+            <span data-en="How to practice" data-zh="练习方式">练习方式</span>
+            <select id="flowSelect"></select>
+          </label>
+          <label>
             <span data-en="Practice mode" data-zh="练习模式">练习模式</span>
             <select id="modeSelect"></select>
+          </label>
+          <label>
+            <span data-en="Cards after each set (spelling / sentence)" data-zh="每组后的练习卡（拼写 / 造句）">每组后的练习卡（拼写 / 造句）</span>
+            <select id="drillsSelect"></select>
           </label>
           <label>
             <span data-en="Appearance" data-zh="外观">外观</span>
             <select id="colorModeSelect"></select>
           </label>
-          <label>
-            <span data-en="Max words per round" data-zh="每局最多单词数">每局最多单词数</span>
+          <label data-levels-only>
+            <span data-en="Max words per level" data-zh="每关最多单词数">每关最多单词数</span>
             <input id="roundSize" type="number" min="5" max="200" step="1" />
           </label>
-          <label>
+          <label data-levels-only>
             <span data-en="Base level time (sec)" data-zh="基础每关时间（秒）">基础每关时间（秒）</span>
             <input id="levelSeconds" type="number" min="20" max="900" step="5" />
           </label>
         </div>
-        <label class="check-row">
+        <label class="check-row" data-levels-only>
           <input id="adaptiveLevelTime" type="checkbox" />
           <span data-en="Adjust level time to my pace" data-zh="按我的速度自动调整每关时间">按我的速度自动调整每关时间</span>
         </label>
@@ -1747,7 +2002,7 @@
         <details class="advanced">
           <summary data-en="Advanced" data-zh="高级选项">高级选项</summary>
           <div class="option-grid">
-            <label>
+            <label data-levels-only>
               <span data-en="Time tolerance (e.g. 0.2)" data-zh="时间容错（如 0.2）">时间容错（如 0.2）</span>
               <input id="levelTimeTolerance" type="number" min="0" max="2" step="0.05" />
             </label>
@@ -1770,6 +2025,17 @@
           </label>
         </details>
         <p class="import-status" id="optionsStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="modal-section ai-section" id="aiSection" aria-labelledby="aiTitle" hidden>
+        <h2 id="aiTitle" data-en="On-device AI (optional)" data-zh="端侧 AI（可选）">端侧 AI（可选）</h2>
+        <p id="aiAbout"></p>
+        <progress id="aiProgress" max="1" value="0" hidden></progress>
+        <p class="import-status" id="aiStatus" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="duo-button" type="button" id="aiToggleBtn"></button>
+          <button class="small-button" type="button" id="aiDeleteBtn" data-en="Delete model" data-zh="删除模型" hidden>删除模型</button>
+        </div>
       </section>
 
       <section class="modal-section danger-zone" aria-labelledby="resetTitle">
@@ -1798,6 +2064,7 @@
       </div>
 
       <section class="modal-section" data-tab-panel="list">
+        <div class="forecast" id="forecast" hidden></div>
         <div class="stage-filters" id="stageFilters" role="group" aria-label="按阶段筛选" data-en-aria="Filter by stage" data-zh-aria="按阶段筛选"></div>
         <div class="list-tools">
           <input id="wordSearch" type="search" autocomplete="off" placeholder="搜索单词或释义" data-en-ph="Search words or meanings" data-zh-ph="搜索单词或释义" />
@@ -1916,6 +2183,7 @@
     </div>
   </div>
 
+  <script src="./js/engine.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
     const INSTALL_NUDGE_KEY = "word_snap_install_nudge_hidden_v1";
@@ -2001,13 +2269,14 @@
         },
         lesson: {
           roundN: "Round {n}", roundLevel: "Level {n} · {done}/{total}", trialLevel: "Trial level · {done}/{total}",
+          endlessLabel: "Set {n} · endless",
           choosePair: "Match the pairs", continueBtn: "Continue",
           emptyTitle: "No words yet", emptyText: "Open the Library to add words first, then start matching.",
           emptyAddBtn: "Add words"
         },
         stats: {
           trainingTitle: "Word training",
-          trainingBlurb: "Missed words come back next round; correct ones come back after longer and longer gaps.",
+          trainingBlurb: "Missed words come back a few cards later; known words come back just before you'd forget them.",
           correct: "Correct", mistakes: "Mistakes", streak: "Streak", unmastered: "Unmastered",
           modeBtn: "Mode: {label}", modeAdaptive: "Adaptive", modeWeak: "Weak only", modeAll: "All in order",
           clearProgress: "Clear progress"
@@ -2017,7 +2286,7 @@
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
           addOne: "Add one", bulkLabel: "Bulk input",
-          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning",
+          bulkPlaceholder: "One per line: word_in_{a},word_in_{b}\nOr: UNESCO = meaning\nWith an example: word,meaning | Example sentence. | Translation",
           addBulk: "Bulk add", clearAll: "Clear all words",
           optionsTitle: "Practice options",
           optLevelSeconds: "Base level time (sec)", optLevelTimeTolerance: "Time tolerance (e.g. 0.2)",
@@ -2030,8 +2299,11 @@
           saveOptions: "Save options",
           listTitle: "Word list",
           listBlurb: "All words in your library. You can re-add after clearing.",
-          deleteBtn: "Delete", speak: "Listen to {w}", stageNew: "New", stageBox: "Box {n}/{max}", stageMastered: "Mastered",
+          deleteBtn: "Delete", speak: "Listen to {w}", stageNew: "New", stageMastered: "Mastered",
           emptyListA: "No words yet", emptyListB: "Add some above",
+          dueNow: "Due now", dueToday: "Later today", dueTomorrow: "Tomorrow", dueInDays: "In {n} days",
+          forecastTitle: "Reviews in the next 7 days", dayToday: "Today", dayTomorrow: "Tmrw",
+          mySentences: "My sentences: ", aiExample: "Written by the on-device AI and checked for grammar",
           langPairLabel: "Language pair", custom: "Custom", sideA: "Side A", sideB: "Side B",
           stage_all: "All", stage_learning: "Learning", stage_review: "In review", stage_new: "New", stage_mastered: "Mastered",
           groupHint_learning: "come up first", groupHint_review: "spaced review", groupHint_new: "join practice in this order", groupHint_mastered: "occasional spot checks",
@@ -2057,6 +2329,7 @@
           pickPair: "Pick one card from each side.", pickMatch: "Now pick its match.",
           correct: "Matched!", allDoneCheck: "All matched. Now check.",
           wrong: "Wrong: {a} = {b}", timeChallenge: "Timed challenge: {t}. Correct answers refill fast; wrong words roll back.",
+          endlessStart: "Words keep coming — no timer. A short summary every {n} pairs.",
           timeAdaptive: "Timed challenge: {t} (from your last clear pace +{tol}%).",
           pickOtherSide: "Pick the match on the other side.", switchedSameSide: "Switched to another card on the same side.",
           finishRest: "Finish the remaining pairs.", libraryComplete: "Library complete!",
@@ -2085,7 +2358,48 @@
           levelSummary: "{done} pairs matched, {m} mistakes.",
           stillLearning: "{n} words still need practice; they come back first.",
           timeUpText: "Unfinished words stay in your practice queue.",
-          reviewHeading: "Review the words you mixed up"
+          reviewHeading: "Review the words you mixed up",
+          blockTitle: "Set complete",
+          blockSummary: "{done} pairs, {m} mistakes, {fresh} new words.",
+          blockDue: "{n} reviews are due today; they come first in the next set.",
+          blockClear: "Nothing is due right now — the next set brings new words.",
+          confusedPairs: "Mixed up: {list}. They will appear side by side again."
+        },
+        settings: {
+          flow_endless: "Endless (recommended)", flow_levels: "Timed levels",
+          drills_0: "None", drills_1: "1 card", drills_2: "2 cards (default)", drills_3: "3 cards"
+        },
+        aiSettings: {
+          about: "Runs a small language model ({name}) on this device: when you have no idea for a sentence card it suggests a situation in Chinese, and it writes example sentences for words that have none (each one passes the grammar check first). Free, no account, nothing you write leaves the device. It needs English–Chinese words and a download of about {mb} MB, once.",
+          enable: "Download and turn on (~{mb} MB)", resume: "Continue download (~{mb} MB)", turnOn: "Turn on", turnOff: "Turn off",
+          downloading: "Downloading… {pct}% — keep this page open. It works offline afterwards.", loading: "Starting the model…",
+          on: "On. The model is on this device.", offCached: "Off. The model is still on this device ({mb} MB).", off: "Off.",
+          failed: "The model could not be downloaded or started. You can try again; everything else keeps working without it.",
+          deleted: "Model deleted, storage freed.", confirmDelete: "Delete the downloaded model (~{mb} MB)? You can download it again later."
+        },
+        drill: {
+          kicker: "Practice {i}/{n} · {type}", type_spell: "Spelling", type_sentence: "Make a sentence",
+          check: "Check", next: "Next",
+          spellPrompt: "Type the word for this meaning.", spellPlaceholder: "Type the word",
+          spellRight: "Right!", spellWrong: "The answer is <b>{w}</b>. Type it once to remember it.", copyAgain: "Not quite — type <b>{w}</b> exactly.",
+          sentenceTitle: "Make a sentence with {w}",
+          sentenceRule: "Any word order is fine as long as it is grammatical, and any form of the word counts (ran, tubers…).",
+          sentencePlaceholder: "A sentence using {w}",
+          loadingEngine: "Loading the grammar checker (about 8 MB, only the first time; it then works offline)…",
+          checking: "Checking…",
+          engineFailed: "The grammar checker could not load. It needs a connection the first time — you can skip this card.",
+          sentenceOk: "Grammatical — nice sentence!",
+          checkMeaning: "Grammar is checked on your device; meaning is not. Make sure {w} means “{m}” here.",
+          notUsed: "The sentence doesn't use {w} yet (any form is fine).",
+          short: "Write at least 4 words.", onlyWord: "Write a whole sentence, not just the word.",
+          noVerb: "Tip: the sentence may be missing a verb.",
+          idea: "Idea: “{text}” — write it in English using {w}.", frames: "Try starting like this: {text}", thinking: "Thinking of an idea…",
+          kind_Agreement: "Agreement", kind_MissingVerb: "Missing verb", kind_Spelling: "Spelling", kind_Typo: "Spelling", kind_Grammar: "Grammar",
+          kind_Miscellaneous: "Grammar", kind_Punctuation: "Punctuation", kind_Capitalization: "Capital letter",
+          kind_WordChoice: "Word choice", kind_Usage: "Usage", kind_Repetition: "Repeated word", kind_Regionalism: "British spelling (fine)",
+          kind_WordOrder: "Word order", kind_BoundaryError: "Spacing", kind_Eggcorn: "Word choice", kind_Malapropism: "Word choice",
+          kind_Nonstandard: "Nonstandard", kind_Style: "Style", kind_Readability: "Readability", kind_Redundancy: "Redundant",
+          kind_Formatting: "Formatting", kind_Enhancement: "Suggestion"
         },
         install: {
           titleInstall: "Install Word Snap",
@@ -2109,6 +2423,7 @@
           copyFailed: "Couldn't copy automatically. The prompt is in the box above: copy it manually, then clear the box.",
           nothing: "Nothing recognised. Paste the AI's answer (one “word,meaning” per line).",
           imported: "Added {n} words.", dupOnly: "No new words (already in the library).",
+          examplesAdded: "Added example sentences to {n} words already in the library.",
           config: "Settings applied: {list}.", skipped: "{n} unreadable lines skipped.",
           cfgLang: "language {a} ↔ {b}", cfgRound: "{n} words per round", cfgTime: "{n}s per level",
           samplesRemoved: "Removed {n} sample words.",
@@ -2129,13 +2444,14 @@
         },
         lesson: {
           roundN: "第 {n} 轮", roundLevel: "第 {n} 关 · {done}/{total}", trialLevel: "体验关 · {done}/{total}",
+          endlessLabel: "第 {n} 组 · 无限练习",
           choosePair: "选择配对", continueBtn: "继续",
           emptyTitle: "还没有单词", emptyText: "请先进入词库添加单词。添加后就可以开始配对练习。",
           emptyAddBtn: "去添加单词"
         },
         stats: {
           trainingTitle: "单词训练",
-          trainingBlurb: "答错的词下一轮再来，答对的词隔得越来越久再来。",
+          trainingBlurb: "答错的词几张卡后就会再来；记住的词会在你快忘的时候再来。",
           correct: "正确配对", mistakes: "错选", streak: "连对", unmastered: "未掌握",
           modeBtn: "模式：{label}", modeAdaptive: "自适应", modeWeak: "只练弱项", modeAll: "全量顺序",
           clearProgress: "清空进度"
@@ -2145,7 +2461,7 @@
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
           addOne: "添加一个", bulkLabel: "批量录入",
-          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义",
+          bulkPlaceholder: "每行一个：{a}词,{b}词\n也可以：UNESCO = 含义\n带例句：单词,释义 | 例句 | 例句翻译",
           addBulk: "批量添加", clearAll: "清空全部词",
           optionsTitle: "练习选项",
           optLevelSeconds: "基础每关时间（秒）", optLevelTimeTolerance: "时间容错（如 0.2）",
@@ -2158,8 +2474,11 @@
           saveOptions: "保存选项",
           listTitle: "词库列表",
           listBlurb: "这里显示当前词库里的全部单词。清空后可以重新录入。",
-          deleteBtn: "删除", speak: "朗读 {w}", stageNew: "新词", stageBox: "熟练 {n}/{max}", stageMastered: "已掌握",
+          deleteBtn: "删除", speak: "朗读 {w}", stageNew: "新词", stageMastered: "已掌握",
           emptyListA: "还没有单词", emptyListB: "请从上方录入",
+          dueNow: "待复习", dueToday: "今天稍后", dueTomorrow: "明天", dueInDays: "{n} 天后",
+          forecastTitle: "未来 7 天复习量", dayToday: "今天", dayTomorrow: "明天",
+          mySentences: "我的例句：", aiExample: "由端侧 AI 生成，已通过语法检查",
           langPairLabel: "语言对", custom: "自定义", sideA: "左侧", sideB: "右侧",
           stage_all: "全部", stage_learning: "学习中", stage_review: "复习中", stage_new: "待学新词", stage_mastered: "已掌握",
           groupHint_learning: "会优先出现", groupHint_review: "按间隔复习", groupHint_new: "按这个顺序陆续加入练习", groupHint_mastered: "偶尔抽查",
@@ -2185,6 +2504,7 @@
           pickPair: "选择一个中文和一个英文。", pickMatch: "再选它的配对。",
           correct: "配对成功。", allDoneCheck: "全部配完了。现在检查。",
           wrong: "不对：{a} = {b}", timeChallenge: "限时挑战：{t}。答对快速补位，错词会回滚。",
+          endlessStart: "单词会一直补上，不计时。每 {n} 组给一次小结。",
           timeAdaptive: "限时挑战：{t}（按上次实际通关配速 +{tol}%）。",
           pickOtherSide: "再选另一侧的配对。", switchedSameSide: "已换选同侧卡片。",
           finishRest: "继续完成剩下的配对。", libraryComplete: "很好，词库已完成。",
@@ -2213,7 +2533,48 @@
           levelSummary: "本关配对 {done} 组，错 {m} 次。",
           stillLearning: "还有 {n} 个词需要巩固，接下来会优先出现。",
           timeUpText: "没配完的词仍在练习队列里。",
-          reviewHeading: "回顾本关混淆的词"
+          reviewHeading: "回顾刚才混淆的词",
+          blockTitle: "这一组完成",
+          blockSummary: "配对 {done} 组，错 {m} 次，新学 {fresh} 个词。",
+          blockDue: "今天还有 {n} 个词到期，下一组会先复习它们。",
+          blockClear: "现在没有到期的词，下一组会学新词。",
+          confusedPairs: "混淆过：{list}。之后它们会再次同时出现。"
+        },
+        settings: {
+          flow_endless: "无限练习（推荐）", flow_levels: "限时关卡",
+          drills_0: "不出", drills_1: "1 张", drills_2: "2 张（默认）", drills_3: "3 张"
+        },
+        aiSettings: {
+          about: "在这台设备上运行一个小语言模型（{name}）：造句卡没有思路时，给你一句中文情景；没有例句的词，自动补上例句（每句都先过语法检查）。免费，不用账号，你写的内容不会离开这台设备。需要词库是英文–中文，并下载约 {mb}MB，只需一次。",
+          enable: "下载并开启（约 {mb}MB）", resume: "继续下载（约 {mb}MB）", turnOn: "开启", turnOff: "关闭",
+          downloading: "正在下载…… {pct}%，请不要关闭页面。下载完之后可以离线使用。", loading: "正在启动模型……",
+          on: "已开启，模型已保存在这台设备上。", offCached: "已关闭，模型仍保存在这台设备上（{mb}MB）。", off: "未开启。",
+          failed: "模型下载或启动失败。可以再试一次；不开 AI 其他功能都照常可用。",
+          deleted: "模型已删除，存储空间已释放。", confirmDelete: "删除已下载的模型（约 {mb}MB）？以后可以重新下载。"
+        },
+        drill: {
+          kicker: "小练习 {i}/{n} · {type}", type_spell: "拼写", type_sentence: "造句",
+          check: "检查", next: "下一题",
+          spellPrompt: "根据释义拼写单词。", spellPlaceholder: "输入单词",
+          spellRight: "拼对了！", spellWrong: "正确答案是 <b>{w}</b>，照着输入一遍加深印象。", copyAgain: "还不一致，请完整输入 <b>{w}</b>。",
+          sentenceTitle: "用 {w} 造一个英文句子",
+          sentenceRule: "语序不限，语法正确就行；任何词形都算（ran、tubers……）。",
+          sentencePlaceholder: "写一个用到 {w} 的句子",
+          loadingEngine: "正在加载语法检查引擎（约 8MB，只需下载一次，之后可离线使用）……",
+          checking: "正在检查……",
+          engineFailed: "语法检查引擎加载失败。第一次使用需要联网下载，可以先跳过这题。",
+          sentenceOk: "语法正确，句子不错！",
+          checkMeaning: "语法在本机检查，意思检查不了：请确认这里的 {w} 是「{m}」的意思。",
+          notUsed: "句子里还没有用到 {w}（任何词形都可以）。",
+          short: "至少写 4 个词。", onlyWord: "请写一个完整的句子，不要只写这个词。",
+          noVerb: "提示：句子可能缺少谓语动词。",
+          idea: "思路：「{text}」——试着用 {w} 把它写成英文。", frames: "可以这样开头：{text}", thinking: "正在想一个思路……",
+          kind_Agreement: "主谓一致", kind_MissingVerb: "缺少谓语", kind_Spelling: "拼写", kind_Typo: "拼写", kind_Grammar: "语法",
+          kind_Miscellaneous: "语法", kind_Punctuation: "标点", kind_Capitalization: "大小写",
+          kind_WordChoice: "用词", kind_Usage: "用法", kind_Repetition: "重复", kind_Regionalism: "英式拼写（没问题）",
+          kind_WordOrder: "语序", kind_BoundaryError: "空格", kind_Eggcorn: "用词", kind_Malapropism: "用词",
+          kind_Nonstandard: "不规范", kind_Style: "文风", kind_Readability: "可读性", kind_Redundancy: "冗余",
+          kind_Formatting: "格式", kind_Enhancement: "建议"
         },
         install: {
           titleInstall: "安装 Word Snap",
@@ -2237,6 +2598,7 @@
           copyFailed: "无法自动复制，提示词已放进上面的输入框，请手动复制后再清空输入框。",
           nothing: "没有识别到内容。请粘贴 AI 的回答（每行一个“单词,释义”）。",
           imported: "已添加 {n} 个单词。", dupOnly: "没有新增单词（都已在词库里）。",
+          examplesAdded: "已为词库里已有的 {n} 个词补上例句。",
           config: "已应用设置：{list}。", skipped: "跳过 {n} 行无法识别的内容。",
           cfgLang: "语言 {a} ↔ {b}", cfgRound: "每局 {n} 词", cfgTime: "每关 {n} 秒",
           samplesRemoved: "已移除 {n} 个示例词。",
@@ -2315,6 +2677,11 @@
     }
 
     const DEFAULT_SETTINGS = {
+      // "endless": the board keeps refilling, the engine picks every word, a short
+      // summary every BLOCK_SIZE pairs. "levels": the older timed levels.
+      flow: "endless",
+      // Spelling / sentence cards shown after each set (0–3).
+      drills: 2,
       levelDurationMs: 120000,
       roundSize: 30,
       adaptiveLevelTime: true,
@@ -2332,7 +2699,9 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
-      langPair: { a: "English", b: "中文" }
+      langPair: { a: "English", b: "中文" },
+      // On-device model (js/ai.js). Off until the learner downloads it in Settings.
+      ai: { on: false }
     };
     const LANG_PAIR_PRESETS = [
       { a: "English", b: "中文" },
@@ -2395,7 +2764,27 @@
       levelTimeTolerance: document.getElementById("levelTimeTolerance"),
       adaptiveLevelTime: document.getElementById("adaptiveLevelTime"),
       modeSelect: document.getElementById("modeSelect"),
+      flowSelect: document.getElementById("flowSelect"),
+      drillsSelect: document.getElementById("drillsSelect"),
+      drill: document.getElementById("drill"),
+      drillKicker: document.getElementById("drillKicker"),
+      drillTitle: document.getElementById("drillTitle"),
+      drillPrompt: document.getElementById("drillPrompt"),
+      drillSpell: document.getElementById("drillSpell"),
+      drillSentence: document.getElementById("drillSentence"),
+      drillResult: document.getElementById("drillResult"),
+      drillSubmit: document.getElementById("drillSubmit"),
+      drillHint: document.getElementById("drillHint"),
+      drillWrongMeaning: document.getElementById("drillWrongMeaning"),
+      drillSkip: document.getElementById("drillSkip"),
+      forecast: document.getElementById("forecast"),
       optionsStatus: document.getElementById("optionsStatus"),
+      aiSection: document.getElementById("aiSection"),
+      aiAbout: document.getElementById("aiAbout"),
+      aiProgress: document.getElementById("aiProgress"),
+      aiStatus: document.getElementById("aiStatus"),
+      aiToggleBtn: document.getElementById("aiToggleBtn"),
+      aiDeleteBtn: document.getElementById("aiDeleteBtn"),
       addOneStatus: document.getElementById("addOneStatus"),
       reviewHeading: document.getElementById("reviewHeading"),
       reviewList: document.getElementById("reviewList"),
@@ -2406,6 +2795,7 @@
       streakTones: document.getElementById("streakTones"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
+      focusPairsBtn: document.getElementById("focusPairsBtn"),
       dropSamples: document.getElementById("dropSamples"),
       dropSamplesRow: document.getElementById("dropSamplesRow"),
       dropSamplesText: document.getElementById("dropSamplesText"),
@@ -2471,14 +2861,18 @@
       visibleAt: new Map(),
       // Words confused during the current level, shown for review on the completion screen.
       levelMisses: new Map(),
+      // [word, word] pairs mixed up this level / set.
+      levelConfusions: [],
+      // Ids of words answered this level / set (practice cards are picked from them).
+      blockWords: new Set(),
       // Wrong-guess words already stepped back once this level.
       levelDemoted: new Set(),
       levelMistakes: 0,
       drawHistory: []
     };
 
-    function createWord(en, zh, custom = false, id = null) {
-      return {
+    function createWord(en, zh, custom = false, id = null, extra = null) {
+      const word = {
         id: id || `${custom ? "custom" : "base"}-${en.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
         en,
         zh,
@@ -2489,13 +2883,27 @@
         streak: 0,
         mastered: false,
         lastMs: 0,
-        // Review box 0–5 (see BOX_ROUND_GAPS). A word is "new" until first answered (see isNewWord).
-        box: 0,
-        dueRound: 0,
-        dueAt: 0,
+        // Review schedule, owned by js/engine.js. null = new (never answered).
+        srs: null,
+        // Ids of words this one was mixed up with, and how often.
+        confusions: {},
         draws: 0,
         lastDrawRound: 0
       };
+      setExample(word, extra && extra.ex, extra && extra.exZh, extra && extra.exAi === true);
+      return word;
+    }
+
+    /**
+     * Optional example sentence (side A) and its translation (side B). Only stored when present.
+     * `ai` marks one written by the on-device model, so the library can say so.
+     */
+    function setExample(word, ex, exZh, ai) {
+      ex = typeof ex === "string" ? ex.trim().slice(0, 300) : "";
+      exZh = typeof exZh === "string" ? exZh.trim().slice(0, 300) : "";
+      if (ex) word.ex = ex; else delete word.ex;
+      if (ex && exZh) word.exZh = exZh; else delete word.exZh;
+      if (ex && ai) word.exAi = true; else delete word.exAi;
     }
 
     function readSavedState() {
@@ -2525,6 +2933,8 @@
       }
       if (refillMaxMs < refillMinMs) refillMaxMs = refillMinMs;
       return {
+        flow: raw.flow === "levels" ? "levels" : "endless",
+        drills: Math.round(clampNumber(raw.drills, 0, 3, DEFAULT_SETTINGS.drills)),
         levelDurationMs: clampNumber(raw.levelDurationMs, 20000, 900000, DEFAULT_SETTINGS.levelDurationMs),
         roundSize: Math.round(clampNumber(raw.roundSize, 5, 200, DEFAULT_SETTINGS.roundSize)),
         adaptiveLevelTime: raw.adaptiveLevelTime !== false,
@@ -2540,7 +2950,8 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
-        langPair: normalizeLangPair(raw.langPair)
+        langPair: normalizeLangPair(raw.langPair),
+        ai: { on: Boolean(raw.ai && raw.ai.on === true) }
       };
     }
 
@@ -2558,41 +2969,46 @@
       return normalized;
     }
 
-    /** Old saves stored reviewLevel / nextReviewAt (time-based). Map them onto the box model. */
-    function migrateBox(savedWord, savedRound) {
+    /**
+     * Older saves used review boxes 0–5 (and before that reviewLevel / nextReviewAt).
+     * Keep those fields so the engine can turn them into a stability once (see
+     * WordSnapEngine.ensureWord); a save that already has `srs` ignores them.
+     */
+    function legacyBox(savedWord) {
       if (Number.isFinite(savedWord.box)) {
-        return {
-          box: Math.max(0, Math.min(MAX_BOX, Math.round(savedWord.box))),
-          dueRound: Number(savedWord.dueRound) || 0,
-          dueAt: Number(savedWord.dueAt) || Date.now()
-        };
+        return { box: Math.max(0, Math.min(5, Math.round(savedWord.box))), dueAt: Number(savedWord.dueAt) || Date.now() };
       }
-      const box = savedWord.mastered ? MAX_BOX : Math.max(0, Math.min(MAX_BOX - 1, Math.round(savedWord.reviewLevel || 0)));
-      return {
-        box,
-        dueRound: savedRound,
-        dueAt: Number(savedWord.nextReviewAt) || Date.now()
-      };
+      const box = savedWord.mastered ? 5 : Math.max(0, Math.min(4, Math.round(savedWord.reviewLevel || 0)));
+      return { box, dueAt: Number(savedWord.nextReviewAt) || Date.now() };
     }
 
     function loadWords(saved) {
       const base = starterWords.map((item, index) => createWord(item[0], item[1], false, `base-${index}`));
       if (!saved || !Array.isArray(saved.words)) return base;
 
+      const now = Date.now();
       return saved.words
         .filter(savedWord => savedWord && savedWord.en && savedWord.zh)
-        .map(savedWord => ({
-          ...createWord(savedWord.en, savedWord.zh, Boolean(savedWord.custom), savedWord.id),
-          seen: savedWord.seen || 0,
-          correct: savedWord.correct || 0,
-          mistakes: savedWord.mistakes || 0,
-          streak: savedWord.streak || 0,
-          lastMs: savedWord.lastMs || 0,
-          ...migrateBox(savedWord, Math.max(1, Math.round(Number(saved.round) || 1))),
-          draws: savedWord.draws || 0,
-          lastDrawRound: savedWord.lastDrawRound || 0
-        }))
-        .map(word => ({ ...word, mastered: word.box >= MAX_BOX }));
+        .map(savedWord => {
+          const word = {
+            ...createWord(savedWord.en, savedWord.zh, Boolean(savedWord.custom), savedWord.id, savedWord),
+            seen: savedWord.seen || 0,
+            correct: savedWord.correct || 0,
+            mistakes: savedWord.mistakes || 0,
+            streak: savedWord.streak || 0,
+            lastMs: savedWord.lastMs || 0,
+            srs: savedWord.srs && Number.isFinite(savedWord.srs.S) ? savedWord.srs : null,
+            confusions: savedWord.confusions && typeof savedWord.confusions === "object" ? savedWord.confusions : {},
+            draws: savedWord.draws || 0,
+            lastDrawRound: savedWord.lastDrawRound || 0
+          };
+          if (Array.isArray(savedWord.sentences)) word.sentences = savedWord.sentences.filter(x => x && typeof x.text === "string").slice(-10);
+          if (!word.srs) Object.assign(word, legacyBox(savedWord));
+          WordSnapEngine.ensureWord(word, now);
+          delete word.box;
+          delete word.dueAt;
+          return word;
+        });
     }
 
     function saveWords() {
@@ -2600,6 +3016,7 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           words: state.words,
           settings: state.settings,
+          engine: engine.serialize(),
           drawHistory: state.drawHistory,
           mode: state.mode,
           onboarding: state.onboarding,
@@ -2800,44 +3217,14 @@
       return copy;
     }
 
-    // ---- Review boxes (Leitner) ----
-    // Wrong → box 0, back next round. Right *when due* → one box up.
-    // Boxes 0–2 are short-term learning and count rounds played (a web page
-    // cannot send reminders, so "soon" has to mean "a few rounds from now").
-    // Boxes 3–5 are long-term memory and only come due after real days — so
-    // a word can never be "mastered" within a single sitting.
-    // The time gaps on boxes 0–2 are a fallback for someone who comes back
-    // later without having played the rounds in between.
-    const MAX_BOX = 5;
-    const ROUND_BOXES = 3;
-    const BOX_ROUND_GAPS = [1, 2, 4];
-    const HOUR_MS = 60 * 60 * 1000;
-    const DAY_MS = 24 * HOUR_MS;
-    // Box 0 waits longer than the longest level (15 min), so a word missed
-    // early in a level cannot be promoted by matching it later in that level.
-    // Box 0–1: minutes/hours. Box 2+: calendar days (see dueAtFor).
-    const BOX_TIME_GAPS = [30 * 60 * 1000, 4 * HOUR_MS];
-    const BOX_DAY_GAPS = [0, 0, 1, 1, 3, 14];
-    const DAY_CUTOFF_HOUR = 4;
-
-    /** Start of the learner's "day" (4 am cutoff, so a late-night session counts as the same day). */
-    function dayStart(ts) {
-      const d = new Date(ts);
-      d.setHours(DAY_CUTOFF_HOUR, 0, 0, 0);
-      if (d.getTime() > ts) d.setDate(d.getDate() - 1);
-      return d;
-    }
-
-    /**
-     * "Come back in N days" means any time on day N, not exactly N×24h later —
-     * otherwise playing at 8 pm and again at 7 pm tomorrow would find nothing due.
-     */
-    function dueAtFor(box, now) {
-      if (box < BOX_TIME_GAPS.length) return now + BOX_TIME_GAPS[box];
-      const d = dayStart(now);
-      d.setDate(d.getDate() + BOX_DAY_GAPS[box]);
-      return d.getTime();
-    }
+    // ---- Review schedule (js/engine.js) ----
+    // Every answer is graded automatically (right/wrong + reaction time against
+    // the learner's own recent times) and fed to the engine, which keeps a
+    // difficulty / stability per word, fits its parameters to this learner, and
+    // picks the next word for the board. Missed words come back a few cards
+    // later; known words come back just before they would be forgotten.
+    const BLOCK_SIZE = 25;
+    let engine = WordSnapEngine.create(null, { blockSize: BLOCK_SIZE });
 
     /**
      * New until it has been answered at least once (right or wrong). Merely
@@ -2845,37 +3232,49 @@
      * word new, in its place in the new-word queue.
      */
     function isNewWord(word) {
-      return !(word.seen > 0 || word.mistakes > 0);
+      return engine.isNew(word);
     }
 
-    function isDueForReview(word, now = Date.now()) {
-      if (isNewWord(word)) return false;
-      const byRounds = word.box < ROUND_BOXES && state.round >= (word.dueRound || 0);
-      return byRounds || (word.dueAt > 0 && now >= word.dueAt);
+    function isEndless() {
+      return state.settings.flow === "endless" && !isTrial();
     }
 
-    /** Introduced but not yet steady (box 0–1): the "currently learning" pile. */
+    /** Learning: introduced, still in short-term steps or under a day of stability. */
     function isLearning(word) {
-      return !isNewWord(word) && word.box <= 1;
+      return engine.stageOf(word) === "learning";
     }
 
-    function scheduleBox(word, box) {
-      word.box = Math.max(0, Math.min(MAX_BOX, box));
-      word.dueRound = word.box < ROUND_BOXES ? state.round + BOX_ROUND_GAPS[word.box] : 0;
-      word.dueAt = dueAtFor(word.box, Date.now());
-      word.mastered = word.box >= MAX_BOX;
+    function isMastered(word) {
+      return engine.stageOf(word) === "mastered";
     }
 
-    /** Right answer. Only a due word moves up — matching it again early proves nothing about memory. */
-    function recordCorrect(word) {
-      if (isDueForReview(word)) {
-        scheduleBox(word, word.box + 1);
-      }
+    function syncMastered(word) {
+      word.mastered = isMastered(word);
     }
 
-    /** `full`: the word being answered goes back to box 0. Otherwise it was the wrong guess — one box down. */
-    function recordWrong(word, full = true) {
-      scheduleBox(word, full ? 0 : word.box - 1);
+    /** Right answer on the board. `ms` = reaction time for this pair. */
+    function recordCorrect(word, ms) {
+      engine.recordAnswer(word, engine.grade(true, ms), Date.now(), { ms, kind: "match" });
+      syncMastered(word);
+    }
+
+    /** The word being answered was missed. */
+    function recordWrong(word) {
+      engine.recordAnswer(word, WordSnapEngine.GRADES.AGAIN, Date.now(), { kind: "match" });
+      syncMastered(word);
+    }
+
+    /** The card picked by mistake: mixed up, so it loses some stability (no review logged). */
+    function recordWrongPick(word) {
+      engine.penalizeWrongPick(word, Date.now());
+      syncMastered(word);
+    }
+
+    /** Re-fit the learner's personal parameters when the browser is idle. */
+    function scheduleEngineFit() {
+      const run = () => { if (engine.maybeOptimize()) saveWords(); };
+      if (window.requestIdleCallback) window.requestIdleCallback(run, { timeout: 5000 });
+      else setTimeout(run, 500);
     }
 
     function escapeHtml(value) {
@@ -2884,10 +3283,18 @@
       })[ch]);
     }
 
+    /** "New", "Mastered", or when the word is next due ("Due now", "Tomorrow", "In 3 days"). */
     function wordStageLabel(word) {
       if (isNewWord(word)) return t("library.stageNew");
-      if (word.mastered) return t("library.stageMastered");
-      return t("library.stageBox", { n: word.box, max: MAX_BOX });
+      const now = Date.now();
+      const at = engine.dueAt(word, now);
+      let due;
+      if (at <= now) due = t("library.dueNow");
+      else {
+        const days = WordSnapEngine.dayKey(at) - WordSnapEngine.dayKey(now);
+        due = days <= 0 ? t("library.dueToday") : days === 1 ? t("library.dueTomorrow") : t("library.dueInDays", { n: days });
+      }
+      return isMastered(word) ? `${t("library.stageMastered")} · ${due}` : due;
     }
 
     // ---- print / export weak words: every option is the learner's; settings persist ----
@@ -2934,8 +3341,8 @@
           : s.source === "all" ? true
           : s.source === "pick" ? picked.has(word.id)
           : !word.mastered && !isNewWord(word));
-      if (s.sort === "mistakes") list = [...list].sort((a, b) => b.mistakes - a.mistakes || a.box - b.box);
-      else if (s.sort === "stage") list = [...list].sort((a, b) => a.box - b.box || Number(a.mastered) - Number(b.mastered));
+      if (s.sort === "mistakes") list = [...list].sort((a, b) => b.mistakes - a.mistakes || stabilityOf(a) - stabilityOf(b));
+      else if (s.sort === "stage") list = [...list].sort((a, b) => stabilityOf(a) - stabilityOf(b));
       else if (s.sort === "alpha") list = [...list].sort((a, b) => String(a.en).localeCompare(String(b.en), undefined, { sensitivity: "base" }));
       else if (s.sort === "random") list = seededShuffle(list, printSeed);
       const limit = Math.floor(Number(s.limit));
@@ -3149,9 +3556,12 @@
 
     /** learning = boxes 0–1, review = boxes 2–4, then new and mastered. */
     function wordStage(word) {
-      if (isNewWord(word)) return "new";
-      if (word.mastered) return "mastered";
-      return word.box <= 1 ? "learning" : "review";
+      return engine.stageOf(word);
+    }
+
+    /** Memory stability in days (new words sort first as -1). */
+    function stabilityOf(word) {
+      return word.srs ? word.srs.S : -1;
     }
 
     const STAGE_ORDER = ["learning", "review", "new", "mastered"];
@@ -3207,6 +3617,7 @@
       els.completionBadge.textContent = "✓";
       els.main.scrollTop = 0;
       state.lastCompletion = { allDone: false, reason: "queue", trial: true };
+      stopDrills();
       renderCompletionCopy();
       renderStats();
     }
@@ -3224,10 +3635,10 @@
       const newRank = new Map(newWordsInOrder().map((word, i) => [word.id, i]));
       const rank = word => {
         const stage = wordStage(word);
-        if (stage === "learning") return [0, word.box, -word.mistakes];
-        if (stage === "review") return [1, word.box, word.dueAt || 0];
+        if (stage === "learning") return [0, stabilityOf(word), -word.mistakes];
+        if (stage === "review") return [1, engine.dueAt(word), 0];
         if (stage === "new") return [2, newRank.get(word.id), 0];
-        return [3, 0, word.dueAt || 0];
+        return [3, engine.dueAt(word), 0];
       };
       return list.slice().sort((a, b) => {
         const ra = rank(a), rb = rank(b);
@@ -3241,6 +3652,15 @@
       return `<span class="stage-tag${cls}">${wordStageLabel(word)}</span>`;
     }
 
+    /** The imported example and the learner's own accepted sentences, under the word. */
+    function exampleLine(word) {
+      const own = (word.sentences || []).filter(x => x.ok).map(x => x.text);
+      return [
+        word.ex ? `<span class="cr-ex">${escapeHtml(word.ex)}${word.exZh ? ` <small>${escapeHtml(word.exZh)}</small>` : ""}${word.exAi ? `<span class="ai-tag" title="${escapeHtml(t("library.aiExample"))}">AI</span>` : ""}</span>` : "",
+        own.length ? `<span class="cr-ex cr-own">${t("library.mySentences")}${escapeHtml(own.slice(-2).join(" · "))}</span>` : ""
+      ].join("");
+    }
+
     function wordRow(word) {
       return `
           <div class="custom-row">
@@ -3249,6 +3669,7 @@
             <span class="cr-mean" title="${escapeHtml(word.zh)}">${escapeHtml(word.zh)}</span>
             ${stageTag(word)}
             <button class="link-button" type="button" data-delete="${escapeHtml(word.id)}">${t("library.deleteBtn")}</button>
+            ${exampleLine(word)}
           </div>`;
     }
 
@@ -3266,7 +3687,25 @@
         : t("library.summaryInitial");
     }
 
+    /** Seven small bars: how many reviews fall due on each of the next 7 days. */
+    function renderForecast() {
+      const el = els.forecast;
+      if (!el) return;
+      el.hidden = !state.words.some(word => !isNewWord(word));
+      if (el.hidden) return;
+      const counts = engine.forecast(state.words, 7);
+      const max = Math.max(1, ...counts);
+      const now = Date.now();
+      const locale = currentLang === "zh" ? "zh-CN" : "en";
+      const label = d => d === 0 ? t("library.dayToday") : d === 1 ? t("library.dayTomorrow")
+        : new Date(WordSnapEngine.dayStartMs(now, d) + 6 * 3600 * 1000).toLocaleDateString(locale, { weekday: "short" });
+      el.innerHTML = `<p class="forecast-title">${t("library.forecastTitle")}</p><div class="forecast-bars">${counts.map((n, d) =>
+        `<div class="forecast-day"><span class="forecast-n">${n}</span><span class="forecast-bar" style="height:${Math.round(4 + 40 * n / max)}px"></span><span class="forecast-label">${label(d)}</span></div>`
+      ).join("")}</div>`;
+    }
+
     function renderCustomList() {
+      renderForecast();
       renderStageFilters();
       const samples = sampleWords();
       els.sampleNote.hidden = !samples.length;
@@ -3477,7 +3916,8 @@
 
     /** Freeze the countdown while the library is open or the tab/app is in the background. */
     function pauseLevel() {
-      if (state.pausedAt || !(state.levelEndsAt > 0)) return;
+      const boardLive = state.levelEndsAt > 0 || (isEndless() && !els.completionView.classList.contains("show"));
+      if (state.pausedAt || !boardLive) return;
       state.pausedAt = performance.now();
       if (state.timerId) {
         clearInterval(state.timerId);
@@ -3491,12 +3931,12 @@
       state.pausedAt = 0;
       // Shift every level clock so paused time counts neither against the
       // countdown nor toward pace / per-word reaction samples.
-      state.levelEndsAt += delta;
+      if (state.levelEndsAt > 0) state.levelEndsAt += delta;
       state.levelStartedAt += delta;
       state.roundStartedAt += delta;
       if (state.lastPairAt > 0) state.lastPairAt += delta;
       state.visibleAt.forEach((at, id) => state.visibleAt.set(id, at + delta));
-      startLevelTimer();
+      if (state.levelEndsAt > 0) startLevelTimer();
       renderTimer();
     }
 
@@ -3508,62 +3948,73 @@
     }
 
     /**
-     * One round = up to `roundSize` words, *chosen* by priority:
-     *   1. words missed last time (box 0, due)
-     *   2. other words due for review, shakiest box first
-     *   3. new words — at most a small batch, and only while the "learning"
-     *      pile (boxes 0–1) is below a round's worth, so a 200-word import
-     *      never floods you. A light review day means more new words.
-     *   4. only if that is less than two boards, top up with words not yet due
-     *      (lowest box, least recently seen). Topping up to the full size would
-     *      show not-due words every round and undo the spacing.
-     * The chosen set is then *played* in random order: if missed words always
-     * came first, their position would give the answer away, and hard words
-     * would bunch up. Nothing is lost on a timeout — unplayed words keep their
-     * schedule and are still due next round.
+     * The words a level / set starts with.
+     * - Endless: just enough to fill the board; every later refill asks the
+     *   engine for one word (pickNextWord), so what comes next always reflects
+     *   the answers given so far.
+     * - Timed levels: a fixed set of up to `roundSize` words, chosen by the
+     *   engine (due learning steps, then due reviews, then a capped number of
+     *   new words), played in random order so position never gives an answer away.
      */
     function buildWordQueue() {
       if (isTrial()) return shuffle(sampleWords().slice(0, TRIAL_SIZE));
       const limit = state.settings.roundSize;
-      const now = Date.now();
-      const byOldest = (a, b) => (a.lastDrawRound || 0) - (b.lastDrawRound || 0);
-
+      if (isEndless()) {
+        // "Practice the mixed-up pairs": those words open the next set together.
+        const picked = (state.focusWords || []).filter(word => state.words.includes(word)).slice(0, SLOT_COUNT + 2);
+        state.focusWords = null;
+        while (picked.length < SLOT_COUNT + 2) {
+          const word = pickNextWord(picked);
+          if (!word) break;
+          picked.push(word);
+        }
+        return picked;
+      }
       if (state.mode === "all") {
-        const pool = state.settings.recycleMastered ? state.words : state.words.filter(word => !word.mastered);
-        return buildSequentialWordQueue(pool).slice(0, limit);
+        return buildSequentialWordQueue(sequentialPool()).slice(0, limit);
       }
-
-      const introduced = state.words.filter(word => !isNewWord(word));
-      const due = introduced.filter(word => isDueForReview(word, now));
-      const missed = shuffle(due.filter(word => word.box === 0)).sort((a, b) => b.mistakes - a.mistakes);
-      const review = shuffle(due.filter(word => word.box > 0)).sort((a, b) => a.box - b.box);
-      const notDue = introduced
-        .filter(word => !due.includes(word) && (state.settings.recycleMastered || !word.mastered))
-        .sort((a, b) => a.box - b.box || byOldest(a, b));
       const minRound = Math.min(limit, 2 * SLOT_COUNT);
-
-      if (state.mode === "weak") {
-        const weakDue = [...missed, ...review.filter(isLearning)].slice(0, limit);
-        const shaky = notDue.filter(isLearning).slice(0, Math.max(0, minRound - weakDue.length));
-        const weakQueue = [...weakDue, ...shaky];
-        if (weakQueue.length) return shuffle(weakQueue);
-      }
-
-      const queue = [...missed, ...review].slice(0, limit);
-      const learningCount = introduced.filter(isLearning).length;
-      const newBatch = Math.max(5, Math.min(15, Math.round(limit / 3)));
-      const newAllowance = Math.min(newBatch, Math.max(0, limit - learningCount), limit - queue.length);
-      const fresh = newWordsInOrder().slice(0, newAllowance);
-      let chosen = [...queue, ...fresh];
-      if (chosen.length < minRound) {
-        chosen = [...chosen, ...notDue.slice(0, minRound - chosen.length)];
-      }
-      // Still short (small library, little introduced yet): allow more new words.
-      if (chosen.length < minRound) {
-        const moreNew = newWordsInOrder().filter(word => !chosen.includes(word));
-        chosen = [...chosen, ...moreNew.slice(0, minRound - chosen.length)];
-      }
+      const ctx = engineContext(new Set());
+      let chosen = engine.pickBatch(state.words, limit, { ...ctx, minRound });
+      if (!chosen.length && state.mode === "weak") chosen = engine.pickBatch(state.words, limit, { ...ctx, mode: "adaptive", minRound });
       return shuffle(chosen);
+    }
+
+    function sequentialPool() {
+      return state.settings.recycleMastered ? state.words : state.words.filter(word => !isMastered(word));
+    }
+
+    /** Ids of every word on the board or waiting to slide in. */
+    function wordsInPlay() {
+      const ids = new Set();
+      [...state.leftSlots, ...state.rightSlots].forEach(slot => { if (slot && slot.word) ids.add(slot.word.id); });
+      [...state.unmatchedLeft, ...state.unmatchedRight, ...state.halfDeck].forEach(word => ids.add(word.id));
+      return ids;
+    }
+
+    function engineContext(exclude) {
+      return {
+        now: Date.now(),
+        exclude,
+        onBoard: state.words.filter(word => exclude.has(word.id)),
+        newOrder: newWordsInOrder(),
+        mode: state.mode,
+        recycleMastered: state.settings.recycleMastered
+      };
+    }
+
+    /** Endless board: the next word to slide in (null if every word is already in play). */
+    function pickNextWord(extra = []) {
+      const exclude = wordsInPlay();
+      extra.forEach(word => exclude.add(word.id));
+      if (state.mode === "all") {
+        return buildSequentialWordQueue(sequentialPool().filter(word => !exclude.has(word.id)))[0] || null;
+      }
+      const ctx = engineContext(exclude);
+      let word = engine.nextWord(state.words, ctx);
+      // "Weak only" with nothing weak left: carry on with normal practice instead of stalling.
+      if (!word && state.mode === "weak") word = engine.nextWord(state.words, { ...ctx, mode: "adaptive" });
+      return word;
     }
 
     function buildSequentialWordQueue(words) {
@@ -3615,21 +4066,30 @@
         return;
       }
 
+      state.leftSlots = [];
+      state.rightSlots = [];
+      state.halfDeck = [];
+      state.unmatchedLeft = [];
+      state.unmatchedRight = [];
+      state.levelConfusions = [];
+      state.blockWords = new Set();
+      stopDrills();
+      const endless = isEndless();
       const levelWords = buildWordQueue();
-      state.sessionTotal = levelWords.length;
+      state.sessionTotal = endless ? BLOCK_SIZE : levelWords.length;
       const now = performance.now();
       state.levelStartedAt = now;
       state.roundStartedAt = now;
       state.lastPairAt = 0;
       state.levelTimeLeftMs = null;
-      state.levelDurationMs = computeLevelDurationMs(state.sessionTotal);
-      state.levelEndsAt = now + state.levelDurationMs;
+      state.levelDurationMs = endless ? 0 : computeLevelDurationMs(state.sessionTotal);
+      state.levelEndsAt = endless ? 0 : now + state.levelDurationMs;
       state.levelTimeIsAdaptive = Boolean(
         state.settings.adaptiveLevelTime
         && resolveMsPerPair(state.settings) > 0
       );
 
-      if (!state.sessionTotal) {
+      if (!levelWords.length) {
         showCompletion(true);
         return;
       }
@@ -3653,7 +4113,9 @@
       els.roundLabel.textContent = levelLabel(0, state.sessionTotal);
       els.feedback.className = "feedback";
       const timeLabel = formatTime(state.levelDurationMs);
-      if (state.levelTimeIsAdaptive) {
+      if (endless) {
+        els.feedback.textContent = t("feedback.endlessStart", { n: BLOCK_SIZE });
+      } else if (state.levelTimeIsAdaptive) {
         const tolPct = Math.round((state.settings.levelTimeTolerance || 0) * 100);
         els.feedback.textContent = t("feedback.timeAdaptive", { t: timeLabel, tol: tolPct });
       } else {
@@ -3661,7 +4123,7 @@
       }
       // The completion screen may have been scrolled; start the board at the top.
       els.main.scrollTop = 0;
-      startLevelTimer();
+      if (!endless) startLevelTimer();
       // A level rebuilt while the library is open (add/delete word) waits for it to close.
       if (shouldPauseLevel()) pauseLevel();
       renderSlots();
@@ -3946,7 +4408,8 @@
       word.correct += 1;
       word.streak += 1;
       word.lastMs = elapsed;
-      recordCorrect(word);
+      recordCorrect(word, elapsed);
+      state.blockWords.add(word.id);
 
       state.score += 1;
       state.streak += 1;
@@ -3974,6 +4437,11 @@
         // selection the user already made after unlock) intact.
         paintSlotPair(cleared.leftIndex, cleared.rightIndex);
         renderStats();
+        // Endless: a short summary every BLOCK_SIZE pairs.
+        if (isEndless() && state.completedThisRun >= BLOCK_SIZE) {
+          showCompletion(false, "block");
+          return;
+        }
         // Board empty + no more words: stop clock immediately even if a refill timer is mid-flight.
         if (finishLevelIfDone()) return;
         els.feedback.className = "feedback";
@@ -3995,6 +4463,10 @@
     }
 
     function takeFreshHalf(side) {
+      if (!state.halfDeck.length && isEndless()) {
+        const next = pickNextWord();
+        if (next) state.halfDeck.push(next);
+      }
       if (!state.halfDeck.length) return null;
       const word = state.halfDeck.shift();
       markWordDrawn(word);
@@ -4065,11 +4537,19 @@
       firstWord.streak = 0;
       secondWord.streak = 0;
       // The first pick is the word being answered; the second was the wrong guess,
-      // so it only steps back one review level instead of losing all progress.
-      recordWrong(firstWord, true);
+      // so it only loses some stability instead of counting as forgotten.
+      recordWrong(firstWord);
+      state.blockWords.add(firstWord.id);
       if (!state.levelDemoted.has(secondWord.id)) {
         state.levelDemoted.add(secondWord.id);
-        recordWrong(secondWord, false);
+        recordWrongPick(secondWord);
+      }
+      // Mixed-up pairs come back side by side later (and are listed in the summary).
+      if (firstWord !== secondWord) {
+        engine.recordConfusion(firstWord, secondWord);
+        if (!state.levelConfusions.some(([a, b]) => (a === firstWord && b === secondWord) || (a === secondWord && b === firstWord))) {
+          state.levelConfusions.push([firstWord, secondWord]);
+        }
       }
       state.levelMisses.set(firstWord.id, firstWord);
       state.levelMisses.set(secondWord.id, secondWord);
@@ -4107,6 +4587,7 @@
     }
 
     function hasWordsWaiting() {
+      if (isEndless()) return state.words.length > 0;
       return state.halfDeck.length > 0 || state.unmatchedLeft.length > 0 || state.unmatchedRight.length > 0;
     }
 
@@ -4138,6 +4619,11 @@
       // Sample real clear pace only (not the fixed countdown allotment / timeout cutoff).
       // A first-timer learning the controls is not a pace sample.
       if (!isTrial()) recordLevelPace(reason);
+      // Close the engine's block (rewards the push policy with memory gained per
+      // minute of actual play — paused time is already shifted out of levelStartedAt).
+      const activeMs = Math.max(0, (state.lastPairAt || performance.now()) - state.levelStartedAt);
+      state.lastBlock = engine.endBlock(Date.now(), activeMs) || null;
+      scheduleEngineFit();
       // Each finished level rotates the color skin.
       advanceThemeAfterLevel();
       els.practiceView.classList.add("hidden");
@@ -4149,6 +4635,7 @@
       if (trial) state.onboarding = "choose";
       state.lastCompletion = { allDone, reason, trial };
       renderCompletionCopy();
+      if (!trial) startDrills();
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
       saveWords();
@@ -4156,9 +4643,9 @@
     }
 
     function levelLabel(done, total) {
-      return isTrial()
-        ? t("lesson.trialLevel", { done, total })
-        : t("lesson.roundLevel", { n: state.round, done, total });
+      if (isTrial()) return t("lesson.trialLevel", { done, total });
+      if (isEndless()) return t("lesson.endlessLabel", { n: state.round, done, total });
+      return t("lesson.roundLevel", { n: state.round, done, total });
     }
 
     function renderCompletionCopy() {
@@ -4166,6 +4653,7 @@
       const remaining = state.words.filter(isLearning).length;
       const summary = t("timeouts.levelSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0 });
       els.trialKeepBtn.hidden = !trial;
+      els.focusPairsBtn.hidden = true;
       if (trial) {
         els.completionTitle.textContent = t("trial.doneTitle");
         // After a reload there are no level stats to report — just the choice.
@@ -4179,6 +4667,18 @@
         return;
       }
       els.continueBtn.textContent = t("lesson.continueBtn");
+      els.focusPairsBtn.hidden = !(reason === "block" && confusedWords().length >= 2);
+      if (reason === "block") {
+        const block = state.lastBlock || {};
+        const dueToday = engine.forecast(state.words, 1)[0];
+        els.completionTitle.textContent = t("timeouts.blockTitle");
+        els.completionText.textContent = [
+          t("timeouts.blockSummary", { done: state.completedThisRun || 0, m: state.levelMistakes || 0, fresh: block.fresh || 0 }),
+          dueToday ? t("timeouts.blockDue", { n: dueToday }) : t("timeouts.blockClear")
+        ].join(" ");
+        renderReviewList();
+        return;
+      }
       els.completionTitle.textContent = allDone ? t("timeouts.allPass") : reason === "timeout" ? t("timeouts.timeUp") : t("timeouts.levelComplete");
       els.completionText.textContent = allDone
         ? t("timeouts.allDoneText")
@@ -4188,14 +4688,518 @@
       renderReviewList();
     }
 
+    /** Every word that was part of a mix-up this level / set, once each. */
+    function confusedWords() {
+      const seen = new Set();
+      (state.levelConfusions || []).flat().forEach(word => { if (state.words.includes(word)) seen.add(word); });
+      return [...seen];
+    }
+
     /** The words mixed up this level, with their correct meaning — the part a learner actually needs to see. */
     function renderReviewList() {
       const missed = [...state.levelMisses.values()].filter(word => state.words.includes(word));
+      const pairs = (state.levelConfusions || []).filter(([a, b]) => state.words.includes(a) && state.words.includes(b));
       els.reviewHeading.textContent = missed.length ? t("timeouts.reviewHeading") : "";
       els.reviewList.innerHTML = missed
         .map(word => `<li${canSpeak() ? ' class="has-speak"' : ""}>${speakButton(word.en)}<b>${escapeHtml(word.en)}</b><span>${escapeHtml(word.zh)}</span></li>`)
-        .join("");
+        .join("")
+        + (pairs.length
+          ? `<li class="confusion-note">${t("timeouts.confusedPairs", { list: pairs.map(([a, b]) => `${escapeHtml(a.en)} ↔ ${escapeHtml(b.en)}`).join(currentLang === "zh" ? "；" : "; ") })}</li>`
+          : "");
     }
+
+    // ---- Practice cards after a set: spelling and sentence making ----
+    // Both feed the schedule. Spelling: right = Good, wrong = Again (then type it
+    // once from the answer). Sentences are checked on this device (js/sentence.js);
+    // the first submission decides the grade — a pass counts as Easy (producing a
+    // word is stronger than recognising it), corrections afterwards are for learning.
+    // ---- On-device AI (optional, js/ai.js) ----
+    // A small WebGPU model, downloaded only when the learner asks for it in Settings.
+    // It suggests a Chinese idea on sentence cards and writes example sentences for
+    // words without one; every example must pass the grammar check before it is kept.
+    // It never grades: the model eval found no small model that judges meaning reliably.
+    // Any failure or timeout falls back to the rules layer silently.
+    const aiState = { support: null, ai: null, busy: false, progress: 0, cached: false, message: "", messageKind: "" };
+    let aiModule = null;
+    let aiInitPromise = null;
+
+    function loadAiModule() {
+      if (!aiModule) aiModule = import("./js/ai.js").catch(error => { aiModule = null; throw error; });
+      return aiModule;
+    }
+
+    function aiLanguageOk() {
+      const { a, b } = state.settings.langPair;
+      return /^(english|英语|英文)$/i.test(a) && /^(中文|汉语|简体中文|chinese)$/i.test(b);
+    }
+
+    /** Checks WebGPU and whether the model is already on this device. Runs once. */
+    function aiInit() {
+      if (!aiInitPromise) {
+        aiInitPromise = (async () => {
+          if (!("gpu" in navigator)) { aiState.support = { webgpu: false }; return; }
+          const mod = await loadAiModule();
+          aiState.support = await mod.detect();
+          if (!aiState.support.webgpu) return;
+          aiState.ai = mod.createAI({ model: mod.DEFAULT_MODEL, f16: aiState.support.f16 });
+          aiState.cached = await aiState.ai.isCached();
+          if (state.settings.ai.on && !aiState.cached) {
+            // The browser evicted the model (or it was never finished): ask again in Settings.
+            state.settings.ai = { on: false };
+            saveWords();
+          }
+        })().catch(() => { aiState.support = { webgpu: false }; });
+      }
+      return aiInitPromise;
+    }
+
+    function syncAiUI() {
+      if (!els.aiSection) return;
+      const ai = aiState.ai;
+      els.aiSection.hidden = !ai || !aiLanguageOk();
+      if (els.aiSection.hidden) return;
+      const mb = ai.model.downloadMB;
+      els.aiAbout.textContent = t("aiSettings.about", { name: ai.model.name, mb });
+      const on = state.settings.ai.on;
+      els.aiProgress.hidden = !aiState.busy;
+      els.aiProgress.value = aiState.progress;
+      els.aiToggleBtn.disabled = aiState.busy;
+      els.aiToggleBtn.textContent = on ? t("aiSettings.turnOff")
+        : aiState.cached ? t("aiSettings.turnOn")
+          : aiState.progress > 0 ? t("aiSettings.resume", { mb }) : t("aiSettings.enable", { mb });
+      els.aiDeleteBtn.hidden = !aiState.cached || aiState.busy;
+      let message = aiState.message, kind = aiState.messageKind;
+      if (aiState.busy) {
+        message = aiState.progress < 1 && !aiState.cached
+          ? t("aiSettings.downloading", { pct: Math.floor(aiState.progress * 100) })
+          : t("aiSettings.loading");
+        kind = "";
+      } else if (!message) {
+        message = on ? t("aiSettings.on") : aiState.cached ? t("aiSettings.offCached", { mb }) : t("aiSettings.off");
+      }
+      els.aiStatus.textContent = message;
+      els.aiStatus.className = `import-status${kind ? " " + kind : ""}`;
+    }
+
+    async function aiToggle() {
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || aiState.busy) return;
+      aiState.message = "";
+      if (state.settings.ai.on) {
+        state.settings.ai = { on: false };
+        saveWords();
+        await ai.unload();
+        syncAiUI();
+        return;
+      }
+      aiState.busy = true;
+      syncAiUI();
+      try {
+        // Ask the browser not to evict hundreds of MB of weights under storage pressure.
+        if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+        await ai.load(report => {
+          aiState.progress = Math.max(aiState.progress, Number(report.progress) || 0);
+          syncAiUI();
+        });
+        aiState.cached = true;
+        aiState.progress = 1;
+        state.settings.ai = { on: true };
+        saveWords();
+      } catch (error) {
+        aiState.message = t("aiSettings.failed");
+        aiState.messageKind = "bad";
+      } finally {
+        aiState.busy = false;
+        syncAiUI();
+      }
+    }
+
+    async function aiDelete() {
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || aiState.busy) return;
+      if (!confirm(t("aiSettings.confirmDelete", { mb: ai.model.downloadMB }))) return;
+      aiState.busy = true;
+      syncAiUI();
+      try {
+        await ai.remove();
+      } catch (error) { /* deleting what is not there is fine */ }
+      aiState.cached = await ai.isCached();
+      aiState.busy = false;
+      aiState.progress = 0;
+      aiState.message = aiState.cached ? t("aiSettings.failed") : t("aiSettings.deleted");
+      aiState.messageKind = aiState.cached ? "bad" : "good";
+      state.settings.ai = { on: false };
+      saveWords();
+      syncAiUI();
+    }
+
+    /** The model, started if it is on and already downloaded; null otherwise. Never downloads. */
+    async function aiReady() {
+      if (!state.settings.ai.on || !aiLanguageOk() || isTrial()) return null;
+      await aiInit();
+      const ai = aiState.ai;
+      if (!ai || !aiState.cached || !state.settings.ai.on) return null;
+      if (!ai.ready) {
+        try { await ai.load(); } catch (error) { return null; }
+      }
+      return ai;
+    }
+
+    /**
+     * A model-written example for `word` that uses it and passes the grammar check,
+     * stored as the word's example (marked AI). → { en, zh } or null.
+     */
+    async function aiExampleFor(word, ai, mod) {
+      try {
+        ai = ai || await aiReady();
+        if (!ai) return null;
+        mod = mod || await loadSentenceModule();
+        const example = await ai.example(word.en, word.zh);
+        if (!example || !example.zh || word.ex) return null;
+        const check = await mod.checkSentence(word.en, example.en);
+        if (!check.ok || !check.target.found) return null;
+        setExample(word, example.en, example.zh, true);
+        saveWords();
+        return example;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    let aiFilling = false;
+    /** Writes example sentences for up to `limit` words of this set that have none. */
+    async function aiFillExamples(limit = 3) {
+      if (aiFilling) return;
+      aiFilling = true;
+      try {
+        const ai = await aiReady();
+        if (!ai) return;
+        const mod = await loadSentenceModule();
+        const words = state.words.filter(word => state.blockWords.has(word.id) && !word.ex && latinWord(word)).slice(0, limit);
+        for (const word of words) {
+          await aiExampleFor(word, ai, mod);
+        }
+      } catch (error) {
+        // Rules layer only; nothing to show.
+      } finally {
+        aiFilling = false;
+      }
+    }
+
+    const drill = { list: [], index: 0 };
+    let sentenceModule = null;
+    let sentenceModuleReady = false;
+
+    function loadSentenceModule() {
+      if (!sentenceModule) {
+        sentenceModule = import("./js/sentence.js")
+          .then(mod => mod.load().then(() => { sentenceModuleReady = true; return mod; }))
+          .catch(error => { sentenceModule = null; throw error; });
+      }
+      return sentenceModule;
+    }
+
+    function latinWord(word) {
+      return /^[A-Za-z][A-Za-z' .-]*$/.test(word.en);
+    }
+
+    function pickDrills() {
+      const n = state.settings.drills;
+      if (!n || isTrial()) return [];
+      const now = Date.now();
+      const missed = new Set(state.levelMisses.keys());
+      const answered = state.words.filter(word => state.blockWords.has(word.id) && word.srs && latinWord(word));
+      const spell = answered.slice().sort((a, b) => Number(missed.has(b.id)) - Number(missed.has(a.id)) || a.srs.S - b.srs.S);
+      const lastSentenceAt = word => Math.max(0, ...(word.sentences || []).map(x => x.at || 0));
+      // Sentences: words that are recognised but not yet well used — answered more than once,
+      // out of the short-term steps, stability around a few days. English side A only (the checker is English).
+      const sentence = /^english$/i.test(state.settings.langPair.a)
+        ? state.words
+          .filter(word => word.srs && latinWord(word) && word.srs.reps >= 2 && word.srs.step === 0 && now - lastSentenceAt(word) > 2 * 24 * 3600 * 1000)
+          .sort((a, b) => Number(state.blockWords.has(b.id)) - Number(state.blockWords.has(a.id))
+            || Math.abs(Math.log(a.srs.S / 3)) - Math.abs(Math.log(b.srs.S / 3)))
+        : [];
+      const order = n === 1 ? ["sentence"] : ["spell", "sentence", "spell"];
+      const out = [], used = new Set();
+      const take = (type, pool) => {
+        const word = pool.find(w => !used.has(w.id));
+        if (!word) return;
+        used.add(word.id);
+        out.push({ type, word, attempts: 0, grade: null, pending: null, phase: "answer" });
+      };
+      order.forEach(type => { if (out.length < n) take(type, type === "spell" ? spell : sentence); });
+      while (out.length < n && spell.some(w => !used.has(w.id))) take("spell", spell);
+      return out;
+    }
+
+    function startDrills() {
+      drill.list = pickDrills();
+      drill.index = 0;
+      renderDrill();
+      // Background: examples for this set's words feed the next spelling cards.
+      if (state.settings.ai.on) aiFillExamples();
+    }
+
+    function stopDrills() {
+      commitDrill(drill.list[drill.index]);
+      drill.list = [];
+      drill.index = 0;
+      els.drill.hidden = true;
+    }
+
+    function wordForms(word) {
+      const w = word.toLowerCase();
+      const forms = new Set([w, w + "s", w + "es", w + "ed", w + "d", w + "ing", w + "er", w + "est", w + "ly"]);
+      if (w.endsWith("y")) { forms.add(w.slice(0, -1) + "ies"); forms.add(w.slice(0, -1) + "ied"); }
+      if (w.endsWith("e")) forms.add(w.slice(0, -1) + "ing");
+      if (/[^aeiou][aeiou][bdgklmnprt]$/.test(w)) { forms.add(w + w.slice(-1) + "ed"); forms.add(w + w.slice(-1) + "ing"); }
+      return forms;
+    }
+
+    /** The example sentence with the word blanked out, or null if the word can't be found in it. */
+    function blankedExample(word) {
+      if (!word.ex) return null;
+      const ex = word.ex, target = word.en.toLowerCase();
+      if (/\s/.test(target)) {
+        const at = ex.toLowerCase().indexOf(target);
+        return at < 0 ? null : { text: `${ex.slice(0, at)}____${ex.slice(at + target.length)}`, form: ex.slice(at, at + target.length) };
+      }
+      const parts = ex.split(/([A-Za-z'-]+)/);
+      const forms = wordForms(target);
+      const index = parts.findIndex(part => forms.has(part.toLowerCase()));
+      if (index < 0) return null;
+      const form = parts[index];
+      parts[index] = "____";
+      return { text: parts.join(""), form };
+    }
+
+    function focusDrill(input) {
+      // On phones the keyboard would cover the card before it is read.
+      if (window.matchMedia && matchMedia("(pointer: coarse)").matches) return;
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function renderDrill() {
+      const card = drill.list[drill.index];
+      els.drill.hidden = !card;
+      if (!card) return;
+      els.drillKicker.textContent = t("drill.kicker", { i: drill.index + 1, n: drill.list.length, type: t("drill.type_" + card.type) });
+      els.drillResult.innerHTML = "";
+      els.drillWrongMeaning.hidden = true;
+      els.drillSubmit.disabled = false;
+      els.drillSubmit.textContent = t("drill.check");
+      if (card.type === "spell") {
+        card.blank = blankedExample(card.word);
+        els.drillTitle.textContent = card.word.zh;
+        els.drillPrompt.innerHTML = card.blank
+          ? `${escapeHtml(card.blank.text)}${card.word.exZh ? `<small>${escapeHtml(card.word.exZh)}</small>` : ""}`
+          : escapeHtml(t("drill.spellPrompt"));
+        els.drillSpell.hidden = false;
+        els.drillSentence.hidden = true;
+        els.drillHint.hidden = true;
+        els.drillSpell.value = "";
+        els.drillSpell.placeholder = t("drill.spellPlaceholder");
+        focusDrill(els.drillSpell);
+      } else {
+        els.drillTitle.innerHTML = t("drill.sentenceTitle", { w: `<b>${escapeHtml(card.word.en)}</b>` });
+        els.drillPrompt.innerHTML = `${escapeHtml(card.word.zh)}<small>${escapeHtml(t("drill.sentenceRule"))}</small>`;
+        els.drillSpell.hidden = true;
+        els.drillSentence.hidden = false;
+        els.drillHint.hidden = false;
+        els.drillSentence.value = "";
+        els.drillSentence.placeholder = t("drill.sentencePlaceholder", { w: card.word.en });
+        focusDrill(els.drillSentence);
+        loadSentenceModule().catch(() => {}); // start the download while the learner thinks
+      }
+    }
+
+    /** Record the card's grade once. */
+    function gradeDrill(card, grade) {
+      if (!card || card.grade != null) return;
+      card.grade = grade;
+      engine.recordAnswer(card.word, grade, Date.now(), { kind: card.type });
+      syncMastered(card.word);
+      saveWords();
+    }
+
+    /** A sentence grade waits until the card is left, so "I used the wrong meaning" can still change it. */
+    function commitDrill(card) {
+      if (card && card.pending != null) gradeDrill(card, card.pending);
+    }
+
+    function nextDrill() {
+      commitDrill(drill.list[drill.index]);
+      drill.index += 1;
+      renderDrill();
+      if (els.drill.hidden) els.continueBtn.focus();
+      renderStats();
+    }
+
+    function normalizeAnswer(text) {
+      return String(text).trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
+    }
+
+    function spellAccepted(card, value) {
+      const answer = normalizeAnswer(value);
+      if (!answer) return false;
+      const accepted = [card.word.en, card.blank && card.blank.form].filter(Boolean).map(normalizeAnswer);
+      // Another library word with the same meaning is right too (synonyms).
+      state.words.forEach(word => { if (word !== card.word && sameText(word.zh, card.word.zh)) accepted.push(normalizeAnswer(word.en)); });
+      return accepted.includes(answer);
+    }
+
+    function submitSpell(card) {
+      const value = els.drillSpell.value;
+      if (card.phase === "done") return nextDrill();
+      if (!value.trim()) return;
+      if (card.phase === "copy") {
+        if ([card.word.en, card.blank && card.blank.form].filter(Boolean).some(x => normalizeAnswer(x) === normalizeAnswer(value))) return nextDrill();
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.copyAgain", { w: escapeHtml(card.word.en) })}</p>`;
+        return;
+      }
+      const right = spellAccepted(card, value);
+      gradeDrill(card, right ? WordSnapEngine.GRADES.GOOD : WordSnapEngine.GRADES.AGAIN);
+      if (right) {
+        card.phase = "done";
+        els.drillResult.innerHTML = `<p class="drill-ok">${t("drill.spellRight")}</p>`;
+        els.drillSubmit.textContent = t("drill.next");
+        els.drillSubmit.focus();
+      } else {
+        card.phase = "copy";
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.spellWrong", { w: escapeHtml(card.word.en) })}</p>`;
+        els.drillSpell.value = "";
+        els.drillSpell.placeholder = card.word.en;
+        els.drillSpell.focus();
+      }
+    }
+
+    function kindLabel(kind) {
+      const label = t("drill.kind_" + kind);
+      return label === "drill.kind_" + kind ? kind : label;
+    }
+
+    function renderSentenceResult(card) {
+      const { result, text } = card;
+      const parts = [];
+      if (result.ok) {
+        parts.push(`<p class="drill-ok">${t("drill.sentenceOk")}</p>`);
+        parts.push(`<p class="drill-muted">${t("drill.checkMeaning", { w: escapeHtml(card.word.en), m: escapeHtml(card.word.zh) })}</p>`);
+      } else {
+        // The sentence with the problem spots underlined.
+        let html = "", at = 0;
+        result.issues.filter(issue => !issue.minor).forEach(issue => {
+          if (issue.start < at) return;
+          html += escapeHtml(text.slice(at, issue.start)) + `<mark>${escapeHtml(text.slice(issue.start, issue.end))}</mark>`;
+          at = issue.end;
+        });
+        html += escapeHtml(text.slice(at));
+        parts.push(`<p class="drill-sentence">${html}</p>`);
+        if (!result.target.found) parts.push(`<p class="drill-bad">${t("drill.notUsed", { w: escapeHtml(card.word.en) })}</p>`);
+        if (result.structure.includes("onlyWord")) parts.push(`<p class="drill-bad">${t("drill.onlyWord")}</p>`);
+        else if (result.structure.includes("short")) parts.push(`<p class="drill-bad">${t("drill.short")}</p>`);
+      }
+      const listed = result.issues.filter(issue => !result.ok || issue.minor);
+      if (listed.length) {
+        parts.push(`<ul class="drill-issues">${listed.map((issue, i) => `<li${issue.minor ? ' class="minor"' : ""}><b>${escapeHtml(kindLabel(issue.kind))}</b> ${escapeHtml(issue.problem)}${issue.suggestions.length ? ` → ${issue.suggestions.map(sug =>
+          `<button class="drill-fix" type="button" data-issue="${result.issues.indexOf(issue)}" data-fix="${escapeHtml(sug)}">${escapeHtml(sug)}</button>`).join(" ")}` : ""}<small>${escapeHtml(issue.message)}</small></li>`).join("")}</ul>`);
+      }
+      if (result.structure.includes("noVerb") && !result.ok) parts.push(`<p class="drill-muted">${t("drill.noVerb")}</p>`);
+      els.drillResult.innerHTML = parts.join("");
+    }
+
+    async function submitSentence(card) {
+      if (card.phase === "done") return nextDrill();
+      const text = els.drillSentence.value.trim();
+      if (!text) return;
+      els.drillSubmit.disabled = true;
+      els.drillResult.innerHTML = `<p class="drill-muted">${t(sentenceModuleReady ? "drill.checking" : "drill.loadingEngine")}</p>`;
+      let mod;
+      try {
+        mod = await loadSentenceModule();
+      } catch (error) {
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+        els.drillSubmit.disabled = false;
+        return;
+      }
+      const result = await mod.checkSentence(card.word.en, text);
+      if (drill.list[drill.index] !== card) return; // moved on while checking
+      els.drillSubmit.disabled = false;
+      card.attempts += 1;
+      card.result = result;
+      card.text = text;
+      if (card.attempts === 1) {
+        const { AGAIN, HARD, EASY } = WordSnapEngine.GRADES;
+        card.pending = result.ok ? EASY : !result.target.found ? AGAIN : HARD;
+      }
+      renderSentenceResult(card);
+      if (result.ok) {
+        card.phase = "done";
+        card.word.sentences = [...(card.word.sentences || []), { text, at: Date.now(), ok: true }].slice(-10);
+        saveWords();
+        els.drillSubmit.textContent = t("drill.next");
+        els.drillWrongMeaning.hidden = false;
+        els.drillHint.hidden = true;
+      }
+    }
+
+    els.drillSubmit.addEventListener("click", () => {
+      const card = drill.list[drill.index];
+      if (!card) return;
+      if (card.type === "spell") submitSpell(card);
+      else submitSentence(card);
+    });
+    els.drillSkip.addEventListener("click", nextDrill);
+    els.drillWrongMeaning.addEventListener("click", () => {
+      const card = drill.list[drill.index];
+      if (!card) return;
+      card.pending = WordSnapEngine.GRADES.AGAIN;
+      if (card.word.sentences && card.word.sentences.length) card.word.sentences[card.word.sentences.length - 1].ok = false;
+      saveWords();
+      nextDrill();
+    });
+    els.drillHint.addEventListener("click", async () => {
+      const card = drill.list[drill.index];
+      if (!card || card.type !== "sentence") return;
+      try {
+        if (!card.word.exZh && state.settings.ai.on) {
+          els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.thinking")}</p>`;
+          // The idea is the translation of a model-written example that passed the grammar
+          // check (the model's free-form ideas were too thin); the example is kept for later cards.
+          const idea = await aiExampleFor(card.word);
+          if (drill.list[drill.index] !== card) return;
+          if (idea) {
+            els.drillResult.innerHTML = `<p class="drill-muted">${t("drill.idea", { text: escapeHtml(idea.zh), w: escapeHtml(card.word.en) })}</p>`;
+            return;
+          }
+        }
+        const mod = await loadSentenceModule();
+        const hint = await mod.hintFor(card.word.en, card.word.exZh ? { exZh: card.word.exZh } : null);
+        els.drillResult.innerHTML = `<p class="drill-muted">${hint.kind === "idea"
+          ? t("drill.idea", { text: escapeHtml(hint.text), w: escapeHtml(card.word.en) })
+          : t("drill.frames", { text: escapeHtml(hint.text) })}</p>`;
+      } catch (error) {
+        els.drillResult.innerHTML = `<p class="drill-bad">${t("drill.engineFailed")}</p>`;
+      }
+    });
+    els.drillResult.addEventListener("click", event => {
+      const button = event.target.closest("[data-fix]");
+      const card = drill.list[drill.index];
+      if (!button || !card || !card.result) return;
+      const issue = card.result.issues[Number(button.dataset.issue)];
+      if (!issue) return;
+      els.drillSentence.value = card.text.slice(0, issue.start) + button.dataset.fix + card.text.slice(issue.end);
+      els.drillSentence.focus();
+    });
+    if (els.aiToggleBtn) els.aiToggleBtn.addEventListener("click", aiToggle);
+    if (els.aiDeleteBtn) els.aiDeleteBtn.addEventListener("click", aiDelete);
+    els.drillSpell.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
+    });
+    els.drillSentence.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey && !event.isComposing) { event.preventDefault(); els.drillSubmit.click(); }
+    });
 
     function showEmptyLibraryPrompt() {
       clearLevelTimers();
@@ -4216,6 +5220,8 @@
       els.completionTitle.textContent = t("lesson.emptyTitle");
       els.completionText.textContent = t("lesson.emptyText");
       els.continueBtn.textContent = t("lesson.emptyAddBtn");
+      els.focusPairsBtn.hidden = true;
+      stopDrills();
       els.feedback.className = "feedback";
       els.feedback.textContent = t("feedback.emptyLib");
       renderStats();
@@ -4223,6 +5229,12 @@
 
     /** Countdown only — runs every timer tick, so it must stay cheap. */
     function renderTimer() {
+      // Endless: no clock, show progress through the current set instead.
+      if (isEndless()) {
+        els.topCount.textContent = `${Math.min(state.completedThisRun || 0, BLOCK_SIZE)}/${BLOCK_SIZE}`;
+        els.topCount.classList.remove("time-low");
+        return;
+      }
       // Frozen after clear/timeout; otherwise live countdown from levelEndsAt.
       let timeLeft;
       if (state.levelTimeLeftMs != null && (state.roundComplete || els.completionView.classList.contains("show") || !state.levelEndsAt)) {
@@ -4239,7 +5251,7 @@
     }
 
     function renderStats() {
-      const remaining = state.words.filter(word => !word.mastered || isDueForReview(word)).length;
+      const remaining = state.words.filter(word => !isMastered(word)).length;
       const targetTotal = currentRoundTotal();
       const pct = state.roundComplete
         ? 100
@@ -4255,8 +5267,8 @@
       els.remaining.textContent = remaining;
 
       const weak = state.words
-        .filter(word => !word.mastered && !isNewWord(word))
-        .sort((a, b) => a.box - b.box || b.mistakes - a.mistakes)
+        .filter(word => !isNewWord(word) && !isMastered(word))
+        .sort((a, b) => engine.retrievability(a) - engine.retrievability(b) || b.mistakes - a.mistakes)
         .slice(0, 6);
 
       els.weakList.innerHTML = weak.length
@@ -4271,9 +5283,34 @@
       return Math.max(state.sessionTotal || 0, state.completedThisRun || 0);
     }
 
+    /**
+     * One import line → [word, meaning, example?, exampleTranslation?].
+     * Example columns come after " | " (spaced pipe), or as the 3rd/4th
+     * column of a tab-separated (spreadsheet) row. Older two-column lines are unchanged.
+     */
     function normalizePair(line) {
-      const trimmed = line.trim();
+      let trimmed = line.trim();
       if (!trimmed) return null;
+      let ex = "", exZh = "";
+      const tabs = trimmed.split("\t");
+      if (tabs.length >= 3 && tabs[0].trim() && tabs[1].trim()) {
+        [ex, exZh] = [tabs[2] || "", tabs[3] || ""];
+        trimmed = `${tabs[0]}\t${tabs[1]}`;
+      } else {
+        const cols = trimmed.split(/\s+\|\s+/);
+        if (cols.length >= 2) {
+          [ex, exZh] = [cols[1] || "", cols[2] || ""];
+          trimmed = cols[0];
+        }
+      }
+      const pair = splitWordMeaning(trimmed);
+      if (!pair) return null;
+      ex = ex.trim();
+      exZh = exZh.trim();
+      return ex ? [...pair, ex, exZh] : pair;
+    }
+
+    function splitWordMeaning(trimmed) {
       // Split on the first separator only, so a meaning may itself contain commas.
       // Tab first: rows pasted from a spreadsheet or Anki export.
       const separator = ["\t", "=", "，", ","].find(sep => trimmed.includes(sep));
@@ -4352,12 +5389,12 @@
 
     function aiExampleLines(a, b) {
       const examples = {
-        "English|中文": ["literature,文学", "take part in,参加"],
-        "English|日本語": ["literature,文学", "take part in,参加する"],
-        "English|Español": ["literature,literatura", "take part in,participar en"],
-        "中文|English": ["文学,literature", "参加,take part in"]
+        "English|中文": ["literature,文学 | She studies English literature at university. | 她在大学学习英国文学。", "take part in,参加 | Everyone can take part in the game. | 每个人都可以参加这个游戏。"],
+        "English|日本語": ["literature,文学 | She studies English literature at university. | 彼女は大学で英文学を学んでいる。", "take part in,参加する | Everyone can take part in the game. | 誰でもその試合に参加できる。"],
+        "English|Español": ["literature,literatura | She studies English literature at university. | Estudia literatura inglesa en la universidad.", "take part in,participar en | Everyone can take part in the game. | Todos pueden participar en el juego."],
+        "中文|English": ["文学,literature | 她在大学学习英国文学。 | She studies English literature at university.", "参加,take part in | 每个人都可以参加这个游戏。 | Everyone can take part in the game."]
       };
-      return examples[`${a}|${b}`] || ["word_1,meaning_1", "word_2,meaning_2"];
+      return examples[`${a}|${b}`] || ["word_1,meaning_1 | example sentence 1 | translation 1", "word_2,meaning_2 | example sentence 2 | translation 2"];
     }
 
     function buildAiPrompt() {
@@ -4377,8 +5414,10 @@
           `   @lang: ${a} | ${b}    the two languages; entries are written in this order`,
           `   @round: ${round}    max words per round (5-200)`,
           `   @time: ${secs}    base seconds per level (20-900)`,
-          `3. After the config lines, one entry per line: ${a} word,${b} meaning`,
-          "   - separate with a single ASCII comma; no numbering, bullets, tables or blank lines;",
+          `3. After the config lines, one entry per line: ${a} word,${b} meaning | ${a} example sentence | ${b} translation of the sentence`,
+          "   - word and meaning are separated by a single ASCII comma; the example and its translation follow, each after “ | ” (space, vertical bar, space);",
+          "   - the example is one short, natural sentence that really uses the word (an inflected form is fine);",
+          "   - no numbering, bullets, tables or blank lines;",
           "   - keep meanings short; separate several meanings with “;” and never put a comma inside a meaning;",
           "   - no duplicate entries.",
           "",
@@ -4398,8 +5437,10 @@
         `   @lang: ${a} | ${b}    两侧语言，词条按这个顺序书写`,
         `   @round: ${round}    每局最多单词数（5–200）`,
         `   @time: ${secs}    每关基础时间，单位秒（20–900）`,
-        `3. 配置行之后，每行一个词条：${a}词,${b}释义`,
-        "   - 只用一个英文逗号分隔；不要序号、项目符号、表格、空行；",
+        `3. 配置行之后，每行一个词条：${a}词,${b}释义 | ${a}例句 | 例句的${b}翻译`,
+        "   - 单词和释义之间只用一个英文逗号；例句和翻译依次跟在后面，各用“ | ”（空格、竖线、空格）隔开；",
+        "   - 例句是一句简短自然、真正用到这个词的句子（可以是变形）；",
+        "   - 不要序号、项目符号、表格、空行；",
         "   - 释义尽量简短，多个释义用“；”隔开，释义里不要出现英文逗号；",
         "   - 不要出现重复词条。",
         "",
@@ -4442,6 +5483,7 @@
 
     /** Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped. */
     let lastRemovedSamples = 0;
+    let lastExamplesAdded = 0;
     function addWords(pairs) {
       lastRemovedSamples = 0;
       const valid = pairs.filter(pair => pair && pair[0] && pair[1]);
@@ -4454,17 +5496,25 @@
         lastRemovedSamples = before - state.words.length;
         state.words.forEach(word => { word.custom = true; });
       }
-      const existing = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
-      let added = 0;
+      const existing = new Map(state.words.map(word => [`${word.en.toLowerCase()}::${word.zh}`, word]));
+      let added = 0, withExample = 0;
       pairs.forEach(pair => {
         if (!pair) return;
         const key = `${pair[0].toLowerCase()}::${pair[1]}`;
-        if (existing.has(key)) return;
-        existing.add(key);
-        state.words.push(createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`));
+        const known = existing.get(key);
+        if (known) {
+          // Re-importing a word with an example sentence adds the sentence (progress is kept).
+          if (pair[2] && !known.ex) { setExample(known, pair[2], pair[3]); withExample += 1; }
+          return;
+        }
+        const word = createWord(pair[0], pair[1], true, `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`, { ex: pair[2], exZh: pair[3] });
+        existing.set(key, word);
+        state.words.push(word);
         added += 1;
       });
+      lastExamplesAdded = withExample;
 
+      if (withExample && !(added > 0 || lastRemovedSamples)) saveWords();
       if (added > 0 || lastRemovedSamples) {
         endTrial();
         saveWords();
@@ -4484,13 +5534,14 @@
         word.streak = 0;
         word.mastered = false;
         word.lastMs = 0;
-        word.box = 0;
-        word.dueRound = 0;
-        word.dueAt = 0;
+        word.srs = null;
+        word.confusions = {};
         word.draws = 0;
         word.lastDrawRound = 0;
       });
       state.drawHistory = [];
+      // The personal fit and push statistics describe this learner's history, which is being cleared too.
+      engine = WordSnapEngine.create(null, { blockSize: BLOCK_SIZE });
       state.round = 1;
       state.score = 0;
       state.mistakes = 0;
@@ -4551,6 +5602,7 @@
       pauseLevel();
       if (els.optionsStatus) els.optionsStatus.textContent = "";
       syncOptionsUI();
+      aiInit().then(syncAiUI);
     }
 
     function closeSettings() {
@@ -4630,6 +5682,18 @@
     }
 
     function syncOptionsUI() {
+      if (els.flowSelect) {
+        els.flowSelect.innerHTML = ["endless", "levels"]
+          .map(flow => `<option value="${flow}">${t("settings.flow_" + flow)}</option>`)
+          .join("");
+        els.flowSelect.value = state.settings.flow;
+      }
+      if (els.drillsSelect) {
+        els.drillsSelect.innerHTML = [0, 1, 2, 3].map(n => `<option value="${n}">${t("settings.drills_" + n)}</option>`).join("");
+        els.drillsSelect.value = String(state.settings.drills);
+      }
+      // Level length and timer only matter for timed levels.
+      els.settingsModal.querySelectorAll("[data-levels-only]").forEach(el => { el.hidden = state.settings.flow !== "levels"; });
       els.levelSeconds.value = Math.round(state.settings.levelDurationMs / 1000);
       els.roundSize.value = state.settings.roundSize;
       if (els.levelTimeTolerance) {
@@ -4650,6 +5714,7 @@
       els.recycleMastered.checked = state.settings.recycleMastered;
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
       syncLangPairUI();
+      syncAiUI();
     }
 
     function saveOptionsFromUI() {
@@ -4664,6 +5729,8 @@
         if (LANG_PAIR_PRESETS[idx]) langPair = { ...LANG_PAIR_PRESETS[idx] };
       }
       const nextSettings = normalizeSettings({
+        flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
+        drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
         levelDurationMs: Number(els.levelSeconds.value) * 1000,
         roundSize: Number(els.roundSize.value),
         adaptiveLevelTime: els.adaptiveLevelTime ? els.adaptiveLevelTime.checked : true,
@@ -4679,7 +5746,8 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
-        langPair
+        langPair,
+        ai: state.settings.ai
       });
       state.settings = nextSettings;
       if (els.modeSelect && ["adaptive", "weak", "all"].includes(els.modeSelect.value)) {
@@ -4852,6 +5920,11 @@
     });
     document.getElementById("quitBtn").addEventListener("click", () => {
       if (!state.words.length) return;
+      // Endless: × ends the current set early and shows its summary.
+      if (isEndless() && state.completedThisRun > 0 && !els.completionView.classList.contains("show")) {
+        showCompletion(false, "block");
+        return;
+      }
       renderRound();
     });
     if (els.langPairSelect) {
@@ -4916,8 +5989,9 @@
       const added = addWords(pairs);
       const messages = [];
       if (added) messages.push(t("ai.imported", { n: added }));
+      else if (pairs.length && !lastExamplesAdded) messages.push(t("ai.dupOnly"));
       if (lastRemovedSamples) messages.push(t("ai.samplesRemoved", { n: lastRemovedSamples }));
-      else if (pairs.length) messages.push(t("ai.dupOnly"));
+      if (lastExamplesAdded) messages.push(t("ai.examplesAdded", { n: lastExamplesAdded }));
       if (configParts.length) messages.push(t("ai.config", { list: configParts.join(currentLang === "zh" ? "、" : ", ") }));
       if (skipped) messages.push(t("ai.skipped", { n: skipped }));
       if (added || configParts.length) els.bulkInput.value = "";
@@ -4925,7 +5999,7 @@
         els.feedback.className = "feedback good";
         els.feedback.textContent = t("feedback.addedN", { n: added });
       }
-      setImportStatus(messages.join(" "), added || configParts.length ? "good" : "");
+      setImportStatus(messages.join(" "), added || configParts.length || lastExamplesAdded ? "good" : "");
     });
 
     document.getElementById("copyAiPromptBtn").addEventListener("click", async () => {
@@ -5006,7 +6080,8 @@
     /** Same format as Bulk input (tab-separated, plus @lang), so pasting it back restores the list. */
     function buildBackupText() {
       const { a, b } = state.settings.langPair;
-      return [`@lang: ${a} | ${b}`, ...state.words.map(word => `${word.en}\t${word.zh}`)].join("\n");
+      return [`@lang: ${a} | ${b}`, ...state.words.map(word =>
+        [word.en, word.zh, ...(word.ex ? [word.ex, word.exZh || ""] : [])].join("\t"))].join("\n");
     }
 
     document.getElementById("copyBackupBtn").addEventListener("click", async () => {
@@ -5050,6 +6125,12 @@
       saveWords();
       renderRound();
     });
+    els.focusPairsBtn.addEventListener("click", () => {
+      state.focusWords = confusedWords();
+      state.round += 1;
+      saveWords();
+      renderRound();
+    });
     els.trialKeepBtn.addEventListener("click", () => {
       endTrial();
       state.round += 1;
@@ -5073,6 +6154,7 @@
         if (event.key === "Escape") { closeLibrary(); closeSettings(); }
         return;
       }
+      if (event.target && event.target.closest && event.target.closest("#drill")) return;
       if (els.completionView.classList.contains("show") && (event.key === "Enter" || event.key === " ")) {
         if (event.target !== els.continueBtn) {
           event.preventDefault();
@@ -5121,7 +6203,9 @@
     registerServiceWorker();
     const savedState = readSavedState();
     state.settings = normalizeSettings(loadSettings(savedState));
+    engine = WordSnapEngine.create(savedState && savedState.engine, { blockSize: BLOCK_SIZE });
     state.words = loadWords(savedState);
+    state.words.forEach(syncMastered);
     state.drawHistory = Array.isArray(savedState && savedState.drawHistory) ? savedState.drawHistory : [];
     if (savedState && ["adaptive", "weak", "all"].includes(savedState.mode)) {
       state.mode = savedState.mode;

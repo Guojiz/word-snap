@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On-device AI Eval</title>
+<style>
+  :root { --bg: #fff; --fg: #1d1d1f; --muted: #6e6e73; --line: #e5e5ea; --good: #1a7f37; --bad: #c62828; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #f2f2f7; --muted: #a1a1a6; --line: #333; --good: #4cc26a; --bad: #ff6b6b; } }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.5 system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  p { color: var(--muted); margin: 4px 0 12px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  select, button { font: inherit; padding: 6px 10px; }
+  #status { color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 4px 6px; text-align: left; vertical-align: top; }
+  .good { color: var(--good); } .bad { color: var(--bad); }
+  #summary { font-weight: 600; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>On-device AI eval</h1>
+<p>Runs tests/fixtures/meaning-judgments.json through a WebLLM model and reports accuracy and latency. Add <code>?model=qwen3-0.6b&amp;run</code> to start automatically.</p>
+<div class="row">
+  <select id="model"></select>
+  <button id="run">Load &amp; run</button>
+  <button id="drop">Delete this model</button>
+  <span id="status"></span>
+</div>
+<div id="summary"></div>
+<table><thead><tr><th>#</th><th>word</th><th>sentence</th><th>label</th><th>model</th><th>ms</th><th>reason</th></tr></thead><tbody id="rows"></tbody></table>
+<script type="module">
+import { MODELS, createAI, detect, modelById } from "../js/ai.js";
+
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+for (const model of MODELS) $("model").add(new Option(`${model.name} (~${model.downloadMB} MB)`, model.id));
+if (params.get("model")) $("model").value = params.get("model");
+
+const gpu = await detect();
+$("status").textContent = gpu.webgpu ? `WebGPU ok, shader-f16: ${gpu.f16}` : "No WebGPU in this browser";
+
+async function run() {
+  const model = modelById($("model").value);
+  const ai = createAI({ model, f16: gpu.f16, timeoutMs: 30000 });
+  $("rows").textContent = "";
+  $("summary").textContent = "";
+  const loadStart = performance.now();
+  await ai.load(p => { $("status").textContent = p.text; });
+  const loadMs = Math.round(performance.now() - loadStart);
+  const items = await (await fetch("../tests/fixtures/meaning-judgments.json")).json();
+  const results = [];
+  for (const [i, item] of items.entries()) {
+    const start = performance.now();
+    const verdict = await ai.judgeMeaning(item.word, item.meaning, item.sentence);
+    const ms = Math.round(performance.now() - start);
+    const got = verdict ? verdict.ok : null;
+    results.push({ ...item, got, ms, reason: verdict ? verdict.reasonZh : "(no answer)" });
+    const tr = $("rows").insertRow();
+    for (const cell of [i + 1, item.word, item.sentence, item.ok ? "ok" : "wrong", got === null ? "—" : got ? "ok" : "wrong", ms, results.at(-1).reason]) tr.insertCell().textContent = cell;
+    tr.className = got === item.ok ? "good" : "bad";
+    $("status").textContent = `${i + 1}/${items.length}`;
+  }
+  // Ideas and examples, eyeballed.
+  const samples = [];
+  for (const item of items.filter((_, i) => i % 12 === 0)) {
+    samples.push({ word: item.word, idea: await ai.ideaZh(item.word, item.meaning), example: await ai.example(item.word, item.meaning) });
+  }
+  const correct = results.filter(r => r.got === r.ok).length;
+  const caught = results.filter(r => !r.ok && r.got === false).length;
+  const falseAlarms = results.filter(r => r.ok && r.got === false).length;
+  const unanswered = results.filter(r => r.got === null).length;
+  const latencies = results.map(r => r.ms).sort((a, b) => a - b);
+  const report = {
+    model: ai.modelId,
+    accuracy: +(correct / results.length).toFixed(3),
+    misusesCaught: `${caught}/${results.filter(r => !r.ok).length}`,
+    falseAlarms: `${falseAlarms}/${results.filter(r => r.ok).length}`,
+    unanswered,
+    medianMs: latencies[Math.floor(latencies.length / 2)],
+    p90Ms: latencies[Math.floor(latencies.length * 0.9)],
+    loadMs,
+    samples
+  };
+  $("summary").textContent = JSON.stringify(report, null, 2);
+  $("status").textContent = "done";
+  window.evalReport = report;
+  await ai.unload();
+}
+
+$("run").onclick = () => run().catch(error => { $("status").textContent = "Error: " + error.message; window.evalError = String(error); });
+$("drop").onclick = async () => {
+  await createAI({ model: $("model").value, f16: gpu.f16 }).remove();
+  $("status").textContent = "deleted";
+};
+if (params.has("run")) $("run").click();
+</script>
+</body>
+</html>

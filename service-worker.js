@@ -1,8 +1,12 @@
-const CACHE_NAME = "word-snap-v40";
+const CACHE_NAME = "word-snap-v46";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./vocabulary-match.html",
+  "./js/engine.js",
+  "./js/sentence.js",
+  "./js/ai.js",
+  "./js/ai-worker.js",
   "./manifest.webmanifest",
   "./apple-touch-icon.png",
   "./icon-192.png",
@@ -21,7 +25,8 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+      // Only our own old versions: the on-device AI keeps its model in "webllm/…" caches.
+      .then(keys => Promise.all(keys.filter(key => key.startsWith("word-snap-") && key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -49,6 +54,8 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(cached => {
       if (cached) return cached;
       return fetch(event.request).then(response => {
+        // Grammar libraries (vendor/) are cached here on first use; failed probes are not.
+        if (!response.ok) return response;
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         return response;
