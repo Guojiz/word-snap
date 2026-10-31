@@ -3142,6 +3142,124 @@
       .ob-track, .tile, .tile-bar i, .tile-arrow { transition: none; }
     }
 
+    /* ---- Card rank on Home: against yourself only (js/habit.js rank()) ---- */
+    .tiles { grid-template-areas: "go go" "rank rank" "lib add" "lib set"; }
+    .tile-rank {
+      grid-area: rank;
+      --r: .8deg;
+      min-height: 0;
+      padding: 14px 18px 16px;
+      gap: 6px;
+      cursor: default;
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: inset 0 0 0 2px var(--line), 0 18px 30px -24px rgba(80, 60, 30, .45);
+    }
+    .tile-rank:active { scale: 1; }
+    .rank-head { display: flex; align-items: center; gap: 10px; width: 100%; }
+    .rank-badge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 48px;
+      border-radius: 9px;
+      rotate: -6deg;
+      background: var(--rank-c, #fff);
+      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 6px 12px -6px rgba(0, 0, 0, .4);
+      color: #2b2a3d;
+      font: 700 15px/1 "Fredoka", system-ui, sans-serif;
+    }
+    .rank-badge.rainbow, .ritual-rank.rainbow {
+      background: linear-gradient(135deg, #ff6b8b, #ffd21f 30%, #2ee6a6 55%, #47b5ff 78%, #b18cff);
+    }
+    .rank-name { font-weight: 800; font-size: 17px; }
+    .rank-pts { margin-left: auto; font: 700 15px/1 "Fredoka", system-ui, sans-serif; white-space: nowrap; }
+    .rank-bar { width: 100%; height: 10px; border-radius: 6px; background: var(--track, var(--line)); overflow: hidden; }
+    .rank-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--rank-c, #47b5ff); transition: width 700ms var(--spring); }
+    .rank-bar.rainbow i { background: linear-gradient(90deg, #ff6b8b, #ffd21f, #2ee6a6, #47b5ff, #b18cff); }
+    .rank-line { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+    .rank-line b { color: var(--text); }
+
+    /* ---- After a set: the ritual (claim → rank news → light the day's flame → reminder) ---- */
+    .ritual {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: calc(24px + var(--sat, 0px)) 20px calc(24px + var(--sab, 0px));
+      background: radial-gradient(120% 70% at 50% 30%, color-mix(in srgb, var(--ritual-c, #47b5ff) 30%, var(--bg)), var(--bg) 70%);
+      overflow-y: auto;
+    }
+    .ritual[hidden] { display: none; }
+    .ritual-card { width: min(420px, 100%); display: grid; justify-items: center; gap: 14px; text-align: center; }
+    .ritual-card > * { animation: ritual-in 320ms var(--spring) both; }
+    .ritual-card > *:nth-child(2) { animation-delay: 60ms; }
+    .ritual-card > *:nth-child(3) { animation-delay: 120ms; }
+    .ritual-card > *:nth-child(4) { animation-delay: 180ms; }
+    .ritual-card > *:nth-child(n+5) { animation-delay: 240ms; }
+    @keyframes ritual-in { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+    .ritual h2 { margin: 0; font-size: 26px; line-height: 1.2; }
+    .ritual p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.45; }
+    .ritual-big { font: 700 84px/1 "Fredoka", system-ui, sans-serif; color: var(--text); text-shadow: 0 6px 0 color-mix(in srgb, var(--ritual-c, #47b5ff) 70%, transparent); }
+    .ritual-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .ritual-chip { padding: 6px 12px; border-radius: 999px; background: var(--c, #47b5ff); color: #2b2a3d; font-weight: 800; font-size: 14px; }
+    .ritual-week { width: 100%; display: grid; gap: 6px; }
+    .ritual-week .rank-line { text-align: center; }
+    .ritual .duo-button { width: 100%; min-height: 56px; font-size: 18px; }
+    .ritual .link-button { min-height: 44px; }
+    .ritual-rank { width: 92px; height: 118px; border-radius: 18px; rotate: -6deg; display: grid; place-items: center; font: 700 30px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--rank-c, #fff); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 18px 30px -14px rgba(0, 0, 0, .45); }
+    .ritual-times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 700 20px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
+    .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; opacity: .75; }
+
+    /* The flame: drag it up (or press the button) to light it. */
+    .ignite-track {
+      position: relative;
+      width: 160px;
+      height: 230px;
+      display: grid;
+      place-items: end center;
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .ignite-track::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 6px;
+      height: 100%;
+      translate: -50% 0;
+      border-radius: 3px;
+      background: linear-gradient(to top, color-mix(in srgb, var(--text) 18%, transparent) calc(var(--p, 0) * 100%), transparent 0);
+    }
+    .flame { width: 120px; height: 150px; translate: 0 calc(var(--p, 0) * -70px); transition: translate 120ms ease-out; }
+    .flame path { transition: fill 400ms ease, opacity 400ms ease; }
+    .flame .outer { fill: color-mix(in srgb, var(--text) 22%, var(--bg)); }
+    .flame .inner { fill: color-mix(in srgb, var(--text) 10%, var(--bg)); }
+    .flame .core { fill: color-mix(in srgb, #ffd21f calc(var(--p, 0) * 100%), var(--bg)); }
+    .ignite-track.lit .flame { translate: 0 -70px; animation: flame-dance 1.2s ease-in-out infinite alternate; }
+    .ignite-track.lit .flame .outer { fill: #ff6b8b; }
+    .ignite-track.lit .flame .inner { fill: #ffb800; }
+    .ignite-track.lit .flame .core { fill: #fff6c2; }
+    .ignite-track.lit::before { opacity: 0; }
+    @keyframes flame-dance { from { scale: 1 1; } to { scale: 1.04 .97; } }
+    .ritual-strip { display: flex; justify-content: center; gap: 8px; }
+    .ritual-strip span { display: grid; justify-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .ritual-strip i { width: 30px; height: 30px; border-radius: 50%; background: var(--line); display: grid; place-items: center; color: #2b2a3d; font-style: normal; font-size: 15px; }
+    .ritual-strip .done i { background: #ffb800; }
+    .ritual-strip .frozen i { background: #47b5ff; }
+    .ritual-strip .today i { box-shadow: inset 0 0 0 3px #ffb800; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ritual-card > *, .ignite-track.lit .flame { animation: none; }
+      .flame, .rank-bar i { transition: none; }
+    }
+
     /* Android: words captured in other apps arrive with a short note above the tab bar. */
     .inbox-note {
       position: fixed;
@@ -3234,6 +3352,18 @@
             <span class="tile-action"><span id="goLabel"></span><svg class="tile-arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <span class="tile-bar" aria-hidden="true"><i id="goBar"></i></span>
           </button>
+          <!-- Card rank: against your own last three weeks only (js/habit.js rank()). -->
+          <div class="tile tile-rank" id="homeRank" hidden>
+            <div class="rank-head">
+              <span class="rank-badge" id="rankBadge" aria-hidden="true"></span>
+              <span class="rank-name" id="rankName"></span>
+              <span class="rank-pts" id="rankPts"></span>
+            </div>
+            <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
+            <span class="rank-line" id="rankLine"></span>
+            <span class="rank-line" id="rankChallenge"></span>
+            <span class="rank-line" id="rankStop"></span>
+          </div>
           <button class="tile tile-lib" type="button" id="homeBook">
             <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
             <span class="tile-title" data-zh="词库" data-en="Library">词库</span>
@@ -3446,6 +3576,10 @@
           <label class="check-row">
             <input id="soundOn" type="checkbox" />
             <span data-en="Sound effects (rewards, the day's flame, buttons)" data-zh="音效（领奖、点燃火焰、按键）">音效（领奖、点燃火焰、按键）</span>
+          </label>
+          <label class="check-row" id="liveRow" hidden>
+            <input id="liveOn" type="checkbox" />
+            <span data-en="Show a set's progress in the status bar when you leave it half-way (Live Update)" data-zh="练到一半切出去时，在状态栏显示这一组的进度（实时活动）">练到一半切出去时，在状态栏显示这一组的进度（实时活动）</span>
           </label>
           <label class="check-row">
             <input id="streakTones" type="checkbox" />
@@ -3997,6 +4131,40 @@
           failed: "Couldn't load the word books. They need a connection the first time.",
           wrongPair: "The word books are English → 中文. Switch the language pair in Settings first."
         },
+        rank: {
+          t0: "White card", t1: "Green card", t2: "Blue card", t3: "Violet card", t4: "Gold card", t5: "Rainbow card",
+          pts: "{p} / {target}",
+          toNext: "{n} more points this week to reach <b>{name}</b> · {days}",
+          toKeep: "{n} more points this week to stay <b>{name}</b> · {days}",
+          met: "This week's target is met: <b>{name}</b> on Monday",
+          metTop: "This week's target is met: you stay <b>{name}</b>",
+          days: "{n} days left", lastDay: "last day",
+          aria: "{name}: {p} of {target} points this week. Ranked against your own last three weeks only.",
+          chDays: "Weekly challenge: reach today's goal on {goal} days ({v}/{goal})",
+          chNewWords: "Weekly challenge: learn {goal} new words ({v}/{goal})",
+          chFullCombos: "Weekly challenge: {goal} full-combo sets ({v}/{goal})",
+          chDone: "Weekly challenge done ✓",
+          stop: "Next stop: a {at}-day streak, {left} to go",
+          stopFirst: "Next stop: reach today's goal to start a streak"
+        },
+        ritual: {
+          setDone: "Set complete!", pairs: "{n} pairs", fullCombo: "Full combo +5", goal: "Today's goal +10",
+          claim: "Claim +{n}", weekTitle: "{name} · this week {p} / {target}",
+          igniteTitle: "Today's goal is done!", igniteHint: "Swipe the flame up to light today's streak", igniteBtn: "Light it",
+          streakDays: "{n}-day streak", streakFirst: "A new streak starts today. Keep it going tomorrow!",
+          streakMore: "Day {n}. Come back tomorrow to make it {m}.",
+          commit: "I'll keep going",
+          remindTitle: "When should I remind you tomorrow?", remindSub: "One reminder a day. Change it any time in Settings.",
+          morning: "Morning", noon: "Noon", evening: "Evening", night: "Night",
+          remindNo: "No reminders", remindSet: "Done: a reminder at {time} every day.",
+          remindDenied: "Notifications are off for Word Snap. Turn them on in the phone's settings.",
+          rankUp: "Last week {p} / {target}: up to {name}!", rankStay: "Last week {p} / {target}: you stay {name}.",
+          rankDown: "Last week {p} / {target}: down to {name}. This week's target is {next}: win it back!",
+          rankTop: "Last week {p} / {target}: still {name}, the top!",
+          rankAbout: "Your target is 10% above your own last three weeks. Nobody else is ranked.",
+          next: "Continue"
+        },
+        live: { setTitle: "{n} to go in this set", setText: "{d} of {t} matched · tap to carry on" },
         langToggle: { en: "EN", zh: "中" }
       },
       zh: {
@@ -4246,6 +4414,40 @@
           failed: "词书加载失败，第一次使用需要联网。",
           wrongPair: "词书是 English → 中文 的，请先在设置里把语言对改过来。"
         },
+        rank: {
+          t0: "白卡", t1: "绿卡", t2: "蓝卡", t3: "紫卡", t4: "金卡", t5: "彩虹卡",
+          pts: "{p} / {target} 分",
+          toNext: "本周再得 {n} 分升到<b>{name}</b> · {days}",
+          toKeep: "本周再得 {n} 分保持<b>{name}</b> · {days}",
+          met: "本周目标达成！下周一升到<b>{name}</b>",
+          metTop: "本周目标达成，<b>{name}</b>稳了",
+          days: "还剩 {n} 天", lastDay: "今天是最后一天",
+          aria: "{name}：本周 {p} / {target} 分。只跟你自己过去三周比。",
+          chDays: "本周挑战：{goal} 天完成今日目标（{v}/{goal}）",
+          chNewWords: "本周挑战：学会 {goal} 个新词（{v}/{goal}）",
+          chFullCombos: "本周挑战：打出 {goal} 组全连（{v}/{goal}）",
+          chDone: "本周挑战完成 ✓",
+          stop: "下一站：连续 {at} 天（还差 {left} 天）",
+          stopFirst: "下一站：完成今日目标，开始连胜"
+        },
+        ritual: {
+          setDone: "这一组完成！", pairs: "配对 {n}", fullCombo: "全连 +5", goal: "今日目标 +10",
+          claim: "领取 +{n} 分", weekTitle: "{name} · 本周 {p} / {target} 分",
+          igniteTitle: "今日目标完成！", igniteHint: "把火焰往上滑，点燃今天的连胜", igniteBtn: "点燃",
+          streakDays: "连续 {n} 天", streakFirst: "新的连胜从今天开始，明天接着来！",
+          streakMore: "第 {n} 天了，明天来就是第 {m} 天。",
+          commit: "我坚持，不放弃",
+          remindTitle: "明天几点提醒你？", remindSub: "每天提醒一次，随时可以在设置里改。",
+          morning: "早上", noon: "中午", evening: "傍晚", night: "晚上",
+          remindNo: "不用提醒", remindSet: "好，每天 {time} 提醒你。",
+          remindDenied: "Word Snap 的通知被关了，需要在手机设置里打开。",
+          rankUp: "上周 {p} / {target} 分，升到{name}！", rankStay: "上周 {p} / {target} 分，保持{name}。",
+          rankDown: "上周 {p} / {target} 分，降到{name}。这周目标 {next} 分，追回来！",
+          rankTop: "上周 {p} / {target} 分，稳坐{name}！",
+          rankAbout: "目标是你自己过去三周平均的 1.1 倍，不跟任何人比。",
+          next: "继续"
+        },
+        live: { setTitle: "这一组还差 {n} 个", setText: "已配对 {d}/{t} · 点这里接着练" },
         langToggle: { en: "EN", zh: "中" }
       }
     };
@@ -4347,6 +4549,7 @@
       recycleMastered: true,
       streakTones: true,
       sound: true,
+      live: true,
       effects: true,
       reminder: "",
       langPair: { a: "English", b: "中文" },
@@ -4494,6 +4697,8 @@
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
       soundOn: document.getElementById("soundOn"),
+      liveOn: document.getElementById("liveOn"),
+      liveRow: document.getElementById("liveRow"),
       effectsOn: document.getElementById("effectsOn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
@@ -4672,6 +4877,7 @@
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
         sound: raw.sound !== false,
+        live: raw.live !== false,
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
         reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
@@ -5093,6 +5299,8 @@
       const status = habitStatus();
       if (status.justDone) {
         habitCelebrate = true;
+        state.goalDoneThisSet = true;
+        feel("goalDone");
         saveWords();
         WordSnapFx.confetti();
         WordSnapFx.banner(t("today.doneBanner", { n: status.streak }));
@@ -6716,6 +6924,9 @@
       if (installNudgeWaiting) setTimeout(showInstallNudge, 1200);
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
+      state.levelSerial = (state.levelSerial || 0) + 1;
+      syncLiveSet(false);
+      setTimeout(startRitual, 450);
       saveWords();
       renderStats();
     }
@@ -8257,6 +8468,8 @@
       WordSnapFx.setEnabled(state.settings.effects !== false);
       if (els.soundOn) els.soundOn.checked = state.settings.sound !== false;
       WordSnapSfx.setEnabled(state.settings.sound !== false);
+      if (els.liveRow) els.liveRow.hidden = !isNativeApp();
+      if (els.liveOn) els.liveOn.checked = state.settings.live !== false;
       syncLangPairUI();
       syncAiUI();
     }
@@ -8294,6 +8507,7 @@
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
         sound: els.soundOn ? els.soundOn.checked : true,
+        live: els.liveOn ? els.liveOn.checked : true,
         effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
@@ -9154,6 +9368,7 @@
       els.todayTitle.textContent = title;
       els.todaySub.textContent = sub;
       els.goLabel.textContent = btn;
+      renderRank();
       const full = done && !awaitingTrialChoice();
       if (full) {
         els.goNum.innerHTML = ICON_CHECK_BIG;
@@ -9428,6 +9643,259 @@
     syncReminders(); // the app: reschedule the week's reminders on every start
     if (isNativeApp() && state.settings.ai.on) aiInit(); // so the 4B model's features show without opening Settings
     renderRound();
+    // ---- Card rank on Home (against yourself only) ----
+    const RANK_COLORS = ["#ffffff", "#2ee6a6", "#47b5ff", "#b18cff", "#ffd21f", "rainbow"];
+    function rankName(tier) { return t(`rank.t${tier}`); }
+    function paintRank(el, tier) {
+      const c = RANK_COLORS[tier];
+      el.classList.toggle("rainbow", c === "rainbow");
+      el.style.setProperty("--rank-c", c === "rainbow" ? "#ffd21f" : c);
+    }
+
+    function renderRank() {
+      const box = document.getElementById("homeRank");
+      if (!box) return;
+      box.hidden = isTrial() || !state.words.length || needsSetup;
+      if (box.hidden) return;
+      const r = WordSnapHabit.rank(habit);
+      const top = r.tier === r.ranks - 1;
+      const name = rankName(r.tier);
+      const badge = document.getElementById("rankBadge");
+      paintRank(badge, r.tier);
+      paintRank(box, r.tier);
+      paintRank(document.getElementById("rankBar"), r.tier);
+      badge.textContent = String(r.tier + 1);
+      document.getElementById("rankName").textContent = name;
+      document.getElementById("rankPts").textContent = t("rank.pts", { p: r.pts, target: r.target });
+      document.getElementById("rankFill").style.width = `${Math.min(100, Math.round(100 * r.pts / r.target))}%`;
+      const days = r.daysLeft <= 1 ? t("rank.lastDay") : t("rank.days", { n: r.daysLeft });
+      document.getElementById("rankLine").innerHTML = r.left > 0
+        ? t(top ? "rank.toKeep" : "rank.toNext", { n: r.left, name: top ? name : rankName(r.tier + 1), days })
+        : t(top ? "rank.metTop" : "rank.met", { name: top ? name : rankName(r.tier + 1) });
+      const ch = WordSnapHabit.challenge(habit);
+      const chKey = { days: "rank.chDays", newWords: "rank.chNewWords", fullCombos: "rank.chFullCombos" }[ch.kind];
+      document.getElementById("rankChallenge").textContent = ch.done ? t("rank.chDone") : t(chKey, { goal: ch.goal, v: ch.value });
+      const streakNow = WordSnapHabit.streak(habit);
+      const stop = WordSnapHabit.nextStop(streakNow);
+      document.getElementById("rankStop").textContent = !streakNow ? t("rank.stopFirst") : stop ? t("rank.stop", stop) : "";
+      box.setAttribute("aria-label", t("rank.aria", { name, p: r.pts, target: r.target }));
+      box.setAttribute("role", "group");
+    }
+
+    // ---- After a set: claim the points, rank news, light the day's flame, a reminder ----
+    // Shown over the set summary (the drills and the list stay underneath).
+    const IGNITED_KEY = "word_snap_ignited_day_v1";
+    const REMIND_ASKED_KEY = "word_snap_remind_asked_v1";
+    let ritualSteps = [];
+    let ritualReturn = null;
+
+    function storeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function storeSet(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+
+    function startRitual() {
+      if (isTrial()) return;
+      const pairs = state.completedThisRun || 0;
+      if (!pairs) return;
+      const fullCombo = !state.levelMistakes && state.lastCompletion && state.lastCompletion.reason !== "timeout";
+      const goal = !!state.goalDoneThisSet;
+      state.goalDoneThisSet = false;
+      const points = pairs + (fullCombo ? 5 : 0) + (goal ? 10 : 0);
+      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points }];
+      const r = WordSnapHabit.rank(habit);
+      if (r.last) ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      const day = String(WordSnapHabit.dayKey(Date.now()));
+      if (habitStatus().done && storeGet(IGNITED_KEY) !== day) {
+        ritualSteps.push({ kind: "ignite", day });
+        if (isNativeApp() && !state.settings.reminder && !storeGet(REMIND_ASKED_KEY)) ritualSteps.push({ kind: "remind" });
+      }
+      const box = document.getElementById("ritual");
+      ritualReturn = document.activeElement;
+      box.hidden = false;
+      if (els.main) els.main.inert = true;
+      nextRitualStep();
+    }
+
+    function closeRitual() {
+      const box = document.getElementById("ritual");
+      box.hidden = true;
+      if (els.main) els.main.inert = false;
+      renderHome();
+      renderStats();
+      const usable = el => el && el !== document.body && document.contains(el) && el.offsetParent !== null;
+      const back = usable(ritualReturn) ? ritualReturn : usable(els.continueBtn) ? els.continueBtn : null;
+      if (back) back.focus({ preventScroll: true });
+    }
+
+    function nextRitualStep() {
+      const step = ritualSteps.shift();
+      if (!step) { closeRitual(); return; }
+      const card = document.getElementById("ritualCard");
+      const box = document.getElementById("ritual");
+      box.style.setProperty("--ritual-c", { claim: "#47b5ff", rank: "#b18cff", ignite: "#ffb800", remind: "#2ee6a6" }[step.kind]);
+      ({ claim: ritualClaim, rank: ritualRank, ignite: ritualIgnite, remind: ritualRemind })[step.kind](card, step);
+      const title = card.querySelector(".ritual-title");
+      if (title) title.id = "ritualTitle";
+      const first = card.querySelector("button, [tabindex]");
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    function ritualClaim(card, step) {
+      const before = WordSnapHabit.rank(habit);
+      const chips = [`<span class="ritual-chip" style="--c:#47b5ff">${t("ritual.pairs", { n: step.pairs })}</span>`];
+      if (step.fullCombo) chips.push(`<span class="ritual-chip" style="--c:#ffd21f">${t("ritual.fullCombo")}</span>`);
+      if (step.goal) chips.push(`<span class="ritual-chip" style="--c:#2ee6a6">${t("ritual.goal")}</span>`);
+      card.innerHTML = `
+        <h2 class="ritual-title">${t("ritual.setDone")}</h2>
+        <div class="ritual-big" id="ritualPoints">+0</div>
+        <div class="ritual-chips">${chips.join("")}</div>
+        <div class="ritual-week">
+          <span class="rank-line" id="ritualWeek">${t("ritual.weekTitle", { name: rankName(before.tier), p: before.pts, target: before.target })}</span>
+          <div class="rank-bar" id="ritualBar"><i style="width:${Math.min(100, Math.round(100 * before.pts / before.target))}%"></i></div>
+        </div>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.claim", { n: step.points })}</button>`;
+      paintRank(document.getElementById("ritualBar"), before.tier);
+      document.getElementById("ritualBar").style.setProperty("--rank-c", RANK_COLORS[before.tier] === "rainbow" ? "#ffd21f" : RANK_COLORS[before.tier] === "#ffffff" ? "#47b5ff" : RANK_COLORS[before.tier]);
+      WordSnapFx.countUp(document.getElementById("ritualPoints"), step.points, n => `+${n}`, { delay: 150 });
+      feel("setComplete");
+      const btn = card.querySelector("[data-r=go]");
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        WordSnapHabit.claim(habit, { points: step.points, fullCombo: step.fullCombo });
+        saveWords();
+        feel("claim");
+        const after = WordSnapHabit.rank(habit);
+        document.querySelector("#ritualBar i").style.width = `${Math.min(100, Math.round(100 * after.pts / after.target))}%`;
+        document.getElementById("ritualWeek").textContent = t("ritual.weekTitle", { name: rankName(after.tier), p: after.pts, target: after.target });
+        WordSnapFx.pop(document.getElementById("ritualPoints"), 1.25);
+        setTimeout(nextRitualStep, 750);
+      }, { once: true });
+    }
+
+    function ritualRank(card, step) {
+      const { last } = step;
+      const name = rankName(last.tier);
+      const key = { up: "ritual.rankUp", stay: "ritual.rankStay", down: "ritual.rankDown", top: "ritual.rankTop" }[last.kind] || "ritual.rankStay";
+      card.innerHTML = `
+        <div class="ritual-rank" id="ritualRankCard">${last.tier + 1}</div>
+        <h2 class="ritual-title">${t(key, { p: last.pts, target: last.target, name, next: step.next })}</h2>
+        <p>${t("ritual.rankAbout")}</p>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.next")}</button>`;
+      paintRank(document.getElementById("ritualRankCard"), last.tier);
+      if (last.kind === "up" || last.kind === "top") { feel("levelUp"); WordSnapFx.confetti(60); }
+      WordSnapHabit.markRankSeen(habit);
+      saveWords();
+      card.querySelector("[data-r=go]").addEventListener("click", () => { feel("tap"); nextRitualStep(); }, { once: true });
+    }
+
+    const FLAME_SVG = '<svg class="flame" viewBox="0 0 120 150" aria-hidden="true"><path class="outer" d="M64 4c6 26 46 44 46 88a50 50 0 0 1-100 0c0-22 11-36 22-46-1 15 5 27 17 31C46 49 54 22 64 4z"/><path class="inner" d="M62 52c4 16 26 28 26 52a28 28 0 0 1-56 0c0-12 6-20 12-25 0 8 3 14 9 17-2-15 3-30 9-44z"/><path class="core" d="M60 92c2 8 13 13 13 24a13 13 0 0 1-26 0c0-6 3-10 6-12 0 4 2 6 4 7-1-7 1-13 3-19z"/></svg>';
+
+    function ritualIgnite(card, step) {
+      card.innerHTML = `
+        <h2 class="ritual-title">${t("ritual.igniteTitle")}</h2>
+        <p id="igniteHint">${t("ritual.igniteHint")}</p>
+        <div class="ignite-track" id="igniteTrack">${FLAME_SVG}</div>
+        <button class="link-button" type="button" id="igniteBtn">${t("ritual.igniteBtn")}</button>
+        <div id="igniteAfter"></div>`;
+      const track = document.getElementById("igniteTrack");
+      let startY = null, progress = 0, lastTick = 0, lit = false;
+      const setP = p => { progress = Math.max(0, Math.min(1, p)); track.style.setProperty("--p", progress.toFixed(3)); };
+      const light = () => {
+        if (lit) return;
+        lit = true;
+        setP(1);
+        track.classList.add("lit");
+        storeSet(IGNITED_KEY, step.day);
+        feel("ignite");
+        document.getElementById("igniteBtn").remove();
+        document.getElementById("igniteHint").remove();
+        setTimeout(() => showStreak(document.getElementById("igniteAfter")), 900);
+      };
+      track.addEventListener("pointerdown", e => { if (lit) return; startY = e.clientY; track.setPointerCapture(e.pointerId); });
+      track.addEventListener("pointermove", e => {
+        if (startY == null || lit) return;
+        setP((startY - e.clientY) / 150);
+        const tick = Math.floor(progress * 10);
+        if (tick !== lastTick) { lastTick = tick; feel("swipe", progress); }
+        if (progress >= 1) light();
+      });
+      const release = () => {
+        if (startY == null || lit) return;
+        startY = null;
+        if (progress > 0.6) light();
+        else { lastTick = 0; setP(0); }
+      };
+      track.addEventListener("pointerup", release);
+      track.addEventListener("pointercancel", release);
+      document.getElementById("igniteBtn").addEventListener("click", light);
+    }
+
+    function showStreak(box) {
+      const n = WordSnapHabit.streak(habit);
+      const names = currentLang === "zh" ? ["一", "二", "三", "四", "五", "六", "日"] : ["M", "T", "W", "T", "F", "S", "S"];
+      const strip = WordSnapHabit.weekStrip(habit).map((d, i) =>
+        `<span class="${d.state}"><i>${d.state === "done" ? "✓" : d.state === "frozen" ? "❄" : ""}</i>${names[i]}</span>`).join("");
+      const stop = WordSnapHabit.nextStop(n);
+      box.className = "ritual-card";
+      box.innerHTML = `
+        <div class="ritual-big" id="ritualStreak">0</div>
+        <h2>${t("ritual.streakDays", { n })}</h2>
+        <div class="ritual-strip">${strip}</div>
+        <p>${n <= 1 ? t("ritual.streakFirst") : t("ritual.streakMore", { n, m: n + 1 })}${stop ? `<br>${t("rank.stop", stop)}` : ""}</p>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.commit")}</button>`;
+      WordSnapFx.countUp(document.getElementById("ritualStreak"), n, String, { delay: 100 });
+      const go = box.querySelector("[data-r=go]");
+      go.focus({ preventScroll: true });
+      go.addEventListener("click", () => { feel("commit"); setTimeout(nextRitualStep, 250); }, { once: true });
+    }
+
+    function ritualRemind(card) {
+      storeSet(REMIND_ASKED_KEY, "1");
+      const times = [["07:30", "morning", "#ffd21f"], ["12:30", "noon", "#2ee6a6"], ["18:30", "evening", "#47b5ff"], ["21:00", "night", "#b18cff"]];
+      card.innerHTML = `
+        <h2 class="ritual-title">${t("ritual.remindTitle")}</h2>
+        <p>${t("ritual.remindSub")}</p>
+        <div class="ritual-times">${times.map(([time, k, c]) => `<button type="button" data-time="${time}" style="--c:${c}">${time}<span>${t(`ritual.${k}`)}</span></button>`).join("")}</div>
+        <p id="remindResult" role="status"></p>
+        <button class="link-button" type="button" id="ritualNo">${t("ritual.remindNo")}</button>`;
+      card.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", async () => {
+        const time = b.dataset.time;
+        feel("tap");
+        state.settings.reminder = time;
+        saveWords();
+        const ok = await syncReminders({ ask: true });
+        if (!ok) state.settings.reminder = "";
+        saveWords();
+        syncOptionsUI();
+        document.getElementById("remindResult").textContent = ok ? t("ritual.remindSet", { time }) : t("ritual.remindDenied");
+        setTimeout(nextRitualStep, ok ? 1300 : 2600);
+      }));
+      document.getElementById("ritualNo").addEventListener("click", () => { feel("tap"); nextRitualStep(); }, { once: true });
+    }
+
+    // ---- Live Update: a set left half-way shows its progress in the status bar (Android 16) ----
+    function livePlugin() {
+      return isNativeApp() && window.Capacitor.Plugins && window.Capacitor.Plugins.WordSnapLive || null;
+    }
+    function syncLiveSet(leaving) {
+      const plugin = livePlugin();
+      if (!plugin) return;
+      const total = currentRoundTotal();
+      const done = state.completedThisRun || 0;
+      const midSet = done > 0 && done < total && !els.completionView.classList.contains("show") && nav && nav.current().screen === "practice";
+      if (leaving && midSet && state.settings.live !== false && !isTrial()) {
+        plugin.showSet({
+          key: `${state.round}:${state.levelSerial || 0}`,
+          done, total,
+          colors: (state.levelJudgements || []).map((_, i) => confettiFor(i).fill),
+          title: t("live.setTitle", { n: total - done }),
+          text: t("live.setText", { d: done, t: total })
+        }).catch(() => {});
+      } else {
+        plugin.endSet().catch(() => {});
+      }
+    }
+    document.addEventListener("visibilitychange", () => syncLiveSet(document.hidden));
+
     // Onboarding until it is finished or skipped: closing the app halfway brings it back.
     initShell(!hasSeenIntro() && state.onboarding === "trial");
 
@@ -9473,6 +9941,7 @@
     collectInbox();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) collectInbox(); });
   </script>
+  <div class="ritual" id="ritual" role="dialog" aria-modal="true" aria-labelledby="ritualTitle" hidden><div class="ritual-card" id="ritualCard"></div></div>
   <div class="inbox-note" id="inboxNote" role="status" aria-live="polite" hidden></div>
   <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 </body>
