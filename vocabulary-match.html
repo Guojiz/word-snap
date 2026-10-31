@@ -3144,6 +3144,10 @@
 
     /* ---- Card rank on Home: against yourself only (js/habit.js rank()) ---- */
     .tiles { grid-template-areas: "go go" "rank rank" "lib add" "lib set"; }
+    /* With the rank block the menu must still fit one phone screen: shorter go/add/set blocks. */
+    .tiles .tile-go { min-height: clamp(150px, 21dvh, 230px); padding-bottom: 28px; }
+    .tiles .tile-add, .tiles .tile-set { min-height: clamp(80px, 12dvh, 130px); }
+    .tile-rank .rank-line + .rank-line { margin-top: -3px; }
     .tile-rank {
       grid-area: rank;
       --r: .8deg;
