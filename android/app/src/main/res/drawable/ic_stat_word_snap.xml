@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status bar icon (single colour, the system tints it): two tilted cards, as on the launcher icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M3.2,6.6l5.8,-1.6c0.8,-0.2 1.6,0.3 1.8,1.1l2.9,10.6c0.2,0.8 -0.3,1.6 -1.1,1.8l-5.8,1.6c-0.8,0.2 -1.6,-0.3 -1.8,-1.1L2.1,8.4C1.9,7.6 2.4,6.8 3.2,6.6z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M14.4,4.2l5.6,1.9c0.8,0.3 1.2,1.1 0.9,1.9l-3.5,10.4c-0.3,0.8 -1.1,1.2 -1.9,0.9l-1.4,-0.5l2.3,-8.4c0.4,-1.5 -0.5,-3.1 -2,-3.5l-1.6,-0.4l0,0c0.3,-0.3 1,-2.6 1.6,-2.3z" />
+</vector>

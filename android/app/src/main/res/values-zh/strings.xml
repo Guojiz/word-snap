@@ -19,4 +19,9 @@
     <string name="shortcut_practice_long">开始今天的练习</string>
     <string name="shortcut_add_short">加词</string>
     <string name="shortcut_add_long">往词库里加词</string>
+    <string name="live_channel">进行中</string>
+    <string name="live_channel_about">练到一半的一组，以及本机模型的下载进度</string>
+    <string name="live_download_title">正在下载 %1$s</string>
+    <string name="live_set_title">这一组还差 %1$d 个</string>
+    <string name="live_set_text">已配对 %1$d/%2$d · 点这里接着练</string>
 </resources>

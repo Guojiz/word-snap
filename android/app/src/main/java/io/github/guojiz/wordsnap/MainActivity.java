@@ -25,6 +25,8 @@ public class MainActivity extends BridgeActivity {
         // App-local plugins must be registered before the bridge starts.
         registerPlugin(LlmPlugin.class);
         registerPlugin(InboxPlugin.class);
+        registerPlugin(HapticsPlugin.class);
+        registerPlugin(LivePlugin.class);
         keepShortcutAction(getIntent()); // read by the web app when it starts
         super.onCreate(savedInstanceState);
         // Draw behind the status and navigation bars; the page pads itself with the safe-area insets.
