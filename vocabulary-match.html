@@ -3216,6 +3216,7 @@
     .ritual-rank { width: 92px; height: 118px; border-radius: 18px; rotate: -6deg; display: grid; place-items: center; font: 700 30px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--rank-c, #fff); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 18px 30px -14px rgba(0, 0, 0, .45); }
     .ritual-times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
     .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 700 20px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
+    .ritual-times .wide { grid-column: 1 / -1; font-size: 18px; }
     .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; opacity: .75; }
 
     /* The flame: drag it up (or press the button) to light it. */
@@ -4007,7 +4008,9 @@
         },
         reminder: {
           off: "Off", at: "Every day at {time}",
+          smartAt: "Smart: when you usually practise (now {time})", smartLearning: "Smart: learns when you usually practise",
           body: "Today's words are waiting — a few minutes is enough.",
+          bodySmart: "You usually practise about now. Today's words are waiting.",
           bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
@@ -4028,6 +4031,7 @@
         onboard: {
           sample: "Just try the sample words", sampleSub: "10 words to learn the game", words: "{n} words",
           goal: "{n} new words", goalEasy: "Easy", goalNormal: "Recommended", goalSerious: "Serious", goalSprint: "Sprint", goalMin: "about {m} min a day",
+          smart: "Smart reminder (recommended)", smartSub: "At the time you usually practise; it learns as you go",
           morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", none: "No reminders", noneSub: "You can turn them on later",
           next: "Continue", finish: "Done", preparing: "Preparing your words…", failed: "Could not load that word book. Check the connection and try again, or skip for now."
         },
@@ -4159,8 +4163,9 @@
           streakMore: "Day {n}. Come back tomorrow to make it {m}.",
           commit: "I'll keep going",
           remindTitle: "When should I remind you tomorrow?", remindSub: "One reminder a day. Change it any time in Settings.",
-          morning: "Morning", noon: "Noon", evening: "Evening", night: "Night",
+          morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", smart: "Smart",
           remindNo: "No reminders", remindSet: "Done: a reminder at {time} every day.",
+          remindSmartSet: "Done: I'll remind you around when you usually practise.",
           remindDenied: "Notifications are off for Word Snap. Turn them on in the phone's settings.",
           rankUp: "Last week {p} / {target}: up to {name}!", rankStay: "Last week {p} / {target}: you stay {name}.",
           rankDown: "Last week {p} / {target}: down to {name}. This week's target is {next}: win it back!",
@@ -4290,7 +4295,9 @@
         },
         reminder: {
           off: "不提醒", at: "每天 {time}",
+          smartAt: "智能：按你平时练习的时间（现在是 {time}）", smartLearning: "智能：自动学会你平时几点练",
           body: "今天的单词还没练，几分钟就好。",
+          bodySmart: "你一般这个时候练。今天的单词在等你。",
           bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
@@ -4311,6 +4318,7 @@
         onboard: {
           sample: "先用示例词试试", sampleSub: "10 个词，熟悉一下玩法", words: "{n} 词",
           goal: "{n} 个新词", goalEasy: "轻松", goalNormal: "推荐", goalSerious: "认真", goalSprint: "冲刺", goalMin: "每天约 {m} 分钟",
+          smart: "智能提醒（推荐）", smartSub: "在你平时练习的时间提醒，用几天就学会了",
           morning: "早上", noon: "中午", evening: "晚上", night: "睡前", none: "先不用提醒", noneSub: "以后可以在设置里打开",
           next: "继续", finish: "完成", preparing: "正在准备词书……", failed: "词书没加载出来。检查一下网络再试，或者先跳过。"
         },
@@ -4442,8 +4450,9 @@
           streakMore: "第 {n} 天了，明天来就是第 {m} 天。",
           commit: "我坚持，不放弃",
           remindTitle: "明天几点提醒你？", remindSub: "每天提醒一次，随时可以在设置里改。",
-          morning: "早上", noon: "中午", evening: "傍晚", night: "晚上",
+          morning: "早上", noon: "中午", evening: "傍晚", night: "晚上", smart: "智能",
           remindNo: "不用提醒", remindSet: "好，每天 {time} 提醒你。",
+          remindSmartSet: "好，在你平时练习的时间前后提醒你。",
           remindDenied: "Word Snap 的通知被关了，需要在手机设置里打开。",
           rankUp: "上周 {p} / {target} 分，升到{name}！", rankStay: "上周 {p} / {target} 分，保持{name}。",
           rankDown: "上周 {p} / {target} 分，降到{name}。这周目标 {next} 分，追回来！",
@@ -4884,7 +4893,7 @@
         live: raw.live !== false,
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
-        reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
+        reminder: typeof raw.reminder === "string" && (raw.reminder === "smart" || /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder)) ? raw.reminder : "",
         langPair: normalizeLangPair(raw.langPair),
         ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
@@ -5357,7 +5366,9 @@
 
     // ---- Daily reminder (Android app: @capacitor/local-notifications) ----
     // One notification a day for the next week at the chosen time, rebuilt on every
-    // start and when today's goal is done (today's is then dropped).
+    // start and when today's goal is done (today's is then dropped). "smart" (智能提醒):
+    // the time you usually start (WordSnapHabit.smartTime; 20:00 until it has 3 days to
+    // go on), and ignored reminders thin out.
     const REMINDER_IDS = [7100, 7101, 7102, 7103, 7104, 7105, 7106];
 
     function notificationsPlugin() {
@@ -5370,6 +5381,18 @@
       }
     }
 
+    /** The smart reminder's time today: learned, or 20:00 while it is still learning. */
+    function reminderClock() {
+      return WordSnapHabit.smartTime(habit) || { hour: 20, minute: 0, days: 0 };
+    }
+    function clockText({ hour, minute }) {
+      return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    }
+    function smartLabel() {
+      const c = reminderClock();
+      return c.days ? t("reminder.smartAt", { time: clockText(c) }) : t("reminder.smartLearning");
+    }
+
     async function syncReminders({ ask = false } = {}) {
       const plugin = notificationsPlugin();
       if (!plugin) return true;
@@ -5380,14 +5403,15 @@
         let permission = await plugin.checkPermissions();
         if (permission.display !== "granted" && ask) permission = await plugin.requestPermissions();
         if (permission.display !== "granted") return false;
-        const [hour, minute] = time.split(":").map(Number);
+        const smart = time === "smart";
+        const { hour, minute } = smart ? reminderClock() : { hour: +time.slice(0, 2), minute: +time.slice(3) };
         const streak = WordSnapHabit.streak(habit);
-        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0] });
+        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0], thinOut: smart });
         await plugin.schedule({
           notifications: plan.map(item => ({
             id: item.id,
             title: "Word Snap",
-            body: streak ? t("reminder.bodyStreak", { n: streak }) : t("reminder.body"),
+            body: streak ? t("reminder.bodyStreak", { n: streak }) : t(smart && WordSnapHabit.smartTime(habit) ? "reminder.bodySmart" : "reminder.body"),
             schedule: { at: new Date(item.at), allowWhileIdle: true }
           }))
         });
@@ -8435,9 +8459,9 @@
         const native = isNativeApp();
         els.reminderRow.hidden = !native;
         els.reminderNote.hidden = native;
-        const times = ["", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+        const times = ["", "smart", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
         if (state.settings.reminder && !times.includes(state.settings.reminder)) times.push(state.settings.reminder);
-        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
+        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time === "smart" ? smartLabel() : time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
         els.reminderSelect.value = state.settings.reminder;
       }
       if (els.dailyNewSelect) {
@@ -9442,9 +9466,9 @@
       paintObStack();
       els.obTimes.hidden = !native;
       els.obWebNote.hidden = native;
-      if (native && !ob.time && ob.step === 0) ob.time = "20:00";
-      els.obTimes.innerHTML = OB_TIMES.map(([time, key], i) => obOption({
-        value: time, title: t("onboard." + key), small: time, color: CONFETTI[i % CONFETTI.length], checked: ob.time === time
+      if (native && !ob.time && ob.step === 0) ob.time = "smart";
+      els.obTimes.innerHTML = obOption({ value: "smart", title: t("onboard.smart"), small: t("onboard.smartSub"), wide: true, color: "#ffd21f", checked: ob.time === "smart" }) + OB_TIMES.map(([time, key], i) => obOption({
+        value: time, title: t("onboard." + key), small: time, color: CONFETTI[[0, 1, 3, 4][i]], checked: ob.time === time // lemon is smart's
       })).join("") + obOption({ value: "", title: t("onboard.none"), small: t("onboard.noneSub"), wide: true, color: "#efe9de", checked: !ob.time });
       paintObStep();
     }
@@ -9854,11 +9878,11 @@
 
     function ritualRemind(card) {
       storeSet(REMIND_ASKED_KEY, "1");
-      const times = [["07:30", "morning", "#ffd21f"], ["12:30", "noon", "#2ee6a6"], ["18:30", "evening", "#47b5ff"], ["21:00", "night", "#b18cff"]];
+      const times = [["07:30", "morning", "#ff6b8b"], ["12:30", "noon", "#2ee6a6"], ["18:30", "evening", "#47b5ff"], ["21:00", "night", "#b18cff"]];
       card.innerHTML = `
         <h2 class="ritual-title">${t("ritual.remindTitle")}</h2>
         <p>${t("ritual.remindSub")}</p>
-        <div class="ritual-times">${times.map(([time, k, c]) => `<button type="button" data-time="${time}" style="--c:${c}">${time}<span>${t(`ritual.${k}`)}</span></button>`).join("")}</div>
+        <div class="ritual-times"><button type="button" class="wide" data-time="smart" style="--c:#ffd21f">${t("ritual.smart")}<span>${escapeHtml(smartLabel())}</span></button>${times.map(([time, k, c]) => `<button type="button" data-time="${time}" style="--c:${c}">${time}<span>${t(`ritual.${k}`)}</span></button>`).join("")}</div>
         <p id="remindResult" role="status"></p>
         <button class="link-button" type="button" id="ritualNo">${t("ritual.remindNo")}</button>`;
       card.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", async () => {
@@ -9870,7 +9894,7 @@
         if (!ok) state.settings.reminder = "";
         saveWords();
         syncOptionsUI();
-        document.getElementById("remindResult").textContent = ok ? t("ritual.remindSet", { time }) : t("ritual.remindDenied");
+        document.getElementById("remindResult").textContent = !ok ? t("ritual.remindDenied") : time === "smart" ? t("ritual.remindSmartSet") : t("ritual.remindSet", { time });
         setTimeout(nextRitualStep, ok ? 1300 : 2600);
       }));
       document.getElementById("ritualNo").addEventListener("click", () => { feel("tap"); nextRitualStep(); }, { once: true });

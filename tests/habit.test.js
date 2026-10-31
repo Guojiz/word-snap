@@ -104,6 +104,30 @@ test("reminders: the next days at the chosen time, not today once the goal is do
   assert.equal(plan[0].id, 7101, "no reminder today after the goal is done");
 });
 
+test("smart reminder: learned from the time you usually start, thinned out when ignored", () => {
+  const h = H.normalize(null);
+  assert.equal(H.smartTime(h, at(0)), null, "nothing learned yet");
+  // Started at 21:10, 21:40 and 20:50 on three days; answers later in a day do not move it.
+  H.recordAnswer(h, { now: at(-2, 21) + 10 * 60000 });
+  H.recordAnswer(h, { now: at(-2, 23) });
+  H.recordAnswer(h, { now: at(-1, 21) + 40 * 60000 });
+  H.recordAnswer(h, { now: at(0, 20) + 50 * 60000 });
+  assert.deepEqual(H.smartTime(h, at(0, 22)), { hour: 21, minute: 0, days: 3 });
+  // Kept through storage.
+  assert.deepEqual(H.smartTime(H.normalize(JSON.parse(JSON.stringify(h))), at(0, 22)), { hour: 21, minute: 0, days: 3 });
+  // After midnight counts as late, not early: capped at 22:00.
+  const owl = H.normalize(null);
+  for (let d = 0; d < 3; d++) H.recordAnswer(owl, { now: at(d, 24) + 30 * 60000 }); // 00:30
+  assert.deepEqual(H.smartTime(owl, at(3)), { hour: 22, minute: 0, days: 3 });
+  // Early birds: never before 07:30.
+  const lark = H.normalize(null);
+  for (let d = 0; d < 3; d++) H.recordAnswer(lark, { now: at(d, 6) });
+  assert.deepEqual(H.smartTime(lark, at(3)), { hour: 7, minute: 30, days: 3 });
+  // Days 3 and 5 are skipped when thinned out.
+  const plan = H.reminderPlan(H.normalize(null), { now: at(0, 12), hour: 20, days: 7, thinOut: true });
+  assert.deepEqual(plan.map(p => p.id), [7100, 7101, 7102, 7104, 7106]);
+});
+
 test("words learned today are not extra due work; the best streak is kept", () => {
   const h = H.normalize(null);
   H.recordAnswer(h, { wasNew: true, id: "w1", now: at(0) });

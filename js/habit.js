@@ -16,6 +16,10 @@
  *   60% → stay; less → down one (never below white). No other learners involved.
  * - Weekly challenge: one of "goal done on 5 days", "30 new words", "3 full
  *   combos", rotating by week. Next stop: the next streak milestone.
+ * - Smart reminder (智能提醒): the time of day you usually start practising, learned
+ *   from when you answered first on each of the last 14 days (the median, at least
+ *   3 days), on the quarter hour before it, between 07:30 and 22:00. Ignored
+ *   reminders thin out: after three days in a row they skip a day.
  *
  * No DOM access. Works as a classic browser script (window.WordSnapHabit) and
  * as a CommonJS module for Node tests.
@@ -68,6 +72,7 @@
       for (const [k, v] of Object.entries(value.log)) {
         if (!/^\d+$/.test(k) || !v || typeof v !== "object") continue;
         log[k] = { p: isNum(v.p) ? Math.max(0, v.p) : 0, n: isNum(v.n) ? Math.max(0, v.n) : 0, fc: isNum(v.fc) ? Math.max(0, v.fc) : 0 };
+        if (isNum(v.t) && v.t >= 0 && v.t < 1440) log[k].t = Math.floor(v.t);
       }
     }
     const r = value.rank && typeof value.rank === "object" ? value.rank : {};
@@ -109,6 +114,12 @@
   function recordAnswer(h, { wasNew = false, ms = 0, now = Date.now(), id = null } = {}) {
     rollToday(h, dayKey(now));
     h.today.answers += 1;
+    // The first answer of the day: the time you started, for the smart reminder.
+    const entry = logDay(h, dayKey(now));
+    if (entry.t == null) {
+      const d = new Date(now);
+      entry.t = d.getHours() * 60 + d.getMinutes();
+    }
     if (wasNew) {
       logDay(h, dayKey(now)).n += 1;
       h.today.newLearned += 1;
@@ -318,10 +329,11 @@
    * [{ id, at }] with stable ids (base + day offset). Today's is left out when
    * the goal is already done or the time has passed.
    */
-  function reminderPlan(h, { now = Date.now(), hour = 20, minute = 0, days = 7, base = 7100 } = {}) {
+  function reminderPlan(h, { now = Date.now(), hour = 20, minute = 0, days = 7, base = 7100, thinOut = false } = {}) {
     const doneToday = h.days[dayKey(now)] === "done";
     const plan = [];
     for (let d = 0; d < days; d++) {
+      if (thinOut && (d === 3 || d === 5)) continue; // unanswered for three days: every other day
       const at = new Date(now);
       at.setDate(at.getDate() + d);
       at.setHours(hour, minute, 0, 0);
@@ -333,13 +345,35 @@
     return plan;
   }
 
+  /**
+   * The smart reminder's time → { hour, minute, days } (days: how many days it was learned
+   * from), or null while fewer than 3 of the last 14 days have a start time.
+   */
+  function smartTime(h, now = Date.now()) {
+    const today = dayKey(now);
+    const shift = DAY_CUTOFF_HOUR * 60; // minutes after 4 am, so 00:30 sorts after 23:30
+    const starts = [];
+    for (let day = today - 13; day <= today; day++) {
+      const e = h.log[day];
+      if (e && e.t != null) starts.push((e.t - shift + 1440) % 1440);
+    }
+    if (starts.length < 3) return null;
+    starts.sort((a, b) => a - b);
+    const mid = starts.length >> 1;
+    const median = starts.length % 2 ? starts[mid] : (starts[mid - 1] + starts[mid]) / 2;
+    let clock = Math.floor(((median + shift) % 1440) / 15) * 15;
+    if (clock < 7 * 60 + 30 && clock >= shift) clock = 7 * 60 + 30;
+    else if (clock > 22 * 60 || clock < shift) clock = 22 * 60;
+    return { hour: Math.floor(clock / 60), minute: clock % 60, days: starts.length };
+  }
+
   /** Whether the word was first learned today (its re-checks are not "due" work). */
   function learnedToday(h, id, now = Date.now()) {
     return h.today.day === dayKey(now) && h.today.newIds.includes(id);
   }
 
   return {
-    normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, learnedToday, noticeFor, dayKey, weekKey, DAY_MS,
+    normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, smartTime, learnedToday, noticeFor, dayKey, weekKey, DAY_MS,
     claim, rank, markRankSeen, challenge, nextStop, weekStrip, RANKS, MILESTONES
   };
 });
