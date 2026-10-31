@@ -227,7 +227,7 @@
     if (!enabled()) return;
     const width = win.innerWidth || 400;
     const height = win.innerHeight || 700;
-    const colors = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff", "#ff7a59", "#3b8beb"];
+    const colors = ["#ff6b8b", "#47b5ff", "#ffd21f", "#2ee6a6", "#b18cff", "#ff7a59", "#3b8beb"];
     for (let i = 0; i < amount; i++) {
       const el = doc.createElement("span");
       el.className = "fx-confetti";

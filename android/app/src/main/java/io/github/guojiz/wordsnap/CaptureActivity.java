@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  */
 public class CaptureActivity extends Activity {
     private static final Pattern WORD = Pattern.compile("[A-Za-z][A-Za-z'’-]*");
-    private static final int[] CONFETTI = { 0xFFFFB4A2, 0xFFA8D8FF, 0xFFFFE27A, 0xFF9EEBC4, 0xFFD4C4FF };
+    private static final int[] CONFETTI = { 0xFFFF6B8B, 0xFF47B5FF, 0xFFFFD21F, 0xFF2EE6A6, 0xFFB18CFF };
 
     private boolean night;
     private int paper, ink, muted, line;
@@ -200,7 +200,7 @@ public class CaptureActivity extends Activity {
         cancel.setOnClickListener(v -> finish());
         row.addView(cancel);
         if (withAdd) {
-            addButton = button(getString(R.string.capture_add), 0xFFFFE27A, 0xFF2B2A3D);
+            addButton = button(getString(R.string.capture_add), 0xFFFFD21F, 0xFF2B2A3D);
             addButton.setOnClickListener(v -> add());
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.leftMargin = dp(8);

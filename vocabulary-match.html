@@ -69,13 +69,13 @@
       --red: #ff7a59;
       --red-deep: #c4421f;
       --red-ink: #b13c1f;
-      --yellow: #ffd23f;
+      --yellow: #ffb800;
       --yellow-ink: #8a6200;
       --ember-ink: #b4530f;
-      --good: #9eebc4;
+      --good: #2ee6a6;
       --good-ink: #1c7a50;
-      --primary: #ffe27a;
-      --primary-dark: #ffd23f;
+      --primary: #ffd21f;
+      --primary-dark: #ffb800;
       --on-primary: #2b2a3d;
       --panel-soft: #fffefb;
       --track: #f1ece3;
@@ -112,14 +112,14 @@
       --text: #f7f5ee;
       --muted: #c9c6d8;
       --dim: #a6a3bb;
-      --green-ink: #9eebc4;
-      --blue-ink: #a8d8ff;
-      --red-ink: #ffb4a2;
-      --yellow-ink: #ffe27a;
+      --green-ink: #2ee6a6;
+      --blue-ink: #47b5ff;
+      --red-ink: #ff6b8b;
+      --yellow-ink: #ffd21f;
       --ember-ink: #ffc08a;
-      --good-ink: #9eebc4;
-      --primary: #ffe27a;
-      --primary-dark: #ffd23f;
+      --good-ink: #2ee6a6;
+      --primary: #ffd21f;
+      --primary-dark: #ffb800;
       --on-primary: #2b2a3d;
       --panel-soft: #252437;
       --track: #34334c;
@@ -130,7 +130,7 @@
       --correct-ink: #2b2a3d;
       --wrong-bg: #593b46;
       --wrong-ink: #ffe3dc;
-      --weak-wrong: #ffb4a2;
+      --weak-wrong: #ff6b8b;
       --scrim: rgba(10, 10, 20, .6);
       --hover-soft: #302f48;
     }
@@ -369,10 +369,10 @@
 
     /* Pastel stickers with ink text (>= 7:1 on each): lemon = PERFECT, mint = GREAT,
        sky = GOOD, peach = MISS. */
-    .fx-judge-perfect { background: #ffe27a; }
-    .fx-judge-great { background: #9eebc4; }
-    .fx-judge-good { background: #a8d8ff; }
-    .fx-judge-miss { background: #ffb4a2; }
+    .fx-judge-perfect { background: #ffd21f; }
+    .fx-judge-great { background: #2ee6a6; }
+    .fx-judge-good { background: #47b5ff; }
+    .fx-judge-miss { background: #ff6b8b; }
 
     .fx-confetti {
       border-radius: 2px;
@@ -599,7 +599,7 @@
       min-width: 16px;
       height: 100%;
       border-radius: inherit;
-      background: #ffb4a2;
+      background: #ff6b8b;
       overflow: hidden;
       transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
     }
@@ -1975,12 +1975,12 @@
       border-radius: var(--radius);
       padding: 12px 10px;
       color: #2b2a3d;
-      background: #ffb4a2;
+      background: #ff6b8b;
       transform: rotate(-3deg);
     }
 
     .intro-demo span:last-child {
-      background: #a8d8ff;
+      background: #47b5ff;
       transform: rotate(3deg);
     }
 
@@ -2822,9 +2822,9 @@
       transition: background-color 400ms var(--glide), transform 400ms var(--spring);
     }
 
-    .ob-steps i.on:nth-child(1) { background: #ffb4a2; }
-    .ob-steps i.on:nth-child(2) { background: #a8d8ff; }
-    .ob-steps i.on:nth-child(3) { background: #9eebc4; }
+    .ob-steps i.on:nth-child(1) { background: #ff6b8b; }
+    .ob-steps i.on:nth-child(2) { background: #47b5ff; }
+    .ob-steps i.on:nth-child(3) { background: #2ee6a6; }
 
     .ob-skip {
       justify-self: end;
@@ -2935,8 +2935,8 @@
     }
 
     .ob-opt[aria-checked="true"] {
-      background: color-mix(in srgb, var(--c, #ffe27a) 38%, var(--panel));
-      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--c, #ffe27a) 70%, #2b2a3d);
+      background: color-mix(in srgb, var(--c, #ffd21f) 38%, var(--panel));
+      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--c, #ffd21f) 70%, #2b2a3d);
     }
 
     .ob-opt[aria-checked="true"]::after {
@@ -3192,7 +3192,7 @@
           <div class="ob-options ob-goals" id="obGoals" role="radiogroup" aria-label="每天新词数" data-en-aria="New words per day" data-zh-aria="每天新词数"></div>
         </div>
         <div class="ob-page" data-step="2">
-          <div class="ob-bell" aria-hidden="true"><svg viewBox="0 0 64 64" width="88" height="88"><circle cx="32" cy="32" r="30" fill="var(--panel-2)"/><path d="M32 14c-7 0-12 5-12 12v8l-4 6h32l-4-6v-8c0-7-5-12-12-12z" fill="#ffe27a" stroke="#2b2a3d" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 44a5 5 0 0 0 10 0" fill="none" stroke="#2b2a3d" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="18" r="4" fill="#ffb4a2"/><circle cx="16" cy="22" r="3" fill="#a8d8ff"/></svg></div>
+          <div class="ob-bell" aria-hidden="true"><svg viewBox="0 0 64 64" width="88" height="88"><circle cx="32" cy="32" r="30" fill="var(--panel-2)"/><path d="M32 14c-7 0-12 5-12 12v8l-4 6h32l-4-6v-8c0-7-5-12-12-12z" fill="#ffd21f" stroke="#2b2a3d" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 44a5 5 0 0 0 10 0" fill="none" stroke="#2b2a3d" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="18" r="4" fill="#ff6b8b"/><circle cx="16" cy="22" r="3" fill="#47b5ff"/></svg></div>
           <h1 data-en="A nudge each day?" data-zh="每天提醒你一下？">每天提醒你一下？</h1>
           <p class="ob-lead" data-en="One gentle reminder at the time you pick, and none once today's goal is done." data-zh="在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。">在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。</p>
           <div class="ob-options ob-times" id="obTimes" role="radiogroup" aria-label="提醒时间" data-en-aria="Reminder time" data-zh-aria="提醒时间"></div>
@@ -3207,7 +3207,7 @@
 
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
-      <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ff6b8b" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#47b5ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
       <button class="rail-btn active" type="button" data-nav="home" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="nav-label" data-en="Home" data-zh="首页">首页</span></button>
       <button class="rail-btn" type="button" data-nav="library"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
       <button class="rail-btn" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
@@ -3715,31 +3715,31 @@
       dark: {
         bg: "#1f1e2e", panel: "#2a2940", panel2: "#25243a", line: "#3a3954", lineStrong: "#56557a",
         text: "#f7f5ee", muted: "#c9c6d8", dim: "#a6a3bb",
-        greenInk: "#9eebc4", blueInk: "#a8d8ff", redInk: "#ffb4a2", yellowInk: "#ffe27a",
-        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
+        greenInk: "#2ee6a6", blueInk: "#47b5ff", redInk: "#ff6b8b", yellowInk: "#ffd21f",
+        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
       },
       light: {
         bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
         text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
         greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
-        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
+        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
       },
-      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffd23f" }
+      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffb800" }
     };
     // Peach, sky, lemon, mint, lilac. Matched cards are filled with these and keep ink text
     // (#2b2a3d on every one is >= 8:1), in both day and night.
-    const CONFETTI = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff"];
+    const CONFETTI = ["#ff6b8b", "#47b5ff", "#ffd21f", "#2ee6a6", "#b18cff"];
     const CONFETTI_INK = "#2b2a3d";
     // The set's colour: every finished set moves to the next one, as the old skins did.
     // It tints the paper, the lane track and the primary button, and the set's first
     // matched pair starts the confetti run in it. Meaning colours (sky selected, coral
     // wrong) never rotate. `confetti` is the theme's index in CONFETTI.
     const COLOR_THEMES = [
-      { id: "lemon", fill: "#ffe27a", deep: "#f5c400", confetti: 2 },
-      { id: "peach", fill: "#ffb4a2", deep: "#ff8f74", confetti: 0 },
-      { id: "sky", fill: "#a8d8ff", deep: "#72bcff", confetti: 1 },
-      { id: "mint", fill: "#9eebc4", deep: "#5fd79f", confetti: 3 },
-      { id: "lilac", fill: "#d4c4ff", deep: "#b19bff", confetti: 4 }
+      { id: "lemon", fill: "#ffd21f", deep: "#f5a800", confetti: 2 },
+      { id: "peach", fill: "#ff6b8b", deep: "#ff3d6e", confetti: 0 },
+      { id: "sky", fill: "#47b5ff", deep: "#1e96f0", confetti: 1 },
+      { id: "mint", fill: "#2ee6a6", deep: "#12c98b", confetti: 3 },
+      { id: "lilac", fill: "#b18cff", deep: "#9466ff", confetti: 4 }
     ];
 
     // ---- i18n ----
@@ -4882,7 +4882,7 @@
       set("--selected-ink", light ? "#1b3f73" : base.text);
       const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
       set("--selected-shadow", light ? rgbaFromHex(a.blue, 0.22) : neutralShadow);
-      set("--correct-bg", "#9eebc4");
+      set("--correct-bg", "#2ee6a6");
       set("--correct-ink", CONFETTI_INK);
       set("--correct-shadow", neutralShadow);
       set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.14 : 0.22));

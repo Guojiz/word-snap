@@ -1,6 +1,6 @@
 ---
 name: Word Snap
-description: Vocabulary matching judged like a rhythm game, on near-white paper where every matched pair turns into a piece of pastel confetti.
+description: Vocabulary matching judged like a rhythm game, on near-white paper where every matched pair turns into a piece of bright, dopamine-coloured confetti.
 colors:
   paper-bg: "#fffcf6"
   paper-panel: "#ffffff"
@@ -25,26 +25,26 @@ colors:
   night-muted: "#c9c6d8"
   night-dim: "#a6a3bb"
   ink: "#2b2a3d"
-  lemon-button-day: "#ffe27a"
-  lemon-button-day-deep: "#ffd23f"
+  lemon-button-day: "#ffd21f"
+  lemon-button-day-deep: "#ffb800"
   on-lemon-button-day: "#2b2a3d"
-  lemon-button-night: "#ffe27a"
-  lemon-button-night-deep: "#ffd23f"
+  lemon-button-night: "#ffd21f"
+  lemon-button-night-deep: "#ffb800"
   on-lemon-button-night: "#2b2a3d"
-  confetti-peach: "#ffb4a2"
+  confetti-peach: "#ff6b8b"
   confetti-peach-edge: "#d0968c"
-  confetti-sky: "#a8d8ff"
+  confetti-sky: "#47b5ff"
   confetti-sky-edge: "#8db2d4"
-  confetti-lemon: "#ffe27a"
+  confetti-lemon: "#ffd21f"
   confetti-lemon-edge: "#d0ba6d"
-  confetti-mint: "#9eebc4"
+  confetti-mint: "#2ee6a6"
   confetti-mint-edge: "#85c1a6"
-  confetti-lilac: "#d4c4ff"
+  confetti-lilac: "#b18cff"
   confetti-lilac-edge: "#afa2d4"
   sky: "#3b8beb"
   sky-deep: "#2a74d0"
   sky-ink-day: "#1f5fb0"
-  sky-ink-night: "#a8d8ff"
+  sky-ink-night: "#47b5ff"
   selected-bg-day: "#edf5fd"
   selected-bg-night: "#2e3f66"
   selected-ink-day: "#1b3f73"
@@ -52,16 +52,16 @@ colors:
   mint: "#4fd69c"
   mint-deep: "#2ec27e"
   mint-ink-day: "#1c7a50"
-  mint-ink-night: "#9eebc4"
-  correct-bg: "#9eebc4"
+  mint-ink-night: "#2ee6a6"
+  correct-bg: "#2ee6a6"
   correct-ink: "#2b2a3d"
-  gold: "#ffd23f"
+  gold: "#ffb800"
   gold-ink-day: "#8a6200"
-  gold-ink-night: "#ffe27a"
+  gold-ink-night: "#ffd21f"
   coral: "#ff7a59"
   coral-deep: "#c4421f"
   coral-ink-day: "#b13c1f"
-  coral-ink-night: "#ffb4a2"
+  coral-ink-night: "#ff6b8b"
   wrong-bg-day: "#ffece8"
   wrong-bg-night: "#593b46"
   wrong-ink-day: "#8f2a12"
@@ -245,13 +245,13 @@ components:
 
 **Creative North Star: "Confetti Cards" (彩纸卡)**
 
-Learning words should feel light and easy. The page is near-white paper; colour arrives as confetti when the learner gets something right. Every match is still judged like a note in a rhythm game: the learner taps a meaning and a word, the pair is judged on the spot (PERFECT, GREAT, GOOD or MISS) from the review engine's own reaction-time grade, the lane at the top fills one segment per match, the combo counts up at the lane's right end, and the number of words left today rolls down towards zero. What changed is the look: each matched pair is filled with the next of five pastel confetti colours, the lane repeats the same sequence, and a finished set reads as a strip of confetti.
+Learning words should feel light and easy. The page is near-white paper; colour arrives as confetti when the learner gets something right. Every match is still judged like a note in a rhythm game: the learner taps a meaning and a word, the pair is judged on the spot (PERFECT, GREAT, GOOD or MISS) from the review engine's own reaction-time grade, the lane at the top fills one segment per match, the combo counts up at the lane's right end, and the number of words left today rolls down towards zero. What changed is the look: each matched pair is filled with the next of five saturated "dopamine" confetti colours (2026-10-31, the maintainer's call: brighter, more game-like than the earlier pastels), the lane repeats the same sequence, and a finished set reads as a strip of confetti.
 
-Day (light) is the main look: warm paper, white panels, soft beige outlines and dark ink text. Night is the same world on soft ink-blue paper, with the same pastels. One rounded face (Fredoka) carries every Latin letter, numeral and judgement; Chinese stays in the system Chinese face. Meaning hues stay fixed: sky chosen, mint correct, coral wrong, lemon PERFECT. The look replaces the heavy indigo "Rhythm Stage" and, before it, a borrowed Duolingo arrangement (green, 3D block buttons, mascot cheer): there are still no block buttons, no mascot and no green-as-brand.
+Day (light) is the main look: warm paper, white panels, soft beige outlines and dark ink text. Night is the same world on soft ink-blue paper, with the same confetti colours. One rounded face (Fredoka) carries every Latin letter, numeral and judgement; Chinese stays in the system Chinese face. Meaning hues stay fixed: sky chosen, mint correct, coral wrong, lemon PERFECT. The look replaces the heavy indigo "Rhythm Stage" and, before it, a borrowed Duolingo arrangement (green, 3D block buttons, mascot cheer): there are still no block buttons, no mascot and no green-as-brand.
 
 **Key Characteristics:**
 - Paper first: near-white paper by day (the default), soft ink-blue by night, switched by `data-color-mode`, same roles in both.
-- Confetti is the reward: matched pairs, the lane and the icon use five pastels (peach, sky, lemon, mint, lilac) with ink text; the rest of the page stays quiet.
+- Confetti is the reward: matched pairs, the lane and the icon use five saturated colours (pink, electric blue, lemon, neon green, violet) with ink text; the rest of the page stays quiet.
 - Hue = meaning: sky chosen/focus, mint correct, lemon PERFECT, coral wrong/MISS, ember a lit day streak.
 - Lemon buttons: the primary action is a lemon fill with ink text, day and night; nothing on the page is a heavy dark block.
 - Fredoka for all Latin text, numerals, judgements and result words, rolling digit by digit.
@@ -259,28 +259,28 @@ Day (light) is the main look: warm paper, white panels, soft beige outlines and 
 
 ## Colors
 
-A warm paper neutral family carries the whole surface; five pastel confetti colours fill what the learner has matched, and four meaning hues mark states, each with an `-ink` variant tuned for text in each mode.
+A warm paper neutral family carries the whole surface; five saturated confetti colours fill what the learner has matched, and four meaning hues mark states, each with an `-ink` variant tuned for text in each mode.
 
-The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is **sky**, `--green*` is **mint**, `--yellow*` is **lemon/gold** (PERFECT), `--red*` is **coral**, `--primary*` is the **lemon button**, `--good` / `--good-ink` is the mint pastel and its ink, `--ember-ink` is **ember**. The `:root` blocks hold pre-JS fallbacks; at runtime `applyTheme()` writes the tokens onto `<html>` from the `STAGE` object and mixes the derived surfaces (panel-soft, selected and wrong backgrounds) from the base hues. Those runtime values are the ones recorded in the frontmatter. The confetti colours are the `CONFETTI` array, their ink is `CONFETTI_INK`; `confettiFor(n)` returns the nth fill and its edge, `mixHex(fill, ink, 0.78)`. Ember, the judgement chips, the FULL COMBO gradient and the icon colours are not in `STAGE`; they come straight from the CSS, `js/fx.js` and `icon.svg`.
+The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is **sky**, `--green*` is **mint**, `--yellow*` is **lemon/gold** (PERFECT), `--red*` is **coral**, `--primary*` is the **lemon button**, `--good` / `--good-ink` is the neon-green confetti colour and its ink, `--ember-ink` is **ember**. The `:root` blocks hold pre-JS fallbacks; at runtime `applyTheme()` writes the tokens onto `<html>` from the `STAGE` object and mixes the derived surfaces (panel-soft, selected and wrong backgrounds) from the base hues. Those runtime values are the ones recorded in the frontmatter. The confetti colours are the `CONFETTI` array, their ink is `CONFETTI_INK`; `confettiFor(n)` returns the nth fill and its edge, `mixHex(fill, ink, 0.78)`. Ember, the judgement chips, the FULL COMBO gradient and the icon colours are not in `STAGE`; they come straight from the CSS, `js/fx.js` and `icon.svg`.
 
 ### Set colour (rotates)
 Every finished set, or endless block, moves to the next set colour: lemon, peach, sky, mint, lilac (`COLOR_THEMES`, index in `themeIndex` / `word_snap_theme_index`). `applyTheme()` tints the paper with it (16% by day, 7% at night), the lane track (30% / 12%), panel-2 and hover; it is the primary button fill (ink text, with a deeper edge from the theme's `deep` and a glow in `--primary-shadow`), and the set's first matched pair starts the confetti run in it (`levelConfettiStart`). Cards, dialogs and every meaning colour stay fixed: sky is always selected, coral always wrong. A first visit starts on a random set colour (the inline script in `<head>` picks and stores it, and tints `--bg` before first paint); after that the rotation continues from where the learner left off. The lemon values below are one of the five; the others swap the fill.
 
 ### Primary
-- **Ink Button** (lemon-button-day / lemon-button-night): the fill of every primary action (Continue, Save, Start), the intro step numbers and the banner pill: lemon `#ffe27a` with ink text in both modes, with a 3px deeper-lemon (`#ffd23f`) bottom edge. It is also the fill of the undo toast (ink text, with an inverted Undo button). Active navigation, the selected library tab, the chosen language and the CLEAR result word use the plain text colour, not the button colour.
+- **Ink Button** (lemon-button-day / lemon-button-night): the fill of every primary action (Continue, Save, Start), the intro step numbers and the banner pill: lemon `#ffd21f` with ink text in both modes, with a 3px deeper-lemon (`#ffb800`) bottom edge. It is also the fill of the undo toast (ink text, with an inverted Undo button). Active navigation, the selected library tab, the chosen language and the CLEAR result word use the plain text colour, not the button colour.
 
 ### Confetti
-- **Peach, Sky, Lemon, Mint, Lilac** (confetti-*): the five fills, in that order. Each matched pair in a set takes the next one (the first pair peach, the sixth peach again), with ink text (at least 8:1 on every fill) and a 2px border of its edge colour (the fill mixed 78% with ink). The lane's segments repeat the same sequence, one per match, so the lane and the pairs agree. The ripple around a matched pair is drawn in the pair's edge colour. The same pastels draw the intro's demo cards (peach meaning, sky word) and the judgement chips, and appear in the goal confetti. They are identical by day and at night.
+- **Pink, Electric Blue, Lemon, Neon Green, Violet** (confetti-*; token names keep the old peach/sky/lemon/mint/lilac keys): the five fills, in that order. Each matched pair in a set takes the next one (the first pair pink, the sixth pink again), with ink text (at least 5:1 on every fill: pink 5.2, violet 5.4, blue 6.2, green 8.7, lemon 9.7) and a 2px border of its edge colour (the fill mixed 78% with ink). The lane's segments repeat the same sequence, one per match, so the lane and the pairs agree. The ripple around a matched pair is drawn in the pair's edge colour. The same colours draw the intro's demo cards (pink meaning, blue word) and the judgement chips, and appear in the goal confetti. They are identical by day and at night.
 
 ### Secondary
 - **Chosen Sky** (sky, sky-deep, sky-ink-*): the selected card's 2px outline, the pressed state of filter chips, the keyboard focus ring, the focused-input border and caret, checkbox accents. Sky ink is the text colour of secondary buttons and link-like controls.
 
 ### Tertiary (state hues)
-- **Correct Mint** (mint, mint-deep, mint-ink-*, correct-*): "today done" and its check, the hint ring after a miss, mastered tags and import success. A matched card normally wears its confetti colour; `correct-bg` (the mint pastel) is only the fallback when none is set.
+- **Correct Mint** (mint, mint-deep, mint-ink-*, correct-*): "today done" and its check, the hint ring after a miss, mastered tags and import success. A matched card normally wears its confetti colour; `correct-bg` (the neon green) is only the fallback when none is set.
 - **Perfect Lemon / Gold** (gold, gold-ink-*, confetti-lemon): the PERFECT chip is a lemon sticker. Lemon otherwise appears only as one of the five confetti fills and as the primary button; no reward or warning is gold.
 - **Miss Coral** (coral, coral-deep, coral-ink-*, wrong-*): a wrong match's outline, tint and shake, TIME UP, the low-time countdown, weak-word counts, review headings, sentence errors, the danger zone and destructive buttons (coral-deep fill, white text). The MISS chip is the peach sticker.
 - **Ember** (ember-ink-*): the day-streak flame and number once today's goal is done. Before that the chip is greyscale at 75% opacity.
-- **Celebration deep tones** (coral, sky, mint-deep, lilac-deep): milestone stars use these deeper confetti colours so they read on paper; the goal confetti mixes the five pastels with coral and sky.
+- **Celebration deep tones** (coral, sky, mint-deep, lilac-deep): milestone stars use these deeper confetti colours so they read on paper; the goal confetti mixes the five confetti colours with coral and sky.
 
 ### Neutral
 - **Paper** (paper-bg) and **Night Paper** (night-bg): the page ground, inputs, the lane's beat ticks and the browser `theme-color`.
@@ -296,7 +296,7 @@ Every finished set, or endless block, moves to the next set colour: lemon, peach
 - **Icon** (icon-tile, confetti-*): two rounded cards, peach and sky, leaning together on a cream `#fff7e8` tile, with a white dot where they touch and three confetti dots (lemon, mint, lilac). The desktop rail's logo tile is the same art without the dots. PNG and maskable icons are full-bleed with the art scaled to 86% into the safe zone; the Android adaptive icon background is `#FFF7E8`.
 
 ### Named Rules
-**The Confetti Rule.** Colour is a reward. The pastels fill only what the learner has matched (and the things that teach or mark matching: the lane, the judgement chips, the intro demo, the icon, the goal confetti). Everything else is paper, panel, line and ink.
+**The Confetti Rule.** Colour is a reward. The confetti colours fill only what the learner has matched (and the things that teach or mark matching: the lane, the judgement chips, the intro demo, the icon, the goal confetti). Everything else is paper, panel, line and ink.
 
 **The One Gold Rule.** Among judgements, lemon/gold means PERFECT. The combo count, the streak, milestone stars and the result words never turn gold; CLEAR is the button ink, FULL COMBO is the wordmark gradient, TIME UP is coral, the lit streak is ember.
 
