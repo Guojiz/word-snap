@@ -115,3 +115,106 @@ test("words learned today are not extra due work; the best streak is kept", () =
   assert.equal(H.today(h, { now: at(1) }).best, 2);
   assert.equal(H.normalize(JSON.parse(JSON.stringify(h))).best, 2);
 });
+
+// ---- Points, card rank (against yourself), weekly challenge, next stop ----
+
+test("the week strip starts on Monday and marks done, today and the rest", () => {
+  const h = H.normalize(null);
+  finishDay(h, at(0)); // Monday
+  const strip = H.weekStrip(h, at(2)); // Wednesday
+  assert.equal(strip.length, 7);
+  assert.equal(strip[0].day, H.dayKey(at(0)), "Monday first");
+  assert.deepEqual(strip.map(d => d.state), ["done", "missed", "today", "future", "future", "future", "future"]);
+});
+
+test("claimed points add up per week; the first week's target is the floor", () => {
+  const h = H.normalize(null);
+  H.claim(h, { points: 25, now: at(0) });
+  H.claim(h, { points: 30, fullCombo: true, now: at(1) });
+  const r = H.rank(h, at(1));
+  assert.deepEqual([r.tier, r.pts, r.target, r.left], [0, 55, 120, 65]);
+  assert.equal(r.daysLeft, 6, "Tuesday: Tuesday to Sunday left");
+  assert.equal(r.last, null);
+});
+
+test("meeting the week's target moves up one rank; the next target follows your own average", () => {
+  const h = H.normalize(null);
+  H.rank(h, at(0));
+  for (let d = 0; d < 6; d++) H.claim(h, { points: 30, now: at(d) }); // 180 ≥ 120
+  const r = H.rank(h, at(7)); // next Monday
+  assert.equal(r.tier, 1);
+  assert.equal(r.last.kind, "up");
+  assert.equal(r.last.pts, 180);
+  // Average of the last three weeks: (180 + 0 + 0) / 3 = 60 → 66 → floor 120.
+  assert.equal(r.target, 120);
+  H.markRankSeen(h);
+  assert.equal(H.rank(h, at(8)).last, null, "the result is shown once");
+});
+
+test("a steady learner's target grows 10% above their own level", () => {
+  const h = H.normalize(null);
+  H.rank(h, at(0));
+  for (let w = 0; w < 3; w++) for (let d = 0; d < 7; d++) H.claim(h, { points: 50, now: at(w * 7 + d) }); // 350 a week
+  const r = H.rank(h, at(21));
+  assert.equal(r.target, 390, "350 × 1.1 = 385 → rounded to 390");
+  assert.equal(r.tier, 3, "three weeks above target: white → green → blue → violet");
+});
+
+test("a week under 60% of the target drops one rank, never below white; 60% holds", () => {
+  const h = H.normalize(null);
+  h.rank.tier = 2;
+  H.rank(h, at(0));
+  H.claim(h, { points: 80, now: at(1) }); // 80 / 120 = 67%: stay
+  let r = H.rank(h, at(7));
+  assert.deepEqual([r.tier, r.last.kind], [2, "stay"]);
+  H.claim(h, { points: 10, now: at(8) }); // 10 / 120: down
+  r = H.rank(h, at(14));
+  assert.deepEqual([r.tier, r.last.kind], [1, "down"]);
+  // Weeks away: one rank per missed week, then white holds.
+  r = H.rank(h, at(14 + 35));
+  assert.equal(r.tier, 0);
+  assert.equal(r.last.kind, "stay");
+});
+
+test("rainbow is the top: meeting the target there says so", () => {
+  const h = H.normalize(null);
+  h.rank.tier = H.RANKS - 1;
+  H.rank(h, at(0));
+  H.claim(h, { points: 500, now: at(0) });
+  const r = H.rank(h, at(7));
+  assert.deepEqual([r.tier, r.last.kind], [H.RANKS - 1, "top"]);
+});
+
+test("the weekly challenge rotates and counts this week only", () => {
+  const h = H.normalize(null);
+  const kinds = new Set([0, 7, 14].map(d => H.challenge(h, at(d)).kind));
+  assert.deepEqual([...kinds].sort(), ["days", "fullCombos", "newWords"]);
+  // Find the week whose challenge is full combos and count two.
+  const d = [0, 7, 14].find(x => H.challenge(h, at(x)).kind === "fullCombos");
+  H.claim(h, { points: 25, fullCombo: true, now: at(d) });
+  H.claim(h, { points: 25, fullCombo: true, now: at(d + 1) });
+  assert.deepEqual(H.challenge(h, at(d + 1)), { kind: "fullCombos", goal: 3, value: 2, done: false });
+  // New words are logged from answers.
+  const n = [0, 7, 14].find(x => H.challenge(h, at(x)).kind === "newWords");
+  for (let i = 0; i < 31; i++) H.recordAnswer(h, { wasNew: true, now: at(n) });
+  assert.equal(H.challenge(h, at(n)).done, true);
+});
+
+test("next stop: the next streak milestone", () => {
+  assert.deepEqual(H.nextStop(0), { at: 3, left: 3 });
+  assert.deepEqual(H.nextStop(3), { at: 7, left: 4 });
+  assert.deepEqual(H.nextStop(29), { at: 30, left: 1 });
+  assert.equal(H.nextStop(400), null);
+});
+
+test("points and rank survive a save and reload; bad stored values are cleaned", () => {
+  const h = H.normalize(null);
+  H.claim(h, { points: 40, fullCombo: true, now: at(0) });
+  H.rank(h, at(0));
+  const back = H.normalize(JSON.parse(JSON.stringify(h)));
+  assert.equal(H.rank(back, at(0)).pts, 40);
+  const bad = H.normalize({ log: { x: 1, 5: "no", 6: { p: -3, n: "a" } }, rank: { tier: 99, target: -1 } });
+  assert.deepEqual(bad.log, { 6: { p: 0, n: 0, fc: 0 } });
+  assert.equal(bad.rank.tier, H.RANKS - 1);
+  assert.equal(bad.rank.target, 120);
+});
