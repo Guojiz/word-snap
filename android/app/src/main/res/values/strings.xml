@@ -4,4 +4,23 @@
     <string name="title_activity_main">Word Snap</string>
     <string name="package_name">io.github.guojiz.wordsnap</string>
     <string name="custom_url_scheme">io.github.guojiz.wordsnap</string>
+    <string name="capture_label">Add to Word Snap</string>
+    <string name="capture_kicker">Word Snap · capture</string>
+    <string name="capture_empty">No text selected</string>
+    <string name="capture_pick_word">Select an English word or a short phrase (up to 4 words)</string>
+    <string name="capture_looking">Looking it up…</string>
+    <string name="capture_meaning_hint">Its meaning in Chinese</string>
+    <string name="capture_from_book">From the word book: %1$s</string>
+    <string name="capture_not_found">Not in the word books. Write the meaning you understood:</string>
+    <string name="capture_need_meaning">Write a meaning first</string>
+    <string name="capture_added">✓ Added</string>
+    <string name="capture_waiting_one">It goes into your library when you open Word Snap</string>
+    <string name="capture_waiting_many">%1$d words waiting; they go into your library when you open Word Snap</string>
+    <string name="capture_cancel">Cancel</string>
+    <string name="capture_ok">OK</string>
+    <string name="capture_add">Add to library</string>
+    <string name="shortcut_practice_short">Practise</string>
+    <string name="shortcut_practice_long">Start today\'s practice</string>
+    <string name="shortcut_add_short">Add words</string>
+    <string name="shortcut_add_long">Add words to the library</string>
 </resources>

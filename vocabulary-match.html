@@ -3141,6 +3141,33 @@
       }
       .ob-track, .tile, .tile-bar i, .tile-arrow { transition: none; }
     }
+
+    /* Android: words captured in other apps arrive with a short note above the tab bar. */
+    .inbox-note {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+      z-index: 60;
+      max-width: min(420px, calc(100vw - 32px));
+      padding: 10px 16px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(43, 42, 61, 0.16);
+      transform: translateX(-50%);
+      animation: inbox-note-in 220ms ease-out;
+    }
+
+    @keyframes inbox-note-in {
+      from { opacity: 0; transform: translate(-50%, 12px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .inbox-note { animation: none; }
+    }
   </style>
 </head>
 <body data-screen="home">
@@ -3742,6 +3769,8 @@
           clearProgress: "Clear progress"
         },
         library: {
+          inboxAdded: "Added {n} words you picked in other apps: {list}",
+          inboxKnown: "Already in your library: {list}",
           title: "Library",
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
@@ -3989,6 +4018,8 @@
           clearProgress: "清空进度"
         },
         library: {
+          inboxAdded: "在其它 App 里收的 {n} 个词已放进词库：{list}",
+          inboxKnown: "已经在词库里了：{list}",
           title: "词库",
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
@@ -9379,7 +9410,50 @@
     renderRound();
     // Onboarding until it is finished or skipped: closing the app halfway brings it back.
     initShell(!hasSeenIntro() && state.onboarding === "trial");
+
+    /**
+     * Android app: words captured with "加入 Word Snap" in other apps' text selection, and the
+     * action of a launcher shortcut, wait in the native WordInbox until the page takes them.
+     * Called at start, when the app comes back to the front, and by MainActivity on a shortcut.
+     */
+    let inboxBusy = false;
+    async function collectInbox() {
+      const plugin = isNativeApp() && window.Capacitor.Plugins && window.Capacitor.Plugins.WordSnapInbox;
+      if (!plugin || inboxBusy) return;
+      inboxBusy = true;
+      let box = null;
+      try { box = await plugin.take(); } catch (e) {}
+      inboxBusy = false;
+      if (!box) return;
+      const pairs = (box.words || []).filter(p => Array.isArray(p) && p[0] && p[1]).map(p => [String(p[0]).trim(), String(p[1]).trim()]);
+      if (pairs.length) {
+        const keys = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
+        const fresh = pairs.filter(p => !keys.has(`${p[0].toLowerCase()}::${p[1]}`));
+        const added = addWords(pairs);
+        const list = items => items.slice(0, 5).map(p => p[0]).join("、") + (items.length > 5 ? "…" : "");
+        showInboxNote(added
+          ? t("library.inboxAdded", { n: added, list: list(fresh) })
+          : t("library.inboxKnown", { list: list(pairs) }));
+        renderHome();
+      }
+      if (box.action === "practice") startFromHome();
+      else if (box.action === "add") openLibrary("add");
+    }
+    window.wordSnapInbox = collectInbox;
+
+    let inboxNoteTimer = 0;
+    function showInboxNote(text) {
+      const note = document.getElementById("inboxNote");
+      note.textContent = text;
+      note.hidden = false;
+      clearTimeout(inboxNoteTimer);
+      inboxNoteTimer = setTimeout(() => { note.hidden = true; }, 4500);
+    }
+
+    collectInbox();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) collectInbox(); });
   </script>
+  <div class="inbox-note" id="inboxNote" role="status" aria-live="polite" hidden></div>
   <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 </body>
 </html>

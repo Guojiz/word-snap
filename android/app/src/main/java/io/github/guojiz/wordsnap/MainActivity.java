@@ -1,5 +1,7 @@
 package io.github.guojiz.wordsnap;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebView;
 
@@ -13,6 +15,8 @@ public class MainActivity extends BridgeActivity {
     /** Asks the web app to take one step back; true when it did (see js/shell.js). */
     private static final String BACK_JS =
         "(function(){try{return !!(window.wordSnapBack&&window.wordSnapBack());}catch(e){return false;}})()";
+    /** Asks the web app to collect what WordInbox holds (a shortcut's action, captured words). */
+    private static final String INBOX_JS = "window.wordSnapInbox&&window.wordSnapInbox()";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,6 +24,8 @@ public class MainActivity extends BridgeActivity {
         SplashScreen.installSplashScreen(this);
         // App-local plugins must be registered before the bridge starts.
         registerPlugin(LlmPlugin.class);
+        registerPlugin(InboxPlugin.class);
+        keepShortcutAction(getIntent()); // read by the web app when it starts
         super.onCreate(savedInstanceState);
         // Draw behind the status and navigation bars; the page pads itself with the safe-area insets.
         EdgeToEdge.enable(this);
@@ -40,5 +46,25 @@ public class MainActivity extends BridgeActivity {
                 });
             }
         });
+    }
+
+    /** A launcher shortcut while the app is already running. */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (keepShortcutAction(intent)) askWebForInbox();
+    }
+
+    /** wordsnap://practice or wordsnap://add → WordInbox; true when it was one. */
+    private boolean keepShortcutAction(Intent intent) {
+        Uri data = intent != null ? intent.getData() : null;
+        if (data == null || !"wordsnap".equals(data.getScheme()) || data.getHost() == null) return false;
+        WordInbox.setAction(this, data.getHost());
+        return true;
+    }
+
+    private void askWebForInbox() {
+        WebView webView = getBridge() != null ? getBridge().getWebView() : null;
+        if (webView != null) webView.post(() -> webView.evaluateJavascript(INBOX_JS, null));
     }
 }
