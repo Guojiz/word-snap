@@ -3444,6 +3444,10 @@
             <span data-en="Effects and vibration" data-zh="动画特效和震动">动画特效和震动</span>
           </label>
           <label class="check-row">
+            <input id="soundOn" type="checkbox" />
+            <span data-en="Sound effects (rewards, the day's flame, buttons)" data-zh="音效（领奖、点燃火焰、按键）">音效（领奖、点燃火焰、按键）</span>
+          </label>
+          <label class="check-row">
             <input id="streakTones" type="checkbox" />
             <span data-en="Piano notes for a streak" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
           </label>
@@ -3701,6 +3705,7 @@
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
+  <script src="./js/sfx.js"></script>
   <script src="./js/shell.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
@@ -4341,6 +4346,7 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
+      sound: true,
       effects: true,
       reminder: "",
       langPair: { a: "English", b: "中文" },
@@ -4487,6 +4493,7 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
+      soundOn: document.getElementById("soundOn"),
       effectsOn: document.getElementById("effectsOn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
@@ -4664,6 +4671,7 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
+        sound: raw.sound !== false,
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
         reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
@@ -5803,6 +5811,12 @@
       }
     }
 
+    /** One moment, felt and heard: a haptic texture (js/fx.js) and its sound (js/sfx.js). */
+    function feel(kind, level = 0) {
+      WordSnapFx.haptic(kind, level);
+      WordSnapSfx.play(kind, level);
+    }
+
     function playMistakeTone() {
       if (state.settings.streakTones === false) return;
       playPianoNote(146.83, 0.42, 0.12);
@@ -6357,6 +6371,7 @@
       if (!state.selected) {
         state.selected = { card, side, index, slot, wordId: slot.word.id };
         card.classList.add("selected");
+        feel("select");
         els.feedback.className = "feedback";
         els.feedback.textContent = t("feedback.pickOtherSide");
         return;
@@ -6466,7 +6481,9 @@
       state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
       WordSnapFx.ripple([first.card, second.card], confetti.edge);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
-      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
+      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "combo" : "match", Math.min(1, state.streak / 20));
+      // The piano flourish marks every 5; from 10 on a milestone also gets the combo arpeggio.
+      if (WordSnapFx.isMilestone(state.streak) && state.streak >= 10) WordSnapSfx.play("combo");
       updateCombo(state.streak);
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
@@ -8238,6 +8255,8 @@
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
       if (els.effectsOn) els.effectsOn.checked = state.settings.effects !== false;
       WordSnapFx.setEnabled(state.settings.effects !== false);
+      if (els.soundOn) els.soundOn.checked = state.settings.sound !== false;
+      WordSnapSfx.setEnabled(state.settings.sound !== false);
       syncLangPairUI();
       syncAiUI();
     }
@@ -8274,6 +8293,7 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
+        sound: els.soundOn ? els.soundOn.checked : true,
         effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
@@ -8977,7 +8997,7 @@
     /** Tab bar / rail: Home, Library, Settings. */
     function navTo(target) {
       if (!nav) return;
-      WordSnapFx.haptic("tap");
+      feel("tap");
       const { screen, overlay } = nav.current();
       if (target === "home") {
         if (overlay) nav.closeOverlay();
@@ -9068,7 +9088,7 @@
     /** Tap a Home block: its colour floods the screen, and what it stands for opens. */
     function tapTile(tile, act) {
       if (document.body.classList.contains("flooding")) return;
-      WordSnapFx.haptic("tap");
+      feel("tap");
       document.body.classList.add("flooding");
       WordSnapShell.flood(tile, act).catch(() => {}).then(() => document.body.classList.remove("flooding"));
     }
@@ -9237,7 +9257,7 @@
       if (group === els.obGoals) { ob.goal = Number(value); paintObStack(); }
       if (group === els.obTimes) ob.time = value;
       group.querySelectorAll(".ob-opt").forEach(opt => opt.setAttribute("aria-checked", opt.dataset.value === value ? "true" : "false"));
-      WordSnapFx.haptic("tap");
+      feel("tap");
       paintObStep();
     }
 
@@ -9306,7 +9326,7 @@
       if (opt) obSelect(group, opt.dataset.value);
     }));
     els.obNext.addEventListener("click", () => {
-      WordSnapFx.haptic("tap");
+      feel("tap");
       if (ob.step < 2) obGo(ob.step + 1);
       else finishOnboarding();
     });
