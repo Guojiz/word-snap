@@ -27,7 +27,11 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(InboxPlugin.class);
         registerPlugin(HapticsPlugin.class);
         registerPlugin(LivePlugin.class);
-        keepShortcutAction(getIntent()); // read by the web app when it starts
+        // Read by the web app when it starts. Not when the activity is restored or reopened from
+        // Recents: that intent is the old shortcut's, and its action has already been taken.
+        Intent launch = getIntent();
+        boolean fromHistory = launch != null && (launch.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0;
+        if (savedInstanceState == null && !fromHistory) keepShortcutAction(launch);
         super.onCreate(savedInstanceState);
         // Draw behind the status and navigation bars; the page pads itself with the safe-area insets.
         EdgeToEdge.enable(this);

@@ -49,6 +49,17 @@ public class HapticsPlugin extends Plugin {
             call.resolve();
             return;
         }
+        if (Build.VERSION.SDK_INT < 26) {
+            // Android 7 has no VibrationEffect: one short buzz, longer for the celebrations.
+            boolean big = name.equals("setComplete") || name.equals("ignite") || name.equals("levelUp") || name.equals("goalDone") || name.equals("combo");
+            try {
+                v.vibrate(big ? 40 : 10);
+            } catch (RuntimeException ignored) {
+                // vibrator busy or not allowed
+            }
+            call.resolve();
+            return;
+        }
         boolean longOne = name.equals("setComplete") || name.equals("ignite") || name.equals("levelUp") || name.equals("goalDone");
         VibrationEffect effect = null;
         if (Build.VERSION.SDK_INT >= 30) effect = composed(v, name, (float) level);

@@ -27,6 +27,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -117,7 +118,9 @@ public class CaptureActivity extends Activity {
         slideIn();
 
         Handler main = new Handler(Looper.getMainLooper());
-        Executors.newSingleThreadExecutor().execute(() -> {
+        // One lookup per card; the thread ends with it instead of idling for the life of the process.
+        ExecutorService lookup = Executors.newSingleThreadExecutor();
+        lookup.execute(() -> {
             WordDictionary.Entry entry = null;
             try {
                 entry = WordDictionary.get(getApplicationContext()).lookup(word);
@@ -127,6 +130,7 @@ public class CaptureActivity extends Activity {
             WordDictionary.Entry found = entry;
             main.post(() -> showLookup(wordView, found));
         });
+        lookup.shutdown();
     }
 
     /** One English word or a short phrase (≤ 4 words) from the selection, or null. */
