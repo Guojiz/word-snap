@@ -9251,7 +9251,7 @@
 
     function openSettings() {
       openSettingsRaw();
-      checkLivePermission({ ask: !storeGet(LIVE_ASKED_KEY) });
+      checkLivePermission(); // look, never ask: the system prompt only follows turning the switch on
       if (nav && !navSyncing) nav.overlay("settings");
       syncNavUI();
     }
@@ -9963,10 +9963,10 @@
     document.addEventListener("visibilitychange", () => syncLiveSet(document.hidden));
 
     /**
-     * The Live Update switch is on, but Android 13+ does not let the app post notifications:
-     * ask once (LocalNotifications); if the answer is no, the switch goes off with a note.
+     * The Live Update switch is on, but Android 13+ does not let the app post notifications.
+     * ask: the user just turned the switch on, so ask (LocalNotifications). Otherwise, or if the
+     * answer is no, the switch goes off with a note, so it never claims to work when it cannot.
      */
-    const LIVE_ASKED_KEY = "word_snap_live_asked_v1";
     async function checkLivePermission({ ask = false } = {}) {
       const plugin = livePlugin();
       if (!plugin || !els.liveNote) return;
@@ -9977,7 +9977,6 @@
       if (!status || status.notify) return;
       const notifications = notificationsPlugin();
       if (ask && notifications) {
-        storeSet(LIVE_ASKED_KEY, "1");
         try {
           const permission = await notifications.requestPermissions();
           if (permission.display === "granted") return;
