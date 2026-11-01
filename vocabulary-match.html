@@ -2679,6 +2679,20 @@
     .tile-lib { grid-area: lib; --r: 2deg; }
     .tile-add { grid-area: add; --r: -2.5deg; }
     .tile-set { grid-area: set; --r: 1.5deg; }
+    /* A new version is out (js/update.js): one quiet dot on 设置, the details live in Settings. */
+    .tile-dot {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .update-banner {
+      margin-top: 10px;
+      font-weight: 800;
+    }
 
     /* Blocks drop in one after another, like confetti landing. */
     .home .tile { animation: tile-in 620ms var(--spring) both; }
@@ -3398,6 +3412,7 @@
             <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
             <span class="tile-title" data-zh="设置" data-en="Settings">设置</span>
             <span class="tile-sub" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span>
+            <span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span>
           </button>
         </div>
       </section>
@@ -3519,6 +3534,11 @@
           <p data-en="Changes save automatically and apply from the next set." data-zh="修改会自动保存，下一组生效。">修改会自动保存，下一组生效。</p>
           <button class="link-button intro-link" type="button" id="showIntroBtn" data-en="How to play" data-zh="玩法说明">玩法说明</button>
           <a class="link-button intro-link" href="https://github.com/Guojiz/word-snap" target="_blank" rel="noopener noreferrer" data-en="Source code (GitHub)" data-zh="源代码（GitHub）">源代码（GitHub）</a>
+          <p class="update-banner" id="updateBanner" hidden>
+            <span id="updateText"></span> ·
+            <a class="link-button" id="updateNotes" target="_blank" rel="noopener noreferrer" data-en="What's new" data-zh="更新说明">更新说明</a> ·
+            <a class="link-button" id="updateApk" target="_blank" rel="noopener noreferrer" data-en="Download" data-zh="下载">下载</a>
+          </p>
         </div>
         <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
@@ -3869,6 +3889,7 @@
   <script src="./js/fx.js"></script>
   <script src="./js/sfx.js"></script>
   <script src="./js/feedback.js"></script>
+  <script src="./js/update.js"></script>
   <script src="./js/shell.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
@@ -4049,6 +4070,7 @@
           chooseTitle: "Now pick your words", chooseSub: "Pick a word book or import a list", chooseBtn: "Choose a word book",
           bookMine: "My library", bookSamples: "Sample words", bookSub: "{n} words · {m} mastered", bookUnit: "words", bookMastered: "{m} mastered",
           streakTitle: "{n}-day streak",
+          updateTitle: "New version {v}",
           setupTitle: "Welcome to Word Snap", setupSub: "Pick a word book and a daily goal", setupBtn: "Set up",
           libTitle: "Library", addTitle: "Add words", addSub: "Paste a list or import", setTitle: "Settings", setSub: "Goal · reminders · look"
         },
@@ -4336,6 +4358,7 @@
           chooseTitle: "换成你要背的词吧", chooseSub: "选一本词书或导入词表", chooseBtn: "选一本词书",
           bookMine: "我的词库", bookSamples: "示例词", bookSub: "{n} 个词 · 已掌握 {m}", bookUnit: "个词", bookMastered: "已掌握 {m}",
           streakTitle: "连续 {n} 天",
+          updateTitle: "有新版本 {v}",
           setupTitle: "欢迎来到 Word Snap", setupSub: "选词书和每日目标，三步设好", setupBtn: "开始设置",
           libTitle: "词库", addTitle: "加词", addSub: "粘贴词表或导入", setTitle: "设置", setSub: "目标 · 提醒 · 外观"
         },
@@ -4663,6 +4686,7 @@
       homeBook: document.getElementById("homeBook"),
       homeAdd: document.getElementById("homeAdd"),
       homeSet: document.getElementById("homeSet"),
+      homeSetDot: document.getElementById("homeSetDot"),
       main: document.querySelector(".main"),
       librarySummary: document.getElementById("librarySummary"),
       newEnglish: document.getElementById("newEnglish"),
@@ -9531,6 +9555,7 @@
       const screen = document.body.dataset.screen;
       if (screen === "home") renderHome();
       if (screen === "onboard") { renderOnboard(); paintObStep(); }
+      showUpdate();
     }
 
     /** Status bar and navigation bar icons follow the page (dark icons on light paper). */
@@ -9865,6 +9890,30 @@
 
     // Onboarding until it is finished or skipped: closing the app halfway brings it back.
     initShell(!hasSeenIntro() && state.onboarding === "trial");
+
+    /**
+     * Android app: is there a newer release? (js/update.js: once a day, 5 s timeout, silent.)
+     * Runs when the browser is idle after Home has drawn; never touches a set in progress.
+     */
+    let availableUpdate = null;
+    function showUpdate() {
+      const u = availableUpdate;
+      if (els.homeSetDot) els.homeSetDot.hidden = !u;
+      const banner = document.getElementById("updateBanner");
+      if (!banner) return;
+      banner.hidden = !u;
+      if (!u) return;
+      document.getElementById("updateText").textContent = t("home.updateTitle", { v: u.version });
+      document.getElementById("updateNotes").href = u.notes;
+      document.getElementById("updateApk").href = u.apk;
+    }
+    function checkForUpdate() {
+      if (!isNativeApp() || !window.WordSnapUpdate) return;
+      WordSnapUpdate.check({ current: APP_VERSION, fetch: window.fetch.bind(window), store: window.localStorage })
+        .then(u => { availableUpdate = u; showUpdate(); })
+        .catch(() => {});
+    }
+    (window.requestIdleCallback || (fn => setTimeout(fn, 1500)))(checkForUpdate, { timeout: 4000 });
 
     /**
      * Android app: words captured with "加入 Word Snap" in other apps' text selection, and the

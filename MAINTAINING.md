@@ -69,3 +69,7 @@ Never commit the keystore or its passwords. Locally, `npm run apk:release` signs
 
 `main` requires a pull request (no direct pushes, no force pushes, no deletion). Once CI is on `main`, also require the **test** check:
 `gh api -X PATCH repos/Guojiz/word-snap/branches/main/protection/required_status_checks -F strict=false -f 'contexts[]=test'`.
+
+## version.json (update check)
+
+The Android app checks `https://api.github.com/repos/Guojiz/word-snap/releases/latest` once a day and falls back to `version.json` from this repo via jsDelivr (`https://cdn.jsdelivr.net/gh/Guojiz/word-snap@main/version.json`). On every release, bump `package.json`, `APP_VERSION` in `vocabulary-match.html` and `version.json` together (tests fail otherwise) and point `version.json`'s `notes` / `apk` at the new release.
