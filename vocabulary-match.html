@@ -942,6 +942,19 @@
       box-shadow: 0 6px 16px -6px var(--wrong-shadow);
     }
 
+    a.duo-button {
+      text-decoration: none;
+    }
+
+    .feedback-section .form-actions {
+      flex-wrap: wrap;
+    }
+
+    .feedback-note {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
     .danger-zone {
       margin: 16px;
       border: 2px solid var(--red);
@@ -3668,6 +3681,16 @@
         </div>
       </section>
 
+      <section class="modal-section feedback-section" aria-labelledby="feedbackTitle">
+        <h2 id="feedbackTitle" data-en="Feedback and community" data-zh="反馈与交流">反馈与交流</h2>
+        <p data-en="Found a bug, or missing something? Tell me either way. GitHub can be slow in mainland China, so Bilibili is just as good." data-zh="遇到问题、想要什么功能，都可以告诉我。GitHub 在国内有时打不开，在 B 站找我也一样。">遇到问题、想要什么功能，都可以告诉我。GitHub 在国内有时打不开，在 B 站找我也一样。</p>
+        <div class="form-actions">
+          <a class="duo-button secondary" id="feedbackGithub" href="https://github.com/Guojiz/word-snap/issues/new" target="_blank" rel="noopener noreferrer" data-en="Report on GitHub" data-zh="在 GitHub 提问题">在 GitHub 提问题</a>
+          <a class="duo-button secondary" id="feedbackBilibili" href="https://space.bilibili.com/3493114115263006" target="_blank" rel="noopener noreferrer" data-en="Find me on Bilibili" data-zh="在 B 站找我">在 B 站找我</a>
+        </div>
+        <p class="feedback-note" data-en="The GitHub form comes filled in with the app version, Android version and phone model, nothing else." data-zh="GitHub 的表单会预先填好 App 版本、Android 版本和手机型号，不含其它信息。">GitHub 的表单会预先填好 App 版本、Android 版本和手机型号，不含其它信息。</p>
+      </section>
+
       <section class="modal-section danger-zone" aria-labelledby="resetTitle">
         <h2 id="resetTitle" data-en="Reset learning progress" data-zh="重置学习进度">重置学习进度</h2>
         <p data-en="Puts every word back to “new” and clears the score. Your word list is kept. This cannot be undone." data-zh="把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。">把所有词恢复成「新词」并清空得分，词库里的单词会保留。无法撤销。</p>
@@ -3845,6 +3868,7 @@
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
   <script src="./js/sfx.js"></script>
+  <script src="./js/feedback.js"></script>
   <script src="./js/shell.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
@@ -5944,6 +5968,8 @@
       els.customList.innerHTML = html;
     }
 
+    /** Kept equal to package.json "version" (tests/feedback.test.js checks). */
+    const APP_VERSION = "1.0.0";
     const SLOT_COUNT = 5;
     const CORRECT_ANIM_MS = 400;
     const WRONG_ANIM_MS = 520;
@@ -8597,6 +8623,13 @@
     document.getElementById("openLibrary").addEventListener("click", () => openLibrary());
     document.querySelectorAll("[data-nav]").forEach(btn => btn.addEventListener("click", () => navTo(btn.dataset.nav)));
     document.getElementById("closeSettings").addEventListener("click", closeSettings);
+    // Feedback (Settings → 反馈与交流): the issue form names the version, OS and phone model only.
+    document.getElementById("feedbackGithub").addEventListener("click", event => {
+      event.currentTarget.href = WordSnapFeedback.issueUrl({ version: APP_VERSION, userAgent: navigator.userAgent, native: isNativeApp() });
+    });
+    document.getElementById("feedbackBilibili").addEventListener("click", event => {
+      if (!WordSnapFeedback.openBilibili(window, { native: isNativeApp() })) event.preventDefault();
+    });
     els.settingsModal.addEventListener("click", event => {
       if (event.target === els.settingsModal) closeSettings();
     });

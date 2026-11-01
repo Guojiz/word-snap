@@ -33,7 +33,7 @@ Word Snap is a static single-page vocabulary matching practice app. Match pairs 
 - **Settings** (side rail / bottom nav) hold the practice options, save automatically, and keep the rarely needed ones under **Advanced**. Resetting learning progress lives here too, behind a confirmation — it is no longer a main navigation button.
 - **My words → Danger zone → Clear all words.** The library is designed to keep growing: practice mixes reviewing old words with learning new ones, and mastered words simply come up less often, so you normally never clear it. Clearing is only for switching to a completely different set (new textbook, term, or language). Use **Copy word list backup** first; pasting the backup into Bulk input restores the words (not their progress).
 - Empty-library prompt when there is nothing to practice.
-- Settings: how to practice (endless / timed levels), cards after each set, on-device AI, language pair, practice mode (adaptive / weak only / all in order), appearance, max words per round, level time, adaptive time, guzheng streak notes; Advanced: time tolerance, refill delay, pause refill while selected, keep practicing after everything is mastered.
+- Settings: how to practice (endless / timed levels), cards after each set, on-device AI, language pair, practice mode (adaptive / weak only / all in order), appearance, max words per round, level time, adaptive time, guzheng streak notes; Advanced: time tolerance, refill delay, pause refill while selected, keep practicing after everything is mastered. At the bottom, Feedback and community: a prefilled GitHub issue (app version, OS version, phone model only) or the maintainer's Bilibili page.
 - Synonyms count: if two entries share a meaning (e.g. `big` / `large` = 大的), either English card matches it.
 - End-of-set review: words you mixed up are listed with their meaning.
 - The level timer (timed levels) pauses while the Library is open or the app is in the background.
@@ -228,7 +228,7 @@ Word Snap 是一个静态单页单词配对练习网页，通过配对（默认�
 - 如果保留示例词，新词**先学你自己的词**（按添加顺序），示例词排在后面。
 - **设置**（侧栏 / 底栏）放练习选项，改完自动保存，不常用的收在「高级选项」里。重置学习进度也在这里，需要确认，不再是主导航按钮。
 - **我的词库 → 危险操作 → 清空全部词。** 词库的设计是越积越多：练习会自动混合复习旧词和学习新词，掌握的词只是出现得更少，所以平时不需要清空。只有彻底换一套词（换教材、换学期、换语言）时才用。清空前先点「复制词表备份」，之后粘贴回「批量录入」即可恢复单词（学习进度不恢复）。
-- 设置：练习方式（无限练习 / 限时关卡）、每组后的练习卡、端侧 AI、语言对、练习模式（自适应 / 只练弱项 / 全量顺序）、外观、每局最多单词数、每关时间、按速度自动调时、古筝音阶；高级：时间容错、补词延迟、选中暂停补词、全部掌握后继续循环。
+- 设置：练习方式（无限练习 / 限时关卡）、每组后的练习卡、端侧 AI、语言对、练习模式（自适应 / 只练弱项 / 全量顺序）、外观、每局最多单词数、每关时间、按速度自动调时、古筝音阶；高级：时间容错、补词延迟、选中暂停补词、全部掌握后继续循环。最下面是「反馈与交流」：预填好的 GitHub 问题（只含 App 版本、系统版本、手机型号）或作者的 B 站主页。
 - 同义词都算对：两个词条释义相同时（如 `big` / `large` = 大的），任一英文卡都能配上。
 - 每组结束列出这一组混淆过的词及释义，方便回顾。
 - （限时关卡）打开词库或切到后台时，本关计时自动暂停。
