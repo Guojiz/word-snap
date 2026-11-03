@@ -22,6 +22,19 @@ test("newer compares numerically, ignores a leading v", () => {
   assert.equal(Update.newer("1.0.0", "1.1"), false);
 });
 
+test("a release outranks its own prerelease; prereleases and drafts are ignored", () => {
+  assert.equal(Update.newer("1.2.0", "1.2.0-beta.1"), true);
+  assert.equal(Update.newer("1.2.0-beta.1", "1.2.0"), false);
+  assert.equal(Update.fromRelease({ ...RELEASE, prerelease: true }), null);
+  assert.equal(Update.fromRelease({ ...RELEASE, draft: true }), null);
+  assert.equal(Update.fromVersionJson({ version: "1.3.0-rc.1" }), null);
+});
+
+test("only https links are kept", () => {
+  const r = Update.fromVersionJson({ version: "1.2.0", notes: "javascript:alert(1)", apk: "http://x/a.apk" });
+  assert.deepEqual(r, { version: "1.2.0", notes: "", apk: "" });
+});
+
 test("fromRelease takes the tag and the release APK", () => {
   assert.deepEqual(Update.fromRelease(RELEASE), { version: "1.1.0", notes: RELEASE.html_url, apk: RELEASE.assets[0].browser_download_url });
   assert.equal(Update.fromRelease({}), null);
@@ -42,19 +55,23 @@ test("check: GitHub first, at most once a day, newer only", async () => {
   assert.equal(await Update.check({ current: "1.1.0", fetch, store, now: now + 3600e3 }), null);
 });
 
-test("check: falls back to version.json, and a failure is silent and waits a day", async () => {
+test("check: falls back to version.json; a failure is silent and retried after an hour", async () => {
   const store = memoryStore();
   const calls = [];
-  const fetch = url => { calls.push(url); return /github\.com/.test(url) ? Promise.reject(new Error("blocked")) : ok({ version: "1.2.0", notes: "n", apk: "a" }); };
+  const fetch = url => { calls.push(url); return /github\.com/.test(url) ? Promise.reject(new Error("blocked")) : ok({ version: "1.2.0", notes: "https://n", apk: "https://a" }); };
   const now = Date.UTC(2026, 10, 1, 12);
-  assert.deepEqual(await Update.check({ current: "1.0.0", fetch, store, now }), { version: "1.2.0", notes: "n", apk: "a" });
+  assert.deepEqual(await Update.check({ current: "1.0.0", fetch, store, now }), { version: "1.2.0", notes: "https://n", apk: "https://a" });
   assert.match(calls[1], /cdn\.jsdelivr\.net\/gh\/Guojiz\/word-snap@main\/version\.json/);
   const store2 = memoryStore();
   const dead = () => Promise.reject(new Error("offline"));
   assert.equal(await Update.check({ current: "1.0.0", fetch: dead, store: store2, now }), null);
   let n = 0;
-  await Update.check({ current: "1.0.0", fetch: () => { n++; return dead(); }, store: store2, now: now + 60e3 });
+  const counting = () => { n++; return dead(); };
+  await Update.check({ current: "1.0.0", fetch: counting, store: store2, now: now + 60e3 });
   assert.equal(n, 0);
+  // back online an hour later: it tries again instead of waiting a whole day
+  const back = await Update.check({ current: "1.0.0", fetch: () => ok(RELEASE), store: store2, now: now + 3601e3 });
+  assert.equal(back.version, "1.1.0");
 });
 
 test("version.json matches package.json", () => {

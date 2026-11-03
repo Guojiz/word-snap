@@ -9914,6 +9914,8 @@
         .catch(() => {});
     }
     (window.requestIdleCallback || (fn => setTimeout(fn, 1500)))(checkForUpdate, { timeout: 4000 });
+    // Android keeps the WebView alive for days; coming back to the front checks again (still once a day).
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) checkForUpdate(); });
 
     /**
      * Android app: words captured with "加入 Word Snap" in other apps' text selection, and the

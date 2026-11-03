@@ -5,7 +5,8 @@
  *     At most once a day (store remembers when), after Home has rendered, never during a set:
  *     the caller decides when. Asks GitHub's latest release first, then version.json on
  *     jsDelivr (GitHub can be slow or blocked in mainland China). Each request gives up after
- *     5 s; any failure is silent (null), and the last answer is kept for the rest of the day.
+ *     5 s; any failure is silent and retried after an hour, keeping the last answer meanwhile.
+ *     Drafts, prereleases and non-https links are ignored.
  *   newer(a, b)        true when version a is above b ("1.10.0" > "1.9.2"), pure
  *   fromRelease(json)  { version, notes, apk } from a GitHub release, pure
  *
@@ -22,33 +23,41 @@
   const VERSION_JSON = "https://cdn.jsdelivr.net/gh/Guojiz/word-snap@main/version.json";
   const STORE_KEY = "word_snap_update_v1";
   const DAY_MS = 24 * 60 * 60 * 1000;
+  const RETRY_MS = 60 * 60 * 1000;
   const TIMEOUT_MS = 5000;
 
   function parts(v) {
     return String(v || "").replace(/^v/i, "").split(/[.+-]/).slice(0, 3).map(n => parseInt(n, 10) || 0);
   }
 
+  function pre(v) {
+    return /^v?\d+(\.\d+)*-/i.test(String(v || "").trim());
+  }
+
+  // A release outranks a prerelease of the same number ("1.2.0" > "1.2.0-beta.1").
   function newer(a, b) {
     const x = parts(a), y = parts(b);
     for (let i = 0; i < 3; i++) {
       if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0);
     }
-    return false;
+    return pre(b) && !pre(a);
+  }
+
+  function https(url) {
+    return /^https:\/\//i.test(String(url || "")) ? String(url) : "";
   }
 
   function fromRelease(json) {
-    if (!json || typeof json.tag_name !== "string") return null;
+    if (!json || typeof json.tag_name !== "string" || json.draft || json.prerelease) return null;
     const asset = (json.assets || []).find(a => /\.apk$/i.test(a.name || "") && !/debug/i.test(a.name || ""));
-    return {
-      version: json.tag_name.replace(/^v/i, ""),
-      notes: json.html_url || "",
-      apk: asset ? asset.browser_download_url : json.html_url || ""
-    };
+    const notes = https(json.html_url);
+    return { version: json.tag_name.replace(/^v/i, ""), notes, apk: https(asset && asset.browser_download_url) || notes };
   }
 
   function fromVersionJson(json) {
-    if (!json || typeof json.version !== "string") return null;
-    return { version: json.version, notes: json.notes || "", apk: json.apk || json.notes || "" };
+    if (!json || typeof json.version !== "string" || pre(json.version)) return null;
+    const notes = https(json.notes);
+    return { version: json.version, notes, apk: https(json.apk) || notes };
   }
 
   async function getJson(fetchFn, url) {
@@ -83,10 +92,12 @@
     if (!current || !fetchFn || !store) return null;
     const saved = read(store);
     let latest = saved.latest || null;
-    if (!(saved.checkedAt && now - saved.checkedAt < DAY_MS && now >= saved.checkedAt)) {
+    const fresh = (at, ms) => at && now >= at && now - at < ms;
+    if (!fresh(saved.checkedAt, DAY_MS) && !fresh(saved.failedAt, RETRY_MS)) {
       const found = fromRelease(await getJson(fetchFn, RELEASE_API)) || fromVersionJson(await getJson(fetchFn, VERSION_JSON));
-      latest = found || latest; // a failed check keeps yesterday's answer and waits a day
-      write(store, { checkedAt: now, latest });
+      // A failed check (offline at launch) keeps the last answer and tries again in an hour.
+      if (found) write(store, { checkedAt: now, latest: (latest = found) });
+      else write(store, { checkedAt: saved.checkedAt, failedAt: now, latest });
     }
     return latest && newer(latest.version, current) ? latest : null;
   }
