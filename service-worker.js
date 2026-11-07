@@ -14,6 +14,7 @@ const APP_SHELL = [
   "./js/wordbooks.js",
   "./js/fx.js",
   "./js/sfx.js",
+  "./js/feedback.js",
   "./js/shell.js",
   "./vendor/fonts/fredoka-latin.woff2",
   "./js/sentence.js",

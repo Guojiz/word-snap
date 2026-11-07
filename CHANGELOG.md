@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-
+- **Feedback and community** in Settings (反馈与交流): «在 GitHub 提问题» opens a new GitHub issue with the app version, Android version and phone model filled in (nothing else); «在 B 站找我» opens the Bilibili app's page when it is installed, else the web page. A note says GitHub can be slow in mainland China.
 - **After-set ritual** (2026-10-31, modelled on what keeps Duolingo learners coming back, observed on the maintainer's phone): claim the set's points (pairs, +5 full combo, +10 today's goal) and watch the week's rank bar fill; when the set completes today's goal, swipe the flame up to light the day's streak, see the streak, the Monday-first week strip and the next stop, and tap "我坚持，不放弃"; in the app, if no reminder is set, "明天几点提醒你？" is asked once.
 - **Card rank against yourself** (卡片段位: white, green, blue, violet, gold, rainbow): each week's target is 10% above your own average of the last three weeks (at least 120 points); meet it → up, 60% → stay, less → down. No other learners, no leaderboard. Home shows the rank, the week's points, a rotating weekly challenge (5 goal days / 30 new words / 3 full combos) and the next streak stop (3, 7, 14, 30 … days).
 - **Haptics with a texture per moment** (Android: the vibrator's click/tick/thud/rise/spin primitives through `WordSnapHaptics`; browsers: vibrate patterns) and **synthesised sound effects** (`js/sfx.js`, no audio files; Settings → Sound effects).
