@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.1.0 — 2026-11-07
+
+First release built and signed on the maintainer's Mac (same key as the APK already on the phone, so it installs over it; versionCode 110).
+
 ### Added
 - **Update check** (Android app): once a day, when the phone is idle after Home has drawn, the app asks GitHub for the latest release (falling back to `version.json` on jsDelivr, since GitHub can be blocked in mainland China); 5 s timeout, silent on failure. A newer version shows a dot on 设置 and «有新版本 x.y.z · 更新说明 · 下载» at the top of Settings; 下载 opens the release APK in the system browser. The web app keeps updating through its service worker.
 - **Feedback and community** in Settings (反馈与交流): «在 GitHub 提问题» opens a new GitHub issue with the app version, Android version and phone model filled in (nothing else); «在 B 站找我» opens the Bilibili app's page when it is installed, else the web page. A note says GitHub can be slow in mainland China.
