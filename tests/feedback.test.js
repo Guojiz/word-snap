@@ -11,6 +11,8 @@ test("device: Android version and model, nothing else", () => {
   assert.deepEqual(Feedback.device(PIXEL), { os: "Android 14", model: "Pixel 7" });
   assert.deepEqual(Feedback.device(REDUCED), { os: "Android", model: "" }); // "Android 10; K" is a fixed fake
   assert.deepEqual(Feedback.device("Mozilla/5.0 (Linux; U; Android 12; zh-cn; 2201123C Build/SKQ1.211006.001) AppleWebKit/537.36 Mobile Safari/537.36 XiaoMi/MiuiBrowser/17.4"), { os: "Android 12", model: "2201123C" });
+  assert.deepEqual(Feedback.device("Mozilla/5.0 (Linux; Android 9; MI) AppleWebKit/537.36"), { os: "Android 9", model: "MI" });
+  assert.deepEqual(Feedback.device("Mozilla/5.0 (Linux; Android 13; en-US; SM-S9180) AppleWebKit/537.36"), { os: "Android 13", model: "SM-S9180" });
   assert.deepEqual(Feedback.device("Mozilla/5.0 (Linux; Android 12; HarmonyOS; NOH-AN00; HMSCore 6.11) AppleWebKit/537.36 Mobile Safari/537.36"), { os: "Android 12", model: "NOH-AN00" });
   assert.deepEqual(Feedback.device("Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X)"), { os: "iOS 17.4", model: "iPhone" });
   assert.deepEqual(Feedback.device(""), { os: "", model: "" });
@@ -45,7 +47,8 @@ function fakeWin() {
   const timers = [];
   const win = {
     hrefs: [],
-    document: { visibilityState: "visible", addEventListener: on, removeEventListener: off },
+    focused: true,
+    document: { visibilityState: "visible", addEventListener: on, removeEventListener: off, hasFocus: () => win.focused },
     addEventListener: on, removeEventListener: off,
     location: { set href(v) { win.hrefs.push(v); } },
     setTimeout: f => timers.push(f),
@@ -66,6 +69,19 @@ test("openBilibili: the app when it opens, the web page when nothing does, once 
   w = fakeWin(); // the app opened: the WebView lost focus before it turned hidden
   Feedback.openBilibili(w, { native: true });
   w.fire("blur");
+  w.focused = false;
+  w.runTimers();
+  assert.deepEqual(w.hrefs, ["bilibili://space/3493114115263006"]);
+
+  w = fakeWin(); // a chooser/permission prompt took focus, the user cancelled it: still the web page
+  Feedback.openBilibili(w, { native: true });
+  w.fire("blur");
+  w.runTimers();
+  assert.deepEqual(w.hrefs, ["bilibili://space/3493114115263006", Feedback.BILIBILI_WEB]);
+
+  w = fakeWin(); // the app came to the front: pagehide
+  Feedback.openBilibili(w, { native: true });
+  w.fire("pagehide");
   w.runTimers();
   assert.deepEqual(w.hrefs, ["bilibili://space/3493114115263006"]);
 

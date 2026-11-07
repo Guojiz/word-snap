@@ -30,7 +30,8 @@
       // The segments after "Android x": skip the ones that are not a model — a language tag
       // (MIUI/UC put "zh-cn" first), "U", "wv", "HarmonyOS" — and take the next one.
       const parts = android[2].split(";").map(p => p.replace(/\s*Build\/.*$/, "").trim()).filter(Boolean);
-      const model = parts.find(p => !/^([a-z]{2}([-_][a-z]{2,4})?|U|wv|HarmonyOS|Linux)$/i.test(p)) || "";
+      const lang = p => /^[a-z]{2}$/.test(p) || /^[a-z]{2}[-_][a-z]{2,4}$/i.test(p); // "zh", "zh-cn", "en-US" — not "MI", "LE"
+      const model = parts.find(p => !lang(p) && !/^(U|wv|HarmonyOS|Linux)$/i.test(p)) || "";
       // Chrome's reduced user agent always says "Android 10; K": neither the version nor the model is real.
       if (model === "K") return { os: "Android", model: "" };
       return { os: `Android ${android[1]}`, model };
@@ -75,18 +76,24 @@
     if (!native) { win.open(BILIBILI_WEB, "_blank", "noopener"); return false; }
     if (opening) return false; // a second tap while the first is still deciding
     opening = true;
-    let left = false;
-    const away = event => { if (event.type !== "visibilitychange" || win.document.visibilityState === "hidden") left = true; };
+    let left = false, blurred = false;
+    // blur alone can be a system chooser or an "allow opening Bilibili?" prompt the user then
+    // cancels: it only counts if the page still has no focus when the timer runs out.
+    const away = event => {
+      if (event.type === "blur") blurred = true;
+      else if (event.type === "pagehide" || win.document.visibilityState === "hidden") left = true;
+    };
     win.document.addEventListener("visibilitychange", away);
     win.addEventListener("blur", away);
     win.addEventListener("pagehide", away);
-    win.location.href = BILIBILI_APP;
+    try { win.location.href = BILIBILI_APP; } catch { /* no handler: the timer falls back */ }
     win.setTimeout(() => {
       win.document.removeEventListener("visibilitychange", away);
       win.removeEventListener("blur", away);
       win.removeEventListener("pagehide", away);
       opening = false;
-      if (!left) win.location.href = BILIBILI_WEB;
+      const stillAway = blurred && win.document.hasFocus && !win.document.hasFocus();
+      if (!left && !stillAway) win.location.href = BILIBILI_WEB;
     }, waitMs);
     return false;
   }
