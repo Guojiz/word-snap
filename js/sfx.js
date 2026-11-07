@@ -43,11 +43,14 @@
   let on = true;
   let ctx = null;
   let bus = null;
+  let room = null; // the live context's reverb, until its impulse has been built
 
   const KEY = 64; // E4 is 宫
   const GONG = [0, 2, 4, 7, 9]; // 宫 商 角 徵 羽
   // The Shepard window for streak notes: loudest at center, fading out about an octave either side.
-  const SHEPARD = { center: 70, sigma: 6, low: 58, high: 96, floor: 0.04 };
+  // No hard bottom edge: a new low partial enters only once the bell curve lets it (≈7 %), so it
+  // fades in instead of popping in, and the top one fades out the same way.
+  const SHEPARD = { center: 70, sigma: 6, low: 48, high: 96, floor: 0.06 };
 
   function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); } // MIDI number → Hz
   function scaleNote(i) { return KEY + 12 * Math.floor(i / 5) + GONG[((i % 5) + 5) % 5]; }
@@ -71,6 +74,16 @@
     return notes;
   }
 
+  /** The loudest note of step n. */
+  function loudest(n) { return matchNotes(n).reduce((a, b) => (b.gain > a.gain ? b : a)).midi; }
+
+  /** The grace note after the n-th match: the next step's nearest note above the loudest one (pure, tested). */
+  function graceNote(n) {
+    const top = loudest(n);
+    const above = matchNotes(n + 1).map(x => x.midi).filter(m => m > top);
+    return above.length ? Math.min(...above) : top + 12;
+  }
+
   function impulse(ac, sec, decay) {
     const n = Math.floor(ac.sampleRate * sec);
     const b = ac.createBuffer(2, n, ac.sampleRate);
@@ -83,7 +96,7 @@
   }
 
   /** The room: a soft low-pass, a little reverb and a gentle limiter so stacked notes never clip. */
-  function chain(ac) {
+  function chain(ac, lazy = false) {
     const input = ac.createGain();
     const soft = ac.createBiquadFilter();
     const verb = ac.createConvolver();
@@ -92,7 +105,8 @@
     const master = ac.createGain();
     soft.type = "lowpass";
     soft.frequency.value = 3400;
-    verb.buffer = impulse(ac, 2.2, 3);
+    // Offline renders get the room at once; live play builds it when the page is idle (warm()).
+    if (lazy) room = verb; else verb.buffer = impulse(ac, 2.2, 3);
     wet.gain.value = 0.24;
     comp.threshold.value = -16;
     comp.knee.value = 10;
@@ -203,12 +217,9 @@
       warm.connect(o);
       o = warm;
       const vib = n >= 6 ? 0.005 : 0;
-      matchNotes(n).forEach(x => zheng(ac, o, hz(x.midi), 0, { gain: 0.9 * x.gain + 0.04, len: 0.9, vib }));
+      matchNotes(n).forEach(x => zheng(ac, o, hz(x.midi), 0, { gain: 0.94 * x.gain, len: 0.9, vib }));
       // Every 5th in a row: a quick grace note one step above (a flourish, not yet a 刮奏).
-      if (n % 5 === 0) {
-        const top = matchNotes(n + 1).reduce((a, b) => (b.gain > a.gain ? b : a));
-        zheng(ac, o, hz(top.midi), 0.07, { gain: 0.1, len: 0.6 });
-      }
+      if (n % 5 === 0) zheng(ac, o, hz(graceNote(n)), 0.07, { gain: 0.1, len: 0.6 });
     },
     wrong(ac, o) { zheng(ac, o, hz(KEY - 5), 0, { gain: 0.26, len: 0.7, bend: -2, bendAt: 0.05 }); },
     combo(ac, o) { gliss(ac, o, 5, 5, 0.12, 0.04, 0.12); },
@@ -255,10 +266,28 @@
     const Ctx = win && (win.AudioContext || win.webkitAudioContext);
     if (!Ctx) return;
     try {
-      if (!ctx) { ctx = new Ctx(); bus = chain(ctx); }
+      if (!ctx) { ctx = new Ctx(); bus = chain(ctx, true); warm(); }
       if (ctx.state === "suspended") ctx.resume();
       SOUNDS[name](ctx, bus, clampLevel(name, level));
     } catch { /* audio unavailable */ }
+  }
+
+  /**
+   * Board first: the reverb impulse and the plucked strings of the first streak notes take a few
+   * ms each to synthesise (tens on a phone). Build them in idle slices right after the context
+   * exists, so the first match never waits for them.
+   */
+  function warm() {
+    const idle = win.requestIdleCallback ? cb => win.requestIdleCallback(cb, { timeout: 400 }) : cb => setTimeout(cb, 30);
+    const jobs = [() => { if (room) { room.buffer = impulse(ctx, 2.2, 3); room = null; } }];
+    for (let n = 1; n <= 10; n++) {
+      jobs.push(() => {
+        matchNotes(n).forEach(x => string(ctx, hz(x.midi)));
+        if (n % 5 === 0) string(ctx, hz(graceNote(n)));
+      });
+    }
+    const next = () => { const job = jobs.shift(); if (!job) return; try { job(); } catch { /* audio unavailable */ } idle(next); };
+    idle(next);
   }
 
   /** Renders a sound offline (for checks): Promise<AudioBuffer>. */
@@ -315,7 +344,7 @@
   }
 
   return {
-    play, render, measure, matchNotes, highShare, names: Object.keys(SOUNDS),
+    play, render, measure, matchNotes, graceNote, highShare, names: Object.keys(SOUNDS),
     setEnabled(value) { on = value !== false; },
     enabled() { return on; }
   };
