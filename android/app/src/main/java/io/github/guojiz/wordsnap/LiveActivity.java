@@ -20,17 +20,14 @@ import java.util.List;
 /**
  * Android 16 Live Updates (promoted ongoing notifications with ProgressStyle and a status bar
  * chip), kept to what the guidelines allow: activities the learner started, in progress, with a
- * clear end. Two of them:
- *  - a practice set left half-way (chip "12/25", the set's confetti lane as segments; tapping
- *    returns to the board; gone when the app is back, the set ends, or after 30 minutes);
- *  - the on-device model download (chip "63%").
+ * clear end: a practice set left half-way (chip "12/25", the set's confetti lane as segments;
+ * tapping returns to the board; gone when the app is back, the set ends, or after 30 minutes).
  * Older Android versions get the same as an ordinary progress notification.
  * A set's card that the learner swipes away is not posted again for that set.
  */
 final class LiveActivity {
     static final String CHANNEL = "live";
     static final int SET_ID = 7300;
-    static final int DOWNLOAD_ID = 7301;
     private static final String PREFS = "live_activity";
     private static final String DISMISSED_SET = "dismissed_set";
     private static final String ACTION_DISMISSED = "io.github.guojiz.wordsnap.LIVE_DISMISSED";
@@ -120,25 +117,6 @@ final class LiveActivity {
 
     static void endSet(Context context) {
         NotificationManagerCompat.from(context).cancel(SET_ID);
-    }
-
-    /** The model download; fraction 0..1. */
-    static void showDownload(Context context, String modelName, long bytes, long total) {
-        if (!canNotify(context) || total <= 0) return;
-        int pct = (int) Math.min(100, bytes * 100 / total);
-        String text = String.format(java.util.Locale.ROOT, "%.1f / %.1f GB", bytes / 1e9, total / 1e9);
-        NotificationCompat.ProgressStyle style = new NotificationCompat.ProgressStyle()
-            .setStyledByProgress(true)
-            .addProgressSegment(new NotificationCompat.ProgressStyle.Segment(100).setColor(0xFF47B5FF))
-            .setProgress(pct);
-        NotificationCompat.Builder b = base(context, context.getString(R.string.live_download_title, modelName), text, pct + "%")
-            .setStyle(style)
-            .setProgress(100, pct, false);
-        post(context, DOWNLOAD_ID, b);
-    }
-
-    static void endDownload(Context context) {
-        NotificationManagerCompat.from(context).cancel(DOWNLOAD_ID);
     }
 
     @SuppressWarnings("MissingPermission") // checked in canNotify()

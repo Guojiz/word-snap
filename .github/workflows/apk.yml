@@ -1,7 +1,10 @@
 # Builds the Android APK.
 # - Pull requests that touch the app: the APK is attached to the run as an artifact
 #   (PR → Checks → "Android APK" → Artifacts), so reviewers can install it.
-# - A tag "v1.2.3": publishes a GitHub Release with the APK attached.
+# - A tag "v1.2.3": publishes a GitHub Release with the signed APK attached, but only when
+#   the keystore secrets are set. Without them the tag only builds (artifact), because a
+#   CI debug key cannot update anyone's install; releases are then uploaded from the
+#   maintainer's Mac (MAINTAINING.md).
 # - "Run workflow": builds one to download from the run's artifacts.
 # Signed release builds need four repository secrets (see MAINTAINING.md):
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
@@ -79,7 +82,8 @@ jobs:
           path: word-snap-*.apk
           retention-days: 30
       - name: GitHub Release
-        if: github.ref_type == 'tag'
+        # Only a properly signed APK may become a release (see the header).
+        if: github.ref_type == 'tag' && env.HAS_KEYSTORE == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" word-snap-*.apk --title "Word Snap $GITHUB_REF_NAME" --generate-notes
