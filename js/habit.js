@@ -8,6 +8,18 @@
  * - Streak: consecutive completed days, ending today or yesterday (today is
  *   still open). A missed day is bridged by the streak freeze, one per week
  *   (Monday to Sunday); a frozen day keeps the streak but does not add to it.
+ * - Points: claimed at the end of each set (the set's correct pairs plus bonuses),
+ *   kept per day for 60 days.
+ * - Card rank (卡片段位), against yourself only: white, green, blue, violet, gold,
+ *   rainbow. Each week's target is 10% above your own average of the last three
+ *   weeks (at least 120). At the week's end: target met → up one rank; at least
+ *   60% → stay; less → down one (never below white). No other learners involved.
+ * - Weekly challenge: one of "goal done on 5 days", "30 new words", "3 full
+ *   combos", rotating by week. Next stop: the next streak milestone.
+ * - Smart reminder (智能提醒): the time of day you usually start practising, learned
+ *   from when you answered first on each of the last 14 days (the median, at least
+ *   3 days), on the quarter hour before it, between 07:30 and 22:00. Ignored
+ *   reminders thin out: after three days in a row they skip a day.
  *
  * No DOM access. Works as a classic browser script (window.WordSnapHabit) and
  * as a CommonJS module for Node tests.
@@ -23,6 +35,11 @@
   const DAY_CUTOFF_HOUR = 4;
   const KEEP_DAYS = 400;
   const DEFAULT_PAIR_MS = 5000;
+  const LOG_DAYS = 60;
+  const RANKS = 6; // white, green, blue, violet, gold, rainbow
+  const MIN_TARGET = 120;
+  const MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
+  const CHALLENGES = [{ kind: "days", goal: 5 }, { kind: "newWords", goal: 30 }, { kind: "fullCombos", goal: 3 }];
 
   /** Calendar day index with a 4 am cutoff, in local time (same as WordSnapEngine.dayKey). */
   function dayKey(ts) {
@@ -50,11 +67,29 @@
     if (value.freezes && typeof value.freezes === "object") {
       for (const [k, v] of Object.entries(value.freezes)) if (/^\d+$/.test(k) && isNum(v)) freezes[k] = v;
     }
+    const log = {};
+    if (value.log && typeof value.log === "object") {
+      for (const [k, v] of Object.entries(value.log)) {
+        if (!/^\d+$/.test(k) || !v || typeof v !== "object") continue;
+        log[k] = { p: isNum(v.p) ? Math.max(0, v.p) : 0, n: isNum(v.n) ? Math.max(0, v.n) : 0, fc: isNum(v.fc) ? Math.max(0, v.fc) : 0 };
+        if (isNum(v.t) && v.t >= 0 && v.t < 1440) log[k].t = Math.floor(v.t);
+      }
+    }
+    const r = value.rank && typeof value.rank === "object" ? value.rank : {};
+    const last = r.last && typeof r.last === "object" && isNum(r.last.week) ? r.last : null;
+    const rank = {
+      tier: isNum(r.tier) ? Math.max(0, Math.min(RANKS - 1, Math.floor(r.tier))) : 0,
+      week: isNum(r.week) ? r.week : null,
+      target: isNum(r.target) && r.target > 0 ? r.target : MIN_TARGET,
+      last: last ? { week: last.week, kind: String(last.kind), pts: Number(last.pts) || 0, target: Number(last.target) || 0, tier: Number(last.tier) || 0, seen: last.seen === true } : null
+    };
     const t = value.today && typeof value.today === "object" ? value.today : {};
     const n = value.notice && typeof value.notice === "object" ? value.notice : null;
     return {
       days,
       freezes,
+      log,
+      rank,
       today: {
         day: isNum(t.day) ? t.day : null,
         newLearned: isNum(t.newLearned) ? Math.max(0, t.newLearned) : 0,
@@ -79,7 +114,14 @@
   function recordAnswer(h, { wasNew = false, ms = 0, now = Date.now(), id = null } = {}) {
     rollToday(h, dayKey(now));
     h.today.answers += 1;
+    // The first answer of the day: the time you started, for the smart reminder.
+    const entry = logDay(h, dayKey(now));
+    if (entry.t == null) {
+      const d = new Date(now);
+      entry.t = d.getHours() * 60 + d.getMinutes();
+    }
     if (wasNew) {
+      logDay(h, dayKey(now)).n += 1;
       h.today.newLearned += 1;
       if (id && !h.today.newIds.includes(id)) h.today.newIds.push(id);
     }
@@ -185,15 +227,113 @@
     };
   }
 
+  function logDay(h, day) {
+    if (!h.log[day]) h.log[day] = { p: 0, n: 0, fc: 0 };
+    for (const k of Object.keys(h.log)) if (Number(k) < day - LOG_DAYS) delete h.log[k];
+    return h.log[day];
+  }
+
+  /** The end of a set: adds its points (and a full combo) to today. Returns today's points. */
+  function claim(h, { points = 0, fullCombo = false, now = Date.now() } = {}) {
+    const entry = logDay(h, dayKey(now));
+    entry.p += Math.max(0, Math.round(points));
+    if (fullCombo) entry.fc += 1;
+    return entry.p;
+  }
+
+  /** The days (Monday first) of a week index. */
+  function weekDays(week) {
+    const monday = week * 7 - 3;
+    return [0, 1, 2, 3, 4, 5, 6].map(i => monday + i);
+  }
+
+  function weekSum(h, week, field) {
+    return weekDays(week).reduce((sum, day) => sum + (h.log[day] ? h.log[day][field] : 0), 0);
+  }
+
+  /** 10% above your own average of the three weeks before `week`, rounded to 10, at least MIN_TARGET. */
+  function targetFor(h, week) {
+    const avg = (weekSum(h, week - 1, "p") + weekSum(h, week - 2, "p") + weekSum(h, week - 3, "p")) / 3;
+    return Math.max(MIN_TARGET, Math.round(avg * 1.1 / 10) * 10);
+  }
+
+  /**
+   * This week's rank, settling the weeks that ended since the last call.
+   * → { tier, ranks, pts, target, left, daysLeft, last }  (last: the result of
+   * last week, until markRankSeen; kind "up" | "stay" | "down" | "top").
+   */
+  function rank(h, now = Date.now()) {
+    const today = dayKey(now);
+    const week = weekKey(today);
+    const r = h.rank;
+    if (r.week == null) {
+      r.week = week;
+      r.target = targetFor(h, week);
+    }
+    let guard = 0;
+    while (r.week < week && guard++ < 60) {
+      const pts = weekSum(h, r.week, "p");
+      let kind = pts >= r.target ? "up" : pts >= r.target * 0.6 ? "stay" : "down";
+      if (kind === "up") {
+        if (r.tier < RANKS - 1) r.tier += 1;
+        else kind = "top";
+      } else if (kind === "down") {
+        if (r.tier > 0) r.tier -= 1;
+        else kind = "stay";
+      }
+      r.last = { week: r.week, kind, pts, target: r.target, tier: r.tier, seen: false };
+      r.week += 1;
+      r.target = targetFor(h, r.week);
+    }
+    const pts = weekSum(h, week, "p");
+    const sunday = weekDays(week)[6];
+    return {
+      tier: r.tier, ranks: RANKS, pts, target: r.target, left: Math.max(0, r.target - pts),
+      daysLeft: sunday - today + 1,
+      last: r.last && r.last.week === week - 1 && !r.last.seen ? r.last : null
+    };
+  }
+
+  function markRankSeen(h) {
+    if (h.rank.last) h.rank.last.seen = true;
+  }
+
+  /** This week's challenge → { kind, goal, value, done }. */
+  function challenge(h, now = Date.now()) {
+    const today = dayKey(now);
+    const week = weekKey(today);
+    const { kind, goal } = CHALLENGES[((week % CHALLENGES.length) + CHALLENGES.length) % CHALLENGES.length];
+    const value = kind === "days"
+      ? weekDays(week).filter(day => h.days[day] === "done").length
+      : weekSum(h, week, kind === "newWords" ? "n" : "fc");
+    return { kind, goal, value: Math.min(value, goal), done: value >= goal };
+  }
+
+  /** The next streak milestone → { at, left }, or null past the last one. */
+  function nextStop(streakDays) {
+    const at = MILESTONES.find(m => m > streakDays);
+    return at ? { at, left: at - streakDays } : null;
+  }
+
+  /** This week, Monday first: [{ day, state: "done" | "frozen" | "today" | "missed" | "future" }]. */
+  function weekStrip(h, now = Date.now()) {
+    const today = dayKey(now);
+    return weekDays(weekKey(today)).map(day => ({
+      day,
+      state: h.days[day] === "done" ? "done" : h.days[day] === "frozen" ? "frozen" : day === today ? "today" : day < today ? "missed" : "future"
+    }));
+  }
+
   /**
    * Daily reminders for the next `days` days at hour:minute (local time), as
    * [{ id, at }] with stable ids (base + day offset). Today's is left out when
    * the goal is already done or the time has passed.
    */
-  function reminderPlan(h, { now = Date.now(), hour = 20, minute = 0, days = 7, base = 7100 } = {}) {
+  function reminderPlan(h, { now = Date.now(), hour = 20, minute = 0, days = 7, base = 7100, thinOut = false } = {}) {
     const doneToday = h.days[dayKey(now)] === "done";
     const plan = [];
     for (let d = 0; d < days; d++) {
+      if (thinOut && (d === 3 || d === 5)) continue; // unanswered for three days: every other day
       const at = new Date(now);
       at.setDate(at.getDate() + d);
       at.setHours(hour, minute, 0, 0);
@@ -205,10 +345,35 @@
     return plan;
   }
 
+  /**
+   * The smart reminder's time → { hour, minute, days } (days: how many days it was learned
+   * from), or null while fewer than 3 of the last 14 days have a start time.
+   */
+  function smartTime(h, now = Date.now()) {
+    const today = dayKey(now);
+    const shift = DAY_CUTOFF_HOUR * 60; // minutes after 4 am, so 00:30 sorts after 23:30
+    const starts = [];
+    for (let day = today - 13; day <= today; day++) {
+      const e = h.log[day];
+      if (e && e.t != null) starts.push((e.t - shift + 1440) % 1440);
+    }
+    if (starts.length < 3) return null;
+    starts.sort((a, b) => a - b);
+    const mid = starts.length >> 1;
+    const median = starts.length % 2 ? starts[mid] : (starts[mid - 1] + starts[mid]) / 2;
+    let clock = Math.floor(((median + shift) % 1440) / 15) * 15;
+    if (clock < 7 * 60 + 30 && clock >= shift) clock = 7 * 60 + 30;
+    else if (clock > 22 * 60 || clock < shift) clock = 22 * 60;
+    return { hour: Math.floor(clock / 60), minute: clock % 60, days: starts.length };
+  }
+
   /** Whether the word was first learned today (its re-checks are not "due" work). */
   function learnedToday(h, id, now = Date.now()) {
     return h.today.day === dayKey(now) && h.today.newIds.includes(id);
   }
 
-  return { normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, learnedToday, noticeFor, dayKey, weekKey, DAY_MS };
+  return {
+    normalize, recordAnswer, settle, streak, today, freezeAvailable, reminderPlan, smartTime, learnedToday, noticeFor, dayKey, weekKey, DAY_MS,
+    claim, rank, markRankSeen, challenge, nextStop, weekStrip, RANKS, MILESTONES
+  };
 });

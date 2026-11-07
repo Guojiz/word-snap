@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press the app icon. MainActivity hands the action to the web app (WordInbox). -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="practice"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_practice"
+        android:shortcutShortLabel="@string/shortcut_practice_short"
+        android:shortcutLongLabel="@string/shortcut_practice_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="io.github.guojiz.wordsnap"
+            android:targetClass="io.github.guojiz.wordsnap.MainActivity"
+            android:data="wordsnap://practice" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="add"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutShortLabel="@string/shortcut_add_short"
+        android:shortcutLongLabel="@string/shortcut_add_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="io.github.guojiz.wordsnap"
+            android:targetClass="io.github.guojiz.wordsnap.MainActivity"
+            android:data="wordsnap://add" />
+    </shortcut>
+</shortcuts>

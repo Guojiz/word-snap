@@ -22,7 +22,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Launcher shortcuts (long-press the icon) open wordsnap://practice and wordsnap://add. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wordsnap" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+
         </activity>
+
+        <!-- "加入 Word Snap" in the text-selection menu of other apps. -->
+        <activity
+            android:name=".CaptureActivity"
+            android:label="@string/capture_label"
+            android:theme="@style/AppTheme.Capture"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <!-- A swiped-away Live Update for a set is not posted again for that set. -->
+        <receiver android:name=".LiveActivity$DismissReceiver" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -40,4 +66,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- A short vibration on answers (Settings → Effects and vibration). -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Live Updates (Android 16): a set left half-way. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
 </manifest>

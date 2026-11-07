@@ -69,13 +69,13 @@
       --red: #ff7a59;
       --red-deep: #c4421f;
       --red-ink: #b13c1f;
-      --yellow: #ffd23f;
+      --yellow: #ffb800;
       --yellow-ink: #8a6200;
       --ember-ink: #b4530f;
-      --good: #9eebc4;
+      --good: #2ee6a6;
       --good-ink: #1c7a50;
-      --primary: #ffe27a;
-      --primary-dark: #ffd23f;
+      --primary: #ffd21f;
+      --primary-dark: #ffb800;
       --on-primary: #2b2a3d;
       --panel-soft: #fffefb;
       --track: #f1ece3;
@@ -112,14 +112,14 @@
       --text: #f7f5ee;
       --muted: #c9c6d8;
       --dim: #a6a3bb;
-      --green-ink: #9eebc4;
-      --blue-ink: #a8d8ff;
-      --red-ink: #ffb4a2;
-      --yellow-ink: #ffe27a;
+      --green-ink: #2ee6a6;
+      --blue-ink: #47b5ff;
+      --red-ink: #ff6b8b;
+      --yellow-ink: #ffd21f;
       --ember-ink: #ffc08a;
-      --good-ink: #9eebc4;
-      --primary: #ffe27a;
-      --primary-dark: #ffd23f;
+      --good-ink: #2ee6a6;
+      --primary: #ffd21f;
+      --primary-dark: #ffb800;
       --on-primary: #2b2a3d;
       --panel-soft: #252437;
       --track: #34334c;
@@ -130,7 +130,7 @@
       --correct-ink: #2b2a3d;
       --wrong-bg: #593b46;
       --wrong-ink: #ffe3dc;
-      --weak-wrong: #ffb4a2;
+      --weak-wrong: #ff6b8b;
       --scrim: rgba(10, 10, 20, .6);
       --hover-soft: #302f48;
     }
@@ -367,12 +367,12 @@
       font-size: 15px;
     }
 
-    /* Pastel stickers with ink text (>= 7:1 on each): lemon = PERFECT, mint = GREAT,
-       sky = GOOD, peach = MISS. */
-    .fx-judge-perfect { background: #ffe27a; }
-    .fx-judge-great { background: #9eebc4; }
-    .fx-judge-good { background: #a8d8ff; }
-    .fx-judge-miss { background: #ffb4a2; }
+    /* Confetti stickers with ink text (>= 5:1 on each): lemon = PERFECT, mint = GREAT,
+       sky = GOOD, pink = MISS. */
+    .fx-judge-perfect { background: #ffd21f; }
+    .fx-judge-great { background: #2ee6a6; }
+    .fx-judge-good { background: #47b5ff; }
+    .fx-judge-miss { background: #ff6b8b; }
 
     .fx-confetti {
       border-radius: 2px;
@@ -599,7 +599,7 @@
       min-width: 16px;
       height: 100%;
       border-radius: inherit;
-      background: #ffb4a2;
+      background: #ff6b8b;
       overflow: hidden;
       transition: width 650ms cubic-bezier(.34, 1.56, .64, 1), background 400ms ease;
     }
@@ -1975,12 +1975,12 @@
       border-radius: var(--radius);
       padding: 12px 10px;
       color: #2b2a3d;
-      background: #ffb4a2;
+      background: #ff6b8b;
       transform: rotate(-3deg);
     }
 
     .intro-demo span:last-child {
-      background: #a8d8ff;
+      background: #47b5ff;
       transform: rotate(3deg);
     }
 
@@ -2822,9 +2822,9 @@
       transition: background-color 400ms var(--glide), transform 400ms var(--spring);
     }
 
-    .ob-steps i.on:nth-child(1) { background: #ffb4a2; }
-    .ob-steps i.on:nth-child(2) { background: #a8d8ff; }
-    .ob-steps i.on:nth-child(3) { background: #9eebc4; }
+    .ob-steps i.on:nth-child(1) { background: #ff6b8b; }
+    .ob-steps i.on:nth-child(2) { background: #47b5ff; }
+    .ob-steps i.on:nth-child(3) { background: #2ee6a6; }
 
     .ob-skip {
       justify-self: end;
@@ -2935,8 +2935,8 @@
     }
 
     .ob-opt[aria-checked="true"] {
-      background: color-mix(in srgb, var(--c, #ffe27a) 38%, var(--panel));
-      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--c, #ffe27a) 70%, #2b2a3d);
+      background: color-mix(in srgb, var(--c, #ffd21f) 38%, var(--panel));
+      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--c, #ffd21f) 70%, #2b2a3d);
     }
 
     .ob-opt[aria-checked="true"]::after {
@@ -3141,6 +3141,156 @@
       }
       .ob-track, .tile, .tile-bar i, .tile-arrow { transition: none; }
     }
+
+    /* ---- Card rank on Home: against yourself only (js/habit.js rank()) ---- */
+    .tiles { grid-template-areas: "go go" "rank rank" "lib add" "lib set"; }
+    /* With the rank block the menu must still fit one phone screen: shorter go/add/set blocks. */
+    .tiles .tile-go { min-height: clamp(150px, 21dvh, 230px); padding-bottom: 28px; }
+    .tiles .tile-add, .tiles .tile-set { min-height: clamp(80px, 12dvh, 130px); }
+    .tile-rank .rank-line + .rank-line { margin-top: -3px; }
+    .tile-rank {
+      grid-area: rank;
+      --r: .8deg;
+      min-height: 0;
+      padding: 14px 18px 16px;
+      gap: 6px;
+      cursor: default;
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: inset 0 0 0 2px var(--line), 0 18px 30px -24px rgba(80, 60, 30, .45);
+    }
+    .tile-rank:active { scale: 1; }
+    .rank-head { display: flex; align-items: center; gap: 10px; width: 100%; }
+    .rank-badge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 48px;
+      border-radius: 9px;
+      rotate: -6deg;
+      background: var(--rank-c, #fff);
+      box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 6px 12px -6px rgba(0, 0, 0, .4);
+      color: #2b2a3d;
+      font: 700 15px/1 "Fredoka", system-ui, sans-serif;
+    }
+    .rank-badge.rainbow, .ritual-rank.rainbow {
+      background: linear-gradient(135deg, #ff6b8b, #ffd21f 30%, #2ee6a6 55%, #47b5ff 78%, #b18cff);
+    }
+    .rank-name { font-weight: 800; font-size: 17px; }
+    .rank-pts { margin-left: auto; font: 700 15px/1 "Fredoka", system-ui, sans-serif; white-space: nowrap; }
+    .rank-bar { width: 100%; height: 10px; border-radius: 6px; background: var(--track, var(--line)); overflow: hidden; }
+    .rank-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--rank-c, #47b5ff); transition: width 700ms var(--spring); }
+    .rank-bar.rainbow i { background: linear-gradient(90deg, #ff6b8b, #ffd21f, #2ee6a6, #47b5ff, #b18cff); }
+    .rank-line { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+    .rank-line b { color: var(--text); }
+
+    /* ---- After a set: the ritual (claim → rank news → light the day's flame → reminder) ---- */
+    .ritual {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: calc(24px + var(--sat, 0px)) 20px calc(24px + var(--sab, 0px));
+      background: radial-gradient(120% 70% at 50% 30%, color-mix(in srgb, var(--ritual-c, #47b5ff) 30%, var(--bg)), var(--bg) 70%);
+      overflow-y: auto;
+    }
+    .ritual[hidden] { display: none; }
+    .ritual-card { width: min(420px, 100%); display: grid; justify-items: center; gap: 14px; text-align: center; }
+    .ritual-card > * { animation: ritual-in 320ms var(--spring) both; }
+    .ritual-card > *:nth-child(2) { animation-delay: 60ms; }
+    .ritual-card > *:nth-child(3) { animation-delay: 120ms; }
+    .ritual-card > *:nth-child(4) { animation-delay: 180ms; }
+    .ritual-card > *:nth-child(n+5) { animation-delay: 240ms; }
+    @keyframes ritual-in { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+    .ritual h2 { margin: 0; font-size: 26px; line-height: 1.2; }
+    .ritual p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.45; }
+    .ritual-big { font: 700 84px/1 "Fredoka", system-ui, sans-serif; color: var(--text); text-shadow: 0 6px 0 color-mix(in srgb, var(--ritual-c, #47b5ff) 70%, transparent); }
+    .ritual-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .ritual-chip { padding: 6px 12px; border-radius: 999px; background: var(--c, #47b5ff); color: #2b2a3d; font-weight: 800; font-size: 14px; }
+    .ritual-week { width: 100%; display: grid; gap: 6px; }
+    .ritual-week .rank-line { text-align: center; }
+    .ritual .duo-button { width: 100%; min-height: 56px; font-size: 18px; }
+    .ritual .link-button { min-height: 44px; }
+    .ritual-rank { width: 92px; height: 118px; border-radius: 18px; rotate: -6deg; display: grid; place-items: center; font: 700 30px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--rank-c, #fff); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 18px 30px -14px rgba(0, 0, 0, .45); }
+    .ritual-times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 700 20px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
+    .ritual-times .wide { grid-column: 1 / -1; font-size: 18px; }
+    .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; }
+
+    /* The flame: drag it up (or press the button) to light it. */
+    .ignite-track {
+      position: relative;
+      width: 160px;
+      height: 230px;
+      display: grid;
+      place-items: end center;
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .ignite-track::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 6px;
+      height: 100%;
+      translate: -50% 0;
+      border-radius: 3px;
+      background: linear-gradient(to top, color-mix(in srgb, var(--text) 18%, transparent) calc(var(--p, 0) * 100%), transparent 0);
+    }
+    .flame { width: 120px; height: 150px; translate: 0 calc(var(--p, 0) * -70px); transition: translate 120ms ease-out; }
+    .flame path { transition: fill 400ms ease, opacity 400ms ease; }
+    .flame .outer { fill: color-mix(in srgb, var(--text) 22%, var(--bg)); }
+    .flame .inner { fill: color-mix(in srgb, var(--text) 10%, var(--bg)); }
+    .flame .core { fill: color-mix(in srgb, #ffd21f calc(var(--p, 0) * 100%), var(--bg)); }
+    .ignite-track.lit .flame { translate: 0 -70px; animation: flame-dance 1.2s ease-in-out infinite alternate; }
+    .ignite-track.lit .flame .outer { fill: #ff6b8b; }
+    .ignite-track.lit .flame .inner { fill: #ffb800; }
+    .ignite-track.lit .flame .core { fill: #fff6c2; }
+    .ignite-track.lit::before { opacity: 0; }
+    @keyframes flame-dance { from { scale: 1 1; } to { scale: 1.04 .97; } }
+    .ritual-strip { display: flex; justify-content: center; gap: 8px; }
+    .ritual-strip span { display: grid; justify-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .ritual-strip i { width: 30px; height: 30px; border-radius: 50%; background: var(--line); display: grid; place-items: center; color: #2b2a3d; font-style: normal; font-size: 15px; }
+    .ritual-strip .done i { background: #ffb800; }
+    .ritual-strip .frozen i { background: #47b5ff; }
+    .ritual-strip .today i { box-shadow: inset 0 0 0 3px #ffb800; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ritual-card > *, .ignite-track.lit .flame { animation: none; }
+      .flame, .rank-bar i { transition: none; }
+    }
+
+    /* Android: words captured in other apps arrive with a short note above the tab bar. */
+    .inbox-note {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+      z-index: 60;
+      max-width: min(420px, calc(100vw - 32px));
+      padding: 10px 16px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(43, 42, 61, 0.16);
+      transform: translateX(-50%);
+      animation: inbox-note-in 220ms ease-out;
+    }
+
+    @keyframes inbox-note-in {
+      from { opacity: 0; transform: translate(-50%, 12px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .inbox-note { animation: none; }
+    }
   </style>
 </head>
 <body data-screen="home">
@@ -3165,7 +3315,7 @@
           <div class="ob-options ob-goals" id="obGoals" role="radiogroup" aria-label="每天新词数" data-en-aria="New words per day" data-zh-aria="每天新词数"></div>
         </div>
         <div class="ob-page" data-step="2">
-          <div class="ob-bell" aria-hidden="true"><svg viewBox="0 0 64 64" width="88" height="88"><circle cx="32" cy="32" r="30" fill="var(--panel-2)"/><path d="M32 14c-7 0-12 5-12 12v8l-4 6h32l-4-6v-8c0-7-5-12-12-12z" fill="#ffe27a" stroke="#2b2a3d" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 44a5 5 0 0 0 10 0" fill="none" stroke="#2b2a3d" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="18" r="4" fill="#ffb4a2"/><circle cx="16" cy="22" r="3" fill="#a8d8ff"/></svg></div>
+          <div class="ob-bell" aria-hidden="true"><svg viewBox="0 0 64 64" width="88" height="88"><circle cx="32" cy="32" r="30" fill="var(--panel-2)"/><path d="M32 14c-7 0-12 5-12 12v8l-4 6h32l-4-6v-8c0-7-5-12-12-12z" fill="#ffd21f" stroke="#2b2a3d" stroke-width="2.5" stroke-linejoin="round"/><path d="M27 44a5 5 0 0 0 10 0" fill="none" stroke="#2b2a3d" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="18" r="4" fill="#ff6b8b"/><circle cx="16" cy="22" r="3" fill="#47b5ff"/></svg></div>
           <h1 data-en="A nudge each day?" data-zh="每天提醒你一下？">每天提醒你一下？</h1>
           <p class="ob-lead" data-en="One gentle reminder at the time you pick, and none once today's goal is done." data-zh="在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。">在你选的时间轻轻提醒一次；当天目标完成了就不再打扰。</p>
           <div class="ob-options ob-times" id="obTimes" role="radiogroup" aria-label="提醒时间" data-en-aria="Reminder time" data-zh-aria="提醒时间"></div>
@@ -3180,7 +3330,7 @@
 
   <div class="app">
     <aside class="rail" aria-label="练习导航" data-en-aria="Practice navigation" data-zh-aria="练习导航">
-      <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ffb4a2" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#a8d8ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120" width="48" height="48"><rect width="120" height="120" rx="30" fill="#fff7e8"/><rect x="20" y="30" width="44" height="60" rx="10" fill="#ff6b8b" transform="rotate(-10 44 60)"/><rect x="56" y="30" width="44" height="60" rx="10" fill="#47b5ff" transform="rotate(10 76 60)"/><circle cx="60" cy="60" r="7" fill="#fff"/></svg></div>
       <button class="rail-btn active" type="button" data-nav="home" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="nav-label" data-en="Home" data-zh="首页">首页</span></button>
       <button class="rail-btn" type="button" data-nav="library"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 8h1.5M16 8h1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="nav-label" data-en="Library" data-zh="词库">词库</span></button>
       <button class="rail-btn" type="button" data-nav="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="nav-label" data-en="Settings" data-zh="设置">设置</span></button>
@@ -3207,6 +3357,18 @@
             <span class="tile-action"><span id="goLabel"></span><svg class="tile-arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <span class="tile-bar" aria-hidden="true"><i id="goBar"></i></span>
           </button>
+          <!-- Card rank: against your own last three weeks only (js/habit.js rank()). -->
+          <div class="tile tile-rank" id="homeRank" hidden>
+            <div class="rank-head">
+              <span class="rank-badge" id="rankBadge" aria-hidden="true"></span>
+              <span class="rank-name" id="rankName"></span>
+              <span class="rank-pts" id="rankPts"></span>
+            </div>
+            <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
+            <span class="rank-line" id="rankLine"></span>
+            <span class="rank-line" id="rankChallenge"></span>
+            <span class="rank-line" id="rankStop"></span>
+          </div>
           <button class="tile tile-lib" type="button" id="homeBook">
             <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
             <span class="tile-title" data-zh="词库" data-en="Library">词库</span>
@@ -3416,6 +3578,15 @@
             <input id="effectsOn" type="checkbox" />
             <span data-en="Effects and vibration" data-zh="动画特效和震动">动画特效和震动</span>
           </label>
+          <label class="check-row">
+            <input id="soundOn" type="checkbox" />
+            <span data-en="Sound effects (rewards, the day's flame, buttons)" data-zh="音效（领奖、点燃火焰、按键）">音效（领奖、点燃火焰、按键）</span>
+          </label>
+          <label class="check-row" id="liveRow" hidden>
+            <input id="liveOn" type="checkbox" />
+            <span data-en="Show a set's progress in the status bar when you leave it half-way (Live Update)" data-zh="练到一半切出去时，在状态栏显示这一组的进度（实时活动）">练到一半切出去时，在状态栏显示这一组的进度（实时活动）</span>
+          </label>
+          <p class="import-hint" id="liveNote" role="status" hidden></p>
           <label class="check-row">
             <input id="streakTones" type="checkbox" />
             <span data-en="Piano notes for a streak" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
@@ -3674,6 +3845,7 @@
   <script src="./js/engine.js"></script>
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
+  <script src="./js/sfx.js"></script>
   <script src="./js/shell.js"></script>
   <script>
     const STORAGE_KEY = "duo_like_word_match_v1";
@@ -3688,31 +3860,31 @@
       dark: {
         bg: "#1f1e2e", panel: "#2a2940", panel2: "#25243a", line: "#3a3954", lineStrong: "#56557a",
         text: "#f7f5ee", muted: "#c9c6d8", dim: "#a6a3bb",
-        greenInk: "#9eebc4", blueInk: "#a8d8ff", redInk: "#ffb4a2", yellowInk: "#ffe27a",
-        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
+        greenInk: "#2ee6a6", blueInk: "#47b5ff", redInk: "#ff6b8b", yellowInk: "#ffd21f",
+        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
       },
       light: {
         bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
         text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
         greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
-        primary: "#ffe27a", primaryDark: "#ffd23f", onPrimary: "#2b2a3d"
+        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
       },
-      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffd23f" }
+      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffb800" }
     };
-    // Peach, sky, lemon, mint, lilac. Matched cards are filled with these and keep ink text
-    // (#2b2a3d on every one is >= 8:1), in both day and night.
-    const CONFETTI = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff"];
+    // Pink, sky, lemon, mint, violet. Matched cards are filled with these and keep ink text
+    // (#2b2a3d on every one is >= 5:1), in both day and night.
+    const CONFETTI = ["#ff6b8b", "#47b5ff", "#ffd21f", "#2ee6a6", "#b18cff"];
     const CONFETTI_INK = "#2b2a3d";
     // The set's colour: every finished set moves to the next one, as the old skins did.
     // It tints the paper, the lane track and the primary button, and the set's first
     // matched pair starts the confetti run in it. Meaning colours (sky selected, coral
     // wrong) never rotate. `confetti` is the theme's index in CONFETTI.
     const COLOR_THEMES = [
-      { id: "lemon", fill: "#ffe27a", deep: "#f5c400", confetti: 2 },
-      { id: "peach", fill: "#ffb4a2", deep: "#ff8f74", confetti: 0 },
-      { id: "sky", fill: "#a8d8ff", deep: "#72bcff", confetti: 1 },
-      { id: "mint", fill: "#9eebc4", deep: "#5fd79f", confetti: 3 },
-      { id: "lilac", fill: "#d4c4ff", deep: "#b19bff", confetti: 4 }
+      { id: "lemon", fill: "#ffd21f", deep: "#f5a800", confetti: 2 },
+      { id: "peach", fill: "#ff6b8b", deep: "#ff3d6e", confetti: 0 },
+      { id: "sky", fill: "#47b5ff", deep: "#1e96f0", confetti: 1 },
+      { id: "mint", fill: "#2ee6a6", deep: "#12c98b", confetti: 3 },
+      { id: "lilac", fill: "#b18cff", deep: "#9466ff", confetti: 4 }
     ];
 
     // ---- i18n ----
@@ -3742,6 +3914,9 @@
           clearProgress: "Clear progress"
         },
         library: {
+          inboxAdded: "Added {n} words you picked in other apps: {list}",
+          inboxKnown: "Already in your library: {list}",
+          listJoin: ", ",
           title: "Library",
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
@@ -3835,7 +4010,9 @@
         },
         reminder: {
           off: "Off", at: "Every day at {time}",
+          smartAt: "Smart: when you usually practise (now {time})", smartLearning: "Smart: learns when you usually practise",
           body: "Today's words are waiting — a few minutes is enough.",
+          bodySmart: "You usually practise about now. Today's words are waiting.",
           bodyStreak: "Keep your 🔥 {n}-day streak — today's words are waiting.",
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
@@ -3856,6 +4033,7 @@
         onboard: {
           sample: "Just try the sample words", sampleSub: "10 words to learn the game", words: "{n} words",
           goal: "{n} new words", goalEasy: "Easy", goalNormal: "Recommended", goalSerious: "Serious", goalSprint: "Sprint", goalMin: "about {m} min a day",
+          smart: "Smart reminder (recommended)", smartSub: "At the time you usually practise; it learns as you go",
           morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", none: "No reminders", noneSub: "You can turn them on later",
           next: "Continue", finish: "Done", preparing: "Preparing your words…", failed: "Could not load that word book. Check the connection and try again, or skip for now."
         },
@@ -3963,6 +4141,45 @@
           failed: "Couldn't load the word books. They need a connection the first time.",
           wrongPair: "The word books are English → 中文. Switch the language pair in Settings first."
         },
+        rank: {
+          t0: "White card", t1: "Green card", t2: "Blue card", t3: "Violet card", t4: "Gold card", t5: "Rainbow card",
+          pts: "{p} / {target}",
+          toNext: "{n} more points this week to reach <b>{name}</b> · {days}",
+          toKeep: "{n} more points this week to stay <b>{name}</b> · {days}",
+          met: "This week's target is met: <b>{name}</b> on Monday",
+          metTop: "This week's target is met: you stay <b>{name}</b>",
+          days: "{n} days left", lastDay: "last day",
+          aria: "{name}: {p} of {target} points this week. Ranked against your own last three weeks only.",
+          chDays: "Weekly challenge: reach today's goal on {goal} days ({v}/{goal})",
+          chNewWords: "Weekly challenge: learn {goal} new words ({v}/{goal})",
+          chFullCombos: "Weekly challenge: {goal} full-combo sets ({v}/{goal})",
+          chDone: "Weekly challenge done ✓",
+          stop: "Next stop: a {at}-day streak, {left} to go",
+          stopFirst: "Next stop: reach today's goal to start a streak"
+        },
+        ritual: {
+          setDone: "Set complete!", pairs: "{n} pairs", fullCombo: "Full combo +5", goal: "Today's goal +10",
+          claim: "Claim +{n}", weekTitle: "{name} · this week {p} / {target}",
+          igniteTitle: "Today's goal is done!", igniteHint: "Swipe the flame up to light today's streak", igniteBtn: "Light it",
+          streakDays: "{n}-day streak", streakFirst: "A new streak starts today. Keep it going tomorrow!",
+          streakMore: "Day {n}. Come back tomorrow to make it {m}.",
+          commit: "I'll keep going",
+          remindTitle: "When should I remind you tomorrow?", remindSub: "One reminder a day. Change it any time in Settings.",
+          morning: "Morning", noon: "Noon", evening: "Evening", night: "Night", smart: "Smart",
+          remindNo: "No reminders", remindSet: "Done: a reminder at {time} every day.",
+          remindSmartSet: "Done: I'll remind you around when you usually practise.",
+          remindDenied: "Notifications are off for Word Snap. Turn them on in the phone's settings.",
+          rankUp: "Last week {p} / {target}: up to {name}!", rankStay: "Last week {p} / {target}: you stay {name}.",
+          rankDown: "Last week {p} / {target}: down to {name}. This week's target is {next}: win it back!",
+          rankTop: "Last week {p} / {target}: still {name}, the top!",
+          rankAbout: "Your target is 10% above your own last three weeks. Nobody else is ranked.",
+          weekdays: "M,T,W,T,F,S,S",
+          next: "Continue"
+        },
+        live: {
+          setTitle: "{n} to go in this set", setText: "{d} of {t} matched · tap to carry on",
+          denied: "Notifications are off for Word Snap, so the Live Update can't show. Allow them in the phone's settings, then switch this on again."
+        },
         langToggle: { en: "EN", zh: "中" }
       },
       zh: {
@@ -3989,6 +4206,9 @@
           clearProgress: "清空进度"
         },
         library: {
+          inboxAdded: "在其它 App 里收的 {n} 个词已放进词库：{list}",
+          inboxKnown: "已经在词库里了：{list}",
+          listJoin: "、",
           title: "词库",
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
@@ -4082,7 +4302,9 @@
         },
         reminder: {
           off: "不提醒", at: "每天 {time}",
+          smartAt: "智能：按你平时练习的时间（现在是 {time}）", smartLearning: "智能：自动学会你平时几点练",
           body: "今天的单词还没练，几分钟就好。",
+          bodySmart: "你一般这个时候练。今天的单词在等你。",
           bodyStreak: "别断了 🔥 连续 {n} 天，今天的单词还没练。",
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
@@ -4103,6 +4325,7 @@
         onboard: {
           sample: "先用示例词试试", sampleSub: "10 个词，熟悉一下玩法", words: "{n} 词",
           goal: "{n} 个新词", goalEasy: "轻松", goalNormal: "推荐", goalSerious: "认真", goalSprint: "冲刺", goalMin: "每天约 {m} 分钟",
+          smart: "智能提醒（推荐）", smartSub: "在你平时练习的时间提醒，用几天就学会了",
           morning: "早上", noon: "中午", evening: "晚上", night: "睡前", none: "先不用提醒", noneSub: "以后可以在设置里打开",
           next: "继续", finish: "完成", preparing: "正在准备词书……", failed: "词书没加载出来。检查一下网络再试，或者先跳过。"
         },
@@ -4210,6 +4433,45 @@
           failed: "词书加载失败，第一次使用需要联网。",
           wrongPair: "词书是 English → 中文 的，请先在设置里把语言对改过来。"
         },
+        rank: {
+          t0: "白卡", t1: "绿卡", t2: "蓝卡", t3: "紫卡", t4: "金卡", t5: "彩虹卡",
+          pts: "{p} / {target} 分",
+          toNext: "本周再得 {n} 分升到<b>{name}</b> · {days}",
+          toKeep: "本周再得 {n} 分保持<b>{name}</b> · {days}",
+          met: "本周目标达成！下周一升到<b>{name}</b>",
+          metTop: "本周目标达成，<b>{name}</b>稳了",
+          days: "还剩 {n} 天", lastDay: "今天是最后一天",
+          aria: "{name}：本周 {p} / {target} 分。只跟你自己过去三周比。",
+          chDays: "本周挑战：{goal} 天完成今日目标（{v}/{goal}）",
+          chNewWords: "本周挑战：学会 {goal} 个新词（{v}/{goal}）",
+          chFullCombos: "本周挑战：打出 {goal} 组全连（{v}/{goal}）",
+          chDone: "本周挑战完成 ✓",
+          stop: "下一站：连续 {at} 天（还差 {left} 天）",
+          stopFirst: "下一站：完成今日目标，开始连胜"
+        },
+        ritual: {
+          setDone: "这一组完成！", pairs: "配对 {n}", fullCombo: "全连 +5", goal: "今日目标 +10",
+          claim: "领取 +{n} 分", weekTitle: "{name} · 本周 {p} / {target} 分",
+          igniteTitle: "今日目标完成！", igniteHint: "把火焰往上滑，点燃今天的连胜", igniteBtn: "点燃",
+          streakDays: "连续 {n} 天", streakFirst: "新的连胜从今天开始，明天接着来！",
+          streakMore: "第 {n} 天了，明天来就是第 {m} 天。",
+          commit: "我坚持，不放弃",
+          remindTitle: "明天几点提醒你？", remindSub: "每天提醒一次，随时可以在设置里改。",
+          morning: "早上", noon: "中午", evening: "傍晚", night: "晚上", smart: "智能",
+          remindNo: "不用提醒", remindSet: "好，每天 {time} 提醒你。",
+          remindSmartSet: "好，在你平时练习的时间前后提醒你。",
+          remindDenied: "Word Snap 的通知被关了，需要在手机设置里打开。",
+          rankUp: "上周 {p} / {target} 分，升到{name}！", rankStay: "上周 {p} / {target} 分，保持{name}。",
+          rankDown: "上周 {p} / {target} 分，降到{name}。这周目标 {next} 分，追回来！",
+          rankTop: "上周 {p} / {target} 分，稳坐{name}！",
+          rankAbout: "目标是你自己过去三周平均的 1.1 倍，不跟任何人比。",
+          weekdays: "一,二,三,四,五,六,日",
+          next: "继续"
+        },
+        live: {
+          setTitle: "这一组还差 {n} 个", setText: "已配对 {d}/{t} · 点这里接着练",
+          denied: "Word Snap 的通知被关了，实时活动显示不出来。在手机设置里允许通知后，再打开这个开关。"
+        },
         langToggle: { en: "EN", zh: "中" }
       }
     };
@@ -4310,6 +4572,8 @@
       pauseRefillWhileSelected: false,
       recycleMastered: true,
       streakTones: true,
+      sound: true,
+      live: true,
       effects: true,
       reminder: "",
       langPair: { a: "English", b: "中文" },
@@ -4456,6 +4720,10 @@
       pauseRefillWhileSelected: document.getElementById("pauseRefillWhileSelected"),
       recycleMastered: document.getElementById("recycleMastered"),
       streakTones: document.getElementById("streakTones"),
+      soundOn: document.getElementById("soundOn"),
+      liveOn: document.getElementById("liveOn"),
+      liveRow: document.getElementById("liveRow"),
+      liveNote: document.getElementById("liveNote"),
       effectsOn: document.getElementById("effectsOn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
@@ -4633,9 +4901,11 @@
         pauseRefillWhileSelected: raw.pauseRefillWhileSelected === true,
         recycleMastered: raw.recycleMastered !== false,
         streakTones: raw.streakTones !== false,
+        sound: raw.sound !== false,
+        live: raw.live !== false,
         effects: raw.effects !== false,
         // "HH:MM" (24 h) or "" for off. Used by the Android app only.
-        reminder: typeof raw.reminder === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder) ? raw.reminder : "",
+        reminder: typeof raw.reminder === "string" && (raw.reminder === "smart" || /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.reminder)) ? raw.reminder : "",
         langPair: normalizeLangPair(raw.langPair),
         ai: { on: Boolean(raw.ai && raw.ai.on === true), enabled: !(raw.ai && raw.ai.enabled === false) }
       };
@@ -4851,7 +5121,7 @@
       set("--selected-ink", light ? "#1b3f73" : base.text);
       const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
       set("--selected-shadow", light ? rgbaFromHex(a.blue, 0.22) : neutralShadow);
-      set("--correct-bg", "#9eebc4");
+      set("--correct-bg", "#2ee6a6");
       set("--correct-ink", CONFETTI_INK);
       set("--correct-shadow", neutralShadow);
       set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.14 : 0.22));
@@ -5054,6 +5324,8 @@
       const status = habitStatus();
       if (status.justDone) {
         habitCelebrate = true;
+        state.goalDoneThisSet = true;
+        feel("goalDone");
         saveWords();
         WordSnapFx.confetti();
         WordSnapFx.banner(t("today.doneBanner", { n: status.streak }));
@@ -5106,7 +5378,9 @@
 
     // ---- Daily reminder (Android app: @capacitor/local-notifications) ----
     // One notification a day for the next week at the chosen time, rebuilt on every
-    // start and when today's goal is done (today's is then dropped).
+    // start and when today's goal is done (today's is then dropped). "smart" (智能提醒):
+    // the time you usually start (WordSnapHabit.smartTime; 20:00 until it has 3 days to
+    // go on), and ignored reminders thin out.
     const REMINDER_IDS = [7100, 7101, 7102, 7103, 7104, 7105, 7106];
 
     function notificationsPlugin() {
@@ -5119,6 +5393,18 @@
       }
     }
 
+    /** The smart reminder's time today: learned, or 20:00 while it is still learning. */
+    function reminderClock() {
+      return WordSnapHabit.smartTime(habit) || { hour: 20, minute: 0, days: 0 };
+    }
+    function clockText({ hour, minute }) {
+      return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    }
+    function smartLabel() {
+      const c = reminderClock();
+      return c.days ? t("reminder.smartAt", { time: clockText(c) }) : t("reminder.smartLearning");
+    }
+
     async function syncReminders({ ask = false } = {}) {
       const plugin = notificationsPlugin();
       if (!plugin) return true;
@@ -5129,14 +5415,15 @@
         let permission = await plugin.checkPermissions();
         if (permission.display !== "granted" && ask) permission = await plugin.requestPermissions();
         if (permission.display !== "granted") return false;
-        const [hour, minute] = time.split(":").map(Number);
+        const smart = time === "smart";
+        const { hour, minute } = smart ? reminderClock() : { hour: +time.slice(0, 2), minute: +time.slice(3) };
         const streak = WordSnapHabit.streak(habit);
-        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0] });
+        const plan = WordSnapHabit.reminderPlan(habit, { hour, minute, base: REMINDER_IDS[0], thinOut: smart });
         await plugin.schedule({
           notifications: plan.map(item => ({
             id: item.id,
             title: "Word Snap",
-            body: streak ? t("reminder.bodyStreak", { n: streak }) : t("reminder.body"),
+            body: streak ? t("reminder.bodyStreak", { n: streak }) : t(smart && WordSnapHabit.smartTime(habit) ? "reminder.bodySmart" : "reminder.body"),
             schedule: { at: new Date(item.at), allowWhileIdle: true }
           }))
         });
@@ -5772,6 +6059,12 @@
       }
     }
 
+    /** One moment, felt and heard: a haptic texture (js/fx.js) and its sound (js/sfx.js). */
+    function feel(kind, level = 0) {
+      WordSnapFx.haptic(kind, level);
+      WordSnapSfx.play(kind, level);
+    }
+
     function playMistakeTone() {
       if (state.settings.streakTones === false) return;
       playPianoNote(146.83, 0.42, 0.12);
@@ -6043,6 +6336,7 @@
       state.levelJudgements = [];
       state.levelConfettiStart = currentTheme().confetti;
       state.lastCompletion = null;
+      state.goalDoneThisSet = false;
       updateCombo(0);
 
       if (!state.words.length) {
@@ -6326,6 +6620,7 @@
       if (!state.selected) {
         state.selected = { card, side, index, slot, wordId: slot.word.id };
         card.classList.add("selected");
+        feel("select");
         els.feedback.className = "feedback";
         els.feedback.textContent = t("feedback.pickOtherSide");
         return;
@@ -6435,7 +6730,9 @@
       state.levelBestStreak = Math.max(state.levelBestStreak || 0, state.levelStreak);
       WordSnapFx.ripple([first.card, second.card], confetti.edge);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
-      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "milestone" : "tap");
+      WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "combo" : "match", Math.min(1, state.streak / 20));
+      // The piano flourish marks every 5; from 10 on a milestone also gets the combo arpeggio.
+      if (WordSnapFx.isMilestone(state.streak) && state.streak >= 10) WordSnapSfx.play("combo");
       updateCombo(state.streak);
       els.feedback.className = "feedback good";
       els.feedback.textContent = t("feedback.correct");
@@ -6668,6 +6965,9 @@
       if (installNudgeWaiting) setTimeout(showInstallNudge, 1200);
       els.feedback.className = "feedback good";
       els.feedback.textContent = allDone ? t("feedback.libraryComplete") : t("feedback.nextLevel");
+      state.levelSerial = (state.levelSerial || 0) + 1;
+      syncLiveSet(false);
+      setTimeout(startRitual, 450);
       saveWords();
       renderStats();
     }
@@ -7955,10 +8255,13 @@
       el.className = `import-status${kind ? " " + kind : ""}`;
     }
 
-    /** Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped. */
+    /**
+     * Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped.
+     * keepRound: leave the set on the board as it is (words captured mid-set join the next one).
+     */
     let lastRemovedSamples = 0;
     let lastExamplesAdded = 0;
-    function addWords(pairs) {
+    function addWords(pairs, { keepRound = false } = {}) {
       lastRemovedSamples = 0;
       const valid = pairs.filter(pair => pair && pair[0] && pair[1]);
       // "Remove the sample words when importing" (ticked by default while samples exist).
@@ -7995,7 +8298,7 @@
         saveWords();
         // Restart the level with the new words, but don't count it as a round
         // played — rounds drive the review schedule.
-        renderRound();
+        if (!keepRound || lastRemovedSamples) renderRound();
         syncDropSamplesRow();
       }
       return added;
@@ -8172,9 +8475,9 @@
         const native = isNativeApp();
         els.reminderRow.hidden = !native;
         els.reminderNote.hidden = native;
-        const times = ["", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+        const times = ["", "smart", "07:30", "12:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
         if (state.settings.reminder && !times.includes(state.settings.reminder)) times.push(state.settings.reminder);
-        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
+        els.reminderSelect.innerHTML = times.map(time => `<option value="${time}">${time === "smart" ? smartLabel() : time ? t("reminder.at", { time }) : t("reminder.off")}</option>`).join("");
         els.reminderSelect.value = state.settings.reminder;
       }
       if (els.dailyNewSelect) {
@@ -8207,6 +8510,10 @@
       if (els.streakTones) els.streakTones.checked = state.settings.streakTones !== false;
       if (els.effectsOn) els.effectsOn.checked = state.settings.effects !== false;
       WordSnapFx.setEnabled(state.settings.effects !== false);
+      if (els.soundOn) els.soundOn.checked = state.settings.sound !== false;
+      WordSnapSfx.setEnabled(state.settings.sound !== false);
+      if (els.liveRow) els.liveRow.hidden = !isNativeApp();
+      if (els.liveOn) els.liveOn.checked = state.settings.live !== false;
       syncLangPairUI();
       syncAiUI();
     }
@@ -8224,6 +8531,7 @@
       }
       const previousReminder = state.settings.reminder;
       const previousPair = state.settings.langPair;
+      const previousLive = state.settings.live !== false;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
@@ -8243,6 +8551,8 @@
         pauseRefillWhileSelected: els.pauseRefillWhileSelected.checked,
         recycleMastered: els.recycleMastered.checked,
         streakTones: els.streakTones ? els.streakTones.checked : true,
+        sound: els.soundOn ? els.soundOn.checked : true,
+        live: els.liveOn ? els.liveOn.checked : true,
         effects: els.effectsOn ? els.effectsOn.checked : true,
         reminder: els.reminderSelect ? els.reminderSelect.value : state.settings.reminder,
         langPair,
@@ -8268,6 +8578,8 @@
           els.optionsStatus.className = "import-status bad";
         }
       }
+      if (nextSettings.live && !previousLive) checkLivePermission({ ask: true });
+      else if (!nextSettings.live && els.liveNote) els.liveNote.hidden = true;
       if (reminderChanged) {
         syncReminders({ ask: Boolean(nextSettings.reminder) }).then(ok => {
           if (ok || !els.optionsStatus) return;
@@ -8844,6 +9156,13 @@
     pressedObserver.observe(els.matchGrid, { attributes: true, attributeFilter: ["class"], subtree: true });
 
     document.addEventListener("keydown", event => {
+      // The after-set ritual is modal: its own buttons take Enter / Space; nothing reaches the
+      // board or Home underneath (Esc must not leave the set behind it).
+      if (ritualOpen()) {
+        const onControl = event.target && event.target.closest && event.target.closest("#ritual button");
+        if (event.key === "Escape" || /^[0-9]$/.test(event.key) || ((event.key === "Enter" || event.key === " ") && !onControl)) event.preventDefault();
+        return;
+      }
       if (els.introModal.classList.contains("open")) {
         // Enter belongs to the focused button; only Esc closes from anywhere.
         if (event.key === "Escape") {
@@ -8932,6 +9251,7 @@
 
     function openSettings() {
       openSettingsRaw();
+      checkLivePermission(); // look, never ask: the system prompt only follows turning the switch on
       if (nav && !navSyncing) nav.overlay("settings");
       syncNavUI();
     }
@@ -8946,7 +9266,7 @@
     /** Tab bar / rail: Home, Library, Settings. */
     function navTo(target) {
       if (!nav) return;
-      WordSnapFx.haptic("tap");
+      feel("tap");
       const { screen, overlay } = nav.current();
       if (target === "home") {
         if (overlay) nav.closeOverlay();
@@ -9037,7 +9357,7 @@
     /** Tap a Home block: its colour floods the screen, and what it stands for opens. */
     function tapTile(tile, act) {
       if (document.body.classList.contains("flooding")) return;
-      WordSnapFx.haptic("tap");
+      feel("tap");
       document.body.classList.add("flooding");
       WordSnapShell.flood(tile, act).catch(() => {}).then(() => document.body.classList.remove("flooding"));
     }
@@ -9103,6 +9423,7 @@
       els.todayTitle.textContent = title;
       els.todaySub.textContent = sub;
       els.goLabel.textContent = btn;
+      renderRank();
       const full = done && !awaitingTrialChoice();
       if (full) {
         els.goNum.innerHTML = ICON_CHECK_BIG;
@@ -9172,9 +9493,9 @@
       paintObStack();
       els.obTimes.hidden = !native;
       els.obWebNote.hidden = native;
-      if (native && !ob.time && ob.step === 0) ob.time = "20:00";
-      els.obTimes.innerHTML = OB_TIMES.map(([time, key], i) => obOption({
-        value: time, title: t("onboard." + key), small: time, color: CONFETTI[i % CONFETTI.length], checked: ob.time === time
+      if (native && !ob.time && ob.step === 0) ob.time = "smart";
+      els.obTimes.innerHTML = obOption({ value: "smart", title: t("onboard.smart"), small: t("onboard.smartSub"), wide: true, color: "#ffd21f", checked: ob.time === "smart" }) + OB_TIMES.map(([time, key], i) => obOption({
+        value: time, title: t("onboard." + key), small: time, color: CONFETTI[[0, 1, 3, 4][i]], checked: ob.time === time // lemon is smart's
       })).join("") + obOption({ value: "", title: t("onboard.none"), small: t("onboard.noneSub"), wide: true, color: "#efe9de", checked: !ob.time });
       paintObStep();
     }
@@ -9206,7 +9527,7 @@
       if (group === els.obGoals) { ob.goal = Number(value); paintObStack(); }
       if (group === els.obTimes) ob.time = value;
       group.querySelectorAll(".ob-opt").forEach(opt => opt.setAttribute("aria-checked", opt.dataset.value === value ? "true" : "false"));
-      WordSnapFx.haptic("tap");
+      feel("tap");
       paintObStep();
     }
 
@@ -9275,7 +9596,7 @@
       if (opt) obSelect(group, opt.dataset.value);
     }));
     els.obNext.addEventListener("click", () => {
-      WordSnapFx.haptic("tap");
+      feel("tap");
       if (ob.step < 2) obGo(ob.step + 1);
       else finishOnboarding();
     });
@@ -9288,6 +9609,7 @@
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
+      if (ritualOpen()) return true; // finish the ritual with its own buttons
       if (els.introModal.classList.contains("open")) { closeIntro(); return true; }
       if (nav && nav.current().screen === "onboard" && ob.step > 0) { obGo(ob.step - 1); return true; }
       return Boolean(nav && nav.back());
@@ -9377,9 +9699,345 @@
     syncReminders(); // the app: reschedule the week's reminders on every start
     if (isNativeApp() && state.settings.ai.on) aiInit(); // so the 4B model's features show without opening Settings
     renderRound();
+    // ---- Card rank on Home (against yourself only) ----
+    const RANK_COLORS = ["#ffffff", "#2ee6a6", "#47b5ff", "#b18cff", "#ffd21f", "rainbow"];
+    function rankName(tier) { return t(`rank.t${tier}`); }
+    function paintRank(el, tier) {
+      const c = RANK_COLORS[tier];
+      el.classList.toggle("rainbow", c === "rainbow");
+      el.style.setProperty("--rank-c", c === "rainbow" ? "#ffd21f" : c);
+    }
+
+    function renderRank() {
+      const box = document.getElementById("homeRank");
+      if (!box) return;
+      box.hidden = isTrial() || !state.words.length || needsSetup;
+      if (box.hidden) return;
+      const r = WordSnapHabit.rank(habit);
+      const top = r.tier === r.ranks - 1;
+      const name = rankName(r.tier);
+      const badge = document.getElementById("rankBadge");
+      paintRank(badge, r.tier);
+      paintRank(box, r.tier);
+      paintRank(document.getElementById("rankBar"), r.tier);
+      badge.textContent = String(r.tier + 1);
+      document.getElementById("rankName").textContent = name;
+      document.getElementById("rankPts").textContent = t("rank.pts", { p: r.pts, target: r.target });
+      document.getElementById("rankFill").style.width = `${Math.min(100, Math.round(100 * r.pts / r.target))}%`;
+      const days = r.daysLeft <= 1 ? t("rank.lastDay") : t("rank.days", { n: r.daysLeft });
+      document.getElementById("rankLine").innerHTML = r.left > 0
+        ? t(top ? "rank.toKeep" : "rank.toNext", { n: r.left, name: top ? name : rankName(r.tier + 1), days })
+        : t(top ? "rank.metTop" : "rank.met", { name: top ? name : rankName(r.tier + 1) });
+      const ch = WordSnapHabit.challenge(habit);
+      const chKey = { days: "rank.chDays", newWords: "rank.chNewWords", fullCombos: "rank.chFullCombos" }[ch.kind];
+      document.getElementById("rankChallenge").textContent = ch.done ? t("rank.chDone") : t(chKey, { goal: ch.goal, v: ch.value });
+      const streakNow = WordSnapHabit.streak(habit);
+      const stop = WordSnapHabit.nextStop(streakNow);
+      document.getElementById("rankStop").textContent = !streakNow ? t("rank.stopFirst") : stop ? t("rank.stop", stop) : "";
+      box.setAttribute("aria-label", t("rank.aria", { name, p: r.pts, target: r.target }));
+      box.setAttribute("role", "group");
+    }
+
+    // ---- After a set: claim the points, rank news, light the day's flame, a reminder ----
+    // Shown over the set summary (the drills and the list stay underneath).
+    const IGNITED_KEY = "word_snap_ignited_day_v1";
+    const REMIND_ASKED_KEY = "word_snap_remind_asked_v1";
+    let ritualSteps = [];
+    let ritualReturn = null;
+
+    function ritualOpen() {
+      const box = document.getElementById("ritual");
+      return Boolean(box && !box.hidden);
+    }
+
+    function storeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function storeSet(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+
+    function startRitual() {
+      // The sample-word trial (onboarding is already "choose" by now) has no points to claim.
+      if (isTrial() || awaitingTrialChoice() || (state.lastCompletion && state.lastCompletion.trial)) return;
+      const pairs = state.completedThisRun || 0;
+      if (!pairs) return;
+      const timeUp = Boolean(state.lastCompletion && state.lastCompletion.reason === "timeout");
+      const fullCombo = !state.levelMistakes && state.lastCompletion && !timeUp;
+      const goal = !!state.goalDoneThisSet;
+      state.goalDoneThisSet = false;
+      const points = pairs + (fullCombo ? 5 : 0) + (goal ? 10 : 0);
+      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points, timeUp }];
+      const r = WordSnapHabit.rank(habit);
+      if (r.last) ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      const day = String(WordSnapHabit.dayKey(Date.now()));
+      if (habitStatus().done && storeGet(IGNITED_KEY) !== day) {
+        ritualSteps.push({ kind: "ignite", day });
+        if (isNativeApp() && !state.settings.reminder && !storeGet(REMIND_ASKED_KEY)) ritualSteps.push({ kind: "remind" });
+      }
+      const box = document.getElementById("ritual");
+      ritualReturn = document.activeElement;
+      box.hidden = false;
+      if (els.main) els.main.inert = true;
+      nextRitualStep();
+    }
+
+    function closeRitual() {
+      const box = document.getElementById("ritual");
+      box.hidden = true;
+      if (els.main) els.main.inert = false;
+      renderHome();
+      renderStats();
+      const usable = el => el && el !== document.body && document.contains(el) && el.offsetParent !== null;
+      const back = usable(ritualReturn) ? ritualReturn : usable(els.continueBtn) ? els.continueBtn : null;
+      if (back) back.focus({ preventScroll: true });
+    }
+
+    function nextRitualStep() {
+      const step = ritualSteps.shift();
+      if (!step) { closeRitual(); return; }
+      const card = document.getElementById("ritualCard");
+      const box = document.getElementById("ritual");
+      box.style.setProperty("--ritual-c", { claim: "#47b5ff", rank: "#b18cff", ignite: "#ffb800", remind: "#2ee6a6" }[step.kind]);
+      ({ claim: ritualClaim, rank: ritualRank, ignite: ritualIgnite, remind: ritualRemind })[step.kind](card, step);
+      const title = card.querySelector(".ritual-title");
+      if (title) title.id = "ritualTitle";
+      const first = card.querySelector("button, [tabindex]");
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    function ritualClaim(card, step) {
+      const before = WordSnapHabit.rank(habit);
+      const chips = [`<span class="ritual-chip" style="--c:#47b5ff">${t("ritual.pairs", { n: step.pairs })}</span>`];
+      if (step.fullCombo) chips.push(`<span class="ritual-chip" style="--c:#ffd21f">${t("ritual.fullCombo")}</span>`);
+      if (step.goal) chips.push(`<span class="ritual-chip" style="--c:#2ee6a6">${t("ritual.goal")}</span>`);
+      card.innerHTML = `
+        <h2 class="ritual-title">${step.timeUp ? t("timeouts.timeUp") : t("ritual.setDone")}</h2>
+        <div class="ritual-big" id="ritualPoints">+0</div>
+        <div class="ritual-chips">${chips.join("")}</div>
+        <div class="ritual-week">
+          <span class="rank-line" id="ritualWeek">${t("ritual.weekTitle", { name: rankName(before.tier), p: before.pts, target: before.target })}</span>
+          <div class="rank-bar" id="ritualBar"><i style="width:${Math.min(100, Math.round(100 * before.pts / before.target))}%"></i></div>
+        </div>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.claim", { n: step.points })}</button>`;
+      paintRank(document.getElementById("ritualBar"), before.tier);
+      document.getElementById("ritualBar").style.setProperty("--rank-c", RANK_COLORS[before.tier] === "rainbow" ? "#ffd21f" : RANK_COLORS[before.tier] === "#ffffff" ? "#47b5ff" : RANK_COLORS[before.tier]);
+      WordSnapFx.countUp(document.getElementById("ritualPoints"), step.points, n => `+${n}`, { delay: 150 });
+      feel("setComplete");
+      const btn = card.querySelector("[data-r=go]");
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        WordSnapHabit.claim(habit, { points: step.points, fullCombo: step.fullCombo });
+        saveWords();
+        feel("claim");
+        const after = WordSnapHabit.rank(habit);
+        document.querySelector("#ritualBar i").style.width = `${Math.min(100, Math.round(100 * after.pts / after.target))}%`;
+        document.getElementById("ritualWeek").textContent = t("ritual.weekTitle", { name: rankName(after.tier), p: after.pts, target: after.target });
+        WordSnapFx.pop(document.getElementById("ritualPoints"), 1.25);
+        setTimeout(nextRitualStep, 750);
+      }, { once: true });
+    }
+
+    function ritualRank(card, step) {
+      const { last } = step;
+      const name = rankName(last.tier);
+      const key = { up: "ritual.rankUp", stay: "ritual.rankStay", down: "ritual.rankDown", top: "ritual.rankTop" }[last.kind] || "ritual.rankStay";
+      card.innerHTML = `
+        <div class="ritual-rank" id="ritualRankCard">${last.tier + 1}</div>
+        <h2 class="ritual-title">${t(key, { p: last.pts, target: last.target, name, next: step.next })}</h2>
+        <p>${t("ritual.rankAbout")}</p>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.next")}</button>`;
+      paintRank(document.getElementById("ritualRankCard"), last.tier);
+      if (last.kind === "up" || last.kind === "top") { feel("levelUp"); WordSnapFx.confetti(60); }
+      WordSnapHabit.markRankSeen(habit);
+      saveWords();
+      card.querySelector("[data-r=go]").addEventListener("click", () => { feel("tap"); nextRitualStep(); }, { once: true });
+    }
+
+    const FLAME_SVG = '<svg class="flame" viewBox="0 0 120 150" aria-hidden="true"><path class="outer" d="M64 4c6 26 46 44 46 88a50 50 0 0 1-100 0c0-22 11-36 22-46-1 15 5 27 17 31C46 49 54 22 64 4z"/><path class="inner" d="M62 52c4 16 26 28 26 52a28 28 0 0 1-56 0c0-12 6-20 12-25 0 8 3 14 9 17-2-15 3-30 9-44z"/><path class="core" d="M60 92c2 8 13 13 13 24a13 13 0 0 1-26 0c0-6 3-10 6-12 0 4 2 6 4 7-1-7 1-13 3-19z"/></svg>';
+
+    function ritualIgnite(card, step) {
+      card.innerHTML = `
+        <h2 class="ritual-title">${t("ritual.igniteTitle")}</h2>
+        <p id="igniteHint">${t("ritual.igniteHint")}</p>
+        <div class="ignite-track" id="igniteTrack">${FLAME_SVG}</div>
+        <button class="link-button" type="button" id="igniteBtn">${t("ritual.igniteBtn")}</button>
+        <div id="igniteAfter"></div>`;
+      const track = document.getElementById("igniteTrack");
+      let startY = null, progress = 0, lastTick = 0, lit = false;
+      const setP = p => { progress = Math.max(0, Math.min(1, p)); track.style.setProperty("--p", progress.toFixed(3)); };
+      const light = () => {
+        if (lit) return;
+        lit = true;
+        setP(1);
+        track.classList.add("lit");
+        storeSet(IGNITED_KEY, step.day);
+        feel("ignite");
+        document.getElementById("igniteBtn").remove();
+        document.getElementById("igniteHint").remove();
+        setTimeout(() => showStreak(document.getElementById("igniteAfter")), 900);
+      };
+      track.addEventListener("pointerdown", e => { if (lit) return; startY = e.clientY; track.setPointerCapture(e.pointerId); });
+      track.addEventListener("pointermove", e => {
+        if (startY == null || lit) return;
+        setP((startY - e.clientY) / 150);
+        const tick = Math.floor(progress * 10);
+        if (tick !== lastTick) { lastTick = tick; feel("swipe", progress); }
+        if (progress >= 1) light();
+      });
+      const release = () => {
+        if (startY == null || lit) return;
+        startY = null;
+        if (progress > 0.6) light();
+        else { lastTick = 0; setP(0); }
+      };
+      track.addEventListener("pointerup", release);
+      track.addEventListener("pointercancel", release);
+      document.getElementById("igniteBtn").addEventListener("click", light);
+    }
+
+    function showStreak(box) {
+      const n = WordSnapHabit.streak(habit);
+      const names = t("ritual.weekdays").split(",");
+      const strip = WordSnapHabit.weekStrip(habit).map((d, i) =>
+        `<span class="${d.state}"><i>${d.state === "done" ? "✓" : d.state === "frozen" ? "❄" : ""}</i>${names[i]}</span>`).join("");
+      const stop = WordSnapHabit.nextStop(n);
+      box.className = "ritual-card";
+      box.innerHTML = `
+        <div class="ritual-big" id="ritualStreak">0</div>
+        <h2>${t("ritual.streakDays", { n })}</h2>
+        <div class="ritual-strip">${strip}</div>
+        <p>${n <= 1 ? t("ritual.streakFirst") : t("ritual.streakMore", { n, m: n + 1 })}${stop ? `<br>${t("rank.stop", stop)}` : ""}</p>
+        <button class="duo-button" type="button" data-r="go">${t("ritual.commit")}</button>`;
+      WordSnapFx.countUp(document.getElementById("ritualStreak"), n, String, { delay: 100 });
+      const go = box.querySelector("[data-r=go]");
+      go.focus({ preventScroll: true });
+      go.addEventListener("click", () => { feel("commit"); setTimeout(nextRitualStep, 250); }, { once: true });
+    }
+
+    function ritualRemind(card) {
+      storeSet(REMIND_ASKED_KEY, "1");
+      const times = [["07:30", "morning", "#ff6b8b"], ["12:30", "noon", "#2ee6a6"], ["18:30", "evening", "#47b5ff"], ["21:00", "night", "#b18cff"]];
+      card.innerHTML = `
+        <h2 class="ritual-title">${t("ritual.remindTitle")}</h2>
+        <p>${t("ritual.remindSub")}</p>
+        <div class="ritual-times"><button type="button" class="wide" data-time="smart" style="--c:#ffd21f">${t("ritual.smart")}<span>${escapeHtml(smartLabel())}</span></button>${times.map(([time, k, c]) => `<button type="button" data-time="${time}" style="--c:${c}">${time}<span>${t(`ritual.${k}`)}</span></button>`).join("")}</div>
+        <p id="remindResult" role="status"></p>
+        <button class="link-button" type="button" id="ritualNo">${t("ritual.remindNo")}</button>`;
+      // One answer only: the time buttons and "No reminders" are switched off after the first tap.
+      const answered = () => card.querySelectorAll(".ritual-times button, #ritualNo").forEach(el => { el.disabled = true; });
+      card.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", async () => {
+        const time = b.dataset.time;
+        answered();
+        feel("tap");
+        state.settings.reminder = time;
+        saveWords();
+        const ok = await syncReminders({ ask: true });
+        if (!ok) state.settings.reminder = "";
+        saveWords();
+        syncOptionsUI();
+        document.getElementById("remindResult").textContent = !ok ? t("ritual.remindDenied") : time === "smart" ? t("ritual.remindSmartSet") : t("ritual.remindSet", { time });
+        setTimeout(nextRitualStep, ok ? 1300 : 2600);
+      }));
+      document.getElementById("ritualNo").addEventListener("click", () => { answered(); feel("tap"); nextRitualStep(); }, { once: true });
+    }
+
+    // ---- Live Update: a set left half-way shows its progress in the status bar (Android 16) ----
+    function livePlugin() {
+      return isNativeApp() && window.Capacitor.Plugins && window.Capacitor.Plugins.WordSnapLive || null;
+    }
+    function syncLiveSet(leaving) {
+      const plugin = livePlugin();
+      if (!plugin) return;
+      const total = currentRoundTotal();
+      const done = state.completedThisRun || 0;
+      const midSet = done > 0 && done < total && !els.completionView.classList.contains("show") && nav && nav.current().screen === "practice";
+      if (leaving && midSet && state.settings.live !== false && !isTrial()) {
+        plugin.showSet({
+          key: `${state.round}:${state.levelSerial || 0}`,
+          done, total,
+          colors: (state.levelJudgements || []).map((_, i) => confettiFor(i).fill),
+          title: t("live.setTitle", { n: total - done }),
+          text: t("live.setText", { d: done, t: total })
+        }).catch(() => {});
+      } else {
+        plugin.endSet().catch(() => {});
+      }
+    }
+    document.addEventListener("visibilitychange", () => syncLiveSet(document.hidden));
+
+    /**
+     * The Live Update switch is on, but Android 13+ does not let the app post notifications.
+     * ask: the user just turned the switch on, so ask (LocalNotifications). Otherwise, or if the
+     * answer is no, the switch goes off with a note, so it never claims to work when it cannot.
+     */
+    async function checkLivePermission({ ask = false } = {}) {
+      const plugin = livePlugin();
+      if (!plugin || !els.liveNote) return;
+      els.liveNote.hidden = true;
+      if (state.settings.live === false) return;
+      let status = null;
+      try { status = await plugin.status(); } catch (e) { return; }
+      if (!status || status.notify) return;
+      const notifications = notificationsPlugin();
+      if (ask && notifications) {
+        try {
+          const permission = await notifications.requestPermissions();
+          if (permission.display === "granted") return;
+        } catch (e) { /* treated as a no */ }
+      }
+      state.settings.live = false;
+      if (els.liveOn) els.liveOn.checked = false;
+      saveWords();
+      els.liveNote.textContent = t("live.denied");
+      els.liveNote.hidden = false;
+    }
+
     // Onboarding until it is finished or skipped: closing the app halfway brings it back.
     initShell(!hasSeenIntro() && state.onboarding === "trial");
+
+    /**
+     * Android app: words captured with "加入 Word Snap" in other apps' text selection, and the
+     * action of a launcher shortcut, wait in the native WordInbox until the page takes them.
+     * Called at start, when the app comes back to the front, and by MainActivity on a shortcut.
+     */
+    let inboxBusy = false;
+    async function collectInbox() {
+      const plugin = isNativeApp() && window.Capacitor.Plugins && window.Capacitor.Plugins.WordSnapInbox;
+      if (!plugin || inboxBusy) return;
+      inboxBusy = true;
+      let box = null;
+      try { box = await plugin.take(); } catch (e) {}
+      inboxBusy = false;
+      if (!box) return;
+      const pairs = (box.words || []).filter(p => Array.isArray(p) && p[0] && p[1]).map(p => [String(p[0]).trim(), String(p[1]).trim()]);
+      if (pairs.length) {
+        const keys = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
+        const fresh = pairs.filter(p => !keys.has(`${p[0].toLowerCase()}::${p[1]}`));
+        // A set under way (or its summary) stays as it is: the words join the next set.
+        const keepRound = state.words.length > 0 && (state.completedThisRun > 0 || els.completionView.classList.contains("show"));
+        const added = addWords(pairs, { keepRound });
+        const list = items => items.slice(0, 5).map(p => p[0]).join(t("library.listJoin")) + (items.length > 5 ? "…" : "");
+        showInboxNote(added
+          ? t("library.inboxAdded", { n: added, list: list(fresh) })
+          : t("library.inboxKnown", { list: list(pairs) }));
+        renderHome();
+      }
+      if (box.action === "practice") startFromHome();
+      else if (box.action === "add") openLibrary("add");
+    }
+    window.wordSnapInbox = collectInbox;
+
+    let inboxNoteTimer = 0;
+    function showInboxNote(text) {
+      const note = document.getElementById("inboxNote");
+      note.textContent = text;
+      note.hidden = false;
+      clearTimeout(inboxNoteTimer);
+      inboxNoteTimer = setTimeout(() => { note.hidden = true; }, 4500);
+    }
+
+    collectInbox();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) collectInbox(); });
   </script>
+  <div class="ritual" id="ritual" role="dialog" aria-modal="true" aria-labelledby="ritualTitle" hidden><div class="ritual-card" id="ritualCard"></div></div>
+  <div class="inbox-note" id="inboxNote" role="status" aria-live="polite" hidden></div>
   <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 </body>
 </html>

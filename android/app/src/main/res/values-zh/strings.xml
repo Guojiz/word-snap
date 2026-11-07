@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="capture_label">加入 Word Snap</string>
+    <string name="capture_kicker">Word Snap · 收词</string>
+    <string name="capture_empty">没有选中文字</string>
+    <string name="capture_pick_word">选一个英文单词或短语试试（最多 4 个词）</string>
+    <string name="capture_looking">查词中…</string>
+    <string name="capture_meaning_hint">这个词的中文意思</string>
+    <string name="capture_from_book">来自词书：%1$s</string>
+    <string name="capture_not_found">词书里没有这个词，写下你理解的意思：</string>
+    <string name="capture_need_meaning">先写一个意思</string>
+    <string name="capture_added">✓ 已加入</string>
+    <string name="capture_waiting_one">打开 Word Snap 时放进词库</string>
+    <string name="capture_waiting_many">收词箱里有 %1$d 个词，打开 Word Snap 时放进词库</string>
+    <string name="capture_cancel">取消</string>
+    <string name="capture_ok">知道了</string>
+    <string name="capture_add">加入词库</string>
+    <string name="shortcut_practice_short">练一组</string>
+    <string name="shortcut_practice_long">开始今天的练习</string>
+    <string name="shortcut_add_short">加词</string>
+    <string name="shortcut_add_long">往词库里加词</string>
+    <string name="live_channel">进行中</string>
+    <string name="live_channel_about">练到一半的一组</string>
+</resources>

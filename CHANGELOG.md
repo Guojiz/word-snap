@@ -4,10 +4,16 @@
 
 ### Added
 
+- **After-set ritual** (2026-10-31, modelled on what keeps Duolingo learners coming back, observed on the maintainer's phone): claim the set's points (pairs, +5 full combo, +10 today's goal) and watch the week's rank bar fill; when the set completes today's goal, swipe the flame up to light the day's streak, see the streak, the Monday-first week strip and the next stop, and tap "我坚持，不放弃"; in the app, if no reminder is set, "明天几点提醒你？" is asked once.
+- **Card rank against yourself** (卡片段位: white, green, blue, violet, gold, rainbow): each week's target is 10% above your own average of the last three weeks (at least 120 points); meet it → up, 60% → stay, less → down. No other learners, no leaderboard. Home shows the rank, the week's points, a rotating weekly challenge (5 goal days / 30 new words / 3 full combos) and the next streak stop (3, 7, 14, 30 … days).
+- **Haptics with a texture per moment** (Android: the vibrator's click/tick/thud/rise/spin primitives through `WordSnapHaptics`; browsers: vibrate patterns) and **synthesised sound effects** (`js/sfx.js`, no audio files; Settings → Sound effects).
+- **Android: text capture** ("加入 Word Snap" in any app's text-selection menu, offline lookup in the word books), **launcher shortcuts** (练一组 / 加词) and a **Live Update** for a set left half-way (status-bar chip on Android 16 QPR1+; an ongoing progress notification elsewhere, e.g. the maintainer's OriginOS 6 on API 36.0).
+
 - **CI and releases**: GitHub Actions run the tests and page checks on every pull request; `main` deploys only the built site (`www/`) to Pages with a per-commit cache name; a `v*` tag builds the Android APK and publishes it as a GitHub Release (signed when the release key secrets are set). See MAINTAINING.md.
 
 ### Changed
 
+- **Dopamine palette**: the five confetti colours are now saturated (pink, electric blue, lemon, neon green, violet), ink text 5.2–9.7:1 on every fill.
 - **It opens like an app now.** Every launch opens on Home, a menu of four colour blocks with real content: today's words (how many are left, what is due, about how long, a progress bar; tap to start or resume), the word book (its name and word count; opens Library), Add words and Settings. Tapping a block floods the screen with its colour and opens that thing. First run the big block offers setup: three short questions (word book, new words a day, reminder time; skippable) that end back on Home, never on the board. Practice and setup are full screen; Library and Settings are full pages on phones with a close button (no bottom tab bar any more); EN / 中 is a chip on Home. Screens slide in and out with View Transitions.
 - **No more automatic focus mode.** Practice is now its own full screen with only the top bar and the board, centred; nothing hides, appears or moves mid-set any more (the board used to glide to the middle after three answers). The setting is gone. × (and Esc) always goes back to Home with the set paused, instead of ending it with a summary.
 - **Back works everywhere**: one navigation stack (`js/shell.js`) behind the in-app close buttons, the browser back button and the Android back gesture; at the first screen Android back puts the app in the background. Closing a set pauses it on Home.

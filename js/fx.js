@@ -227,7 +227,7 @@
     if (!enabled()) return;
     const width = win.innerWidth || 400;
     const height = win.innerHeight || 700;
-    const colors = ["#ffb4a2", "#a8d8ff", "#ffe27a", "#9eebc4", "#d4c4ff", "#ff7a59", "#3b8beb"];
+    const colors = ["#ff6b8b", "#47b5ff", "#ffd21f", "#2ee6a6", "#b18cff", "#ff7a59", "#3b8beb"];
     for (let i = 0; i < amount; i++) {
       const el = doc.createElement("span");
       el.className = "fx-confetti";
@@ -266,12 +266,34 @@
     ], { duration: 2800, easing: "ease-out" });
   }
 
-  /** A short vibration (correct: a tap; wrong: a double buzz). Off with effects. */
-  function haptic(kind = "tap") {
-    if (!on || !win || !win.navigator || typeof win.navigator.vibrate !== "function") return;
+  /**
+   * Haptics, one texture per moment: tap, select, match (level 0..1 grows with the combo),
+   * combo, wrong, claim, setComplete, goalDone, ignite, commit, levelUp, swipe. The Android app
+   * plays them on the vibrator's primitives (WordSnapHaptics); browsers get a vibrate() pattern.
+   * Off with effects.
+   */
+  const VIBRATE = {
+    tap: 8, select: 5, match: 10, combo: [12, 40, 12, 40, 24], wrong: [18, 40, 18], claim: [10, 80, 14],
+    setComplete: [10, 60, 10, 60, 14, 60, 40], goalDone: [10, 60, 10, 60, 14, 60, 40], levelUp: [10, 60, 10, 60, 14, 60, 40],
+    ignite: [120, 30, 60, 120, 8, 110, 8, 120, 6], commit: [30, 30, 12], swipe: 4, milestone: [12, 30, 12, 30, 24]
+  };
+  function nativeHaptics() {
+    const cap = win && win.Capacitor;
     try {
-      win.navigator.vibrate(kind === "wrong" ? [18, 40, 18] : kind === "milestone" ? [12, 30, 12, 30, 24] : 8);
-    } catch { /* not allowed here */ }
+      if (!cap || !cap.isNativePlatform || !cap.isNativePlatform()) return null;
+      return (cap.Plugins && cap.Plugins.WordSnapHaptics) || null;
+    } catch { return null; }
+  }
+  function haptic(kind = "tap", level = 0) {
+    if (!on || !win) return;
+    if (kind === "milestone") kind = "combo";
+    const plugin = nativeHaptics();
+    if (plugin) {
+      plugin.play({ name: kind, level }).catch(() => {});
+      return;
+    }
+    if (!win.navigator || typeof win.navigator.vibrate !== "function") return;
+    try { win.navigator.vibrate(VIBRATE[kind] || 8); } catch { /* not allowed here */ }
   }
 
   return { judge, judgementFor, roll, ripple, burst, pop, countUp, confetti, banner, haptic, setEnabled, enabled, tierFor, isMilestone, clock, SPRING };
