@@ -3589,7 +3589,7 @@
           <p class="import-hint" id="liveNote" role="status" hidden></p>
           <label class="check-row">
             <input id="streakTones" type="checkbox" />
-            <span data-en="Piano notes for a streak" data-zh="连对时播放钢琴音阶">连对时播放钢琴音阶</span>
+            <span data-en="Guzheng notes that climb with a streak" data-zh="连对时播放古筝音阶">连对时播放古筝音阶</span>
           </label>
         </div>
         <details class="advanced">
@@ -3930,7 +3930,7 @@
           optAdaptiveLevelTime: "Adaptive level time from last real clear pace (+ tolerance)",
           optPauseRefill: "Pause refill while a card is selected",
           optRecycleMastered: "Keep cycling after all mastered",
-          optStreakTones: "Streak piano tones on correct matches",
+          optStreakTones: "Guzheng notes that climb with a streak",
           saveOptions: "Save options",
           listTitle: "Word list",
           listBlurb: "All words in your library. You can re-add after clearing.",
@@ -4222,7 +4222,7 @@
           optAdaptiveLevelTime: "按上次实际通关配速自适应本关时间（加容错）",
           optPauseRefill: "选中卡片时暂停补词，不打断当前选择",
           optRecycleMastered: "全部掌握后继续循环练习，不让队列空掉",
-          optStreakTones: "连对时播放钢琴音阶",
+          optStreakTones: "连对时播放古筝音阶",
           saveOptions: "保存选项",
           listTitle: "词库列表",
           listBlurb: "这里显示当前词库里的全部单词。清空后可以重新录入。",
@@ -5960,103 +5960,10 @@
     const CORRECT_ANIM_MS = 400;
     const WRONG_ANIM_MS = 520;
     const TIMER_TICK_MS = 250;
-    const STREAK_SCALE_SEMITONES = [0, 2, 4, 5, 7, 9, 11];
-    const STREAK_BASE_FREQ = 261.63;
-    const STREAK_GROUP_SIZE = 5;
-    const STREAK_GROUP_STEP = 2;
-    const STREAK_START_STEP = 1;
-    const STREAK_CYCLE_GROUPS = 8;
-    const PIANO_INHARMONICITY = 0.00012;
-    let streakAudioCtx = null;
-
-    function ensureStreakAudio() {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return null;
-      if (!streakAudioCtx) streakAudioCtx = new Ctx();
-      if (streakAudioCtx.state === "suspended") streakAudioCtx.resume();
-      return streakAudioCtx;
-    }
-
-    function streakToneFrequency(streak) {
-      const step = Math.max(0, streak - 1);
-      const scaleLen = STREAK_SCALE_SEMITONES.length;
-      const group = Math.floor(step / STREAK_GROUP_SIZE) % STREAK_CYCLE_GROUPS;
-      const within = step % STREAK_GROUP_SIZE;
-      const degree = STREAK_START_STEP * group + STREAK_GROUP_STEP * within;
-      const index = ((degree % scaleLen) + scaleLen) % scaleLen;
-      const semitone = STREAK_SCALE_SEMITONES[index] + 12 * Math.floor(degree / scaleLen);
-      return STREAK_BASE_FREQ * Math.pow(2, semitone / 12);
-    }
-
-    function playPianoNote(freq, durationSec = 0.9, velocity = 0.2) {
-      const ctx = ensureStreakAudio();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      const master = ctx.createGain();
-      master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(velocity, now + 0.004);
-      master.gain.exponentialRampToValueAtTime(Math.max(0.0001, velocity * 0.38), now + 0.14);
-      master.gain.exponentialRampToValueAtTime(0.0001, now + durationSec);
-      master.connect(ctx.destination);
-
-      [
-        { n: 1, amp: 1, decay: 1 },
-        { n: 2, amp: 0.52, decay: 0.74 },
-        { n: 3, amp: 0.3, decay: 0.56 },
-        { n: 4, amp: 0.17, decay: 0.42 },
-        { n: 5, amp: 0.11, decay: 0.32 },
-        { n: 6, amp: 0.07, decay: 0.24 },
-        { n: 7, amp: 0.045, decay: 0.18 },
-        { n: 8, amp: 0.03, decay: 0.14 }
-      ].forEach(partial => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const partialFreq = freq * partial.n * Math.sqrt(1 + PIANO_INHARMONICITY * partial.n * partial.n);
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(partialFreq, now);
-        const decaySec = Math.max(0.1, durationSec * partial.decay);
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.linearRampToValueAtTime(partial.amp, now + 0.003);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + decaySec);
-        osc.connect(gain).connect(master);
-        osc.start(now);
-        osc.stop(now + durationSec + 0.05);
-      });
-
-      const noiseLen = Math.max(1, Math.floor(ctx.sampleRate * 0.018));
-      const noiseBuffer = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-      const noiseData = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < noiseLen; i += 1) {
-        noiseData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (noiseLen * 0.12));
-      }
-      const noise = ctx.createBufferSource();
-      noise.buffer = noiseBuffer;
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = "bandpass";
-      noiseFilter.frequency.setValueAtTime(Math.min(5200, Math.max(900, freq * 7)), now);
-      noiseFilter.Q.setValueAtTime(1.1, now);
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(velocity * 0.07, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
-      noise.connect(noiseFilter).connect(noiseGain).connect(master);
-      noise.start(now);
-      noise.stop(now + 0.03);
-    }
-
-    function playGroupEndFlourish(freq) {
-      playPianoNote(freq, 0.95, 0.18);
-      playPianoNote(freq * 2, 0.72, 0.12);
-      setTimeout(() => playPianoNote(freq * 3, 0.42, 0.07), 45);
-    }
-
+    /** One guzheng note per correct match; it keeps climbing however long the streak runs (js/sfx.js matchNotes). */
     function playStreakTone(streak) {
       if (state.settings.streakTones === false) return;
-      const freq = streakToneFrequency(streak);
-      if (streak > 0 && streak % STREAK_GROUP_SIZE === 0) {
-        playGroupEndFlourish(freq);
-      } else {
-        playPianoNote(freq, 0.88, 0.2);
-      }
+      WordSnapSfx.play("match", streak, { ignoreSwitch: true });
     }
 
     /** One moment, felt and heard: a haptic texture (js/fx.js) and its sound (js/sfx.js). */
@@ -6067,8 +5974,7 @@
 
     function playMistakeTone() {
       if (state.settings.streakTones === false) return;
-      playPianoNote(146.83, 0.42, 0.12);
-      setTimeout(() => playPianoNote(110, 0.35, 0.08), 55);
+      WordSnapSfx.play("wrong", 0, { ignoreSwitch: true });
     }
     function randomBetween(min, max) {
       return Math.floor(min + Math.random() * (max - min + 1));
@@ -6731,7 +6637,7 @@
       WordSnapFx.ripple([first.card, second.card], confetti.edge);
       WordSnapFx.judge([first.card, second.card], WordSnapFx.judgementFor(grade), elapsed);
       WordSnapFx.haptic(WordSnapFx.isMilestone(state.streak) ? "combo" : "match", Math.min(1, state.streak / 20));
-      // The piano flourish marks every 5; from 10 on a milestone also gets the combo arpeggio.
+      // The streak note adds a grace note every 5; from 10 on a milestone also gets a short 刮奏.
       if (WordSnapFx.isMilestone(state.streak) && state.streak >= 10) WordSnapSfx.play("combo");
       updateCombo(state.streak);
       els.feedback.className = "feedback good";
