@@ -25,10 +25,14 @@
   /** { os: "Android 14" | "iOS 17.4" | …, model: "Pixel 7" | "" } from a user agent string. */
   function device(userAgent = "") {
     const ua = String(userAgent);
-    const android = ua.match(/Android\s+([\d.]+)(?:;\s*([^;)]+))?/);
+    const android = ua.match(/Android\s+([\d.]+)((?:;[^;)]*)*)/);
     if (android) {
-      let model = (android[2] || "").replace(/\s*Build\/.*$/, "").trim();
-      if (model === "K" || /^wv$/i.test(model)) model = ""; // reduced user agents hide the model
+      // The segments after "Android x": skip the ones that are not a model — a language tag
+      // (MIUI/UC put "zh-cn" first), "U", "wv", "HarmonyOS" — and take the next one.
+      const parts = android[2].split(";").map(p => p.replace(/\s*Build\/.*$/, "").trim()).filter(Boolean);
+      const model = parts.find(p => !/^([a-z]{2}([-_][a-z]{2,4})?|U|wv|HarmonyOS|Linux)$/i.test(p)) || "";
+      // Chrome's reduced user agent always says "Android 10; K": neither the version nor the model is real.
+      if (model === "K") return { os: "Android", model: "" };
       return { os: `Android ${android[1]}`, model };
     }
     const ios = ua.match(/(iPhone|iPad)[^)]*OS ([\d_]+)/);
@@ -39,10 +43,11 @@
     return { os: "", model: "" };
   }
 
-  function issueUrl({ version = "", userAgent = "", native = false } = {}) {
+  function issueUrl({ version = "", build = "", userAgent = "", native = false } = {}) {
     const { os, model } = device(userAgent);
     const where = native ? "Android app" : "web";
-    const facts = [`Word Snap ${version || "?"} (${where})`, os, model].filter(Boolean).join(" · ");
+    const ver = (version || "?") + (build && build !== "dev" ? ` build ${build}` : "");
+    const facts = [`Word Snap ${ver} (${where})`, os, model].filter(Boolean).join(" · ");
     const body = [
       "**What happened / 发生了什么**",
       "",
@@ -60,18 +65,29 @@
   /**
    * Tries the Bilibili app first; when nothing takes the link (the page is still in front a
    * moment later), opens the web page instead. Returns false so a link's default is skipped.
+   * Leaving is seen by blur/pagehide as well as visibilitychange: a WebView only turns hidden
+   * once the other app has drawn, which a slow cold start (splash ads) can push past the timer.
+   * The fallback relies on Capacitor handing any non-app URL to the system (no allowNavigation).
    */
-  function openBilibili(win, { native = false } = {}) {
+  let opening = false;
+  function openBilibili(win, { native = false, waitMs = 2000 } = {}) {
     if (!win) return true;
     if (!native) { win.open(BILIBILI_WEB, "_blank", "noopener"); return false; }
+    if (opening) return false; // a second tap while the first is still deciding
+    opening = true;
     let left = false;
-    const away = () => { if (win.document.visibilityState === "hidden") left = true; };
+    const away = event => { if (event.type !== "visibilitychange" || win.document.visibilityState === "hidden") left = true; };
     win.document.addEventListener("visibilitychange", away);
+    win.addEventListener("blur", away);
+    win.addEventListener("pagehide", away);
     win.location.href = BILIBILI_APP;
     win.setTimeout(() => {
       win.document.removeEventListener("visibilitychange", away);
+      win.removeEventListener("blur", away);
+      win.removeEventListener("pagehide", away);
+      opening = false;
       if (!left) win.location.href = BILIBILI_WEB;
-    }, 1200);
+    }, waitMs);
     return false;
   }
 

@@ -55,6 +55,16 @@ for (const entry of entries) {
   cpSync(from, join(out, entry), { recursive: true });
 }
 
+// Every copy (site and app) names the commit it was built from, so a bug report can say which build.
+{
+  const pagePath = join(out, "vocabulary-match.html");
+  const page = readFileSync(pagePath, "utf8");
+  const sha = commitSha();
+  const stampedPage = page.replace(/const APP_BUILD = "[^"]*";/, `const APP_BUILD = "${sha === "dev" ? "dev" : sha.slice(0, 7)}";`);
+  if (stampedPage === page) throw new Error("vocabulary-match.html: APP_BUILD line not found");
+  writeFileSync(pagePath, stampedPage);
+}
+
 if (site) {
   const swPath = join(out, "service-worker.js");
   const sw = readFileSync(swPath, "utf8");

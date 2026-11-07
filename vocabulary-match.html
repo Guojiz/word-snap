@@ -3689,7 +3689,7 @@
           <a class="duo-button secondary" id="feedbackGithub" href="https://github.com/Guojiz/word-snap/issues/new" target="_blank" rel="noopener noreferrer" data-en="Report on GitHub" data-zh="在 GitHub 提问题">在 GitHub 提问题</a>
           <a class="duo-button secondary" id="feedbackBilibili" href="https://space.bilibili.com/3493114115263006" target="_blank" rel="noopener noreferrer" data-en="Find me on Bilibili" data-zh="在 B 站找我">在 B 站找我</a>
         </div>
-        <p class="feedback-note" data-en="The GitHub form comes filled in with the app version, Android version and phone model, nothing else." data-zh="GitHub 的表单会预先填好 App 版本、Android 版本和手机型号，不含其它信息。">GitHub 的表单会预先填好 App 版本、Android 版本和手机型号，不含其它信息。</p>
+        <p class="feedback-note" data-en="The GitHub form comes filled in with the app version, system version and phone model, nothing else." data-zh="GitHub 的表单会预先填好 App 版本、系统版本和手机型号，不含其它信息。">GitHub 的表单会预先填好 App 版本、系统版本和手机型号，不含其它信息。</p>
       </section>
 
       <section class="modal-section danger-zone" aria-labelledby="resetTitle">
@@ -5982,6 +5982,8 @@
 
     /** Kept equal to package.json "version" (tests/feedback.test.js checks). */
     const APP_VERSION = "1.0.0";
+    /** The commit this copy was built from: stamped by tools/build-www.mjs, "dev" in the source tree. */
+    const APP_BUILD = "dev";
     const SLOT_COUNT = 5;
     const CORRECT_ANIM_MS = 400;
     const WRONG_ANIM_MS = 520;
@@ -8644,7 +8646,7 @@
     document.getElementById("closeSettings").addEventListener("click", closeSettings);
     // Feedback (Settings → 反馈与交流): the issue form names the version, OS and phone model only.
     document.getElementById("feedbackGithub").addEventListener("click", event => {
-      event.currentTarget.href = WordSnapFeedback.issueUrl({ version: APP_VERSION, userAgent: navigator.userAgent, native: isNativeApp() });
+      event.currentTarget.href = WordSnapFeedback.issueUrl({ version: APP_VERSION, build: APP_BUILD, userAgent: navigator.userAgent, native: isNativeApp() });
     });
     document.getElementById("feedbackBilibili").addEventListener("click", event => {
       if (!WordSnapFeedback.openBilibili(window, { native: isNativeApp() })) event.preventDefault();
