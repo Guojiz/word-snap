@@ -54,6 +54,11 @@ jobs:
       - name: Android SDK packages
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018" "cmake;3.22.1" > /dev/null
       - run: npm ci
+      - name: Tag matches the app's version
+        if: github.ref_type == 'tag'
+        run: |
+          want="v$(node -p "require('./package.json').version")"
+          [ "$GITHUB_REF_NAME" = "$want" ] || { echo "tag $GITHUB_REF_NAME but package.json says $want (APP_VERSION would be wrong)"; exit 1; }
       - run: npm test
       - run: npm run check
       - name: Web files into the app

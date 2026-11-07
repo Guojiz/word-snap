@@ -30,9 +30,9 @@ test("a release outranks its own prerelease; prereleases and drafts are ignored"
   assert.equal(Update.fromVersionJson({ version: "1.3.0-rc.1" }), null);
 });
 
-test("only https links are kept", () => {
-  const r = Update.fromVersionJson({ version: "1.2.0", notes: "javascript:alert(1)", apk: "http://x/a.apk" });
-  assert.deepEqual(r, { version: "1.2.0", notes: "", apk: "" });
+test("unsafe links fall back to the releases page, never to an empty href", () => {
+  const r = Update.fromVersionJson({ version: "1.2.0", notes: "javascript:alert(1)", apk: "http://github.com/Guojiz/word-snap/a.apk" });
+  assert.deepEqual(r, { version: "1.2.0", notes: "https://github.com/Guojiz/word-snap/releases", apk: "https://github.com/Guojiz/word-snap/releases" });
 });
 
 test("fromRelease takes the tag and the release APK", () => {
@@ -58,9 +58,10 @@ test("check: GitHub first, at most once a day, newer only", async () => {
 test("check: falls back to version.json; a failure is silent and retried after an hour", async () => {
   const store = memoryStore();
   const calls = [];
-  const fetch = url => { calls.push(url); return /github\.com/.test(url) ? Promise.reject(new Error("blocked")) : ok({ version: "1.2.0", notes: "https://n", apk: "https://a" }); };
+  const fetch = url => { calls.push(url); return /github\.com/.test(url) ? Promise.reject(new Error("blocked")) : ok({ version: "1.2.0", notes: "https://evil.example/n", apk: "https://github.com/Guojiz/word-snap/releases/download/v1.2.0/word-snap-1.2.0.apk" }); };
   const now = Date.UTC(2026, 10, 1, 12);
-  assert.deepEqual(await Update.check({ current: "1.0.0", fetch, store, now }), { version: "1.2.0", notes: "https://n", apk: "https://a" });
+  // a link outside the repository is replaced by the releases page
+  assert.deepEqual(await Update.check({ current: "1.0.0", fetch, store, now }), { version: "1.2.0", notes: "https://github.com/Guojiz/word-snap/releases", apk: "https://github.com/Guojiz/word-snap/releases/download/v1.2.0/word-snap-1.2.0.apk" });
   assert.match(calls[1], /cdn\.jsdelivr\.net\/gh\/Guojiz\/word-snap@main\/version\.json/);
   const store2 = memoryStore();
   const dead = () => Promise.reject(new Error("offline"));
@@ -79,4 +80,14 @@ test("version.json matches package.json", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   const v = JSON.parse(fs.readFileSync(path.join(root, "version.json"), "utf8"));
   assert.equal(v.version, pkg.version);
+});
+
+test("only plain versions and links into the repository are trusted", () => {
+  const R = "https://github.com/Guojiz/word-snap/releases";
+  assert.equal(Update.fromVersionJson({ version: "9.9.9 去 evil.cn 下载", apk: R }), null);
+  assert.equal(Update.fromVersionJson({ version: "1.2.0rc1" }), null);
+  assert.deepEqual(Update.fromVersionJson({ version: "1.2.0", apk: "https://evil.cn/x.apk", notes: "https://github.com.evil.cn/x" }), { version: "1.2.0", notes: R, apk: R });
+  assert.equal(Update.fromRelease({ tag_name: "v1.2.0-rc.1", assets: [] }), null);
+  const rel = Update.fromRelease({ tag_name: "v1.2.0", html_url: R + "/tag/v1.2.0", assets: [{ name: "word-snap-1.2.0.apk", browser_download_url: "https://objects.example.com/x.apk" }] });
+  assert.deepEqual(rel, { version: "1.2.0", notes: R + "/tag/v1.2.0", apk: R + "/tag/v1.2.0" });
 });

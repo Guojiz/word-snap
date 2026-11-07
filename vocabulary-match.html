@@ -2693,6 +2693,7 @@
       margin-top: 10px;
       font-weight: 800;
     }
+    .update-banner .link-button { min-height: 44px; } /* "Download" is the action here: a full-size target */
 
     /* Blocks drop in one after another, like confetti landing. */
     .home .tile { animation: tile-in 620ms var(--spring) both; }
@@ -9298,6 +9299,7 @@
       if (screen === "home") {
         renderHome();
         els.main.scrollTop = 0;
+        if (prev) setTimeout(() => checkForUpdate(), 0); // once a day at most; skipped during a set
       }
       if (screen === "practice") {
         if (!state.words.length) renderRound();
@@ -9974,11 +9976,16 @@
       document.getElementById("updateNotes").href = u.notes;
       document.getElementById("updateApk").href = u.apk;
     }
+    let updateChecking = false;
     function checkForUpdate() {
-      if (!isNativeApp() || !window.WordSnapUpdate) return;
+      if (!isNativeApp() || !window.WordSnapUpdate || updateChecking) return;
+      // Never during a set: away from Home it waits until Home is shown again (applyScreen).
+      if (document.body.dataset.screen !== "home") return;
+      updateChecking = true;
       WordSnapUpdate.check({ current: APP_VERSION, fetch: window.fetch.bind(window), store: window.localStorage })
         .then(u => { availableUpdate = u; showUpdate(); })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => { updateChecking = false; });
     }
     (window.requestIdleCallback || (fn => setTimeout(fn, 1500)))(checkForUpdate, { timeout: 4000 });
     // Android keeps the WebView alive for days; coming back to the front checks again (still once a day).

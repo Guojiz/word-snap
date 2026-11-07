@@ -6,7 +6,9 @@
  *     the caller decides when. Asks GitHub's latest release first, then version.json on
  *     jsDelivr (GitHub can be slow or blocked in mainland China). Each request gives up after
  *     5 s; any failure is silent and retried after an hour, keeping the last answer meanwhile.
- *     Drafts, prereleases and non-https links are ignored.
+ *     Drafts, prereleases and versions that are not plain numbers are ignored; links are kept
+ *     only when they point into github.com/Guojiz/word-snap/ (a tampered CDN copy of
+ *     version.json cannot send anyone to another APK), else the releases page is used.
  *   newer(a, b)        true when version a is above b ("1.10.0" > "1.9.2"), pure
  *   fromRelease(json)  { version, notes, apk } from a GitHub release, pure
  *
@@ -25,6 +27,7 @@
   const DAY_MS = 24 * 60 * 60 * 1000;
   const RETRY_MS = 60 * 60 * 1000;
   const TIMEOUT_MS = 5000;
+  const RELEASES = "https://github.com/Guojiz/word-snap/releases";
 
   function parts(v) {
     return String(v || "").replace(/^v/i, "").split(/[.+-]/).slice(0, 3).map(n => parseInt(n, 10) || 0);
@@ -43,21 +46,32 @@
     return pre(b) && !pre(a);
   }
 
-  function https(url) {
-    return /^https:\/\//i.test(String(url || "")) ? String(url) : "";
+  /** A link into this repository on github.com, or "". */
+  function ours(url) {
+    const s = String(url || "");
+    return /^https:\/\/github\.com\/Guojiz\/word-snap\/[^\s"'<>]*$/.test(s) || s === RELEASES ? s : "";
+  }
+
+  /** "1.2.0" from "v1.2.0"; null for prereleases ("1.2.0-rc.1", "1.2.0rc1") and anything else. */
+  function plain(v) {
+    const m = String(v || "").trim().match(/^v?(\d+(?:\.\d+){0,2})$/i);
+    return m ? m[1] : null;
   }
 
   function fromRelease(json) {
     if (!json || typeof json.tag_name !== "string" || json.draft || json.prerelease) return null;
+    const version = plain(json.tag_name);
+    if (!version) return null;
     const asset = (json.assets || []).find(a => /\.apk$/i.test(a.name || "") && !/debug/i.test(a.name || ""));
-    const notes = https(json.html_url);
-    return { version: json.tag_name.replace(/^v/i, ""), notes, apk: https(asset && asset.browser_download_url) || notes };
+    const notes = ours(json.html_url) || RELEASES;
+    return { version, notes, apk: ours(asset && asset.browser_download_url) || notes };
   }
 
   function fromVersionJson(json) {
-    if (!json || typeof json.version !== "string" || pre(json.version)) return null;
-    const notes = https(json.notes);
-    return { version: json.version, notes, apk: https(json.apk) || notes };
+    const version = json && plain(json.version);
+    if (!version) return null;
+    const notes = ours(json.notes) || RELEASES;
+    return { version, notes, apk: ours(json.apk) || notes };
   }
 
   async function getJson(fetchFn, url) {
