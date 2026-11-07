@@ -367,8 +367,8 @@
       font-size: 15px;
     }
 
-    /* Pastel stickers with ink text (>= 7:1 on each): lemon = PERFECT, mint = GREAT,
-       sky = GOOD, peach = MISS. */
+    /* Confetti stickers with ink text (>= 5:1 on each): lemon = PERFECT, mint = GREAT,
+       sky = GOOD, pink = MISS. */
     .fx-judge-perfect { background: #ffd21f; }
     .fx-judge-great { background: #2ee6a6; }
     .fx-judge-good { background: #47b5ff; }
@@ -3217,7 +3217,7 @@
     .ritual-times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
     .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 700 20px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
     .ritual-times .wide { grid-column: 1 / -1; font-size: 18px; }
-    .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; opacity: .75; }
+    .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; }
 
     /* The flame: drag it up (or press the button) to light it. */
     .ignite-track {
@@ -3586,6 +3586,7 @@
             <input id="liveOn" type="checkbox" />
             <span data-en="Show a set's progress in the status bar when you leave it half-way (Live Update)" data-zh="练到一半切出去时，在状态栏显示这一组的进度（实时活动）">练到一半切出去时，在状态栏显示这一组的进度（实时活动）</span>
           </label>
+          <p class="import-hint" id="liveNote" role="status" hidden></p>
           <label class="check-row">
             <input id="streakTones" type="checkbox" />
             <span data-en="Guzheng notes that climb with a streak" data-zh="连对时播放古筝音阶">连对时播放古筝音阶</span>
@@ -3870,8 +3871,8 @@
       },
       accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffb800" }
     };
-    // Peach, sky, lemon, mint, lilac. Matched cards are filled with these and keep ink text
-    // (#2b2a3d on every one is >= 8:1), in both day and night.
+    // Pink, sky, lemon, mint, violet. Matched cards are filled with these and keep ink text
+    // (#2b2a3d on every one is >= 5:1), in both day and night.
     const CONFETTI = ["#ff6b8b", "#47b5ff", "#ffd21f", "#2ee6a6", "#b18cff"];
     const CONFETTI_INK = "#2b2a3d";
     // The set's colour: every finished set moves to the next one, as the old skins did.
@@ -3915,6 +3916,7 @@
         library: {
           inboxAdded: "Added {n} words you picked in other apps: {list}",
           inboxKnown: "Already in your library: {list}",
+          listJoin: ", ",
           title: "Library",
           summaryInitial: "Add, delete, or clear words here. Changes stay in this browser only.",
           summary: "{n} words total, {m} custom.",
@@ -4171,9 +4173,13 @@
           rankDown: "Last week {p} / {target}: down to {name}. This week's target is {next}: win it back!",
           rankTop: "Last week {p} / {target}: still {name}, the top!",
           rankAbout: "Your target is 10% above your own last three weeks. Nobody else is ranked.",
+          weekdays: "M,T,W,T,F,S,S",
           next: "Continue"
         },
-        live: { setTitle: "{n} to go in this set", setText: "{d} of {t} matched · tap to carry on" },
+        live: {
+          setTitle: "{n} to go in this set", setText: "{d} of {t} matched · tap to carry on",
+          denied: "Notifications are off for Word Snap, so the Live Update can't show. Allow them in the phone's settings, then switch this on again."
+        },
         langToggle: { en: "EN", zh: "中" }
       },
       zh: {
@@ -4202,6 +4208,7 @@
         library: {
           inboxAdded: "在其它 App 里收的 {n} 个词已放进词库：{list}",
           inboxKnown: "已经在词库里了：{list}",
+          listJoin: "、",
           title: "词库",
           summaryInitial: "在这里添加、删除或清空单词。修改只保存在当前浏览器里。",
           summary: "当前共 {n} 个词，其中自定义 {m} 个。",
@@ -4458,9 +4465,13 @@
           rankDown: "上周 {p} / {target} 分，降到{name}。这周目标 {next} 分，追回来！",
           rankTop: "上周 {p} / {target} 分，稳坐{name}！",
           rankAbout: "目标是你自己过去三周平均的 1.1 倍，不跟任何人比。",
+          weekdays: "一,二,三,四,五,六,日",
           next: "继续"
         },
-        live: { setTitle: "这一组还差 {n} 个", setText: "已配对 {d}/{t} · 点这里接着练" },
+        live: {
+          setTitle: "这一组还差 {n} 个", setText: "已配对 {d}/{t} · 点这里接着练",
+          denied: "Word Snap 的通知被关了，实时活动显示不出来。在手机设置里允许通知后，再打开这个开关。"
+        },
         langToggle: { en: "EN", zh: "中" }
       }
     };
@@ -4712,6 +4723,7 @@
       soundOn: document.getElementById("soundOn"),
       liveOn: document.getElementById("liveOn"),
       liveRow: document.getElementById("liveRow"),
+      liveNote: document.getElementById("liveNote"),
       effectsOn: document.getElementById("effectsOn"),
       settingsModal: document.getElementById("settingsModal"),
       trialKeepBtn: document.getElementById("trialKeepBtn"),
@@ -6230,6 +6242,7 @@
       state.levelJudgements = [];
       state.levelConfettiStart = currentTheme().confetti;
       state.lastCompletion = null;
+      state.goalDoneThisSet = false;
       updateCombo(0);
 
       if (!state.words.length) {
@@ -8148,10 +8161,13 @@
       el.className = `import-status${kind ? " " + kind : ""}`;
     }
 
-    /** Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped. */
+    /**
+     * Words to add. Returns how many were added; `lastRemovedSamples` says if the samples were dropped.
+     * keepRound: leave the set on the board as it is (words captured mid-set join the next one).
+     */
     let lastRemovedSamples = 0;
     let lastExamplesAdded = 0;
-    function addWords(pairs) {
+    function addWords(pairs, { keepRound = false } = {}) {
       lastRemovedSamples = 0;
       const valid = pairs.filter(pair => pair && pair[0] && pair[1]);
       // "Remove the sample words when importing" (ticked by default while samples exist).
@@ -8188,7 +8204,7 @@
         saveWords();
         // Restart the level with the new words, but don't count it as a round
         // played — rounds drive the review schedule.
-        renderRound();
+        if (!keepRound || lastRemovedSamples) renderRound();
         syncDropSamplesRow();
       }
       return added;
@@ -8421,6 +8437,7 @@
       }
       const previousReminder = state.settings.reminder;
       const previousPair = state.settings.langPair;
+      const previousLive = state.settings.live !== false;
       const nextSettings = normalizeSettings({
         flow: els.flowSelect && els.flowSelect.value === "levels" ? "levels" : "endless",
         drills: els.drillsSelect ? Number(els.drillsSelect.value) : state.settings.drills,
@@ -8467,6 +8484,8 @@
           els.optionsStatus.className = "import-status bad";
         }
       }
+      if (nextSettings.live && !previousLive) checkLivePermission({ ask: true });
+      else if (!nextSettings.live && els.liveNote) els.liveNote.hidden = true;
       if (reminderChanged) {
         syncReminders({ ask: Boolean(nextSettings.reminder) }).then(ok => {
           if (ok || !els.optionsStatus) return;
@@ -9043,6 +9062,13 @@
     pressedObserver.observe(els.matchGrid, { attributes: true, attributeFilter: ["class"], subtree: true });
 
     document.addEventListener("keydown", event => {
+      // The after-set ritual is modal: its own buttons take Enter / Space; nothing reaches the
+      // board or Home underneath (Esc must not leave the set behind it).
+      if (ritualOpen()) {
+        const onControl = event.target && event.target.closest && event.target.closest("#ritual button");
+        if (event.key === "Escape" || /^[0-9]$/.test(event.key) || ((event.key === "Enter" || event.key === " ") && !onControl)) event.preventDefault();
+        return;
+      }
       if (els.introModal.classList.contains("open")) {
         // Enter belongs to the focused button; only Esc closes from anywhere.
         if (event.key === "Escape") {
@@ -9131,6 +9157,7 @@
 
     function openSettings() {
       openSettingsRaw();
+      checkLivePermission(); // look, never ask: the system prompt only follows turning the switch on
       if (nav && !navSyncing) nav.overlay("settings");
       syncNavUI();
     }
@@ -9488,6 +9515,7 @@
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
+      if (ritualOpen()) return true; // finish the ritual with its own buttons
       if (els.introModal.classList.contains("open")) { closeIntro(); return true; }
       if (nav && nav.current().screen === "onboard" && ob.step > 0) { obGo(ob.step - 1); return true; }
       return Boolean(nav && nav.back());
@@ -9623,18 +9651,25 @@
     let ritualSteps = [];
     let ritualReturn = null;
 
+    function ritualOpen() {
+      const box = document.getElementById("ritual");
+      return Boolean(box && !box.hidden);
+    }
+
     function storeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
     function storeSet(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
 
     function startRitual() {
-      if (isTrial()) return;
+      // The sample-word trial (onboarding is already "choose" by now) has no points to claim.
+      if (isTrial() || awaitingTrialChoice() || (state.lastCompletion && state.lastCompletion.trial)) return;
       const pairs = state.completedThisRun || 0;
       if (!pairs) return;
-      const fullCombo = !state.levelMistakes && state.lastCompletion && state.lastCompletion.reason !== "timeout";
+      const timeUp = Boolean(state.lastCompletion && state.lastCompletion.reason === "timeout");
+      const fullCombo = !state.levelMistakes && state.lastCompletion && !timeUp;
       const goal = !!state.goalDoneThisSet;
       state.goalDoneThisSet = false;
       const points = pairs + (fullCombo ? 5 : 0) + (goal ? 10 : 0);
-      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points }];
+      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points, timeUp }];
       const r = WordSnapHabit.rank(habit);
       if (r.last) ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
       const day = String(WordSnapHabit.dayKey(Date.now()));
@@ -9679,7 +9714,7 @@
       if (step.fullCombo) chips.push(`<span class="ritual-chip" style="--c:#ffd21f">${t("ritual.fullCombo")}</span>`);
       if (step.goal) chips.push(`<span class="ritual-chip" style="--c:#2ee6a6">${t("ritual.goal")}</span>`);
       card.innerHTML = `
-        <h2 class="ritual-title">${t("ritual.setDone")}</h2>
+        <h2 class="ritual-title">${step.timeUp ? t("timeouts.timeUp") : t("ritual.setDone")}</h2>
         <div class="ritual-big" id="ritualPoints">+0</div>
         <div class="ritual-chips">${chips.join("")}</div>
         <div class="ritual-week">
@@ -9765,7 +9800,7 @@
 
     function showStreak(box) {
       const n = WordSnapHabit.streak(habit);
-      const names = currentLang === "zh" ? ["一", "二", "三", "四", "五", "六", "日"] : ["M", "T", "W", "T", "F", "S", "S"];
+      const names = t("ritual.weekdays").split(",");
       const strip = WordSnapHabit.weekStrip(habit).map((d, i) =>
         `<span class="${d.state}"><i>${d.state === "done" ? "✓" : d.state === "frozen" ? "❄" : ""}</i>${names[i]}</span>`).join("");
       const stop = WordSnapHabit.nextStop(n);
@@ -9791,8 +9826,11 @@
         <div class="ritual-times"><button type="button" class="wide" data-time="smart" style="--c:#ffd21f">${t("ritual.smart")}<span>${escapeHtml(smartLabel())}</span></button>${times.map(([time, k, c]) => `<button type="button" data-time="${time}" style="--c:${c}">${time}<span>${t(`ritual.${k}`)}</span></button>`).join("")}</div>
         <p id="remindResult" role="status"></p>
         <button class="link-button" type="button" id="ritualNo">${t("ritual.remindNo")}</button>`;
+      // One answer only: the time buttons and "No reminders" are switched off after the first tap.
+      const answered = () => card.querySelectorAll(".ritual-times button, #ritualNo").forEach(el => { el.disabled = true; });
       card.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", async () => {
         const time = b.dataset.time;
+        answered();
         feel("tap");
         state.settings.reminder = time;
         saveWords();
@@ -9803,7 +9841,7 @@
         document.getElementById("remindResult").textContent = !ok ? t("ritual.remindDenied") : time === "smart" ? t("ritual.remindSmartSet") : t("ritual.remindSet", { time });
         setTimeout(nextRitualStep, ok ? 1300 : 2600);
       }));
-      document.getElementById("ritualNo").addEventListener("click", () => { feel("tap"); nextRitualStep(); }, { once: true });
+      document.getElementById("ritualNo").addEventListener("click", () => { answered(); feel("tap"); nextRitualStep(); }, { once: true });
     }
 
     // ---- Live Update: a set left half-way shows its progress in the status bar (Android 16) ----
@@ -9830,6 +9868,33 @@
     }
     document.addEventListener("visibilitychange", () => syncLiveSet(document.hidden));
 
+    /**
+     * The Live Update switch is on, but Android 13+ does not let the app post notifications.
+     * ask: the user just turned the switch on, so ask (LocalNotifications). Otherwise, or if the
+     * answer is no, the switch goes off with a note, so it never claims to work when it cannot.
+     */
+    async function checkLivePermission({ ask = false } = {}) {
+      const plugin = livePlugin();
+      if (!plugin || !els.liveNote) return;
+      els.liveNote.hidden = true;
+      if (state.settings.live === false) return;
+      let status = null;
+      try { status = await plugin.status(); } catch (e) { return; }
+      if (!status || status.notify) return;
+      const notifications = notificationsPlugin();
+      if (ask && notifications) {
+        try {
+          const permission = await notifications.requestPermissions();
+          if (permission.display === "granted") return;
+        } catch (e) { /* treated as a no */ }
+      }
+      state.settings.live = false;
+      if (els.liveOn) els.liveOn.checked = false;
+      saveWords();
+      els.liveNote.textContent = t("live.denied");
+      els.liveNote.hidden = false;
+    }
+
     // Onboarding until it is finished or skipped: closing the app halfway brings it back.
     initShell(!hasSeenIntro() && state.onboarding === "trial");
 
@@ -9851,8 +9916,10 @@
       if (pairs.length) {
         const keys = new Set(state.words.map(word => `${word.en.toLowerCase()}::${word.zh}`));
         const fresh = pairs.filter(p => !keys.has(`${p[0].toLowerCase()}::${p[1]}`));
-        const added = addWords(pairs);
-        const list = items => items.slice(0, 5).map(p => p[0]).join("、") + (items.length > 5 ? "…" : "");
+        // A set under way (or its summary) stays as it is: the words join the next set.
+        const keepRound = state.words.length > 0 && (state.completedThisRun > 0 || els.completionView.classList.contains("show"));
+        const added = addWords(pairs, { keepRound });
+        const list = items => items.slice(0, 5).map(p => p[0]).join(t("library.listJoin")) + (items.length > 5 ? "…" : "");
         showInboxNote(added
           ? t("library.inboxAdded", { n: added, list: list(fresh) })
           : t("library.inboxKnown", { list: list(pairs) }));

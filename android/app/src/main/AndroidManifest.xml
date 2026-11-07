@@ -66,7 +66,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- A short vibration on answers (Settings → Effects and vibration). -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- Live Updates (Android 16): a set left half-way, the model download. -->
+    <!-- Live Updates (Android 16): a set left half-way. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
 </manifest>
