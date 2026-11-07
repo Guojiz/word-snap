@@ -43,7 +43,7 @@
   let on = true;
   let ctx = null;
   let bus = null;
-  let room = null; // the live context's reverb, until its impulse has been built
+  let room = null; // the live context's reverb { verb, wet }, until its impulse has been built
 
   const KEY = 64; // E4 is 宫
   const GONG = [0, 2, 4, 7, 9]; // 宫 商 角 徵 羽
@@ -106,7 +106,7 @@
     soft.type = "lowpass";
     soft.frequency.value = 3400;
     // Offline renders get the room at once; live play builds it when the page is idle (warm()).
-    if (lazy) room = verb; else verb.buffer = impulse(ac, 2.2, 3);
+    if (lazy) { room = { verb, wet }; wet.gain.value = 0; } else verb.buffer = impulse(ac, 2.2, 3);
     wet.gain.value = 0.24;
     comp.threshold.value = -16;
     comp.knee.value = 10;
@@ -279,7 +279,12 @@
    */
   function warm() {
     const idle = win.requestIdleCallback ? cb => win.requestIdleCallback(cb, { timeout: 400 }) : cb => setTimeout(cb, 30);
-    const jobs = [() => { if (room) { room.buffer = impulse(ctx, 2.2, 3); room = null; } }];
+    const jobs = [() => {
+      if (!room) return;
+      room.verb.buffer = impulse(ctx, 2.2, 3);
+      room.wet.gain.setTargetAtTime(0.24, ctx.currentTime, 0.4); // the room fades in, never blooms mid-note
+      room = null;
+    }];
     for (let n = 1; n <= 10; n++) {
       jobs.push(() => {
         matchNotes(n).forEach(x => string(ctx, hz(x.midi)));

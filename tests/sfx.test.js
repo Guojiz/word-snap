@@ -14,7 +14,7 @@ test("streak notes stay inside the window, gains sum to 1, loudest near the midd
     assert.ok(notes.length >= 2 && notes.length <= 4, `n=${n}: ${notes.length} notes`);
     const sum = notes.reduce((s, x) => s + x.gain, 0);
     assert.ok(Math.abs(sum - 1) < 0.002, `n=${n}: sum ${sum}`);
-    for (const x of notes) assert.ok(x.midi >= 55 && x.midi <= 96, `n=${n}: midi ${x.midi}`);
+    for (const x of notes) assert.ok(x.midi >= 56 && x.midi <= 96, `n=${n}: midi ${x.midi}`);
     const loudest = notes.reduce((a, b) => (b.gain > a.gain ? b : a));
     assert.ok(loudest.midi >= 64 && loudest.midi <= 76, `n=${n}: loudest ${loudest.midi} outside E4..E5`);
     assert.ok(notes.every(x => x.midi <= 90), `n=${n}: above F#6`);
