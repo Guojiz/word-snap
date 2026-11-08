@@ -216,7 +216,9 @@ It replaces "Confetti Cards" (paper, five rotating confetti colours, lemon butto
 - Meaning without hue rotation: ink ring = chosen; wine ring (`--red-ink`) = wrong; a matched pair wears its route colour with ink text.
 - Zero wait: Home's first frame is complete (no drop-ins, no fade-in); the sky's slow drift is decoration only.
 - System faces only (Roboto / SF on Latin, PingFang / HarmonyOS Sans / MiSans on Chinese), tabular figures. **举重若轻**: type is big and light, never bold — display numbers 200 at 60–68px, the greeting 400 at 30px, words, rows and buttons 500, small text 400; every legacy 600–900 weight in the sheet was lowered one step. The rounded Fredoka face is gone (2026-11-08: "字体灾难").
-- Home is one sentence of structure: date and greeting, the streak; one goal card holding the only button; then quiet rows (rank, library, add words, settings) on one translucent sheet. No tile grid, no drop-in, no colour flood on tap.
+- Phone only (Android). Home = greeting + streak; one frosted-glass goal card; the one ink button in the thumb zone; a glass dock (词库 · 加词 · 段位 · 设置); the rank as a glass sheet on demand. Nothing else is on Home.
+- **Glass (`.glass`)**: panel at 58% (night 46%), `backdrop-filter: blur(28px) saturate(1.7)`, a 1px inner highlight, a long soft shadow. Used for the goal card, the dock, sheets, the ritual cards and the folded review; never for the cards you match.
+- **One thing at a time**: the end of a set shows the ring, its line and one button; the ritual steps come as glass cards one by one; the mixed-up words stay folded.
 - Cards print no key numbers; keys 1–0 still pick them (2026-11-08).
 - The board shows no heading (screen readers still get it) and judgements are small ink tags; the end screen is the ring and its one line, no stat tiles.
 

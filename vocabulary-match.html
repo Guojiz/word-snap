@@ -3445,104 +3445,174 @@
     .completion > p:not(.set-colours) { color: var(--muted); font-size: 14px; line-height: 1.5; }
     .completion-actions { gap: 4px; }
 
-    /* Home (v9): date and greeting, one goal card with the only button, then quiet rows.
-       The card is a white sheet on the sky; the rows sit on one translucent sheet. */
-    .home { grid-template-rows: auto 1fr; gap: 0; }
-    .home-top { align-items: flex-end; padding: 6px 2px 18px; animation: none; }
-    .home-hello small { display: block; color: var(--muted); font-size: 13px; font-weight: 600; }
-    .home-hello b { display: block; margin-top: 4px; color: var(--text); font-size: 28px; font-weight: 700; line-height: 1.15; }
-    .home-chips { align-items: center; gap: 4px; }
-    .home-lang { min-height: 44px; padding: 0 10px; background: none; box-shadow: none; color: var(--muted); font-size: 14px; }
+    .settings-lang { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 16px; font-size: 15px; }
+    .settings-lang .lang-toggle { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--panel-2); color: var(--muted); font: inherit; cursor: pointer; }
+
+    /* ---- End of a set, one thing at a time: the ring and its line, one button; the steps
+       after it (claim, rank, flame, reminder) are glass cards one by one; the mixed-up
+       words stay folded until asked for. ---- */
+    .completion:not(.is-trial) h2, .completion:not(.is-trial) #completionText { display: none; }
+    .completion-actions { display: grid; justify-items: stretch; gap: 6px; margin-top: 8px; }
+    .completion-actions .duo-button { width: 100%; }
+    .review-fold { margin-top: 18px; border-radius: 24px; text-align: left; }
+    .review-fold:has(.review-list:empty) { display: none; }
+    .review-fold summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 0 20px;
+      list-style: none;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .review-fold summary::-webkit-details-marker { display: none; }
+    .review-fold summary::after { content: ""; width: 8px; height: 8px; border-right: 1.6px solid var(--muted); border-bottom: 1.6px solid var(--muted); rotate: 45deg; translate: 0 -3px; transition: rotate 200ms var(--ease); }
+    .review-fold[open] summary::after { rotate: 225deg; translate: 0 2px; }
+    .review-fold .review-heading { margin: 0; color: var(--text); font-weight: 500; }
+    .review-fold .review-list { margin: 0; padding: 0 12px 12px; }
+    .drill { border-radius: 24px; }
+    .ritual {
+      background: color-mix(in srgb, var(--bg) 25%, transparent);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+    }
+    .ritual-card {
+      padding: 30px 24px 22px;
+      border-radius: 32px;
+      background: color-mix(in srgb, var(--panel) 62%, transparent);
+      -webkit-backdrop-filter: blur(28px) saturate(1.7);
+      backdrop-filter: blur(28px) saturate(1.7);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55), 0 30px 60px -34px rgba(20, 24, 30, .5);
+    }
+    :root[data-color-mode="dark"] .ritual-card { background: color-mix(in srgb, var(--panel) 50%, transparent); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09), 0 30px 60px -34px rgba(0, 0, 0, .8); }
+    .ritual h2 { font-weight: 500; }
+    .ritual-big { font-weight: 200 !important; text-shadow: none !important; }
+    .ritual-chip { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); font-weight: 500; }
+    .ritual-rank { rotate: 0deg; }
+
+    /* ---- Glass (毛玻璃): translucent sheets that let the sky through, blurred ---- */
+    .glass {
+      background: color-mix(in srgb, var(--panel) 58%, transparent);
+      -webkit-backdrop-filter: blur(28px) saturate(1.7);
+      backdrop-filter: blur(28px) saturate(1.7);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), 0 24px 48px -30px rgba(20, 24, 30, .45);
+    }
+    :root[data-color-mode="dark"] .glass {
+      background: color-mix(in srgb, var(--panel) 46%, transparent);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09), 0 24px 48px -30px rgba(0, 0, 0, .8);
+    }
+
+    /* ---- Home (phone): greeting, one glass card, the button in the thumb zone, the dock ---- */
+    .home {
+      grid-template-rows: auto 1fr auto auto;
+      gap: 0;
+      min-height: calc(100dvh - var(--sat) - var(--sab) - 56px);
+    }
+    .home-top { align-items: flex-end; padding: 8px 4px 0; animation: none; }
+    .home-hello small { display: block; color: var(--muted); font-size: 13px; }
+    .home-hello b { display: block; margin-top: 6px; color: var(--text); line-height: 1.1; }
     .home-streak {
       min-height: 44px;
-      padding: 0 4px 0 8px;
+      padding: 0 14px;
       gap: 4px;
+      border-radius: 999px;
       background: none;
       box-shadow: none;
       color: var(--muted);
       font-size: 20px;
-      font-weight: 600;
     }
-    .home-streak.lit { color: var(--text); box-shadow: none; }
-    .home-body { align-self: start; display: grid; gap: 14px; }
+    .home-streak.lit { color: var(--text); }
+    .home-stage { display: grid; align-content: center; padding: 28px 0; }
     .goal {
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      width: 100%;
-      padding: 22px 20px 20px;
-      border: 0;
-      border-radius: 28px;
+      padding: 26px 24px 24px;
+      border-radius: 32px;
       color: var(--text);
-      background: color-mix(in srgb, var(--panel) 94%, transparent);
-      box-shadow: 0 1px 2px var(--card-shadow), 0 18px 40px -28px rgba(0, 0, 0, .35);
-      text-align: left;
-      font: inherit;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
-    .goal:active { scale: .985; }
-    .goal:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
-    .goal-kicker { color: var(--muted); font-size: 14px; font-weight: 600; }
-    .goal-num { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
-    .goal-num b { font: 600 60px/1 var(--num-font); letter-spacing: -.02em; }
-    .goal-num b svg { width: 52px; height: 52px; }
-    .goal-num span { color: var(--muted); font-size: 16px; font-weight: 600; }
+    .goal-kicker { color: var(--muted); font-size: 14px; }
+    .goal-num { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+    .goal-num b { font-family: var(--num-font); line-height: .95; }
+    .goal-num b svg { width: 56px; height: 56px; }
+    .goal-num span { color: var(--muted); font-size: 16px; }
     .goal-num:has(b:empty) { display: none; }
-    .goal-bar { display: block; height: 6px; margin-top: 18px; overflow: hidden; border-radius: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .goal-bar { display: block; height: 4px; margin-top: 22px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
     .goal-bar[hidden] { display: none; }
     .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background-color: var(--text); transition: width 900ms var(--spring) 200ms; }
-    .goal-meta { margin-top: 10px; color: var(--muted); font-size: 13.5px; font-weight: 500; line-height: 1.4; }
+    .goal-meta { margin-top: 12px; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
     .goal-meta + .goal-meta { margin-top: 2px; }
     .goal-meta:empty, .goal-meta[hidden] { display: none; }
-    .goal-action {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 54px;
-      margin-top: 20px;
+    .home-cta {
+      min-height: 58px;
+      margin: 0 0 14px;
+      border: 0;
       border-radius: 999px;
       color: var(--on-primary);
       background: var(--primary);
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .home-rows {
-      padding: 4px 0;
-      border-radius: 24px;
-      background: color-mix(in srgb, var(--panel) 80%, transparent);
-    }
-    .hrow {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      min-height: 64px;
-      padding: 10px 18px;
-      border: 0;
-      background: none;
-      color: var(--text);
-      text-align: left;
+      box-shadow: 0 18px 36px -20px rgba(20, 24, 30, .6);
       font: inherit;
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: .02em;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: scale 160ms var(--ease);
     }
-    .hrow[hidden] { display: none; }
-    .hrow[hidden] + .hrow::before { display: none; }
-    .hrow + .hrow::before { content: ""; position: absolute; top: 0; left: 54px; right: 18px; height: 1px; background: var(--line); }
-    .hrow:active { background: color-mix(in srgb, var(--text) 5%, transparent); }
-    .hrow:focus-visible { outline: 3px solid var(--text); outline-offset: -3px; border-radius: 16px; }
-    .hrow-ico { flex: none; color: var(--muted); }
-    .hrow-tx { flex: 1; min-width: 0; display: grid; gap: 2px; }
-    .hrow-t { display: flex; align-items: baseline; gap: 8px; font-size: 16px; font-weight: 600; }
-    .hrow-s { overflow: hidden; color: var(--muted); font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
-    .hrow-pts { margin-left: auto; color: var(--muted); font: 600 13px var(--num-font); }
-    .hrow-chev { flex: none; color: var(--dim); }
-    .hrow-rank { cursor: default; }
-    .hrow-rank .rank-badge { width: 22px; height: 28px; border-radius: 6px; font-size: 12px; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--rank-c, #fff) 55%, #35393b); }
-    .hrow .tile-dot { position: static; flex: none; width: 8px; height: 8px; color: var(--red-ink); }
-    @media (min-width: 1051px) { .home { align-content: center; } .home-body { gap: 16px; } }
+    .home-cta:active { scale: .97; }
+    .home-cta:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+    .dock {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      padding: 6px;
+      border-radius: 26px;
+    }
+    .dock button {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 3px;
+      min-height: 56px;
+      padding: 8px 4px 6px;
+      border: 0;
+      border-radius: 20px;
+      color: var(--muted);
+      background: none;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dock button[hidden] { display: none; }
+    .dock button:active { background: color-mix(in srgb, var(--text) 7%, transparent); }
+    .dock button:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
+    .dock .tile-dot { position: absolute; top: 8px; right: calc(50% - 18px); width: 7px; height: 7px; color: var(--red-ink); }
+    /* The rank sheet: slides up over a soft scrim; tap outside to close. */
+    .sheet-scrim { position: fixed; inset: 0; z-index: 70; background: color-mix(in srgb, #000 22%, transparent); animation: fade-in 200ms ease both; }
+    .sheet {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: calc(10px + var(--sab));
+      z-index: 71;
+      padding: 10px 22px 26px;
+      border-radius: 30px;
+      animation: sheet-up 340ms cubic-bezier(.2, .9, .25, 1) both;
+    }
+    .sheet[hidden], .sheet-scrim[hidden] { display: none; }
+    .sheet:focus { outline: none; }
+    .sheet-grip { width: 36px; height: 4px; margin: 0 auto 18px; border-radius: 2px; background: color-mix(in srgb, var(--text) 22%, transparent); }
+    @keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } }
+    @keyframes fade-in { from { opacity: 0; } }
+    .rank-sheet { display: grid; gap: 10px; }
+    .rank-sheet .rank-head { gap: 12px; }
+    .rank-sheet .rank-name { font-size: 20px; font-weight: 500; }
+    .rank-sheet .rank-pts { font-family: var(--num-font); font-weight: 400; color: var(--muted); }
+    .rank-sheet .rank-badge { rotate: 0deg; }
+    .rank-sheet .rank-bar { height: 4px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .rank-sheet .rank-line { margin: 0; font-size: 14px; line-height: 1.5; }
+    @media (prefers-reduced-motion: reduce) { .sheet, .sheet-scrim { animation: none; } }
 
     /* 举重若轻 (2026-11-08): type is big and light, never heavy. Display numbers and the
        greeting are thin at a large size; words, rows and buttons are medium; nothing is bold. */
@@ -3614,43 +3684,38 @@
     <main class="main">
 
       <section class="home" id="homeScreen" aria-label="Word Snap">
-        <!-- v9 Home: who and when, one goal card (the only action), then quiet rows. -->
+        <!-- Home (phone): who and when; one glass card that says how far today is; the one
+             button in the thumb zone; everything else waits in the glass dock. -->
         <header class="home-top">
           <div class="home-hello"><small id="homeDate"></small><b id="homeGreet"></b></div>
-          <div class="home-chips">
-            <button class="home-lang lang-toggle" type="button" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
-            <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
-          </div>
+          <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
         </header>
-        <div class="home-body" id="tiles">
-          <button class="goal" type="button" id="homeGo">
+        <div class="home-stage" id="tiles">
+          <div class="goal glass">
             <span class="goal-kicker" id="todayTitle"></span>
             <span class="goal-num"><b id="goNum"></b><span id="goUnit"></span></span>
             <span class="goal-bar" aria-hidden="true"><i id="goBar"></i></span>
             <span class="goal-meta" id="todaySub"></span>
             <span class="goal-meta" id="goColours"></span>
-            <span class="goal-action"><span id="goLabel"></span></span>
-          </button>
-          <div class="home-rows">
-            <!-- Card rank: against your own last three weeks only (js/habit.js rank()). -->
-            <div class="hrow hrow-rank" id="homeRank" hidden>
-              <span class="rank-badge" id="rankBadge" aria-hidden="true"></span>
-              <span class="hrow-tx"><span class="hrow-t"><span id="rankName"></span><span class="hrow-pts" id="rankPts"></span></span><span class="hrow-s" id="rankLine"></span></span>
-              <span class="rank-more" hidden><span class="rank-bar" id="rankBar"><i id="rankFill"></i></span><span id="rankChallenge"></span><span id="rankStop"></span></span>
-            </div>
-            <button class="hrow" type="button" id="homeBook">
-              <svg class="hrow-ico" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-              <span class="hrow-tx"><span class="hrow-t" data-zh="词库" data-en="Library">词库</span><span class="hrow-s"><span id="bookTitle"></span> · <span id="bookNum"></span> <span id="bookUnit"></span> · <span id="bookSub"></span></span></span><svg class="hrow-chev" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button class="hrow" type="button" id="homeAdd">
-              <svg class="hrow-ico" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-              <span class="hrow-tx"><span class="hrow-t" data-zh="加词" data-en="Add words">加词</span><span class="hrow-s" data-zh="粘贴词表或导入" data-en="Paste a list or import">粘贴词表或导入</span></span><svg class="hrow-chev" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button class="hrow" type="button" id="homeSet">
-              <svg class="hrow-ico" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-              <span class="hrow-tx"><span class="hrow-t" data-zh="设置" data-en="Settings">设置</span><span class="hrow-s" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span></span>
-              <span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span><svg class="hrow-chev" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+          </div>
+        </div>
+        <button class="home-cta" type="button" id="homeGo"><span id="goLabel"></span></button>
+        <nav class="dock glass" aria-label="更多" data-en-aria="More" data-zh-aria="更多">
+          <button type="button" id="homeBook"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span data-zh="词库" data-en="Library">词库</span><span class="sr-only"><span id="bookTitle"></span><span id="bookNum"></span><span id="bookUnit"></span><span id="bookSub"></span></span></button>
+          <button type="button" id="homeAdd"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-zh="加词" data-en="Add">加词</span></button>
+          <button type="button" id="homeRankBtn" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3.2l7.6 4.4v8.8L12 20.8l-7.6-4.4V7.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="homeRankLabel" data-zh="段位" data-en="Rank">段位</span></button>
+          <button type="button" id="homeSet"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-zh="设置" data-en="Settings">设置</span><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
+        </nav>
+        <!-- Card rank: against your own last three weeks only (js/habit.js rank()); a glass sheet on demand. -->
+        <div class="sheet-scrim" id="rankScrim" hidden></div>
+        <div class="sheet glass" id="rankSheet" role="dialog" aria-modal="true" aria-labelledby="rankName" hidden>
+          <div class="sheet-grip" aria-hidden="true"></div>
+          <div class="rank-sheet" id="homeRank" hidden>
+            <div class="rank-head"><span class="rank-badge" id="rankBadge" aria-hidden="true"></span><span class="rank-name" id="rankName"></span><span class="rank-pts" id="rankPts"></span></div>
+            <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
+            <p class="rank-line" id="rankLine"></p>
+            <p class="rank-line" id="rankChallenge"></p>
+            <p class="rank-line" id="rankStop"></p>
           </div>
         </div>
       </section>
@@ -3700,8 +3765,11 @@
               <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
             </div>
           </section>
-          <p class="review-heading" id="reviewHeading"></p>
-          <ul class="review-list" id="reviewList"></ul>
+          <!-- The mixed-up words wait folded: open them when you want them. -->
+          <details class="review-fold glass">
+            <summary><span class="review-heading" id="reviewHeading"></span></summary>
+            <ul class="review-list" id="reviewList"></ul>
+          </details>
 
         </div>
 
@@ -3784,6 +3852,11 @@
         <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <section class="modal-section" id="settingsSection">
+        <!-- The app's own language: on the phone this is the only place to switch it. -->
+        <div class="settings-lang">
+          <span data-en="App language" data-zh="界面语言">界面语言</span>
+          <button class="lang-toggle" type="button" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
+        </div>
         <!-- Four groups, each a single kind of decision. -->
         <div class="settings-group">
           <h3 data-en="Learning plan" data-zh="学习计划">学习计划</h3>
@@ -5589,6 +5662,7 @@
         ? t("colours.someSub", { m: miss, lost: WordSnapRoutes.N_COLOURS - k, best: state.levelBestStreak || 0 })
         : t("colours.fullSub", { n: state.completedThisRun || 0 });
       document.getElementById("setColours").hidden = !(state.completedThisRun > 0);
+      els.completionView.classList.toggle("is-trial", isTrial());
       paintSky();
     }
 
@@ -5652,7 +5726,9 @@
       } else if (screen === "home") {
         hues = WordSnapRoutes.todayHues(todayColours());
         p = homeProgress;
-        strength = hues.length ? 1 : 0;
+        strength = 1;
+        // Nothing earned yet today: a faint cool dawn, so the glass has something to hold.
+        if (!hues.length) { hues = [228, 262, 200]; p = 0; strength = 0.45; }
       }
       // The blobs are sized for the whole screen, so the colours meet instead of floating as spots.
       const scale = Math.max(1.6, Math.max(window.innerWidth, window.innerHeight) / 340 * 1.15);
@@ -9914,6 +9990,14 @@
     els.homeBook.addEventListener("click", () => tapTile(els.homeBook, () => openLibrary()));
     els.homeAdd.addEventListener("click", () => tapTile(els.homeAdd, () => openLibrary("add")));
     els.homeSet.addEventListener("click", () => tapTile(els.homeSet, () => openSettings()));
+    // The rank waits behind the dock: a glass sheet slides up when asked for.
+    (() => {
+      const btn = document.getElementById("homeRankBtn"), sheet = document.getElementById("rankSheet"), scrim = document.getElementById("rankScrim");
+      const close = () => { sheet.hidden = true; scrim.hidden = true; btn.focus(); };
+      btn.addEventListener("click", () => { feel("tap"); sheet.hidden = false; scrim.hidden = false; sheet.setAttribute("tabindex", "-1"); sheet.focus(); });
+      scrim.addEventListener("click", close);
+      sheet.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+    })();
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
@@ -10021,6 +10105,7 @@
       const box = document.getElementById("homeRank");
       if (!box) return;
       box.hidden = isTrial() || !state.words.length || needsSetup;
+      document.getElementById("homeRankBtn").hidden = box.hidden;
       if (box.hidden) return;
       const r = WordSnapHabit.rank(habit);
       const top = r.tier === r.ranks - 1;
@@ -10044,6 +10129,7 @@
       const stop = WordSnapHabit.nextStop(streakNow);
       document.getElementById("rankStop").textContent = !streakNow ? t("rank.stopFirst") : stop ? t("rank.stop", stop) : "";
       box.setAttribute("aria-label", t("rank.aria", { name, p: r.pts, target: r.target }));
+      document.getElementById("homeRankLabel").textContent = name;
       box.setAttribute("role", "group");
     }
 
