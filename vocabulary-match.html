@@ -3338,6 +3338,7 @@
     .app { position: relative; z-index: 1; }
     .rail { background: transparent; }
 
+    /* Never nest backdrop-filters: Android's WebView then drops the inner content. */
     /* ---- Glass: clear, barely tinted, so the sky shows through and nothing on it competes
        with the button ---- */
     .glass {
@@ -3360,8 +3361,6 @@
       border-radius: 999px;
       color: #1d1f20;
       background: rgba(255, 255, 255, .92);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
       box-shadow: inset 0 1px 0 #fff, 0 12px 28px -16px rgba(20, 24, 30, .45);
       font: var(--t-body);
       font-weight: 500;
@@ -3372,7 +3371,7 @@
     :root[data-color-mode="dark"] .lg-button, :root[data-color-mode="dark"] .duo-button:not(.danger) { color: #1d1f20; background: rgba(255, 255, 255, .9); box-shadow: 0 12px 28px -16px rgba(0, 0, 0, .8); }
     .lg-button:active, .duo-button:active { scale: .97; }
     .lg-button:focus-visible, .duo-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-    .duo-button.secondary { color: var(--text); background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .duo-button.secondary { color: var(--text); background: none; box-shadow: none; }
     .duo-button.danger { min-height: 60px; border-radius: 999px; color: #fff; background: var(--red-deep); box-shadow: none; font-weight: 500; }
     .duo-button[disabled] { color: var(--dim); background: color-mix(in srgb, var(--panel) 50%, transparent); box-shadow: none; }
     .lg-link { min-height: 48px; border: 0; background: none; color: var(--muted); font: var(--t-label); cursor: pointer; }
@@ -3505,9 +3504,9 @@
     .ritual-card {
       padding: 30px 24px 22px;
       border-radius: 32px;
-      background: color-mix(in srgb, var(--panel) 40%, transparent);
-      -webkit-backdrop-filter: blur(30px) saturate(1.15);
-      backdrop-filter: blur(30px) saturate(1.15);
+      /* The screen behind is already blurred; a second backdrop-filter inside it makes
+         Android's WebView drop the card's content, so the card is a plain translucent sheet. */
+      background: color-mix(in srgb, var(--panel) 62%, transparent);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35), 0 30px 60px -34px rgba(20, 24, 30, .45);
     }
     .ritual h2 { font: var(--t-title); }
