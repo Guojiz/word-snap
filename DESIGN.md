@@ -215,7 +215,9 @@ It replaces "Confetti Cards" (paper, five rotating confetti colours, lemon butto
 - Colour is earned: route colours appear only on what practice made — matched cards, the lane, the combo number, the end ring, the sky. Everything else is grey and ink.
 - Meaning without hue rotation: ink ring = chosen; wine ring (`--red-ink`) = wrong; a matched pair wears its route colour with ink text.
 - Zero wait: Home's first frame is complete (no drop-ins, no fade-in); the sky's slow drift is decoration only.
-- Fredoka for Latin text and numerals; system Chinese face for Chinese.
+- System faces only (Roboto / SF on Latin, PingFang / HarmonyOS Sans / MiSans on Chinese), weights 500–700, tabular figures. The rounded Fredoka face is gone (2026-11-08: "字体灾难").
+- Home is one sentence of structure: date and greeting, the streak; one goal card holding the only button; then quiet rows (rank, library, add words, settings) on one translucent sheet. No tile grid, no drop-in, no colour flood on tap.
+- The board shows no heading (screen readers still get it) and judgements are small ink tags; the end screen is the ring and its one line, no stat tiles.
 
 ## Colors
 

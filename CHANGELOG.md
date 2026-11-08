@@ -6,6 +6,8 @@
 - **The v9 look** (decided in the redesign preview drafts v5–v9, 2026-11-01): one neutral ground (iPhone 15 greys, white cards, ink text) and ink pill buttons replace Confetti Cards (warm paper, five rotating confetti colours, lemon 3D buttons, a set colour tinting the paper). DESIGN.md is rewritten for it.
 - **Colour routes** (`js/routes.js`): each set draws a seven-colour route (晚霞, 极光, 糖果, 果园, 海湾, 彩虹). A clean set keeps all seven colours; each miss takes one away, never below two. Matched cards, the lane (now one continuous gradient), the combo number and the new end-of-set ring show only the colours earned so far; the end screen says «七色全齐 · 晚霞» or «5 / 7 种颜色 · 极光 — 错了 2 次，少了 2 种颜色».
 - **全屏彩** (the maintainer's call, 2026-11-08): the colours earned fill the whole screen behind Home (today's sets, stronger as today's goal fills) and the board (this set's colours, growing as it goes); Library and Settings stay plain. Home's blocks no longer drop in: the first frame is complete.
+- **Home rebuilt to the v9 layout** (2026-11-08, "臃肿、主次不分明"): date and greeting with the streak; one goal card with the only button; rank, library, add words and settings as quiet rows. The tile grid, the wordmark and the colour flood on tap are gone.
+- **System type** (2026-11-08, "字体灾难"): Fredoka is replaced by the system faces everywhere, with lighter weights; the board's heading is visually hidden, judgement stickers become small ink tags, and the end screen drops the stat tiles (the ring says it).
 - **断弦** (the maintainer's call, 2026-11-08): a wrong match now sounds like a guzheng string snapping — a crack, the string whipping down an octave, a dull slap — instead of a soft sliding sigh.
 
 ## 1.1.0 — 2026-11-07
