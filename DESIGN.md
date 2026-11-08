@@ -20,10 +20,8 @@ colors:
   text-night: "#e2e2e3"
   muted-night: "#c2c7ca"
   dim-night: "#a2a7aa"
-  ink-button-day: "#2f3132"
-  on-ink-button-day: "#f1f0f1"
-  ink-button-night: "#e2e2e3"
-  on-ink-button-night: "#2f3132"
+  button: "rgba(255, 255, 255, .92)"
+  on-button: "#1d1f20"
   wrong-ink-day: "#9b4052"
   wrong-ink-night: "#ffb2bc"
   ok-ink-day: "#285d2a"
@@ -40,65 +38,26 @@ colors:
   route-sky-night: "oklch(0.42 0.10 h)"
 typography:
   display:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "64px"
-    fontWeight: 700
-    lineHeight: 1
-    letterSpacing: "0.02em"
-  judgement:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "26px"
-    fontWeight: 700
-    letterSpacing: "0.02em"
-  numeral-result:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "38px"
-    fontWeight: 700
-    lineHeight: 1.05
-    fontFeature: "\"tnum\""
-  numeral-today:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "34px"
-    fontWeight: 700
-    lineHeight: 0.9
-  numeral-combo:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "30px"
-    fontWeight: 700
-    lineHeight: 1
-  numeral-count:
-    fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
-    fontSize: "22px"
-    fontWeight: 700
-    fontFeature: "\"tnum\""
-  headline:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
-    fontSize: "36px"
-    fontWeight: 700
-    lineHeight: 1.18
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", Roboto, \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", system-ui, sans-serif"
+    fontSize: "96px"
+    fontWeight: 200
+    lineHeight: 0.95
+    letterSpacing: "-0.04em"
   title:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", Roboto, \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", system-ui, sans-serif"
     fontSize: "22px"
-    fontWeight: 700
-    lineHeight: 1.2
-  card-word:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
-    fontSize: "21px"
-    fontWeight: 800
-  button:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
-    fontSize: "17px"
-    fontWeight: 800
-    lineHeight: 1.2
+    fontWeight: 400
+    lineHeight: 1.3
   body:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
-    fontSize: "15px"
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", Roboto, \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", system-ui, sans-serif"
+    fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.45
   label:
-    fontFamily: "\"Fredoka\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Microsoft YaHei\", system-ui, sans-serif"
-    fontSize: "14px"
-    fontWeight: 900
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", Roboto, \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 500
+    lineHeight: 1.3
 rounded:
   tag: "6px"
   small: "10px"
@@ -211,14 +170,14 @@ It replaces "Confetti Cards" (paper, five rotating confetti colours, lemon butto
 
 **Key Characteristics:**
 - One neutral ground, both modes (`data-color-mode`): grey page, white (night: graphite) cards, ink text.
-- Ink controls: the primary action is an ink pill (`--primary` = inverse surface); secondary is a hairline pill. No lemon, no 3D edges.
+- **The squint test**: on every screen exactly one thing is brightest, and it is the next thing to press. The button is near-white (`rgba(255,255,255,.92)`, text `#1d1f20`, 60px, no gradient, no ink or colour fill); everything else is clear glass or plain text.
 - Colour is earned: route colours appear only on what practice made — matched cards, the lane, the combo number, the end ring, the sky. Everything else is grey and ink.
 - Meaning without hue rotation: ink ring = chosen; wine ring (`--red-ink`) = wrong; a matched pair wears its route colour with ink text.
 - Zero wait: Home's first frame is complete (no drop-ins, no fade-in); the sky's slow drift is decoration only.
-- System faces only (Roboto / SF on Latin, PingFang / HarmonyOS Sans / MiSans on Chinese), tabular figures. **举重若轻**: type is big and light, never bold — display numbers 200 at 60–68px, the greeting 400 at 30px, words, rows and buttons 500, small text 400; every legacy 600–900 weight in the sheet was lowered one step. The rounded Fredoka face is gone (2026-11-08: "字体灾难").
-- Phone only (Android). Home = greeting + streak; one frosted-glass goal card; the one ink button in the thumb zone; a glass dock (词库 · 加词 · 段位 · 设置); the rank as a glass sheet on demand. Nothing else is on Home.
-- **Glass (`.glass`)**: panel at 58% (night 46%), `backdrop-filter: blur(28px) saturate(1.7)`, a 1px inner highlight, a long soft shadow. Used for the goal card, the dock, sheets, the ritual cards and the folded review; never for the cards you match.
-- **One thing at a time**: the end of a set shows the ring, its line and one button; the ritual steps come as glass cards one by one; the mixed-up words stay folded.
+- System faces only (Roboto / SF on Latin, PingFang / HarmonyOS Sans / MiSans on Chinese), tabular figures. **举重若轻** — four steps and no others: display 96/200, title 22/400, body 17/400, label 15/500 (CSS `--t-display`, `--t-title`, `--t-body`, `--t-label`). Nothing is bold; no 13–14px grey text. Fredoka is gone (2026-11-08: "字体灾难").
+- Phone only (Android). Home = the settings icon and the streak, then **one glass card whose pages you swipe** (今天 · 词库 · 段位), dots below; each page has one button, at the bottom in the thumb zone. No greeting, no date, no dock.
+- **Glass (`.glass`)**: panel at 40%, `backdrop-filter: blur(30px) saturate(1.15)` (no colour cast), a 1px inner highlight at 35%, a long soft shadow. Used for the Home card, the ritual cards and the folded review; never for the cards you match.
+- **One thing at a time**: the end of a set is the ring (pairs in the middle), the points (34/300, claimed automatically — no claim card), one line («错 1 次 · 6/7 种颜色» or «七色全齐 · 晚霞») and one button. After it, only steps that matter come as glass cards: a rank that changed, lighting the day, the one-time reminder. The trial ends in one choice.
 - Cards print no key numbers; keys 1–0 still pick them (2026-11-08).
 - The board shows no heading (screen readers still get it) and judgements are small ink tags; the end screen is the ring and its one line, no stat tiles.
 
@@ -230,8 +189,8 @@ The CSS custom properties keep their legacy names; at runtime `applyTheme()` wri
 - **bg / panel / panel-2 / line / line-strong / track** (frontmatter `*-day`, `*-night`): page, cards and dialogs, quiet fills, hairlines (cards use a 1px inset hairline instead of a border), the empty lane (`text` at 12%).
 - **text / muted / dim**: primary text, secondary text, card number keys. Dim is at least 4.5:1 on the page in both modes.
 
-### Ink button
-- **ink-button** (`--primary`, `--on-primary`): every primary action — Home's go button, Continue, Save. A full pill, 54–56px tall, no shadow.
+### Button
+- **button** (`.lg-button`, `.duo-button`): near-white `rgba(255,255,255,.92)` with `#1d1f20` text in both modes, 60px tall, full pill, a white top highlight and a soft shadow. It is the brightest thing on any screen. Secondary actions are plain text (`.lg-link`). Destructive buttons fill `--red-deep` with white text.
 
 ### Marks
 - **wrong-ink** (`--red-ink`): a wrong pick's 2px ring and text, weak-word counts, destructive text. Destructive buttons fill `--red-deep` with white text.
@@ -244,33 +203,24 @@ The CSS custom properties keep their legacy names; at runtime `applyTheme()` wri
 ### The sky (全屏彩)
 - A fixed layer behind the app (`#sky`), soft radial blobs of the colours earned, sized to the screen and drifting slowly (18 s; still under reduced motion).
 - Home: today's colours (`word_snap_today_colours_v1`, only today's sets), stronger as today's goal fills. Board: the set's earned colours, from 30% to 80% as the set goes on. End of set: full strength. Library and Settings: none.
-- Blocks on Home sit on it as 84–94% white sheets so text stays clear; no backdrop blur (it would repaint every frame behind a moving sky).
+- Glass sits on it (see Glass); the board opens at 60% and grows to 100% as the set goes on; the end screen holds it at 50%.
 
 ### Named Rules
 **The Earned Colour Rule.** Colour is only ever what practice earned today or in this set. A screen with nothing earned is grey and ink, and that is correct.
 
 ## Typography
 
-**Display Font:** Fredoka 500–700, bundled (SIL OFL, `vendor/fonts/fredoka-latin.woff2`, one variable file, Latin subset), with "Nunito", "Varela Round", system-ui, sans-serif
-**Body Font:** Fredoka for Latin, then the system Chinese stack: PingFang SC, HarmonyOS Sans SC, MiSans, Noto Sans SC, Microsoft YaHei, system-ui, sans-serif
+**Faces:** the system faces only — Roboto / SF on Latin, PingFang SC / HarmonyOS Sans / MiSans / Noto Sans SC on Chinese. No bundled display face.
 
-**Character:** one round, friendly face for every English word, number and judgement, beside the plain system Chinese face for every Chinese string. Fredoka's `unicode-range` covers Latin only, so Chinese characters fall through to the system face automatically; the two sit on one line without any per-language markup. `font-synthesis-weight: none` keeps browsers from faking weights beyond the file's 700, so CSS weights of 800 and above render as Fredoka 700 for Latin text.
+**Scale (举重若轻):** four steps, no others.
+- **Display** 96px / 200 / -0.04em — the big number on Home (words to go), the library size.
+- **Title** 22px / 400 — a headline that replaces the number (goal done, setup), the book name, the rank name, ritual titles.
+- **Body** 17px / 400 — every sentence, the button text (500), card words (19px / 500 on the board).
+- **Label** 15px / 500 — page labels (词库, 段位), the counter, judgement tags, the ring's unit.
 
-### Hierarchy
-- **Display** (Fredoka 700, 64px, line-height 1, +0.02em, rotated -4deg; `clamp(44px, 13vw, 64px)` on narrow screens): the result word, CLEAR / FULL COMBO / TIME UP.
-- **Judgement** (Fredoka 700, 26px, +0.02em, rotated -4deg): PERFECT / GREAT / GOOD / MISS over a matched pair, with the reaction time as a 15px suffix ("0.8s").
-- **Numerals** (Fredoka 700): result counts 38px tabular; today's remaining number 34px at line-height 0.9; combo count 30px with a 13px +0.08em word; trial count and streak 22px (16px count on phones). Card number keys use Fredoka 700 at 16px (14px on phones). Result line figures 20px.
-- **Headline** (700, 36px, 1.18; 30px on phones): the board's instruction ("把意思和单词配成对"); 32px for the completion title.
-- **Title** (700, 22px, 1.2): dialog and panel headings, drill titles.
-- **Card word** (800, 21px; 18px on phones; 16px / 15px two-line clamp for long items).
-- **Button** (800, 17px, 1.2).
-- **Body** (400, 15px, 1.45, muted): dialog and panel copy. Today line text is 15px 800 muted.
-- **Label** (900, 14px): form labels and small buttons; 12–13px 800 for stat captions, nav and tags.
+The end ring's number is 64/200 and the points 34/300: the only two sizes outside the scale, both inside the ring's frame.
 
-### Named Rules
-**The Two Faces Rule.** Fredoka sets Latin text, numerals and the judgement and result words; Chinese is always the system face. Never force Chinese into a Latin face or add a second Latin display face.
-
-**The Roll Rule.** A number that changes in place (today's remaining, the combo, the trial count, the streak) rolls only its changed digits upward; summary figures count up instead. Numbers never jump.
+**The No-Bold Rule.** Weight never carries hierarchy; size and colour (text vs muted) do.
 
 ## Layout
 
@@ -301,42 +251,27 @@ Generously rounded rectangles with 2px outlines throughout. Match cards, inputs,
 ## Components
 
 ### Match Cards
-The instrument. Every state is a colour of the world, never a new shape.
-- **Shape:** 18px corners, 2px outline, 60px tall (58px on phones), card lift.
-- **Layout:** a 40px key column (28px on phones) with the number key in muted Fredoka, then the word centred.
-- **Default:** panel fill, line outline. **Hover:** line-strong outline, panel-soft fill. **Pressed:** 3px down, shorter shadow.
-- **Selected:** sky outline, selected-bg fill, selected-ink text; `aria-pressed` mirrors it.
-- **Correct:** both cards take the pair's confetti colour (`--confetti`, the next in peach → sky → lemon → mint → lilac) with ink text and its edge colour as the outline (`--confetti-edge`), a 420ms spring pulse (1.045 scale, brighter) and a ripple ring in the edge colour; then the pair fades out and the new card enters (900ms rise). Without a confetti colour the card falls back to the mint pastel and mint outline.
-- **Wrong:** coral outline, wrong-bg fill, a 220ms ±7px shake, the MISS chip and a double-buzz haptic.
-- **Hint:** after a miss the right partner flashes a 4px mint ring (900ms).
+- 80px tall, 20px corners, 10px apart, two columns filling the width; the grid sits 24px above the bottom (thumb zone). White panel with a 1px inner hairline.
+- Text: the word centred, 19px / 500. No key numbers (keys 1–0 still work).
+- States: chosen = 2px ink ring; matched = the route colour (`card` role) with ink text; wrong = 2px wine ring and wine text; the right answer after a miss = 2px ink ring (no green, no lift). New cards fade in over 240ms.
 
 ### Lane (progress)
-- **Track:** 16px pill in track colour with five beat ticks every 20%: 3px gaps in the page background colour, so the lane reads as cut paper.
-- **Fill:** springs to its width (650ms) and is painted one segment per correct match in that pair's confetti colour, in the same sequence as the cards, so a finished set is a strip of confetti. Before the first match it is peach.
-- **Combo count:** from three in a row it appears above the lane's right end: Fredoka 30px number plus a 13px word ("连击"), always in text colour; milestones (5 / 10 / 20 / 50) pop and throw a few stars in the deep confetti tones (mint and sky from the start, coral added at 5, lilac at 10).
-- **Beside it:** the trial count ("7/25", Fredoka 22px muted, coral ink when time is low) and the streak chip.
+- A 4px plain ink bar on a 12% track; the counter beside it is a label. No gradients: the route colours live on the cards, the sky and the end ring.
 
-### Judgement Chip
-A pastel sticker (pill radius, chip lift, rotated -4deg) that pops above the matched pair, centred between the two cards: Fredoka 26px word in ink plus the reaction time in `#4a4960`. Lemon for PERFECT, mint for GREAT, sky for GOOD, peach for MISS; the text is ink in both modes (at least 7:1 on each). It rises, overshoots to 1.12, holds and floats off in 520ms. It is information, so it still appears (static, 700ms) when effects are off or motion is reduced.
+### Judgement Tag
+- A small near-white pill (label size) above the matched pair: 完美 / 很好 / 不错 / 错了 in Chinese, PERFECT / GREAT / GOOD / MISS in English, with the reaction time at 60%.
 
-### Today Line and Streak Chip
-- **Today line:** today's remaining words as a big rolling Fredoka number followed by a 15px muted sentence ("个词今天要练 · 约 1 分钟"); when the goal is met it turns mint ink with a check icon and pops once, with confetti and a banner pill.
-- **Streak chip:** flame icon plus Fredoka number, greyscale and 75% opacity until today's goal is done, then ember.
+### Combo
+- From three in a row, above the lane's right end: a 22/300 number and the 15px word, ink and muted. Milestones still pop.
+
+### Home Card
+- One glass card, pages swiped left/right with scroll snap (今天 · 词库 · 段位; 段位 only once the rank exists); dots below. Each page: a label, its one fact at display or title size, at most one body line, one button at the bottom. Settings is the icon top-left; the streak is top-right (body size, muted until today is lit).
 
 ### Result Screen
-- **Result word:** CLEAR (button ink: ink by day, lemon at night), FULL COMBO (a left-to-right gradient of the wordmark colours, `#ff7a59 → #f5b800 → #2ec27e → #3b82f6 → #9b7bff`, decorative and `aria-hidden`) or TIME UP (coral ink), Fredoka 64px tilted -4deg, popping in.
-- **Judgement counts:** four columns PERFECT / GREAT / GOOD / MISS, each a 15px Fredoka label on its judgement sticker colour over a 38px tabular count in text colour; the tiles rise in 90ms apart and count up.
-- **Result line:** best combo, accuracy and time in one muted sentence with Fredoka 20px figures.
-- **Then:** a full-width primary Continue, an optional secondary "practise the mixed-up pairs", and spelling / sentence drill cards (panel-soft, 2px line, 18px).
+- The ring (200px, 10px stroke, the route's earned colours; a clean set's ring has a light running round it), the pairs inside (64/200 over the label «对»), the points under it (34/300, counted up), one body line, one button. The mixed-up words wait in a folded glass row. No stat tiles, no title, no paragraph.
 
 ### Buttons
-- **Shape:** 16px corners, 54px tall, min 150px wide (full width on phones).
-- **Primary:** lemon fill with ink text in both modes; 17px 800, button lift. Hover brightens 3%; pressed moves 2px down and the edge flattens.
-- **Secondary:** transparent with a 2px line outline and sky-ink text.
-- **Danger:** coral-deep fill, white text, only inside the danger zone (a coral-outlined box).
-- **Disabled:** track fill, dim text, no movement.
-- **Small buttons:** 42px tall, 18px corners, line outline, sky-ink text on the ground colour.
-- **Icon buttons:** 44px circles, dim icon, panel-2 on hover.
+- See Colors → Button. One button per screen; anything else is plain text.
 
 ### Chips and Tabs
 - **Filter chips:** 36px pills, line outline, muted text with a bold count; pressed state is sky outline on selected-bg.
@@ -345,6 +280,24 @@ A pastel sticker (pill radius, chip lift, rotated -4deg) that pops above the mat
 ### Inputs / Fields
 - **Style:** 2px line outline, 18px corners, ground-colour fill, 12px × 13px padding; labels sit above in 14px heavy muted text.
 - **Focus:** sky border and caret, plus the 3px sky focus ring for keyboard focus.
+
+### Dialogs
+Library, Settings and the intro open as centred cards (max 720px wide, 18px corners, panel fill, dialog shadow) over the scrim, with 20px sections divided by 2px lines. The intro's demo shows the icon's two cards: a peach meaning and a sky word in ink, leaning towards each other.
+
+### Undo Toast
+After a delete, a 14px-cornered toast centred above the bottom edge: lemon fill with ink text, and an Undo button inverted (on-ink fill, ink text, 10px corners, 40px tall).
+
+### Navigation
+- **Screens, not one page.** Home, Practice and Onboarding are screens; Library and Settings are overlays on the current screen. `js/shell.js` keeps them in one stack backed by browser history, so the in-app back controls, the browser back button and the Android back gesture all walk the same steps (dialog, page, set, onboarding step). At the root, Android back puts the app in the background instead of closing it.
+- **Phones (≤1050px):** no tab bar. Home is the menu; Library and Settings open from its blocks as full pages (30px title, a close button top right; Library's sections become a segmented control), and opened from a set they stay bottom sheets. Close, Back and the Android back gesture return to where they were opened from.
+- **Desktop:** a 96px rail with the 48px logo tile and 60px-wide stacked icon-over-label buttons (Home, Library, Settings, appearance, EN / 中); active and hover get a line outline and panel-soft fill.
+- **Safe areas:** the page is drawn edge to edge (`viewport-fit=cover`, Android `EdgeToEdge`); `--sat` / `--sab` take the larger of `env(safe-area-inset-*)` and Capacitor's injected `--safe-area-inset-*`, and every bar and page pads with them.
+
+### Onboarding
+Three steps, each one question with one primary button pinned at the bottom: the word book (2-column cards with word counts, skeletons while the list loads, plus "just try the sample words"), new words a day (5 / 10 / 20 / 30; a grid of 30 little cards fills with confetti colours to show the choice) and a reminder time (Android only; the web says it needs the app). Segmented progress at the top, Back from step 2, Skip always. Finishing imports the book's first words and lands on Home; Skip also lands on Home, offering the sample set. Nobody is dropped onto the board: the first set starts from Home's big button. Setup shows until it is finished or skipped.
+
+### Home
+See Components → Home Card. One card, swiped; nothing else on the screen but the settings icon and the streak.
 
 ### Dialogs
 Library, Settings and the intro open as centred cards (max 720px wide, 18px corners, panel fill, dialog shadow) over the scrim, with 20px sections divided by 2px lines. The intro's demo shows the icon's two cards: a peach meaning and a sky word in ink, leaning towards each other.
@@ -382,22 +335,17 @@ One easing for state (`cubic-bezier(.2, .8, .2, 1)`) and one spring for rewards 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep the page near-white paper and let colour arrive as confetti: matched pairs and the lane take the next pastel in peach → sky → lemon → mint → lilac.
-- **Do** give every state the same hue everywhere: sky chosen, mint correct, lemon PERFECT, coral wrong/MISS, ember lit streak.
-- **Do** set text on any pastel in ink `#2b2a3d`, in day and night alike.
-- **Do** use the `-ink` variant of a hue for any other text in it, and check it at 4.5:1 against the surface it sits on in both modes.
-- **Do** set every numeral and every judgement or result word in Fredoka, and roll changed digits rather than replacing the number.
-- **Do** make the primary action a lemon fill with ink text, with 16px corners and button lift.
-- **Do** keep cards and controls at 18px corners with 2px outlines and the soft lift.
-- **Do** keep touch targets at 44px or more and show the 3px sky focus ring (2px offset) for keyboard focus.
-- **Do** keep the judgement word visible when motion is reduced or effects are off; drop only its motion.
+- **Do** pass the squint test on every screen: one brightest thing, and it is the next thing to press.
+- **Do** keep colour to what practice earned: matched cards, the sky, the end ring.
+- **Do** use the four type steps only (display 96/200, title 22/400, body 17/400, label 15/500).
+- **Do** put the one button at the bottom of its glass card, in the thumb zone.
+- **Do** guide one step at a time: fold or defer anything that is not this step.
+- **Do** keep touch targets at 44px or more and a visible focus ring.
 
 ### Don't:
-- **Don't** use lemon or gold for anything but PERFECT among judgements and rewards: not the combo, the streak, a result word, a warning or milestone stars.
-- **Don't** spread the pastels over chrome (navigation, panels, headings); confetti belongs to what the learner has matched.
-- **Don't** put white or light text on a pastel, even at night.
-- **Don't** use sky as a primary-action fill or for success; its only fill is a pressed state (the listen button while it speaks).
-- **Don't** bring back the indigo stage or the borrowed Duolingo look: green as brand colour, 3D block buttons with hard bottom edges, a mascot cheering.
-- **Don't** set Chinese text in Fredoka or any other Latin face; it has no Chinese glyphs and the system face is the design.
-- **Don't** add `text-transform: uppercase` to new components; capitals belong to the judgement and result words, which are written in capitals.
-- **Don't** hard-code new hex values in components; add a token with both a day and a night value first.
+- **Don't** fill a button with ink or colour; the button is near-white glass.
+- **Don't** put rainbow gradients on the lane, text or chrome.
+- **Don't** say the same thing twice on one screen (a headline, a tick and a "done" unit are one message).
+- **Don't** offer a second choice where one will do, or let an unfinished step be skipped.
+- **Don't** add decoration that says nothing (greetings, dates, stat tiles).
+- **Don't** use bold, the Fredoka face, key numbers on cards, or 13–14px grey text.

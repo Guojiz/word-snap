@@ -3309,11 +3309,21 @@
       .inbox-note { animation: none; }
     }
 
-    /* ==== The v9 look (DESIGN.md): one neutral ground, ink controls, colour is earned ====
-       Surfaces are iPhone 15 greys; the only colour is what practice earns: the set's colour
-       route (js/routes.js) on matched cards, the lane and the end ring, and the sky (全屏彩)
-       behind everything on Home and the board. Meaning colours stay: ink = chosen,
-       wine = wrong. Nothing waits: Home's first frame is complete, no drop-ins. */
+    /* ==== The v9 look (DESIGN.md) — phone only ====
+       One neutral ground; the colour practice earns fills the screen behind everything (the
+       sky); surfaces are glass. The squint test: on every screen exactly one thing is
+       brightest, and it is the next thing to press. Type has four steps only:
+       display 96/200 · title 22/400 · body 17/400 · label 15/500. Nothing is bold. */
+    :root {
+      --t-display: 200 96px/0.95 var(--num-font);
+      --t-title: 400 22px/1.3 var(--num-font);
+      --t-body: 400 17px/1.45 var(--num-font);
+      --t-label: 500 15px/1.3 var(--num-font);
+    }
+    body { font-variant-numeric: tabular-nums; }
+    h1, h2, h3 { font-weight: 400; letter-spacing: -.01em; }
+
+    /* ---- The sky (全屏彩) ---- */
     .sky {
       position: fixed;
       inset: -20%;
@@ -3327,267 +3337,183 @@
     @keyframes sky-drift { from { transform: translate3d(-4%, -3%, 0); } to { transform: translate3d(4%, 3%, 0); } }
     .app { position: relative; z-index: 1; }
     .rail { background: transparent; }
-    body.has-sky .rail { background: color-mix(in srgb, var(--bg) 70%, transparent); }
 
-    .duo-button {
-      min-height: 56px;
-      border-radius: 999px;
-      box-shadow: none;
-      font-weight: 700;
-    }
-    .duo-button:hover { filter: none; opacity: .92; }
-    .duo-button:active { transform: scale(.98); box-shadow: none; }
-    .duo-button.secondary {
-      min-height: 50px;
-      color: var(--text);
-      background: color-mix(in srgb, var(--panel) 72%, transparent);
-      border: 0;
-      box-shadow: inset 0 0 0 1.5px var(--line-strong);
-    }
-    .duo-button.danger { color: #fff; background: var(--red-deep); box-shadow: none; }
-    .duo-button[disabled] { color: var(--dim); background: var(--track); box-shadow: none; }
-
-    /* The board: white cards with a hairline; chosen = an ink ring; matched = the route colour. */
-    .match-card {
-      border: 0;
-      border-radius: 16px;
-      background: var(--panel);
-      box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px var(--card-shadow);
-    }
-    .match-card:hover { background: var(--panel); box-shadow: inset 0 0 0 1px var(--line-strong), 0 1px 2px var(--card-shadow); }
-    .match-card:active { transform: scale(.98); box-shadow: inset 0 0 0 1px var(--line-strong); }
-    .match-card.selected {
-      color: var(--text);
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--text), 0 8px 16px -10px rgba(0, 0, 0, .35);
-      transform: translateY(-1px);
-    }
-    .match-card.correct {
-      color: var(--correct-ink);
-      background: var(--confetti, var(--correct-bg));
-      box-shadow: none;
-    }
-    .match-card.wrong {
-      color: var(--red-ink);
-      background: var(--panel);
-      box-shadow: inset 0 0 0 2px var(--red-ink);
-    }
-    /* No key numbers on the cards (maintainer, 2026-11-08): keys 1–0 still work, the cards just do not print them. */
-    .match-card { grid-template-columns: minmax(0, 1fr); padding: 0 14px; }
-    .match-card .num { display: none; }
-
-    /* The lane: one continuous gradient of the colours earned so far (laneGradient). */
-    .lesson-top { padding-top: 26px; }
-    .progress { height: 8px; background: color-mix(in srgb, var(--text) 12%, transparent); }
-    .progress::after { display: none; }
-    .progress-fill { min-width: 0; background-color: transparent; }
-
-    /* Type: the system faces (Roboto / PingFang / HarmonyOS Sans …) instead of the rounded
-       display face; lighter weights, tabular figures. */
-    body { font-variant-numeric: tabular-nums; }
-    .word { font-weight: 600; letter-spacing: 0; }
-    .match-grid .word { font-size: 19px; }
-    h1, h2, h3 { font-weight: 700; letter-spacing: -.01em; }
-    .duo-button, .goal-action { font-weight: 600; letter-spacing: .01em; }
-    .goal-num b, .set-ring b { font-weight: 600; letter-spacing: -.03em; }
-    .top-count, .combo-label, .home-streak { font-weight: 600; }
-
-    /* The board says nothing it does not need: the instruction is for screen readers only,
-       and the judgement is a small ink tag instead of a coloured sticker. */
-    #practiceView h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    .fx-judge, .fx-judge-perfect, .fx-judge-great, .fx-judge-good, .fx-judge-miss {
-      padding: 4px 10px;
-      color: var(--on-primary);
-      background: var(--primary);
-      box-shadow: none;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: .06em;
-      transform: translate(-50%, -100%);
-    }
-    .fx-judge small { color: inherit; opacity: .7; font-size: 12px; }
-
-    /* End of a set: the ring of its colours; a clean set's ring has a light running round it. */
-    .completion-badge { display: none; }
-    .set-ring {
-      position: relative;
-      width: 188px;
-      height: 188px;
-      margin: 8px auto 18px;
-      display: grid;
-      place-content: center;
-      justify-items: center;
-      gap: 4px;
-    }
-    .set-ring::before,
-    .set-ring.full::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 13px), #000 calc(100% - 12px));
-      mask: radial-gradient(farthest-side, transparent calc(100% - 13px), #000 calc(100% - 12px));
-    }
-    .set-ring::before { background: var(--ring, var(--track)); }
-    .set-ring.full::after {
-      background: conic-gradient(from 0deg, transparent 0 78%, rgba(255, 255, 255, .75) 88%, transparent 97%);
-      animation: ring-spin 2.6s linear infinite;
-    }
-    @keyframes ring-spin { to { transform: rotate(1turn); } }
-    .set-ring small { position: relative; color: var(--muted); font-size: 14px; font-weight: 600; }
-    .set-ring b { position: relative; color: var(--text); font: 600 56px/1 var(--num-font); letter-spacing: -.02em; }
-    .set-colours { display: grid; gap: 6px; margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.45; }
-    .set-colours b { color: var(--text); font-size: 17px; font-weight: 700; }
-    .set-colours b.full { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    /* The ring and its line are the result; the stat tiles would say it twice. */
-    .completion-stats { display: none !important; }
-    .completion h2 { margin: 0 0 8px; font-size: 22px; }
-    .completion > p:not(.set-colours) { color: var(--muted); font-size: 14px; line-height: 1.5; }
-    .completion-actions { gap: 4px; }
-
-    .settings-lang { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 16px; font-size: 15px; }
-    .settings-lang .lang-toggle { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--panel-2); color: var(--muted); font: inherit; cursor: pointer; }
-
-    /* ---- End of a set, one thing at a time: the ring and its line, one button; the steps
-       after it (claim, rank, flame, reminder) are glass cards one by one; the mixed-up
-       words stay folded until asked for. ---- */
-    .completion:not(.is-trial) h2, .completion:not(.is-trial) #completionText { display: none; }
-    /* One choice per screen: the trial ends in choosing your words; no way around it. */
-    #trialKeepBtn, #focusPairsBtn { display: none !important; }
-    .completion-actions { display: grid; justify-items: stretch; gap: 6px; margin-top: 8px; }
-    .completion-actions .duo-button { width: 100%; }
-    .review-fold { margin-top: 18px; border-radius: 24px; text-align: left; }
-    .review-fold:has(.review-list:empty) { display: none; }
-    .review-fold summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 56px;
-      padding: 0 20px;
-      list-style: none;
-      cursor: pointer;
-      font-size: 15px;
-    }
-    .review-fold summary::-webkit-details-marker { display: none; }
-    .review-fold summary::after { content: ""; width: 8px; height: 8px; border-right: 1.6px solid var(--muted); border-bottom: 1.6px solid var(--muted); rotate: 45deg; translate: 0 -3px; transition: rotate 200ms var(--ease); }
-    .review-fold[open] summary::after { rotate: 225deg; translate: 0 2px; }
-    .review-fold .review-heading { margin: 0; color: var(--text); font-weight: 500; }
-    .review-fold .review-list { margin: 0; padding: 0 12px 12px; }
-    .drill { border-radius: 24px; }
-    .ritual {
-      background: color-mix(in srgb, var(--bg) 25%, transparent);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-    }
-    .ritual-card {
-      padding: 30px 24px 22px;
-      border-radius: 32px;
-      background: color-mix(in srgb, var(--panel) 62%, transparent);
-      -webkit-backdrop-filter: blur(28px) saturate(1.7);
-      backdrop-filter: blur(28px) saturate(1.7);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55), 0 30px 60px -34px rgba(20, 24, 30, .5);
-    }
-    :root[data-color-mode="dark"] .ritual-card { background: color-mix(in srgb, var(--panel) 50%, transparent); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09), 0 30px 60px -34px rgba(0, 0, 0, .8); }
-    .ritual h2 { font-weight: 500; }
-    .ritual-big { font-weight: 200 !important; text-shadow: none !important; }
-    .ritual-chip { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); font-weight: 500; }
-    .ritual-rank { rotate: 0deg; }
-
-    /* ---- Glass (毛玻璃): translucent sheets that let the sky through, blurred ---- */
+    /* ---- Glass: clear, barely tinted, so the sky shows through and nothing on it competes
+       with the button ---- */
     .glass {
-      background: color-mix(in srgb, var(--panel) 58%, transparent);
-      -webkit-backdrop-filter: blur(28px) saturate(1.7);
-      backdrop-filter: blur(28px) saturate(1.7);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), 0 24px 48px -30px rgba(20, 24, 30, .45);
+      background: color-mix(in srgb, var(--panel) 40%, transparent);
+      -webkit-backdrop-filter: blur(30px) saturate(1.15);
+      backdrop-filter: blur(30px) saturate(1.15);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35), 0 24px 48px -32px rgba(20, 24, 30, .35);
     }
     :root[data-color-mode="dark"] .glass {
-      background: color-mix(in srgb, var(--panel) 46%, transparent);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09), 0 24px 48px -30px rgba(0, 0, 0, .8);
+      background: color-mix(in srgb, var(--panel) 40%, transparent);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 24px 48px -32px rgba(0, 0, 0, .7);
     }
 
-    /* ---- Home (phone): greeting, then one glass card whose pages you swipe ---- */
-    .home { grid-template-rows: auto 1fr; gap: 0; min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
-    .home-top { justify-content: flex-end; padding: 8px 4px 0; animation: none; } /* no greeting: it said nothing */
-    .home-hello small { display: block; color: var(--muted); font-size: 13px; }
-    .home-hello b { display: block; margin-top: 6px; color: var(--text); line-height: 1.1; }
-    .home-streak { min-height: 44px; padding: 0 14px; gap: 4px; border-radius: 999px; background: none; box-shadow: none; color: var(--muted); font-size: 20px; }
-    .home-streak.lit { color: var(--text); }
-    .home-stage { display: grid; align-content: center; gap: 16px; padding: 24px 0 8px; }
-    .deck { border-radius: 34px; overflow: hidden; }
-    .deck-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }
-    .deck-track::-webkit-scrollbar { display: none; }
-    .page { flex: 0 0 100%; scroll-snap-align: center; display: flex; flex-direction: column; min-height: 400px; padding: 28px 26px 26px; color: var(--text); }
-    .page[hidden] { display: none; }
-    .goal-kicker { color: var(--muted); font-size: 14px; }
-    .page-title { margin-top: 10px; font-size: 22px; line-height: 1.3; }
-    .goal-num { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
-    .goal-num b { font-family: var(--num-font); line-height: .95; }
-    .goal-num b svg { width: 56px; height: 56px; }
-    .goal-num span { color: var(--muted); font-size: 16px; }
-    .goal-num:has(b:empty) { display: none; }
-    .goal-bar { display: block; height: 3px; margin-top: 24px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
-    .goal-bar[hidden] { display: none; }
-    .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background: var(--text); transition: width 900ms var(--spring) 200ms; }
-    .goal-meta { margin-top: 12px; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
-    .goal-meta + .goal-meta { margin-top: 2px; }
-    .goal-meta:empty, .goal-meta[hidden] { display: none; }
-    .page .lg-button, .page-actions { margin-top: auto; }
-    .page-actions { display: grid; gap: 4px; }
-    .deck-dots { display: flex; justify-content: center; gap: 7px; }
-    .deck-dots i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--text) 22%, transparent); transition: width 200ms var(--ease); }
-    .deck-dots i.on { width: 18px; border-radius: 3px; background: var(--text); }
-
-    /* ---- Liquid glass buttons: no coloured fill, light caught in clear glass ---- */
+    /* ---- The button: the brightest thing on screen. Near-white, no gradient, no ink. ---- */
     .lg-button, .duo-button:not(.danger) {
       position: relative;
-      min-height: 56px;
+      min-height: 60px;
+      padding: 0 24px;
       border: 0;
       border-radius: 999px;
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .42));
-      -webkit-backdrop-filter: blur(18px) saturate(1.8);
-      backdrop-filter: blur(18px) saturate(1.8);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 0 0 1px rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .05), 0 10px 24px -14px rgba(20, 24, 30, .45);
-      font: inherit;
-      font-size: 17px;
+      color: #1d1f20;
+      background: rgba(255, 255, 255, .92);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 #fff, 0 12px 28px -16px rgba(20, 24, 30, .45);
+      font: var(--t-body);
       font-weight: 500;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       transition: scale 160ms var(--ease);
     }
-    :root[data-color-mode="dark"] .lg-button, :root[data-color-mode="dark"] .duo-button:not(.danger) {
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, .08));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), inset 0 0 0 1px rgba(255, 255, 255, .1), 0 10px 24px -14px rgba(0, 0, 0, .8);
-    }
+    :root[data-color-mode="dark"] .lg-button, :root[data-color-mode="dark"] .duo-button:not(.danger) { color: #1d1f20; background: rgba(255, 255, 255, .9); box-shadow: 0 12px 28px -16px rgba(0, 0, 0, .8); }
     .lg-button:active, .duo-button:active { scale: .97; }
-    .lg-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-    .lg-button .tile-dot { position: absolute; top: 14px; right: 22px; width: 7px; height: 7px; color: var(--red-ink); }
-    .lg-link { min-height: 48px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; cursor: pointer; }
-    .rank-sheet { display: grid; gap: 10px; margin-top: 14px; }
+    .lg-button:focus-visible, .duo-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+    .duo-button.secondary { color: var(--text); background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .duo-button.danger { min-height: 60px; border-radius: 999px; color: #fff; background: var(--red-deep); box-shadow: none; font-weight: 500; }
+    .duo-button[disabled] { color: var(--dim); background: color-mix(in srgb, var(--panel) 50%, transparent); box-shadow: none; }
+    .lg-link { min-height: 48px; border: 0; background: none; color: var(--muted); font: var(--t-label); cursor: pointer; }
+
+    /* ---- Home: the streak and settings, then one glass card whose pages you swipe. The
+       card sits low so its button is in the thumb zone; the next page peeks in. ---- */
+    .home { grid-template-rows: auto 1fr; gap: 0; min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
+    .home-top { justify-content: space-between; padding: 4px 0 0; animation: none; }
+    .home-icon { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+    .home-icon .tile-dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; color: var(--red-ink); }
+    .home-streak { min-height: 44px; padding: 0 6px; gap: 4px; background: none; box-shadow: none; color: var(--muted); font: var(--t-body); }
+    .home-streak.lit { color: var(--text); box-shadow: none; }
+    .home-stage { display: grid; align-content: end; gap: 14px; padding: 16px 0 24px; }
+    .deck { border-radius: 34px; overflow: hidden; }
+    .deck-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }
+    .deck-track::-webkit-scrollbar { display: none; }
+    .page { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; min-height: 380px; padding: 30px 26px 24px; color: var(--text); }
+    .page[hidden] { display: none; }
+    .goal-kicker { color: var(--muted); font: var(--t-label); }
+    #todayTitle { display: none; }
+    .page:has(.goal-num b:empty) #todayTitle { display: block; color: var(--text); font: var(--t-title); }
+    .page-title { margin-top: 8px; font: var(--t-title); }
+    .goal-num { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+    .goal-num b { font: var(--t-display); letter-spacing: -.04em; }
+    .goal-num span { color: var(--muted); font: var(--t-body); }
+    .goal-num:has(b:empty) { display: none; }
+    .goal-bar { display: block; height: 3px; margin-top: 28px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .goal-bar[hidden] { display: none; }
+    .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background: var(--text); transition: width 900ms var(--spring) 200ms; }
+    .goal-meta { margin-top: 14px; color: var(--muted); font: var(--t-body); }
+    #goColours { display: none; }
+    .goal-meta:empty, .goal-meta[hidden] { display: none; }
+    .page .lg-button, .page-actions { margin-top: auto; }
+    .page-actions { display: grid; gap: 2px; }
+    .deck-dots { display: flex; justify-content: center; gap: 7px; }
+    .deck-dots i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--text) 22%, transparent); transition: width 200ms var(--ease); }
+    .deck-dots i.on { width: 18px; border-radius: 3px; background: var(--text); }
+    .rank-sheet { display: grid; gap: 14px; margin-top: 10px; }
     .rank-sheet .rank-head { gap: 12px; }
-    .rank-sheet .rank-name { font-size: 22px; font-weight: 400; }
-    .rank-sheet .rank-pts { font-family: var(--num-font); font-weight: 400; color: var(--muted); }
-    .rank-sheet .rank-badge { rotate: 0deg; }
+    .rank-sheet .rank-badge { width: 28px; height: 36px; border-radius: 8px; rotate: 0deg; box-shadow: none; font: var(--t-label); }
+    .rank-sheet .rank-name { font: var(--t-title); }
+    .rank-sheet .rank-pts { color: var(--muted); font: var(--t-body); }
     .rank-sheet .rank-bar { height: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); }
-    .rank-sheet .rank-bar i { background: var(--text) !important; }
-    .rank-sheet .rank-line { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
-    .progress-fill { background-image: none !important; background-color: var(--text) !important; }
+    .rank-sheet .rank-bar i { background: var(--text); }
+    .rank-sheet .rank-line { margin: 0; color: var(--muted); font: var(--t-body); }
+    .settings-lang { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 16px; font: var(--t-body); }
+    .settings-lang .lang-toggle { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--panel-2); color: var(--muted); font: var(--t-label); cursor: pointer; }
 
+    /* ---- The board: cards sit low (thumb zone), tall and quiet; the sky is there from the
+       first pair. Chosen = an ink ring; matched = the route colour; wrong = a wine ring. ---- */
+    #practiceView h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    body[data-screen="practice"] .lesson { min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
+    body[data-screen="practice"] #practiceView { align-self: end; padding-bottom: 24px; }
+    .lesson-top { padding-top: 26px; }
+    .progress { height: 4px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+    .progress::after { display: none; }
+    .progress-fill { min-width: 0; background-color: var(--text); }
+    .top-count { color: var(--muted); font: var(--t-label); }
+    .combo-label { color: var(--muted); }
+    .combo-label b { font: 300 22px/1 var(--num-font); color: var(--text); }
+    .combo-label span { font: var(--t-label); letter-spacing: 0; }
+    .match-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, 80px); gap: 10px; }
+    .match-card {
+      height: 80px;
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0 14px;
+      border: 0;
+      border-radius: 20px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px var(--card-shadow);
+    }
+    .match-card .num { display: none; }
+    .match-card .word, .word { font: var(--t-body); font-size: 19px; font-weight: 500; letter-spacing: 0; }
+    .match-card:hover { background: var(--panel); }
+    .match-card:active { transform: scale(.98); }
+    .match-card.selected { color: var(--text); background: var(--panel); box-shadow: inset 0 0 0 2px var(--text), 0 8px 16px -10px rgba(0, 0, 0, .35); }
+    .match-card.correct { color: var(--correct-ink); background: var(--confetti, var(--correct-bg)); box-shadow: none; }
+    .match-card.wrong { color: var(--red-ink); background: var(--panel); box-shadow: inset 0 0 0 2px var(--red-ink); }
+    .match-card.hint-correct { box-shadow: inset 0 0 0 2px var(--text); animation: none; }
+    .match-card.entering { animation-duration: 240ms; }
+    .fx-judge, .fx-judge-perfect, .fx-judge-great, .fx-judge-good, .fx-judge-miss {
+      padding: 4px 12px;
+      color: #1d1f20;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .4);
+      font: var(--t-label);
+      transform: translate(-50%, -100%);
+    }
+    .fx-judge small { color: inherit; opacity: .6; font: var(--t-label); }
 
-    /* 举重若轻 (2026-11-08): type is big and light, never heavy. Display numbers and the
-       greeting are thin at a large size; words, rows and buttons are medium; nothing is bold. */
-    .home-hello b { font-size: 30px; font-weight: 400; letter-spacing: -.01em; }
-    .goal-num b { font-size: 68px; font-weight: 200; letter-spacing: -.04em; }
-    .set-ring b { font-size: 60px; font-weight: 200; letter-spacing: -.04em; }
-    .goal-num span, .goal-kicker, .hrow-t, .set-colours b { font-weight: 500; }
-    .goal-meta, .hrow-s, .set-colours, .home-hello small { font-weight: 400; }
-    .word, .match-grid .word { font-weight: 500; }
-    .duo-button, .goal-action { font-weight: 500; }
-    .home-streak, .top-count { font-weight: 400; }
-    .combo-label b { font-weight: 300; }
-    h1, h2, h3 { font-weight: 500; }
-    .completion h2 { font-weight: 500; }
+    /* ---- End of a set: it says one thing. The ring (the one place the colours show), how
+       many pairs, the points, one line, one button. ---- */
+    .completion-badge, #completionStats, #trialKeepBtn, #focusPairsBtn { display: none; }
+    .completion h2, #completionText { display: none; }
+    .set-ring { position: relative; width: 200px; height: 200px; margin: 8px auto 6px; display: grid; place-content: center; justify-items: center; gap: 2px; }
+    .set-ring::before, .set-ring.full::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
+    }
+    .set-ring::before { background: var(--ring, var(--track)); }
+    .set-ring.full::after { background: conic-gradient(from 0deg, transparent 0 78%, rgba(255, 255, 255, .75) 88%, transparent 97%); animation: ring-spin 2.6s linear infinite; }
+    @keyframes ring-spin { to { transform: rotate(1turn); } }
+    .set-ring b { position: relative; font: 200 64px/1 var(--num-font); letter-spacing: -.04em; color: var(--text); }
+    .set-ring small { position: relative; color: var(--muted); font: var(--t-label); }
+    .set-points { margin: 0 0 6px; font: 300 34px/1.2 var(--num-font); color: var(--text); }
+    .set-points[hidden] { display: none; }
+    .set-colours { margin: 0 0 24px; }
+    .set-colours b { color: var(--text); font: var(--t-body); }
+    .set-colours span:empty { display: none; }
+    .completion-actions { display: grid; justify-items: stretch; gap: 4px; margin-top: 8px; }
+    .completion-actions .duo-button { width: 100%; }
+    .review-fold { margin-top: 18px; border-radius: 24px; text-align: left; }
+    .review-fold:has(.review-list:empty) { display: none; }
+    .review-fold summary { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 20px; list-style: none; cursor: pointer; font: var(--t-body); }
+    .review-fold summary::-webkit-details-marker { display: none; }
+    .review-fold summary::after { content: ""; width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); rotate: 45deg; translate: 0 -3px; transition: rotate 200ms var(--ease); }
+    .review-fold[open] summary::after { rotate: 225deg; translate: 0 2px; }
+    .review-fold .review-heading { margin: 0; color: var(--text); font: var(--t-body); }
+    .review-fold .review-list { margin: 0; padding: 0 12px 12px; }
+    .drill { border-radius: 24px; }
+
+    /* ---- The steps after a set that still matter (a new rank, lighting the day, a reminder):
+       one glass card at a time over a blurred screen. ---- */
+    .ritual { background: color-mix(in srgb, var(--bg) 25%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+    .ritual-card {
+      padding: 30px 24px 22px;
+      border-radius: 32px;
+      background: color-mix(in srgb, var(--panel) 40%, transparent);
+      -webkit-backdrop-filter: blur(30px) saturate(1.15);
+      backdrop-filter: blur(30px) saturate(1.15);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35), 0 30px 60px -34px rgba(20, 24, 30, .45);
+    }
+    .ritual h2 { font: var(--t-title); }
+    .ritual p { font: var(--t-body); }
+    .ritual .ritual-big { font: var(--t-display); text-shadow: none; }
+    .ritual .ritual-rank { rotate: 0deg; }
 
     @media (prefers-reduced-motion: reduce) {
       .sky, .set-ring.full::after { animation: none; }
@@ -3648,6 +3574,7 @@
         <!-- Home (phone): who and when; one glass card that says how far today is; the one
              button in the thumb zone; everything else waits in the glass dock. -->
         <header class="home-top">
+          <button class="home-icon" type="button" id="homeSet" aria-label="设置" data-en-aria="Settings" data-zh-aria="设置"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
           <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
         </header>
         <!-- Everything on Home lives in one glass card: swipe left and right between today,
@@ -3679,14 +3606,9 @@
                   <div class="rank-head"><span class="rank-badge" id="rankBadge" aria-hidden="true"></span><span class="rank-name" id="rankName"></span><span class="rank-pts" id="rankPts"></span></div>
                   <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
                   <p class="rank-line" id="rankLine"></p>
-                  <p class="rank-line" id="rankChallenge"></p>
-                  <p class="rank-line" id="rankStop"></p>
+                  <p class="rank-line" id="rankChallenge" hidden></p>
+                  <p class="rank-line" id="rankStop" hidden></p>
                 </div>
-              </section>
-              <section class="page" aria-roledescription="page">
-                <span class="goal-kicker" data-zh="设置" data-en="Settings">设置</span>
-                <span class="page-title" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span>
-                <button class="lg-button" type="button" id="homeSet"><span data-zh="打开设置" data-en="Open settings">打开设置</span><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
               </section>
             </div>
           </div>
@@ -3715,7 +3637,8 @@
         <div class="completion" id="completionView">
           <div class="completion-badge" aria-hidden="true">CLEAR</div>
           <!-- The set's colours as one ring: all seven for a clean set, one fewer per miss. -->
-          <div class="set-ring" id="setRing" aria-hidden="true"><small id="setRingLabel"></small><b id="setRingN"></b></div>
+          <div class="set-ring" id="setRing" aria-hidden="true"><b id="setRingN"></b><small id="setRingLabel"></small></div>
+          <div class="set-points" id="setPoints" hidden></div>
           <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
           <p class="set-colours" id="setColours"><b id="setColoursHead"></b><span id="setColoursSub"></span></p>
           <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
@@ -4354,7 +4277,7 @@
         colours: {
           full: "All seven colours · {route}", fullSub: "{n} in a row, not one miss",
           some: "{k} of 7 colours · {route}", someSub: "{m} misses, {lost} colours lost · best streak {best}",
-          ringDone: "Set done", ringTime: "Time's up", today: "{s} sets · {c} colours today", todayOne: "1 set · {c} colours today"
+          ringDone: "Set done", ringTime: "Time's up", pairsUnit: "pairs", line: "{m} wrong · {k}/7 colours", lineClean: "All seven colours · {route}", today: "{s} sets · {c} colours today", todayOne: "1 set · {c} colours today"
         },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         home: {
@@ -4652,7 +4575,7 @@
         colours: {
           full: "七色全齐 · {route}", fullSub: "{n} 连，一次没错",
           some: "{k} / 7 种颜色 · {route}", someSub: "错了 {m} 次，少了 {lost} 种颜色 · 最长连击 {best}",
-          ringDone: "这一组完成", ringTime: "时间到", today: "今天 {s} 组 · {c} 种颜色", todayOne: "今天 1 组 · {c} 种颜色"
+          ringDone: "这一组完成", ringTime: "时间到", pairsUnit: "对", line: "错 {m} 次 · {k}/7 种颜色", lineClean: "七色全齐 · {route}", today: "今天 {s} 组 · {c} 种颜色", todayOne: "今天 1 组 · {c} 种颜色"
         },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         home: {
@@ -5623,16 +5546,16 @@
       const timeUp = !state.roundComplete;
       ring.style.setProperty("--ring", `conic-gradient(from 0deg, ${WordSnapRoutes.stops(route.hues, k, light ? "bar" : "barDark", true)})`);
       ring.classList.toggle("full", !miss && !timeUp);
-      document.getElementById("setRingLabel").textContent = t(timeUp ? "colours.ringTime" : "colours.ringDone");
+      document.getElementById("setRingLabel").textContent = t(timeUp ? "colours.ringTime" : "colours.pairsUnit");
+      document.getElementById("setPoints").hidden = true;
       document.getElementById("setRingN").textContent = String(state.completedThisRun || 0);
       const name = currentLang === "zh" ? route.zh : route.en;
       const head = document.getElementById("setColoursHead"), sub = document.getElementById("setColoursSub");
       head.style.setProperty("--grad", `linear-gradient(90deg, ${WordSnapRoutes.stops(route.hues, k, light ? "text" : "textDark")})`);
       head.classList.remove("full");
-      head.textContent = miss ? t("colours.some", { k, route: name }) : t("colours.full", { route: name });
-      sub.textContent = miss
-        ? t("colours.someSub", { m: miss, lost: WordSnapRoutes.N_COLOURS - k, best: state.levelBestStreak || 0 })
-        : t("colours.fullSub", { n: state.completedThisRun || 0 });
+      // One line: what went wrong (if anything) and the colours it left.
+      head.textContent = miss ? t("colours.line", { m: miss, k }) : t("colours.lineClean", { route: name });
+      sub.textContent = "";
       document.getElementById("setColours").hidden = !(state.completedThisRun > 0);
       els.completionView.classList.toggle("is-trial", isTrial());
       paintSky();
@@ -5693,7 +5616,8 @@
         const total = currentRoundTotal() || 25, got = state.completedThisRun || 0;
         hues = state.levelRoute.hues.slice(0, levelColours(ended));
         p = ended ? 1 : got / total;
-        strength = ended ? 1 : got ? 0.3 + 0.5 * p : 0;
+        strength = ended ? 0.5 : 0.6 + 0.4 * p;
+        if (!got && !ended) hues = state.levelRoute.hues.slice(0, 1);
       } else if (screen === "home") {
         hues = WordSnapRoutes.todayHues(todayColours());
         p = homeProgress;
@@ -5702,7 +5626,7 @@
         if (!hues.length) { hues = [228, 262, 200]; p = 0; strength = 0.45; }
       }
       // The blobs are sized for the whole screen, so the colours meet instead of floating as spots.
-      const scale = Math.max(1.6, Math.max(window.innerWidth, window.innerHeight) / 340 * 1.15);
+      const scale = Math.max(2.2, Math.max(window.innerWidth, window.innerHeight) / 340 * 1.6);
       if (hues.length) sky.style.setProperty("--sky", WordSnapRoutes.mesh(hues, p, dark, { scale, floor: 0.75 }));
       sky.style.opacity = String(strength);
       document.body.classList.toggle("has-sky", strength > 0);
@@ -9768,8 +9692,9 @@
       renderRank();
       const full = done && !awaitingTrialChoice();
       if (full) {
-        els.goNum.innerHTML = ICON_CHECK_BIG;
-        els.goUnit.textContent = t("home.unitDone");
+        // Done: the headline says it once; no tick, no "done" unit.
+        els.goNum.textContent = "";
+        els.goUnit.textContent = "";
       } else {
         els.goNum.textContent = num;
         els.goUnit.textContent = unit;
@@ -9960,7 +9885,8 @@
       const track = document.getElementById("deckTrack"), dots = document.getElementById("deckDots");
       if (!track || !dots) return;
       const pages = [...track.children].filter(p => !p.hidden);
-      const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      const w = pages[0] ? pages[0].getBoundingClientRect().width : track.clientWidth;
+      const i = Math.min(pages.length - 1, Math.round(track.scrollLeft / Math.max(1, w)));
       dots.innerHTML = pages.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("");
     }
     document.getElementById("deckTrack").addEventListener("scroll", () => requestAnimationFrame(paintDeckDots), { passive: true });
@@ -10125,14 +10051,23 @@
       const goal = !!state.goalDoneThisSet;
       state.goalDoneThisSet = false;
       const points = pairs + (fullCombo ? 5 : 0) + (goal ? 10 : 0);
-      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points, timeUp }];
+      // The points are already counted: claim them now and show them under the ring, no extra tap.
+      WordSnapHabit.claim(habit, { points, fullCombo });
+      saveWords();
+      feel("claim");
+      const pts = document.getElementById("setPoints");
+      if (pts) { pts.hidden = false; WordSnapFx.countUp(pts, points, n => `+${n}`, { delay: 150 }); }
+      ritualSteps = [];
       const r = WordSnapHabit.rank(habit);
-      if (r.last) ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      // The rank card only when something changed; a week that just held needs no card.
+      if (r.last && r.last.kind !== "stay") ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      else if (r.last) { WordSnapHabit.markRankSeen(habit); saveWords(); }
       const day = String(WordSnapHabit.dayKey(Date.now()));
       if (habitStatus().done && storeGet(IGNITED_KEY) !== day) {
         ritualSteps.push({ kind: "ignite", day });
         if (isNativeApp() && !state.settings.reminder && !storeGet(REMIND_ASKED_KEY)) ritualSteps.push({ kind: "remind" });
       }
+      if (!ritualSteps.length) return;
       const box = document.getElementById("ritual");
       ritualReturn = document.activeElement;
       box.hidden = false;
