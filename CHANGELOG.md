@@ -8,6 +8,7 @@
 - **全屏彩** (the maintainer's call, 2026-11-08): the colours earned fill the whole screen behind Home (today's sets, stronger as today's goal fills) and the board (this set's colours, growing as it goes); Library and Settings stay plain. Home's blocks no longer drop in: the first frame is complete.
 - **Home rebuilt to the v9 layout** (2026-11-08, "臃肿、主次不分明"): date and greeting with the streak; one goal card with the only button; rank, library, add words and settings as quiet rows. The tile grid, the wordmark and the colour flood on tap are gone.
 - **System type** (2026-11-08, "字体灾难"): Fredoka is replaced by the system faces everywhere, with lighter weights; the board's heading is visually hidden, judgement stickers become small ink tags, and the end screen drops the stat tiles (the ring says it).
+- **举重若轻** (2026-11-08): big, light type — thin display numbers and greeting, medium words and buttons, no bold anywhere.
 - **No key numbers on the cards** (2026-11-08): the 1–0 hints are no longer printed; the keys still work.
 - **断弦** (the maintainer's call, 2026-11-08): a wrong match now sounds like a guzheng string snapping — a crack, the string whipping down an octave, a dull slap — instead of a soft sliding sigh.
 
