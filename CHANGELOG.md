@@ -8,6 +8,7 @@
 - **全屏彩** (the maintainer's call, 2026-11-08): the colours earned fill the whole screen behind Home (today's sets, stronger as today's goal fills) and the board (this set's colours, growing as it goes); Library and Settings stay plain. Home's blocks no longer drop in: the first frame is complete.
 - **Home rebuilt to the v9 layout** (2026-11-08, "臃肿、主次不分明"): date and greeting with the streak; one goal card with the only button; rank, library, add words and settings as quiet rows. The tile grid, the wordmark and the colour flood on tap are gone.
 - **System type** (2026-11-08, "字体灾难"): Fredoka is replaced by the system faces everywhere, with lighter weights; the board's heading is visually hidden, judgement stickers become small ink tags, and the end screen drops the stat tiles (the ring says it).
+- **No greeting on Home** (2026-11-08): «中午好» and the date said nothing; only the streak stays above the card.
 - **Home is one glass card you swipe** (2026-11-08): today · library · rank · settings are pages of a single card (native scroll-snap, dots below); one button per page. The dock and rank sheet are gone.
 - **Liquid glass buttons**: primary buttons are clear glass catching light, no ink or colour fill.
 - **Fewer rainbows**: the lane, the combo number, the goal bar and the result line are plain ink; colour shows only on matched cards, the sky and the end ring.

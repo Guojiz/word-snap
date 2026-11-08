@@ -3507,7 +3507,7 @@
 
     /* ---- Home (phone): greeting, then one glass card whose pages you swipe ---- */
     .home { grid-template-rows: auto 1fr; gap: 0; min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
-    .home-top { align-items: flex-end; padding: 8px 4px 0; animation: none; }
+    .home-top { justify-content: flex-end; padding: 8px 4px 0; animation: none; } /* no greeting: it said nothing */
     .home-hello small { display: block; color: var(--muted); font-size: 13px; }
     .home-hello b { display: block; margin-top: 6px; color: var(--text); line-height: 1.1; }
     .home-streak { min-height: 44px; padding: 0 14px; gap: 4px; border-radius: 999px; background: none; box-shadow: none; color: var(--muted); font-size: 20px; }
@@ -3648,7 +3648,6 @@
         <!-- Home (phone): who and when; one glass card that says how far today is; the one
              button in the thumb zone; everything else waits in the glass dock. -->
         <header class="home-top">
-          <div class="home-hello"><small id="homeDate"></small><b id="homeGreet"></b></div>
           <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
         </header>
         <!-- Everything on Home lives in one glass card: swipe left and right between today,
@@ -4362,7 +4361,6 @@
           leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
           doneTitle: "Today's goal is done", doneSub: "{n}-day streak. Fancy one more?", doneSubNoStreak: "Nice work. Fancy one more?",
           start: "Start practice", resume: "Continue the set", again: "One more set", nextSet: "Next set",
-          hiMorning: "Good morning", hiNoon: "Good afternoon", hiAfternoon: "Good afternoon", hiEvening: "Good evening", hiNight: "Up late",
           emptyTitle: "Your library is empty", emptySub: "Pick a word book or paste a list", emptyBtn: "Add words", emptyUnit: "words",
           trialTitle: "Try a set first", trialSub: "10 sample words to learn the game", trialBtn: "Play the sample set", trialUnit: "sample words",
           chooseTitle: "Now pick your words", chooseSub: "Pick a word book or import a list", chooseBtn: "Choose a word book",
@@ -4661,7 +4659,6 @@
           leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
           doneTitle: "今天的目标完成了", doneSub: "已连续 {n} 天，想练可以再来", doneSubNoStreak: "做得好，想练可以再来",
           start: "开始练习", resume: "继续这一组", again: "再练一组", nextSet: "下一组",
-          hiMorning: "早上好", hiNoon: "中午好", hiAfternoon: "下午好", hiEvening: "晚上好", hiNight: "夜深了",
           emptyTitle: "词库还是空的", emptySub: "选一本词书或粘贴词表", emptyBtn: "添加单词", emptyUnit: "个词",
           trialTitle: "先玩一组试试", trialSub: "10 个示例词，先熟悉玩法", trialBtn: "开始体验", trialUnit: "个示例词",
           chooseTitle: "换成你要背的词吧", chooseSub: "选一本词书或导入词表", chooseBtn: "选一本词书",
@@ -9729,9 +9726,6 @@
       const status = habitStatus(now.getTime());
       const streak = isTrial() ? 0 : status.streak;
       els.homeStreakN.textContent = String(streak);
-      const hr = now.getHours();
-      document.getElementById("homeGreet").textContent = t(hr < 5 ? "home.hiNight" : hr < 11 ? "home.hiMorning" : hr < 14 ? "home.hiNoon" : hr < 18 ? "home.hiAfternoon" : "home.hiEvening");
-      document.getElementById("homeDate").textContent = now.toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-GB", { month: "long", day: "numeric", weekday: "short" });
       els.homeStreak.classList.toggle("lit", status.done && !isTrial());
       els.homeStreak.setAttribute("aria-label", t("home.streakTitle", { n: streak }));
 
