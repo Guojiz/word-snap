@@ -1,83 +1,43 @@
 ---
 name: Word Snap
-description: Vocabulary matching judged like a rhythm game, on near-white paper where every matched pair turns into a piece of bright, dopamine-coloured confetti.
+description: Vocabulary matching on one quiet neutral ground, where practice earns colour — each set draws a seven-colour route, every miss takes one away, and the colours earned fill the whole screen.
 colors:
-  paper-bg: "#fffcf6"
-  paper-panel: "#ffffff"
-  paper-panel-2: "#fff7e8"
-  paper-panel-soft: "#fffefb"
-  paper-line: "#efe9de"
-  paper-line-strong: "#dcd3c3"
-  paper-track: "#f1ece3"
-  paper-hover: "#fff7e8"
-  paper-text: "#2b2a3d"
-  paper-muted: "#55546a"
-  paper-dim: "#6b6a80"
-  night-bg: "#1f1e2e"
-  night-panel: "#2a2940"
-  night-panel-2: "#25243a"
-  night-panel-soft: "#252437"
-  night-line: "#3a3954"
-  night-line-strong: "#56557a"
-  night-track: "#34334c"
-  night-hover: "#302f48"
-  night-text: "#f7f5ee"
-  night-muted: "#c9c6d8"
-  night-dim: "#a6a3bb"
-  ink: "#2b2a3d"
-  lemon-button-day: "#ffd21f"
-  lemon-button-day-deep: "#ffb800"
-  on-lemon-button-day: "#2b2a3d"
-  lemon-button-night: "#ffd21f"
-  lemon-button-night-deep: "#ffb800"
-  on-lemon-button-night: "#2b2a3d"
-  confetti-peach: "#ff6b8b"
-  confetti-peach-edge: "#d0968c"
-  confetti-sky: "#47b5ff"
-  confetti-sky-edge: "#8db2d4"
-  confetti-lemon: "#ffd21f"
-  confetti-lemon-edge: "#d0ba6d"
-  confetti-mint: "#2ee6a6"
-  confetti-mint-edge: "#85c1a6"
-  confetti-lilac: "#b18cff"
-  confetti-lilac-edge: "#afa2d4"
-  sky: "#3b8beb"
-  sky-deep: "#2a74d0"
-  sky-ink-day: "#1f5fb0"
-  sky-ink-night: "#47b5ff"
-  selected-bg-day: "#edf5fd"
-  selected-bg-night: "#2e3f66"
-  selected-ink-day: "#1b3f73"
-  selected-ink-night: "#f7f5ee"
-  mint: "#4fd69c"
-  mint-deep: "#2ec27e"
-  mint-ink-day: "#1c7a50"
-  mint-ink-night: "#2ee6a6"
-  correct-bg: "#2ee6a6"
-  correct-ink: "#2b2a3d"
-  gold: "#ffb800"
-  gold-ink-day: "#8a6200"
-  gold-ink-night: "#ffd21f"
-  coral: "#ff7a59"
-  coral-deep: "#c4421f"
-  coral-ink-day: "#b13c1f"
-  coral-ink-night: "#ff6b8b"
-  wrong-bg-day: "#ffece8"
-  wrong-bg-night: "#593b46"
-  wrong-ink-day: "#8f2a12"
-  wrong-ink-night: "#ffe3dc"
-  lilac-deep: "#9b7bff"
-  ember-ink-day: "#b4530f"
-  ember-ink-night: "#ffc08a"
-  judge-time: "#4a4960"
-  wordmark-coral: "#ff7a59"
-  wordmark-gold: "#f5b800"
-  wordmark-green: "#2ec27e"
-  wordmark-blue: "#3b82f6"
-  wordmark-violet: "#9b7bff"
-  icon-tile: "#fff7e8"
-  scrim-day: "rgba(43, 42, 61, 0.38)"
-  scrim-night: "rgba(10, 10, 20, 0.6)"
+  bg-day: "#f9f9fa"
+  panel-day: "#ffffff"
+  panel-2-day: "#eeeeef"
+  line-day: "#e2e2e3"
+  line-strong-day: "#c2c7ca"
+  track-day: "#e8e8e9"
+  text-day: "#35393b"
+  muted-day: "#42484a"
+  dim-day: "#5f6568"
+  bg-night: "#121415"
+  panel-night: "#1e2021"
+  panel-2-night: "#282a2b"
+  line-night: "#333536"
+  line-strong-night: "#4a5052"
+  track-night: "#282a2b"
+  text-night: "#e2e2e3"
+  muted-night: "#c2c7ca"
+  dim-night: "#a2a7aa"
+  ink-button-day: "#2f3132"
+  on-ink-button-day: "#f1f0f1"
+  ink-button-night: "#e2e2e3"
+  on-ink-button-night: "#2f3132"
+  wrong-ink-day: "#9b4052"
+  wrong-ink-night: "#ffb2bc"
+  ok-ink-day: "#285d2a"
+  ok-ink-night: "#9bd595"
+  link-ink-day: "#2f657b"
+  link-ink-night: "#9acee7"
+  route-card-day: "oklch(0.90 0.085 h)"
+  route-card-night: "oklch(0.40 0.085 h)"
+  route-bar-day: "oklch(0.74 0.20 h)"
+  route-bar-night: "oklch(0.78 0.17 h)"
+  route-text-day: "oklch(0.55 0.16 h)"
+  route-text-night: "oklch(0.82 0.12 h)"
+  route-sky-day: "oklch(0.86 0.13 h)"
+  route-sky-night: "oklch(0.42 0.10 h)"
 typography:
   display:
     fontFamily: "\"Fredoka\", \"Nunito\", \"Varela Round\", system-ui, sans-serif"
@@ -243,66 +203,46 @@ components:
 
 ## Overview
 
-**Creative North Star: "Confetti Cards" (彩纸卡)**
+**Creative North Star: "Earned Colour" (颜色是挣来的)** — the v9 redesign, 2026-11-08.
 
-Learning words should feel light and easy. The page is near-white paper; colour arrives as confetti when the learner gets something right. Every match is still judged like a note in a rhythm game: the learner taps a meaning and a word, the pair is judged on the spot (PERFECT, GREAT, GOOD or MISS) from the review engine's own reaction-time grade, the lane at the top fills one segment per match, the combo counts up at the lane's right end, and the number of words left today rolls down towards zero. What changed is the look: each matched pair is filled with the next of five saturated "dopamine" confetti colours (2026-10-31, the maintainer's call: brighter, more game-like than the earlier pastels), the lane repeats the same sequence, and a finished set reads as a strip of confetti.
+The app is one quiet neutral ground (iPhone 15 greys, white cards, ink text); the only colour is what practice earns. Each set draws a **colour route** of seven hues (晚霞, 极光, 糖果, 果园, 海湾, 彩虹; random direction, a small hue nudge, never the same route twice in a row). A clean set keeps all seven; every miss takes one away, never below two. The colours arrive as the set goes on: matched cards, the lane, the combo number and the end ring only ever show the colours earned so far. Home's goal card gathers today's sets, and since 2026-11-08 the maintainer's call **全屏彩** applies: the colours earned fill the whole screen behind Home and the board (the "sky"), so a day of practice literally colours the app. Library and Settings stay plain.
 
-Day (light) is the main look: warm paper, white panels, soft beige outlines and dark ink text. Night is the same world on soft ink-blue paper, with the same confetti colours. One rounded face (Fredoka) carries every Latin letter, numeral and judgement; Chinese stays in the system Chinese face. Meaning hues stay fixed: sky chosen, mint correct, coral wrong, lemon PERFECT. The look replaces the heavy indigo "Rhythm Stage" and, before it, a borrowed Duolingo arrangement (green, 3D block buttons, mascot cheer): there are still no block buttons, no mascot and no green-as-brand.
+It replaces "Confetti Cards" (paper, five rotating confetti colours, lemon buttons, a set colour tinting the paper), whose rules no longer apply. Matching is still judged on the spot from the review engine's reaction-time grade; the combo still counts at the lane's right end.
 
 **Key Characteristics:**
-- Paper first: near-white paper by day (the default), soft ink-blue by night, switched by `data-color-mode`, same roles in both.
-- Confetti is the reward: matched pairs, the lane and the icon use five saturated colours (pink, electric blue, lemon, neon green, violet) with ink text; the rest of the page stays quiet.
-- Hue = meaning: sky chosen/focus, mint correct, lemon PERFECT, coral wrong/MISS, ember a lit day streak.
-- Lemon buttons: the primary action is a lemon fill with ink text, day and night; nothing on the page is a heavy dark block.
-- Fredoka for all Latin text, numerals, judgements and result words, rolling digit by digit.
-- Soft lifted cards, 18px corners, 2px outlines; no hard offset shadows.
+- One neutral ground, both modes (`data-color-mode`): grey page, white (night: graphite) cards, ink text.
+- Ink controls: the primary action is an ink pill (`--primary` = inverse surface); secondary is a hairline pill. No lemon, no 3D edges.
+- Colour is earned: route colours appear only on what practice made — matched cards, the lane, the combo number, the end ring, the sky. Everything else is grey and ink.
+- Meaning without hue rotation: ink ring = chosen; wine ring (`--red-ink`) = wrong; a matched pair wears its route colour with ink text.
+- Zero wait: Home's first frame is complete (no drop-ins, no fade-in); the sky's slow drift is decoration only.
+- Fredoka for Latin text and numerals; system Chinese face for Chinese.
 
 ## Colors
 
-A warm paper neutral family carries the whole surface; five saturated confetti colours fill what the learner has matched, and four meaning hues mark states, each with an `-ink` variant tuned for text in each mode.
+The CSS custom properties keep their legacy names; at runtime `applyTheme()` writes them from `STAGE` (light and dark neutrals, plus marks). The set colour rotation (`COLOR_THEMES`, `themeIndex`) still advances but no longer tints anything.
 
-The CSS custom properties keep legacy names. The mapping is fixed: `--blue*` is **sky**, `--green*` is **mint**, `--yellow*` is **lemon/gold** (PERFECT), `--red*` is **coral**, `--primary*` is the **lemon button**, `--good` / `--good-ink` is the neon-green confetti colour and its ink, `--ember-ink` is **ember**. The `:root` blocks hold pre-JS fallbacks; at runtime `applyTheme()` writes the tokens onto `<html>` from the `STAGE` object and mixes the derived surfaces (panel-soft, selected and wrong backgrounds) from the base hues. Those runtime values are the ones recorded in the frontmatter. The confetti colours are the `CONFETTI` array, their ink is `CONFETTI_INK`; `confettiFor(n)` returns the nth fill and its edge, `mixHex(fill, ink, 0.78)`. Ember, the judgement chips, the FULL COMBO gradient and the icon colours are not in `STAGE`; they come straight from the CSS, `js/fx.js` and `icon.svg`.
+### Neutral ground
+- **bg / panel / panel-2 / line / line-strong / track** (frontmatter `*-day`, `*-night`): page, cards and dialogs, quiet fills, hairlines (cards use a 1px inset hairline instead of a border), the empty lane (`text` at 12%).
+- **text / muted / dim**: primary text, secondary text, card number keys. Dim is at least 4.5:1 on the page in both modes.
 
-### Set colour (rotates)
-Every finished set, or endless block, moves to the next set colour: lemon, peach, sky, mint, lilac (`COLOR_THEMES`, index in `themeIndex` / `word_snap_theme_index`). `applyTheme()` tints the paper with it (16% by day, 7% at night), the lane track (30% / 12%), panel-2 and hover; it is the primary button fill (ink text, with a deeper edge from the theme's `deep` and a glow in `--primary-shadow`), and the set's first matched pair starts the confetti run in it (`levelConfettiStart`). Cards, dialogs and every meaning colour stay fixed: sky is always selected, coral always wrong. A first visit starts on a random set colour (the inline script in `<head>` picks and stores it, and tints `--bg` before first paint); after that the rotation continues from where the learner left off. The lemon values below are one of the five; the others swap the fill.
+### Ink button
+- **ink-button** (`--primary`, `--on-primary`): every primary action — Home's go button, Continue, Save. A full pill, 54–56px tall, no shadow.
 
-### Primary
-- **Ink Button** (lemon-button-day / lemon-button-night): the fill of every primary action (Continue, Save, Start), the intro step numbers and the banner pill: lemon `#ffd21f` with ink text in both modes, with a 3px deeper-lemon (`#ffb800`) bottom edge. It is also the fill of the undo toast (ink text, with an inverted Undo button). Active navigation, the selected library tab, the chosen language and the CLEAR result word use the plain text colour, not the button colour.
+### Marks
+- **wrong-ink** (`--red-ink`): a wrong pick's 2px ring and text, weak-word counts, destructive text. Destructive buttons fill `--red-deep` with white text.
+- **ok-ink / link-ink** (`--green-ink`, `--blue-ink`): success text and link-like controls.
 
-### Confetti
-- **Pink, Electric Blue, Lemon, Neon Green, Violet** (confetti-*; token names keep the old peach/sky/lemon/mint/lilac keys): the five fills, in that order. Each matched pair in a set takes the next one (the first pair pink, the sixth pink again), with ink text (at least 5:1 on every fill: pink 5.2, violet 5.4, blue 6.2, green 8.7, lemon 9.7) and a 2px border of its edge colour (the fill mixed 78% with ink). The lane's segments repeat the same sequence, one per match, so the lane and the pairs agree. The ripple around a matched pair is drawn in the pair's edge colour. The same colours draw the intro's demo cards (pink meaning, blue word) and the judgement chips, and appear in the goal confetti. They are identical by day and at night.
+### Colour routes (js/routes.js)
+- Each hue is drawn at a fixed OKLCH lightness per role, so the mix stays even: **card** (matched card fill; ink text ≥ 4.5:1 at every hue, tested), **bar** (lane, end ring; marks only), **text** (combo number, the "七色全齐" line; large text), **sky** (the full-screen mesh). Night uses the `*Dark` roles.
+- `available(miss)` = max(2, 7 − miss); `shown(got, total, miss)` = how many have arrived; `stops()` eases gradients through OKLCH so the in-betweens stay bright.
 
-### Secondary
-- **Chosen Sky** (sky, sky-deep, sky-ink-*): the selected card's 2px outline, the pressed state of filter chips, the keyboard focus ring, the focused-input border and caret, checkbox accents. Sky ink is the text colour of secondary buttons and link-like controls.
-
-### Tertiary (state hues)
-- **Correct Mint** (mint, mint-deep, mint-ink-*, correct-*): "today done" and its check, the hint ring after a miss, mastered tags and import success. A matched card normally wears its confetti colour; `correct-bg` (the neon green) is only the fallback when none is set.
-- **Perfect Lemon / Gold** (gold, gold-ink-*, confetti-lemon): the PERFECT chip is a lemon sticker. Lemon otherwise appears only as one of the five confetti fills and as the primary button; no reward or warning is gold.
-- **Miss Coral** (coral, coral-deep, coral-ink-*, wrong-*): a wrong match's outline, tint and shake, TIME UP, the low-time countdown, weak-word counts, review headings, sentence errors, the danger zone and destructive buttons (coral-deep fill, white text). The MISS chip is the peach sticker.
-- **Ember** (ember-ink-*): the day-streak flame and number once today's goal is done. Before that the chip is greyscale at 75% opacity.
-- **Celebration deep tones** (coral, sky, mint-deep, lilac-deep): milestone stars use these deeper confetti colours so they read on paper; the goal confetti mixes the five confetti colours with coral and sky.
-
-### Neutral
-- **Paper** (paper-bg) and **Night Paper** (night-bg): the page ground, inputs, the lane's beat ticks and the browser `theme-color`.
-- **Panel** (paper-panel / night-panel): cards, dialogs and the judgement chip's fallback. White by day, ink-blue `#2a2940` at night.
-- **Panel Soft / Panel 2 / Hover** (paper-panel-soft, paper-panel-2, paper-hover and night equivalents): side panels, review rows, drills, hovered cards, icon-button hover. By day panel 2 and hover are the same cream as the icon tile.
-- **Line / Line Strong** (paper-line, paper-line-strong and night equivalents): every 2px outline and divider; line-strong on hover and for the scrollbar.
-- **Track** (paper-track / night-track): the empty part of the lane and disabled buttons.
-- **Text / Muted / Dim** (paper-text, paper-muted, paper-dim and night equivalents): primary text, secondary text, and tertiary marks such as card number keys and the quit icon.
-- **Scrim** (scrim-day / scrim-night): behind dialogs.
-
-### Brand
-- **Wordmark colours** (wordmark-*): coral, gold, green, blue and violet. They appear together only as the FULL COMBO gradient, which is decorative (`aria-hidden`; the heading below carries the result).
-- **Icon** (icon-tile, confetti-*): two rounded cards, peach and sky, leaning together on a cream `#fff7e8` tile, with a white dot where they touch and three confetti dots (lemon, mint, lilac). The desktop rail's logo tile is the same art without the dots. PNG and maskable icons are full-bleed with the art scaled to 86% into the safe zone; the Android adaptive icon background is `#FFF7E8`.
+### The sky (全屏彩)
+- A fixed layer behind the app (`#sky`), soft radial blobs of the colours earned, sized to the screen and drifting slowly (18 s; still under reduced motion).
+- Home: today's colours (`word_snap_today_colours_v1`, only today's sets), stronger as today's goal fills. Board: the set's earned colours, from 30% to 80% as the set goes on. End of set: full strength. Library and Settings: none.
+- Blocks on Home sit on it as 84–94% white sheets so text stays clear; no backdrop blur (it would repaint every frame behind a moving sky).
 
 ### Named Rules
-**The Confetti Rule.** Colour is a reward. The confetti colours fill only what the learner has matched (and the things that teach or mark matching: the lane, the judgement chips, the intro demo, the icon, the goal confetti). Everything else is paper, panel, line and ink.
-
-**The One Gold Rule.** Among judgements, lemon/gold means PERFECT. The combo count, the streak, milestone stars and the result words never turn gold; CLEAR is the button ink, FULL COMBO is the wordmark gradient, TIME UP is coral, the lit streak is ember.
-
-**The Chosen Sky Rule.** Sky marks what the learner has chosen or where the keyboard is: the selected card, a pressed filter, the focus ring. It is never a fill for a primary action. (The sky pastel as a confetti fill is a different thing: a matched pair, not a choice.)
-
-**The Ink Variant Rule.** Base hues are for outlines, fills and rings; anything read as text uses the matching `-ink` variant for the current mode, which is what holds the 4.5:1 contrast. Text on a pastel is always ink `#2b2a3d`, in both modes.
+**The Earned Colour Rule.** Colour is only ever what practice earned today or in this set. A screen with nothing earned is grey and ink, and that is correct.
 
 ## Typography
 

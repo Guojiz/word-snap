@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#fffcf6" />
+  <meta name="theme-color" content="#f9f9fa" />
   <meta name="color-scheme" content="light dark" />
   <script>
     (function () {
@@ -13,18 +13,8 @@
         var m = localStorage.getItem("word_snap_color_mode") || "system";
         var light = m === "light" || (m === "system" && window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches);
         document.documentElement.setAttribute("data-color-mode", light ? "light" : "dark");
-        // The set colour (COLOR_THEMES) is not fixed from the start: a first visit picks
-        // one at random, then each finished set moves on. Tint the paper before first paint
-        // (= applyTheme's --bg) so the page does not flash another colour.
-        var t = Number(localStorage.getItem("word_snap_theme_index"));
-        if (localStorage.getItem("word_snap_theme_index") == null || !(t >= 0 && t < 5)) {
-          t = Math.floor(Math.random() * 5);
-          localStorage.setItem("word_snap_theme_index", String(t));
-        }
-        var bg = light
-          ? ["#fff8e2", "#fff0e9", "#f1f6f7", "#eff9ee", "#f8f3f7"]
-          : ["#2f2c33", "#2f2936", "#292b3d", "#282c38", "#2c2a3d"];
-        document.documentElement.style.setProperty("--bg", bg[Math.floor(t)]);
+        // One neutral ground (= applyTheme's --bg), set before first paint so nothing flashes.
+        document.documentElement.style.setProperty("--bg", light ? "#f9f9fa" : "#121415");
       } catch (e) {}
     })();
   </script>
@@ -52,7 +42,7 @@
        *-ink variants are the same hues dark/light enough for text (>= 4.5:1).
        applyTheme() sets the same values at runtime; these are the pre-JS fallbacks. */
     :root {
-      --bg: #fffcf6;
+      --bg: #f9f9fa;
       --panel: #ffffff;
       --panel-2: #fff7e8;
       --line: #efe9de;
@@ -3319,9 +3309,157 @@
     @media (prefers-reduced-motion: reduce) {
       .inbox-note { animation: none; }
     }
+
+    /* ==== The v9 look (DESIGN.md): one neutral ground, ink controls, colour is earned ====
+       Surfaces are iPhone 15 greys; the only colour is what practice earns: the set's colour
+       route (js/routes.js) on matched cards, the lane and the end ring, and the sky (全屏彩)
+       behind everything on Home and the board. Meaning colours stay: ink = chosen,
+       wine = wrong. Nothing waits: Home's first frame is complete, no drop-ins. */
+    .sky {
+      position: fixed;
+      inset: -20%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      background: var(--sky, none);
+      animation: sky-drift 18s ease-in-out infinite alternate;
+    }
+    body[data-screen="practice"] .sky { transition: opacity 600ms ease; }
+    @keyframes sky-drift { from { transform: translate3d(-4%, -3%, 0); } to { transform: translate3d(4%, 3%, 0); } }
+    .app { position: relative; z-index: 1; }
+    .rail { background: transparent; }
+    body.has-sky .rail { background: color-mix(in srgb, var(--bg) 70%, transparent); }
+
+    .duo-button {
+      min-height: 56px;
+      border-radius: 999px;
+      box-shadow: none;
+      font-weight: 700;
+    }
+    .duo-button:hover { filter: none; opacity: .92; }
+    .duo-button:active { transform: scale(.98); box-shadow: none; }
+    .duo-button.secondary {
+      min-height: 50px;
+      color: var(--text);
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      border: 0;
+      box-shadow: inset 0 0 0 1.5px var(--line-strong);
+    }
+    .duo-button.danger { color: #fff; background: var(--red-deep); box-shadow: none; }
+    .duo-button[disabled] { color: var(--dim); background: var(--track); box-shadow: none; }
+
+    /* The board: white cards with a hairline; chosen = an ink ring; matched = the route colour. */
+    .match-card {
+      border: 0;
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px var(--card-shadow);
+    }
+    .match-card:hover { background: var(--panel); box-shadow: inset 0 0 0 1px var(--line-strong), 0 1px 2px var(--card-shadow); }
+    .match-card:active { transform: scale(.98); box-shadow: inset 0 0 0 1px var(--line-strong); }
+    .match-card.selected {
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--text), 0 8px 16px -10px rgba(0, 0, 0, .35);
+      transform: translateY(-1px);
+    }
+    .match-card.correct {
+      color: var(--correct-ink);
+      background: var(--confetti, var(--correct-bg));
+      box-shadow: none;
+    }
+    .match-card.wrong {
+      color: var(--red-ink);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 2px var(--red-ink);
+    }
+    .match-card .num { color: var(--dim); }
+
+    /* The lane: one continuous gradient of the colours earned so far (laneGradient). */
+    .lesson-top { padding-top: 26px; }
+    .progress { height: 8px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+    .progress::after { display: none; }
+    .progress-fill { min-width: 0; background-color: transparent; }
+
+    /* End of a set: the ring of its colours; a clean set's ring has a light running round it. */
+    .completion-badge { display: none; }
+    .set-ring {
+      position: relative;
+      width: 188px;
+      height: 188px;
+      margin: 8px auto 18px;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 4px;
+    }
+    .set-ring::before,
+    .set-ring.full::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 13px), #000 calc(100% - 12px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 13px), #000 calc(100% - 12px));
+    }
+    .set-ring::before { background: var(--ring, var(--track)); }
+    .set-ring.full::after {
+      background: conic-gradient(from 0deg, transparent 0 78%, rgba(255, 255, 255, .75) 88%, transparent 97%);
+      animation: ring-spin 2.6s linear infinite;
+    }
+    @keyframes ring-spin { to { transform: rotate(1turn); } }
+    .set-ring small { position: relative; color: var(--muted); font-size: 14px; font-weight: 600; }
+    .set-ring b { position: relative; color: var(--text); font: 600 56px/1 var(--num-font); letter-spacing: -.02em; }
+    .set-colours { display: grid; gap: 6px; margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .set-colours b { color: var(--text); font-size: 17px; font-weight: 700; }
+    .set-colours b.full { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* Home: quiet blocks on top of the day's colours; the go block is the one white sheet. */
+    .home-top, .home .tile { animation: none; }
+    .home-word i:nth-child(n) { color: inherit; }
+    .home-streak, .home-lang {
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .home-streak.lit { color: var(--text); box-shadow: inset 0 0 0 1.5px var(--text); }
+    .tiles .tile {
+      --r: 0deg;
+      color: var(--text);
+      background: color-mix(in srgb, var(--panel) 84%, transparent);
+      box-shadow: inset 0 0 0 1px var(--line);
+      border-radius: 24px;
+    }
+    :root[data-color-mode="dark"] .tiles .tile { box-shadow: inset 0 0 0 1px var(--line); }
+    .tiles .tile-go { background: color-mix(in srgb, var(--panel) 94%, transparent); padding: 20px 20px 18px; gap: 6px; }
+    .tile-kicker, .tile-sub { opacity: 1; color: var(--muted); }
+    .tile-go .tile-bar { position: static; order: 1; width: 100%; margin-top: 12px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+    .tile-go .tile-bar i { background-color: var(--text); }
+    .tile-go .tile-action {
+      order: 2;
+      align-self: stretch;
+      justify-content: center;
+      min-height: 54px;
+      margin-top: 14px;
+      padding: 0 20px;
+      border-radius: 999px;
+      color: var(--on-primary);
+      background: var(--primary);
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .tile-colours[hidden] { display: none; }
+    .rank-bar { height: 6px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+    .rank-badge { rotate: 0deg; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sky, .set-ring.full::after { animation: none; }
+      body[data-screen="practice"] .sky { transition: none; }
+    }
   </style>
 </head>
 <body data-screen="home">
+  <!-- 全屏彩: the colours earned so far fill the screen behind everything (paintSky). -->
+  <div class="sky" id="sky" aria-hidden="true"></div>
   <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on Home. -->
   <section class="onboard" id="onboardScreen" aria-label="开始使用" data-en-aria="Get started" data-zh-aria="开始使用" hidden>
     <header class="ob-top">
@@ -3382,6 +3520,7 @@
             <span class="tile-kicker" id="todayTitle"></span>
             <span class="tile-num"><b id="goNum"></b><span id="goUnit"></span></span>
             <span class="tile-sub" id="todaySub"></span>
+            <span class="tile-sub tile-colours" id="goColours"></span>
             <span class="tile-action"><span id="goLabel"></span><svg class="tile-arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <span class="tile-bar" aria-hidden="true"><i id="goBar"></i></span>
           </button>
@@ -3438,7 +3577,10 @@
 
         <div class="completion" id="completionView">
           <div class="completion-badge" aria-hidden="true">CLEAR</div>
+          <!-- The set's colours as one ring: all seven for a clean set, one fewer per miss. -->
+          <div class="set-ring" id="setRing" aria-hidden="true"><small id="setRingLabel"></small><b id="setRingN"></b></div>
           <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
+          <p class="set-colours" id="setColours"><b id="setColoursHead"></b><span id="setColoursSub"></span></p>
           <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
           <div class="completion-stats" id="completionStats" hidden></div>
           <div class="completion-actions">
@@ -3890,6 +4032,7 @@
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
   <script src="./js/sfx.js"></script>
+  <script src="./js/routes.js"></script>
   <script src="./js/feedback.js"></script>
   <script src="./js/update.js"></script>
   <script src="./js/shell.js"></script>
@@ -3904,18 +4047,18 @@
     // applyTheme() derives the mixed tones at runtime — DESIGN.md records those.
     const STAGE = {
       dark: {
-        bg: "#1f1e2e", panel: "#2a2940", panel2: "#25243a", line: "#3a3954", lineStrong: "#56557a",
-        text: "#f7f5ee", muted: "#c9c6d8", dim: "#a6a3bb",
-        greenInk: "#2ee6a6", blueInk: "#47b5ff", redInk: "#ff6b8b", yellowInk: "#ffd21f",
-        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
+        bg: "#121415", panel: "#1e2021", panel2: "#282a2b", line: "#333536", lineStrong: "#4a5052",
+        text: "#e2e2e3", muted: "#c2c7ca", dim: "#a2a7aa",
+        greenInk: "#9bd595", blueInk: "#9acee7", redInk: "#ffb2bc", yellowInk: "#f5c64d",
+        primary: "#e2e2e3", onPrimary: "#2f3132", track: "#282a2b", hover: "#282a2b"
       },
       light: {
-        bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
-        text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
-        greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
-        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
+        bg: "#f9f9fa", panel: "#ffffff", panel2: "#eeeeef", line: "#e2e2e3", lineStrong: "#c2c7ca",
+        text: "#35393b", muted: "#42484a", dim: "#5f6568",
+        greenInk: "#285d2a", blueInk: "#2f657b", redInk: "#9b4052", yellowInk: "#7a5600",
+        primary: "#2f3132", onPrimary: "#f1f0f1", track: "#e8e8e9", hover: "#f3f3f4"
       },
-      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffb800" }
+      accent: { green: "#436740", greenDark: "#2a4128", blue: "#2f657b", blueDeep: "#1e3f4e", red: "#9b4052", redDeep: "#7d2f3f", yellow: "#e3b53d" }
     };
     // Pink, sky, lemon, mint, violet. Matched cards are filled with these and keep ink text
     // (#2b2a3d on every one is >= 5:1), in both day and night.
@@ -4063,6 +4206,11 @@
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
         fx: { combo: "{n} in a row", comboWord: "COMBO" },
+        colours: {
+          full: "All seven colours · {route}", fullSub: "{n} in a row, not one miss",
+          some: "{k} of 7 colours · {route}", someSub: "{m} misses, {lost} colours lost · best streak {best}",
+          ringDone: "Set done", ringTime: "Time's up", today: "{s} sets · {c} colours today", todayOne: "1 set · {c} colours today"
+        },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         home: {
           leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
@@ -4356,6 +4504,11 @@
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
         fx: { combo: "连对 {n} 次", comboWord: "连击" },
+        colours: {
+          full: "七色全齐 · {route}", fullSub: "{n} 连，一次没错",
+          some: "{k} / 7 种颜色 · {route}", someSub: "错了 {m} 次，少了 {lost} 种颜色 · 最长连击 {best}",
+          ringDone: "这一组完成", ringTime: "时间到", today: "今天 {s} 组 · {c} 种颜色", todayOne: "今天 1 组 · {c} 种颜色"
+        },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         home: {
           leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
@@ -5132,18 +5285,17 @@
 
     function applyTheme(index) {
       const i = themeIndexOf(index);
-      const mood = COLOR_THEMES[i];
       const light = resolveColorScheme() === "light";
       const base = light ? STAGE.light : STAGE.dark;
       const a = STAGE.accent;
-      // Paper takes a whisper of the set's colour; panels (cards, dialogs) stay clean.
-      const fixedBg = mixHex(mood.fill, base.bg, light ? 0.16 : 0.07);
+      // One neutral ground: grey surfaces and ink. Colour is earned in practice (the set's
+      // colour route) and shown by the sky (paintSky); nothing else is tinted.
       const root = document.documentElement;
       root.setAttribute("data-color-mode", light ? "light" : "dark");
       const set = (name, value) => root.style.setProperty(name, value);
-      set("--bg", fixedBg);
+      set("--bg", base.bg);
       set("--panel", base.panel);
-      set("--panel-2", mixHex(mood.fill, base.panel, light ? 0.22 : 0.1));
+      set("--panel-2", base.panel2);
       set("--line", base.line);
       set("--line-strong", base.lineStrong);
       set("--text", base.text);
@@ -5160,34 +5312,37 @@
       set("--blue-ink", base.blueInk);
       set("--red-ink", base.redInk);
       set("--yellow-ink", base.yellowInk);
-      set("--primary", mood.fill);
-      set("--primary-dark", mood.deep);
-      set("--on-primary", CONFETTI_INK);
-      set("--primary-shadow", rgbaFromHex(mood.deep, 0.45));
-      set("--panel-soft", mixHex(base.panel, fixedBg, 0.5));
-      set("--track", mixHex(mood.fill, light ? "#f1ece3" : "#34334c", light ? 0.3 : 0.12));
-      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.09 : 0.22));
-      set("--selected-ink", light ? "#1b3f73" : base.text);
-      const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
-      set("--selected-shadow", light ? rgbaFromHex(a.blue, 0.22) : neutralShadow);
-      set("--correct-bg", "#2ee6a6");
-      set("--correct-ink", CONFETTI_INK);
-      set("--correct-shadow", neutralShadow);
-      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.14 : 0.22));
-      set("--wrong-ink", light ? "#8f2a12" : "#ffe3dc");
-      set("--wrong-shadow", light ? rgbaFromHex(a.red, 0.22) : neutralShadow);
-      set("--on-accent", CONFETTI_INK);
-      set("--warn-ink", "#2b1800");
-      set("--warn-shadow", rgbaFromHex(a.yellow, 0.4));
+      set("--ember-ink", base.text);
+      set("--good-ink", base.greenInk);
+      set("--primary", base.primary);
+      set("--primary-dark", base.primary);
+      set("--on-primary", base.onPrimary);
+      set("--primary-shadow", "transparent");
+      set("--panel-soft", base.panel);
+      set("--track", base.track);
+      set("--selected-bg", base.panel);
+      set("--selected-ink", base.text);
+      const neutralShadow = light ? "rgba(26, 28, 30, .10)" : "rgba(0, 0, 0, .45)";
+      set("--selected-shadow", neutralShadow);
+      set("--correct-bg", base.panel2);
+      set("--correct-ink", base.text);
+      set("--correct-shadow", "transparent");
+      set("--wrong-bg", base.panel);
+      set("--wrong-ink", base.redInk);
+      set("--wrong-shadow", "transparent");
+      set("--on-accent", base.onPrimary);
+      set("--warn-ink", base.text);
+      set("--warn-shadow", "transparent");
       set("--weak-wrong", base.redInk);
       set("--card-shadow", neutralShadow);
-      set("--scrim", light ? "rgba(43, 42, 61, .38)" : "rgba(10, 10, 20, .6)");
-      set("--hover-soft", mixHex(mood.fill, base.panel, light ? 0.14 : 0.08));
+      set("--scrim", light ? "rgba(26, 28, 30, .32)" : "rgba(0, 0, 0, .6)");
+      set("--hover-soft", base.hover);
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute("content", fixedBg);
+      if (meta) meta.setAttribute("content", base.bg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
       if (state && state.settings) state.settings.themeIndex = i;
       syncSystemBars();
+      if (typeof paintSky === "function") paintSky();
       return i;
     }
 
@@ -5315,6 +5470,28 @@
     const ICON_CHECK = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>';
 
     const RESULT_WORDS = { clear: "CLEAR", fullCombo: "FULL COMBO", timeUp: "TIME UP", start: "START" };
+    /** The end-of-set ring and its line: the colours this set earned, and why some are missing. */
+    function renderCompletionRing() {
+      const ring = document.getElementById("setRing");
+      if (!ring) return;
+      const route = levelRoute(), miss = state.levelMistakes || 0, k = levelColours(true), light = isLight();
+      const timeUp = !state.roundComplete;
+      ring.style.setProperty("--ring", `conic-gradient(from 0deg, ${WordSnapRoutes.stops(route.hues, k, light ? "bar" : "barDark", true)})`);
+      ring.classList.toggle("full", !miss && !timeUp);
+      document.getElementById("setRingLabel").textContent = t(timeUp ? "colours.ringTime" : "colours.ringDone");
+      document.getElementById("setRingN").textContent = String(state.completedThisRun || 0);
+      const name = currentLang === "zh" ? route.zh : route.en;
+      const head = document.getElementById("setColoursHead"), sub = document.getElementById("setColoursSub");
+      head.style.setProperty("--grad", `linear-gradient(90deg, ${WordSnapRoutes.stops(route.hues, k, light ? "text" : "textDark")})`);
+      head.classList.toggle("full", !miss);
+      head.textContent = miss ? t("colours.some", { k, route: name }) : t("colours.full", { route: name });
+      sub.textContent = miss
+        ? t("colours.someSub", { m: miss, lost: WordSnapRoutes.N_COLOURS - k, best: state.levelBestStreak || 0 })
+        : t("colours.fullSub", { n: state.completedThisRun || 0 });
+      document.getElementById("setColours").hidden = !(state.completedThisRun > 0);
+      paintSky();
+    }
+
     function setResultWord(kind) {
       const badge = els.completionBadge;
       badge.textContent = RESULT_WORDS[kind] || RESULT_WORDS.clear;
@@ -5322,19 +5499,66 @@
       badge.classList.toggle("time-up", kind === "timeUp");
     }
 
-    /** The confetti colour of the set's nth match (0-based), and a deeper edge for its border. */
+    /** The set's colour route (js/routes.js): drawn when a set starts, never the same twice in a row. */
+    function levelRoute() {
+      if (!state.levelRoute) state.levelRoute = WordSnapRoutes.pickRoute(Math.random, state.lastRouteId || "");
+      return state.levelRoute;
+    }
+    const isLight = () => resolveColorScheme() === "light";
+
+    /** The nth matched pair's colour (0-based): it walks the colours earned so far. `edge` is the bright mark tone. */
     function confettiFor(n) {
-      const k = n + (state.levelConfettiStart || 0);
-      const fill = CONFETTI[((k % CONFETTI.length) + CONFETTI.length) % CONFETTI.length];
-      return { fill, edge: mixHex(fill, CONFETTI_INK, 0.78) };
+      const hue = WordSnapRoutes.matchHue(levelRoute(), n, currentRoundTotal() || 25, state.levelMistakes || 0);
+      const light = isLight();
+      return { fill: WordSnapRoutes.colourOf(hue, light ? "card" : "cardDark"), edge: WordSnapRoutes.colourOf(hue, light ? "bar" : "barDark") };
     }
 
-    // The lane is the set's history: one segment per match, in that pair's confetti colour.
+    /** How many of the route's colours the set has earned so far (all of what is left at the end). */
+    function levelColours(final = false) {
+      const total = currentRoundTotal() || 25, miss = state.levelMistakes || 0;
+      return final ? WordSnapRoutes.available(miss) : WordSnapRoutes.shown(state.completedThisRun || 0, total, miss);
+    }
+
+    // The lane: one continuous gradient through the colours earned so far.
     function laneGradient() {
-      const list = state.levelJudgements || [];
-      if (!list.length) return "none";
-      const step = 100 / list.length;
-      return `linear-gradient(90deg, ${list.map((kind, i) => `${confettiFor(i).fill} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
+      if (!(state.completedThisRun > 0)) return "none";
+      return `linear-gradient(90deg, ${WordSnapRoutes.stops(levelRoute().hues, levelColours(state.roundComplete), isLight() ? "bar" : "barDark")})`;
+    }
+
+    // ---- 全屏彩: the colours earned fill the screen behind everything ----
+    const TODAY_COLOURS_KEY = "word_snap_today_colours_v1";
+    function todayColours() {
+      let stored = null;
+      try { stored = JSON.parse(localStorage.getItem(TODAY_COLOURS_KEY) || "null"); } catch (e) {}
+      return WordSnapRoutes.today(stored, WordSnapHabit.dayKey(Date.now()));
+    }
+    function addTodayColours() {
+      if (!(state.completedThisRun > 0)) return;
+      const t = WordSnapRoutes.addSet(todayColours(), WordSnapHabit.dayKey(Date.now()), levelRoute(), state.levelMistakes || 0);
+      try { localStorage.setItem(TODAY_COLOURS_KEY, JSON.stringify(t)); } catch (e) {}
+    }
+    let homeProgress = 0;
+    function paintSky() {
+      const sky = document.getElementById("sky");
+      if (!sky || !state) return;
+      const dark = !isLight(), screen = document.body.dataset.screen;
+      let hues = [], p = 0, strength = 0;
+      if (screen === "practice" && state.levelRoute) {
+        const ended = els.completionView && els.completionView.classList.contains("show");
+        const total = currentRoundTotal() || 25, got = state.completedThisRun || 0;
+        hues = state.levelRoute.hues.slice(0, levelColours(ended));
+        p = ended ? 1 : got / total;
+        strength = ended ? 1 : got ? 0.3 + 0.5 * p : 0;
+      } else if (screen === "home") {
+        hues = WordSnapRoutes.todayHues(todayColours());
+        p = homeProgress;
+        strength = hues.length ? 1 : 0;
+      }
+      // The blobs are sized for the whole screen, so the colours meet instead of floating as spots.
+      const scale = Math.max(1.6, Math.max(window.innerWidth, window.innerHeight) / 340 * 1.15);
+      if (hues.length) sky.style.setProperty("--sky", WordSnapRoutes.mesh(hues, p, dark, { scale, floor: 0.75 }));
+      sky.style.opacity = String(strength);
+      document.body.classList.toggle("has-sky", strength > 0);
     }
 
     // ---- Daily goal and day streak (js/habit.js) ----
@@ -6108,6 +6332,10 @@
         return;
       }
       els.comboLabel.dataset.tier = tier.name;
+      if (state.levelRoute) {
+        const hue = state.levelRoute.hues[levelColours() - 1];
+        els.comboLabel.style.color = WordSnapRoutes.colourOf(hue, isLight() ? "text" : "textDark");
+      }
       els.comboLabel.innerHTML = `<b data-combo-n></b><span>${escapeHtml(t("fx.comboWord"))}</span>`;
       const n = els.comboLabel.querySelector("[data-combo-n]");
       n.dataset.rollText = String(Math.max(0, streak - 1));
@@ -6293,7 +6521,8 @@
       state.levelBestStreak = 0;
       state.levelStreak = 0;
       state.levelJudgements = [];
-      state.levelConfettiStart = currentTheme().confetti;
+      state.lastRouteId = state.levelRoute ? state.levelRoute.id : state.lastRouteId;
+      state.levelRoute = WordSnapRoutes.pickRoute(Math.random, state.lastRouteId || "");
       state.lastCompletion = null;
       state.goalDoneThisSet = false;
       updateCombo(0);
@@ -6911,8 +7140,10 @@
       scheduleEngineFit();
       // Each finished level rotates the color skin.
       advanceThemeAfterLevel();
+      addTodayColours();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
+      renderCompletionRing();
       setResultWord(reason === "timeout" ? "timeUp" : !state.levelMistakes && state.completedThisRun > 0 ? "fullCombo" : "clear");
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
@@ -7989,6 +8220,7 @@
           : 0;
       els.progressFill.style.width = `${pct}%`;
       els.progressFill.style.backgroundImage = laneGradient();
+      paintSky();
       renderTimer();
       els.roundLabel.textContent = levelLabel(state.completedThisRun || 0, targetTotal);
       els.score.textContent = state.score;
@@ -9294,6 +9526,7 @@
       if (screen === prev) { syncNavUI(); return; }
       shownScreen = screen;
       document.body.dataset.screen = screen;
+      paintSky();
       els.onboardScreen.hidden = screen !== "onboard";
       if (prev === "practice" && screen !== "practice") pauseLevel();
       if (screen === "home") {
@@ -9400,6 +9633,13 @@
         els.goUnit.textContent = unit;
       }
       els.homeGo.setAttribute("aria-label", [title, num && !full ? `${num} ${unit}` : "", sub, btn].filter(Boolean).join(". "));
+      const today = todayColours(), hues = WordSnapRoutes.todayHues(today);
+      homeProgress = full ? 1 : pct / 100;
+      els.goBar.style.backgroundImage = hues.length ? `linear-gradient(90deg, ${WordSnapRoutes.stops(hues, hues.length, isLight() ? "bar" : "barDark")})` : "";
+      const goColours = document.getElementById("goColours");
+      goColours.textContent = hues.length ? t(today.sets.length === 1 ? "colours.todayOne" : "colours.today", { s: today.sets.length, c: hues.length }) : "";
+      goColours.hidden = !hues.length;
+      paintSky();
       // Next frame, so the bar grows from where it was.
       requestAnimationFrame(() => { els.goBar.style.setProperty("--fill", `${full ? 100 : Math.max(pct ? 4 : 0, pct)}%`); });
       els.goBar.parentElement.hidden = needsSetup || !state.words.length;
