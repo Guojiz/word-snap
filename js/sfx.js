@@ -12,7 +12,7 @@
  *   tap         a soft, short high pluck (buttons)
  *   select      a lighter one (choosing a card)
  *   match       one note per correct pair; level = the streak (1, 2, 3 …), see matchNotes()
- *   wrong       a pressed note sliding down: a soft sigh
+ *   wrong       断弦, a string snapping: a crack, the string whipping down an octave, a slap
  *   combo       a short 刮奏 (combo milestones)
  *   claim       a pluck and its octave (claiming the set's points)
  *   setComplete a 刮奏 into a held chord
@@ -149,7 +149,7 @@
   }
 
   /** A guzheng note: the pluck, then vibrato (揉) or a bend (滑, in semitones) from the left hand. */
-  function zheng(ac, out, f, t, { gain = 0.3, len = 1.2, vib = 0, bend = 0, bendAt = 0.06 } = {}) {
+  function zheng(ac, out, f, t, { gain = 0.3, len = 1.2, vib = 0, bend = 0, bendAt = 0.06, bendLen = 0.22 } = {}) {
     const at = ac.currentTime + t;
     const { buf, rate } = string(ac, f);
     const src = ac.createBufferSource();
@@ -159,7 +159,7 @@
     src.playbackRate.setValueAtTime(rate, at);
     if (bend) {
       src.playbackRate.setValueAtTime(rate, at + bendAt);
-      src.playbackRate.exponentialRampToValueAtTime(rate * Math.pow(2, bend / 12), at + bendAt + 0.22);
+      src.playbackRate.exponentialRampToValueAtTime(rate * Math.pow(2, bend / 12), at + bendAt + bendLen);
     }
     if (vib) {
       const lfo = ac.createOscillator();
@@ -197,6 +197,31 @@
     });
   }
 
+  const snaps = new Map();
+  /** 断弦: the crack of a string giving way, a burst of noise that is gone in 40 ms (cached per sample rate). */
+  function snap(ac, out, t, gain = 0.2) {
+    const at = ac.currentTime + t;
+    const sr = ac.sampleRate;
+    if (!snaps.has(sr)) {
+      const len = Math.floor(sr * 0.04);
+      const b = ac.createBuffer(1, len, sr);
+      const d = b.getChannelData(0);
+      let seed = 4242;
+      for (let i = 0; i < len; i++) { seed = (seed * 16807) % 2147483647; d[i] = (seed / 1073741823.5 - 1) * Math.exp(-i / (sr * 0.008)); }
+      snaps.set(sr, b);
+    }
+    const src = ac.createBufferSource();
+    const band = ac.createBiquadFilter();
+    const g = ac.createGain();
+    src.buffer = snaps.get(sr);
+    band.type = "bandpass";
+    band.frequency.value = 2200;
+    band.Q.value = 1.1;
+    g.gain.value = gain;
+    src.connect(band).connect(g).connect(out);
+    src.start(at);
+  }
+
   /** 刮奏: a sweep up the scale from step `from`, fast at first, the last note held. Returns when it ends. */
   function gliss(ac, out, from, count, t, step = 0.032, gain = 0.2) {
     for (let i = 0; i < count; i++) {
@@ -221,7 +246,12 @@
       // Every 5th in a row: a quick grace note one step above (a flourish, not yet a 刮奏).
       if (n % 5 === 0) zheng(ac, o, hz(graceNote(n)), 0.07, { gain: 0.1, len: 0.6 });
     },
-    wrong(ac, o) { zheng(ac, o, hz(KEY - 5), 0, { gain: 0.26, len: 0.7, bend: -2, bendAt: 0.05 }); },
+    wrong(ac, o) {
+      // 断弦: a crack, the freed string whipping down an octave, and a dull slap on the board.
+      snap(ac, o, 0, 0.22);
+      zheng(ac, o, hz(KEY + 2), 0.004, { gain: 0.24, len: 0.32, bend: -12, bendAt: 0.012, bendLen: 0.14 });
+      zheng(ac, o, hz(KEY - 22), 0.03, { gain: 0.14, len: 0.22, bend: -3, bendAt: 0.02, bendLen: 0.1 });
+    },
     combo(ac, o) { gliss(ac, o, 5, 5, 0.12, 0.04, 0.12); },
     claim(ac, o) {
       zheng(ac, o, hz(scaleNote(7)), 0, { gain: 0.2, len: 0.9 });

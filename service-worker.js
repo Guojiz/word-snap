@@ -14,6 +14,7 @@ const APP_SHELL = [
   "./js/wordbooks.js",
   "./js/fx.js",
   "./js/sfx.js",
+  "./js/routes.js",
   "./js/feedback.js",
   "./js/update.js",
   "./js/shell.js",

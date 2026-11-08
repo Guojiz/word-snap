@@ -136,6 +136,7 @@
   }
 
   const JUDGE_TEXT = { perfect: "PERFECT", great: "GREAT", good: "GOOD", miss: "MISS" };
+  const JUDGE_TEXT_ZH = { perfect: "完美", great: "很好", good: "不错", miss: "错了" };
 
   /**
    * The judgement word over a matched (or missed) pair, with the reaction time.
@@ -151,7 +152,7 @@
     const x = boxes.reduce((sum, b) => sum + b.left + b.width / 2, 0) / boxes.length;
     const el = doc.createElement("div");
     el.className = `fx-judge fx-judge-${kind}`;
-    el.textContent = JUDGE_TEXT[kind] || "";
+    el.textContent = (String(doc.documentElement.lang || "").startsWith("zh") ? JUDGE_TEXT_ZH : JUDGE_TEXT)[kind] || "";
     if (ms > 0 && kind !== "miss") {
       const time = doc.createElement("small");
       time.textContent = `${(ms / 1000).toFixed(1)}s`;

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Word Snap</title>
   <meta name="description" content="A fast bilingual vocabulary matching practice app with adaptive review, custom word lists, and PWA install." />
-  <meta name="theme-color" content="#fffcf6" />
+  <meta name="theme-color" content="#f9f9fa" />
   <meta name="color-scheme" content="light dark" />
   <script>
     (function () {
@@ -13,18 +13,8 @@
         var m = localStorage.getItem("word_snap_color_mode") || "system";
         var light = m === "light" || (m === "system" && window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches);
         document.documentElement.setAttribute("data-color-mode", light ? "light" : "dark");
-        // The set colour (COLOR_THEMES) is not fixed from the start: a first visit picks
-        // one at random, then each finished set moves on. Tint the paper before first paint
-        // (= applyTheme's --bg) so the page does not flash another colour.
-        var t = Number(localStorage.getItem("word_snap_theme_index"));
-        if (localStorage.getItem("word_snap_theme_index") == null || !(t >= 0 && t < 5)) {
-          t = Math.floor(Math.random() * 5);
-          localStorage.setItem("word_snap_theme_index", String(t));
-        }
-        var bg = light
-          ? ["#fff8e2", "#fff0e9", "#f1f6f7", "#eff9ee", "#f8f3f7"]
-          : ["#2f2c33", "#2f2936", "#292b3d", "#282c38", "#2c2a3d"];
-        document.documentElement.style.setProperty("--bg", bg[Math.floor(t)]);
+        // One neutral ground (= applyTheme's --bg), set before first paint so nothing flashes.
+        document.documentElement.style.setProperty("--bg", light ? "#f9f9fa" : "#121415");
       } catch (e) {}
     })();
   </script>
@@ -52,7 +42,7 @@
        *-ink variants are the same hues dark/light enough for text (>= 4.5:1).
        applyTheme() sets the same values at runtime; these are the pre-JS fallbacks. */
     :root {
-      --bg: #fffcf6;
+      --bg: #f9f9fa;
       --panel: #ffffff;
       --panel-2: #fff7e8;
       --line: #efe9de;
@@ -98,7 +88,7 @@
       --radius: 18px;
       --ease: cubic-bezier(.2, .8, .2, 1);
       --theme-shift: 420ms;
-      --num-font: "Fredoka", "Nunito", "Varela Round", system-ui, sans-serif;
+      --num-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     :root[data-color-mode="light"] { color-scheme: light; }
@@ -146,7 +136,7 @@
       min-height: 1.4em;
       margin: 8px 0 0;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 600;
       color: var(--muted);
     }
     .import-status.good { color: var(--green-ink); }
@@ -187,7 +177,7 @@
       margin: 0;
       color: var(--text);
       background: var(--bg);
-      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
       letter-spacing: 0;
     }
 
@@ -242,7 +232,7 @@
       cursor: pointer;
       padding: 6px 2px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
       text-align: center;
       line-height: 1.12;
       letter-spacing: 0;
@@ -351,7 +341,7 @@
       gap: 6px;
       font-family: var(--num-font);
       font-size: 26px;
-      font-weight: 800;
+      font-weight: 600;
       letter-spacing: 0.02em;
       white-space: nowrap;
       padding: 2px 14px 3px;
@@ -401,7 +391,7 @@
       color: var(--muted);
       font-family: var(--num-font);
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 600;
       filter: grayscale(1);
       opacity: 0.75;
       transition: filter 0.4s ease, opacity 0.4s ease, color 0.4s ease;
@@ -430,7 +420,7 @@
       gap: 4px 12px;
       margin: 18px 0 6px;
       font-family: var(--num-font);
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .result-cell {
@@ -465,7 +455,7 @@
       color: var(--muted);
       font-family: inherit;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
       text-align: center;
     }
 
@@ -473,7 +463,7 @@
       color: var(--text);
       font-family: var(--num-font);
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     @keyframes tile-in {
@@ -492,7 +482,7 @@
       padding: 2px 0;
       color: var(--muted);
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .today-bar b {
@@ -510,7 +500,7 @@
       color: var(--text);
       font-family: var(--num-font);
       font-size: 34px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 0.9;
     }
 
@@ -536,7 +526,7 @@
     .today-bar small {
       display: block;
       margin-top: 2px;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     @keyframes today-pop {
@@ -556,7 +546,7 @@
       background: transparent;
       cursor: pointer;
       font-size: 24px;
-      font-weight: 900;
+      font-weight: 600;
       line-height: 1;
     }
 
@@ -614,7 +604,7 @@
       gap: 4px;
       color: var(--text);
       font-family: var(--num-font);
-      font-weight: 800;
+      font-weight: 600;
       white-space: nowrap;
       transform-origin: right bottom;
       opacity: 0;
@@ -645,7 +635,7 @@
       color: var(--muted);
       font-family: var(--num-font);
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 600;
       text-align: right;
       font-variant-numeric: tabular-nums;
     }
@@ -756,7 +746,7 @@
     .match-card .num {
       color: var(--muted);
       font-family: var(--num-font);
-      font-weight: 700;
+      font-weight: 500;
     }
 
     /* On coloured card states the hint takes the card's own ink (always ≥ 4.5:1). */
@@ -771,13 +761,13 @@
       margin-top: 1px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.1;
     }
 
     .reading-inline {
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 500;
     }
 
     /* A matched pair is filled with its confetti colour (markCorrect sets --confetti). */
@@ -826,7 +816,7 @@
       place-items: center;
       color: var(--dim);
       font-size: 16px;
-      font-weight: 900;
+      font-weight: 600;
       line-height: 1;
     }
 
@@ -835,7 +825,7 @@
       overflow: hidden;
       color: inherit;
       font-size: 21px;
-      font-weight: 800;
+      font-weight: 600;
       text-align: center;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -890,7 +880,7 @@
       margin: 0 0 10px;
       color: var(--red-ink);
       font-size: 15px;
-      font-weight: 900;
+      font-weight: 600;
       text-align: left;
       text-transform: uppercase;
     }
@@ -913,7 +903,7 @@
       cursor: pointer;
       padding: 12px 20px;
       font-size: 17px;
-      font-weight: 800;
+      font-weight: 600;
       text-align: center;
       line-height: 1.2;
       text-wrap: balance;
@@ -1037,7 +1027,7 @@
       margin-top: 6px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
       overflow-wrap: anywhere;
       word-break: break-word;
     }
@@ -1073,7 +1063,7 @@
       place-items: center;
       color: var(--weak-wrong);
       font-size: 14px;
-      font-weight: 900;
+      font-weight: 600;
       text-align: center;
     }
 
@@ -1095,7 +1085,7 @@
       cursor: pointer;
       padding: 8px 10px;
       font-size: 14px;
-      font-weight: 900;
+      font-weight: 600;
       text-align: center;
       line-height: 1.2;
       overflow-wrap: anywhere;
@@ -1230,7 +1220,7 @@
       gap: 7px;
       color: var(--muted);
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     input,
@@ -1312,7 +1302,7 @@
       color: var(--on-primary);
       background: var(--primary);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-      font-weight: 800;
+      font-weight: 600;
       transform: translateX(-50%);
     }
 
@@ -1324,7 +1314,7 @@
       color: var(--primary);
       background: var(--on-primary);
       font: inherit;
-      font-weight: 900;
+      font-weight: 600;
       cursor: pointer;
     }
 
@@ -1436,7 +1426,7 @@
       border-bottom: 2px solid #111;
       padding-bottom: 6px;
       margin-bottom: 10px;
-      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-head h1 {
@@ -1452,7 +1442,7 @@
     }
 
     .ps-body {
-      font-family: "Fredoka", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
 
     .ps-body.cols-2 {
@@ -1473,7 +1463,7 @@
     .ps-row.ps-labels {
       color: #666;
       font-size: .8em;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .ps-row > * {
@@ -1487,7 +1477,7 @@
     }
 
     .ps-row b {
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .ps-row .ps-num,
@@ -1585,7 +1575,7 @@
       background: transparent;
       cursor: pointer;
       padding: 0 8px;
-      font-weight: 900;
+      font-weight: 600;
       text-align: center;
     }
 
@@ -1606,7 +1596,7 @@
       color: var(--text);
       font-family: var(--num-font);
       font-size: clamp(44px, 13vw, 64px);
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1;
       letter-spacing: 0.02em;
       transform: rotate(-4deg);
@@ -1693,7 +1683,7 @@
       margin: 0;
       color: var(--muted);
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 1.5;
       text-wrap: pretty;
     }
@@ -1712,7 +1702,7 @@
       background: transparent;
       cursor: pointer;
       font-size: 20px;
-      font-weight: 900;
+      font-weight: 600;
       line-height: 1;
     }
 
@@ -1979,7 +1969,7 @@
       gap: 10px;
       align-items: center;
       margin: 18px 20px;
-      font-weight: 800;
+      font-weight: 600;
       text-align: center;
     }
 
@@ -2027,7 +2017,7 @@
       background: transparent;
       cursor: pointer;
       font-size: 15px;
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .tab-btn[aria-selected="true"] {
@@ -2056,7 +2046,7 @@
       background: var(--bg);
       cursor: pointer;
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .stage-chip b {
@@ -2117,7 +2107,7 @@
       margin: 14px 0 0;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 600;
       text-transform: uppercase;
     }
 
@@ -2127,7 +2117,7 @@
 
     .list-group small {
       margin-left: 6px;
-      font-weight: 700;
+      font-weight: 500;
       text-transform: none;
     }
 
@@ -2176,7 +2166,7 @@
     .advanced summary {
       cursor: pointer;
       color: var(--muted);
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .advanced[open] summary {
@@ -2261,7 +2251,7 @@
       border-radius: 6px;
       color: var(--dim);
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .forecast {
@@ -2275,7 +2265,7 @@
       margin: 0 0 8px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 600;
       text-transform: uppercase;
     }
 
@@ -2296,7 +2286,7 @@
     .forecast-n {
       color: var(--text);
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .forecast-bar {
@@ -2332,7 +2322,7 @@
       margin: 0;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .drill-title {
@@ -2374,12 +2364,12 @@
 
     .drill-ok {
       color: var(--green-ink);
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .drill-bad {
       color: var(--red-ink);
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .drill-muted {
@@ -2438,7 +2428,7 @@
       background: var(--panel);
       cursor: pointer;
       font: inherit;
-      font-weight: 900;
+      font-weight: 600;
     }
 
     .drill-actions {
@@ -2509,7 +2499,7 @@
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.4;
       text-align: center;
     }
@@ -2557,9 +2547,8 @@
     }
 
     /* ---- Home ---- */
-    /* Home is the menu: every launch opens on a few colour blocks with real content
-       (today's words, the word book, add words, settings); tap one to do that thing. The
-       tapped block's colour floods the screen on the way in (js/shell.js flood). */
+    /* Home is the menu: today's goal card and a few rows; tap one to do that thing.
+       The v9 rules near the end of this sheet restyle it (one card, quiet rows). */
     .home {
       --home-h: calc(100vh - 64px);
       width: min(480px, 100%);
@@ -2588,7 +2577,7 @@
       color: var(--text);
       font-family: var(--num-font);
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 500;
       white-space: nowrap;
     }
 
@@ -2610,7 +2599,7 @@
       box-shadow: inset 0 0 0 2px var(--line);
       font-family: var(--num-font);
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .home-chips { display: flex; gap: 8px; }
@@ -2626,7 +2615,7 @@
       box-shadow: inset 0 0 0 2px var(--line);
       font-family: var(--num-font);
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
     }
 
@@ -2691,7 +2680,7 @@
     }
     .update-banner {
       margin-top: 10px;
-      font-weight: 800;
+      font-weight: 600;
     }
     .update-banner .link-button { min-height: 44px; } /* "Download" is the action here: a full-size target */
 
@@ -2708,7 +2697,7 @@
 
     .tile-kicker {
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 600;
       opacity: .75;
     }
 
@@ -2722,18 +2711,18 @@
     .tile-num b {
       font-family: var(--num-font);
       font-size: 64px;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1;
     }
 
-    .tile-num span { font-size: 17px; font-weight: 800; }
+    .tile-num span { font-size: 17px; font-weight: 600; }
     .tile-num:has(b:empty) { display: none; }
 
     .tile-num svg { width: 56px; height: 56px; }
 
     .tile-sub {
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.4;
       opacity: .75;
     }
@@ -2745,7 +2734,7 @@
       margin-top: auto;
       padding-top: 10px;
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .tile-arrow { transition: translate 200ms var(--spring); }
@@ -2776,7 +2765,7 @@
 
     .tile-title {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 1.25;
     }
 
@@ -2784,7 +2773,7 @@
       max-width: 100%;
       overflow: hidden;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 600;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -2857,7 +2846,7 @@
     .ob-skip {
       justify-self: end;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .ob-viewport {
@@ -2942,7 +2931,7 @@
     .ob-opt small {
       color: var(--muted);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .ob-opt.wide { grid-column: 1 / -1; }
@@ -3200,13 +3189,13 @@
       background: var(--rank-c, #fff);
       box-shadow: inset 0 0 0 2.5px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 6px 12px -6px rgba(0, 0, 0, .4);
       color: #2b2a3d;
-      font: 700 15px/1 "Fredoka", system-ui, sans-serif;
+      font: 500 15px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
     }
     .rank-badge.rainbow, .ritual-rank.rainbow {
       background: linear-gradient(135deg, #ff6b8b, #ffd21f 30%, #2ee6a6 55%, #47b5ff 78%, #b18cff);
     }
-    .rank-name { font-weight: 800; font-size: 17px; }
-    .rank-pts { margin-left: auto; font: 700 15px/1 "Fredoka", system-ui, sans-serif; white-space: nowrap; }
+    .rank-name { font-weight: 600; font-size: 17px; }
+    .rank-pts { margin-left: auto; font: 500 15px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; white-space: nowrap; }
     .rank-bar { width: 100%; height: 10px; border-radius: 6px; background: var(--track, var(--line)); overflow: hidden; }
     .rank-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--rank-c, #47b5ff); transition: width 700ms var(--spring); }
     .rank-bar.rainbow i { background: linear-gradient(90deg, #ff6b8b, #ffd21f, #2ee6a6, #47b5ff, #b18cff); }
@@ -3234,18 +3223,18 @@
     @keyframes ritual-in { from { opacity: 0; transform: translateY(14px) scale(.96); } }
     .ritual h2 { margin: 0; font-size: 26px; line-height: 1.2; }
     .ritual p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.45; }
-    .ritual-big { font: 700 84px/1 "Fredoka", system-ui, sans-serif; color: var(--text); text-shadow: 0 6px 0 color-mix(in srgb, var(--ritual-c, #47b5ff) 70%, transparent); }
+    .ritual-big { font: 500 84px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; color: var(--text); text-shadow: 0 6px 0 color-mix(in srgb, var(--ritual-c, #47b5ff) 70%, transparent); }
     .ritual-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-    .ritual-chip { padding: 6px 12px; border-radius: 999px; background: var(--c, #47b5ff); color: #2b2a3d; font-weight: 800; font-size: 14px; }
+    .ritual-chip { padding: 6px 12px; border-radius: 999px; background: var(--c, #47b5ff); color: #2b2a3d; font-weight: 600; font-size: 14px; }
     .ritual-week { width: 100%; display: grid; gap: 6px; }
     .ritual-week .rank-line { text-align: center; }
     .ritual .duo-button { width: 100%; min-height: 56px; font-size: 18px; }
     .ritual .link-button { min-height: 44px; }
-    .ritual-rank { width: 92px; height: 118px; border-radius: 18px; rotate: -6deg; display: grid; place-items: center; font: 700 30px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--rank-c, #fff); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 18px 30px -14px rgba(0, 0, 0, .45); }
+    .ritual-rank { width: 92px; height: 118px; border-radius: 18px; rotate: -6deg; display: grid; place-items: center; font: 500 30px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; color: #2b2a3d; background: var(--rank-c, #fff); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--rank-c, #fff) 55%, #2b2a3d), 0 18px 30px -14px rgba(0, 0, 0, .45); }
     .ritual-times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-    .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 700 20px/1 "Fredoka", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
+    .ritual-times button { min-height: 56px; border: 0; border-radius: 18px; font: 500 20px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; color: #2b2a3d; background: var(--c); cursor: pointer; }
     .ritual-times .wide { grid-column: 1 / -1; font-size: 18px; }
-    .ritual-times button span { display: block; margin-top: 4px; font: 700 12px/1 system-ui, sans-serif; }
+    .ritual-times button span { display: block; margin-top: 4px; font: 500 12px/1 system-ui, sans-serif; }
 
     /* The flame: drag it up (or press the button) to light it. */
     .ignite-track {
@@ -3282,7 +3271,7 @@
     .ignite-track.lit::before { opacity: 0; }
     @keyframes flame-dance { from { scale: 1 1; } to { scale: 1.04 .97; } }
     .ritual-strip { display: flex; justify-content: center; gap: 8px; }
-    .ritual-strip span { display: grid; justify-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .ritual-strip span { display: grid; justify-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--muted); }
     .ritual-strip i { width: 30px; height: 30px; border-radius: 50%; background: var(--line); display: grid; place-items: center; color: #2b2a3d; font-style: normal; font-size: 15px; }
     .ritual-strip .done i { background: #ffb800; }
     .ritual-strip .frozen i { background: #47b5ff; }
@@ -3306,7 +3295,7 @@
       background: var(--panel);
       color: var(--text);
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
       box-shadow: 0 8px 24px rgba(43, 42, 61, 0.16);
       transform: translateX(-50%);
       animation: inbox-note-in 220ms ease-out;
@@ -3319,9 +3308,221 @@
     @media (prefers-reduced-motion: reduce) {
       .inbox-note { animation: none; }
     }
+
+    /* ==== The v9 look (DESIGN.md) — phone only ====
+       One neutral ground; the colour practice earns fills the screen behind everything (the
+       sky); surfaces are glass. The squint test: on every screen exactly one thing is
+       brightest, and it is the next thing to press. Type has four steps only:
+       display 96/200 · title 22/400 · body 17/400 · label 15/500. Nothing is bold. */
+    :root {
+      --t-display: 200 96px/0.95 var(--num-font);
+      --t-title: 400 22px/1.3 var(--num-font);
+      --t-body: 400 17px/1.45 var(--num-font);
+      --t-label: 500 15px/1.3 var(--num-font);
+    }
+    body { font-variant-numeric: tabular-nums; }
+    h1, h2, h3 { font-weight: 400; letter-spacing: -.01em; }
+
+    /* ---- The sky (全屏彩) ---- */
+    .sky {
+      position: fixed;
+      inset: -20%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      background: var(--sky, none);
+      animation: sky-drift 18s ease-in-out infinite alternate;
+    }
+    body[data-screen="practice"] .sky { transition: opacity 600ms ease; }
+    @keyframes sky-drift { from { transform: translate3d(-4%, -3%, 0); } to { transform: translate3d(4%, 3%, 0); } }
+    .app { position: relative; z-index: 1; }
+    .rail { background: transparent; }
+
+    /* Never nest backdrop-filters: Android's WebView then drops the inner content. */
+    /* ---- Glass: clear, barely tinted, so the sky shows through and nothing on it competes
+       with the button ---- */
+    .glass {
+      background: color-mix(in srgb, var(--panel) 40%, transparent);
+      -webkit-backdrop-filter: blur(30px) saturate(1.15);
+      backdrop-filter: blur(30px) saturate(1.15);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35), 0 24px 48px -32px rgba(20, 24, 30, .35);
+    }
+    :root[data-color-mode="dark"] .glass {
+      background: color-mix(in srgb, var(--panel) 40%, transparent);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 24px 48px -32px rgba(0, 0, 0, .7);
+    }
+
+    /* ---- The button: the brightest thing on screen. Near-white, no gradient, no ink. ---- */
+    .lg-button, .duo-button:not(.danger) {
+      position: relative;
+      min-height: 60px;
+      padding: 0 24px;
+      border: 0;
+      border-radius: 999px;
+      color: #1d1f20;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: inset 0 1px 0 #fff, 0 12px 28px -16px rgba(20, 24, 30, .45);
+      font: var(--t-body);
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: scale 160ms var(--ease);
+    }
+    :root[data-color-mode="dark"] .lg-button, :root[data-color-mode="dark"] .duo-button:not(.danger) { color: #1d1f20; background: rgba(255, 255, 255, .9); box-shadow: 0 12px 28px -16px rgba(0, 0, 0, .8); }
+    .lg-button:active, .duo-button:active { scale: .97; }
+    .lg-button:focus-visible, .duo-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+    .duo-button.secondary { color: var(--text); background: none; box-shadow: none; }
+    .duo-button.danger { min-height: 60px; border-radius: 999px; color: #fff; background: var(--red-deep); box-shadow: none; font-weight: 500; }
+    .duo-button[disabled] { color: var(--dim); background: color-mix(in srgb, var(--panel) 50%, transparent); box-shadow: none; }
+    .lg-link { min-height: 48px; border: 0; background: none; color: var(--muted); font: var(--t-label); cursor: pointer; }
+
+    /* ---- Home: the streak and settings, then one glass card whose pages you swipe. The
+       card sits low so its button is in the thumb zone; the next page peeks in. ---- */
+    .home { grid-template-rows: auto 1fr; gap: 0; min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
+    .home-top { justify-content: space-between; padding: 4px 0 0; animation: none; }
+    .home-icon { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+    .home-icon .tile-dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; color: var(--red-ink); }
+    .home-streak { min-height: 44px; padding: 0 6px; gap: 4px; background: none; box-shadow: none; color: var(--muted); font: var(--t-body); }
+    .home-streak.lit { color: var(--text); box-shadow: none; }
+    .home-stage { display: grid; align-content: end; gap: 14px; padding: 16px 0 24px; }
+    .deck { border-radius: 34px; overflow: hidden; }
+    .deck-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }
+    .deck-track::-webkit-scrollbar { display: none; }
+    .page { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; min-height: 380px; padding: 30px 26px 24px; color: var(--text); }
+    .page[hidden] { display: none; }
+    .goal-kicker { color: var(--muted); font: var(--t-label); }
+    #todayTitle { display: none; }
+    .page:has(.goal-num b:empty) #todayTitle { display: block; color: var(--text); font: var(--t-title); }
+    .page-title { margin-top: 8px; font: var(--t-title); }
+    .goal-num { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+    .goal-num b { font: var(--t-display); letter-spacing: -.04em; }
+    .goal-num span { color: var(--muted); font: var(--t-body); }
+    .goal-num:has(b:empty) { display: none; }
+    .goal-bar { display: block; height: 3px; margin-top: 28px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .goal-bar[hidden] { display: none; }
+    .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background: var(--text); transition: width 900ms var(--spring) 200ms; }
+    .goal-meta { margin-top: 14px; color: var(--muted); font: var(--t-body); }
+    #goColours { display: none; }
+    .goal-meta:empty, .goal-meta[hidden] { display: none; }
+    .page .lg-button, .page-actions { margin-top: auto; }
+    .page-actions { display: grid; gap: 2px; }
+    .deck-dots { display: flex; justify-content: center; gap: 7px; }
+    .deck-dots i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--text) 22%, transparent); transition: width 200ms var(--ease); }
+    .deck-dots i.on { width: 18px; border-radius: 3px; background: var(--text); }
+    .rank-sheet { display: grid; gap: 14px; margin-top: 10px; }
+    .rank-sheet .rank-head { gap: 12px; }
+    .rank-sheet .rank-badge { width: 28px; height: 36px; border-radius: 8px; rotate: 0deg; box-shadow: none; font: var(--t-label); }
+    .rank-sheet .rank-name { font: var(--t-title); }
+    .rank-sheet .rank-pts { color: var(--muted); font: var(--t-body); }
+    .rank-sheet .rank-bar { height: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .rank-sheet .rank-bar i { background: var(--text); }
+    .rank-sheet .rank-line { margin: 0; color: var(--muted); font: var(--t-body); }
+    .settings-lang { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 16px; font: var(--t-body); }
+    .settings-lang .lang-toggle { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--panel-2); color: var(--muted); font: var(--t-label); cursor: pointer; }
+
+    /* ---- The board: cards sit low (thumb zone), tall and quiet; the sky is there from the
+       first pair. Chosen = an ink ring; matched = the route colour; wrong = a wine ring. ---- */
+    #practiceView h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    body[data-screen="practice"] .lesson { min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
+    body[data-screen="practice"] #practiceView { align-self: end; padding-bottom: 24px; }
+    .lesson-top { padding-top: 26px; }
+    .progress { height: 4px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+    .progress::after { display: none; }
+    .progress-fill { min-width: 0; background-color: var(--text); }
+    .top-count { color: var(--muted); font: var(--t-label); }
+    .combo-label { color: var(--muted); }
+    .combo-label b { font: 300 22px/1 var(--num-font); color: var(--text); }
+    .combo-label span { font: var(--t-label); letter-spacing: 0; }
+    .match-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, 80px); gap: 10px; }
+    .match-card {
+      height: 80px;
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0 14px;
+      border: 0;
+      border-radius: 20px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px var(--card-shadow);
+    }
+    .match-card .num { display: none; }
+    .match-card .word, .word { font: var(--t-body); font-size: 19px; font-weight: 500; letter-spacing: 0; }
+    .match-card:hover { background: var(--panel); }
+    .match-card:active { transform: scale(.98); }
+    .match-card.selected { color: var(--text); background: var(--panel); box-shadow: inset 0 0 0 2px var(--text), 0 8px 16px -10px rgba(0, 0, 0, .35); }
+    .match-card.correct { color: var(--correct-ink); background: var(--confetti, var(--correct-bg)); box-shadow: none; }
+    .match-card.wrong { color: var(--red-ink); background: var(--panel); box-shadow: inset 0 0 0 2px var(--red-ink); }
+    .match-card.hint-correct { box-shadow: inset 0 0 0 2px var(--text); animation: none; }
+    .match-card.entering { animation-duration: 240ms; }
+    .fx-judge, .fx-judge-perfect, .fx-judge-great, .fx-judge-good, .fx-judge-miss {
+      padding: 4px 12px;
+      color: #1d1f20;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .4);
+      font: var(--t-label);
+      transform: translate(-50%, -100%);
+    }
+    .fx-judge small { color: inherit; opacity: .6; font: var(--t-label); }
+
+    /* ---- End of a set: it says one thing. The ring (the one place the colours show), how
+       many pairs, the points, one line, one button. ---- */
+    .completion-badge, #completionStats, #trialKeepBtn, #focusPairsBtn { display: none; }
+    .completion h2, #completionText { display: none; }
+    .set-ring { position: relative; width: 200px; height: 200px; margin: 8px auto 6px; display: grid; place-content: center; justify-items: center; gap: 2px; }
+    .set-ring::before, .set-ring.full::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
+    }
+    .set-ring::before { background: var(--ring, var(--track)); }
+    .set-ring.full::after { background: conic-gradient(from 0deg, transparent 0 78%, rgba(255, 255, 255, .75) 88%, transparent 97%); animation: ring-spin 2.6s linear infinite; }
+    @keyframes ring-spin { to { transform: rotate(1turn); } }
+    .set-ring b { position: relative; font: 200 64px/1 var(--num-font); letter-spacing: -.04em; color: var(--text); }
+    .set-ring small { position: relative; color: var(--muted); font: var(--t-label); }
+    .set-points { margin: 0 0 6px; font: 300 34px/1.2 var(--num-font); color: var(--text); }
+    .set-points[hidden] { display: none; }
+    .set-colours { margin: 0 0 24px; }
+    .set-colours b { color: var(--text); font: var(--t-body); }
+    .set-colours span:empty { display: none; }
+    .completion-actions { display: grid; justify-items: stretch; gap: 4px; margin-top: 8px; }
+    .completion-actions .duo-button { width: 100%; }
+    .review-fold { margin-top: 18px; border-radius: 24px; text-align: left; }
+    .review-fold:has(.review-list:empty) { display: none; }
+    .review-fold summary { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 20px; list-style: none; cursor: pointer; font: var(--t-body); }
+    .review-fold summary::-webkit-details-marker { display: none; }
+    .review-fold summary::after { content: ""; width: 8px; height: 8px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); rotate: 45deg; translate: 0 -3px; transition: rotate 200ms var(--ease); }
+    .review-fold[open] summary::after { rotate: 225deg; translate: 0 2px; }
+    .review-fold .review-heading { margin: 0; color: var(--text); font: var(--t-body); }
+    .review-fold .review-list { margin: 0; padding: 0 12px 12px; }
+    .drill { border-radius: 24px; }
+
+    /* ---- The steps after a set that still matter (a new rank, lighting the day, a reminder):
+       one glass card at a time over a blurred screen. ---- */
+    .ritual { background: color-mix(in srgb, var(--bg) 25%, transparent); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+    .ritual-card {
+      padding: 30px 24px 22px;
+      border-radius: 32px;
+      /* The screen behind is already blurred; a second backdrop-filter inside it makes
+         Android's WebView drop the card's content, so the card is a plain translucent sheet. */
+      background: color-mix(in srgb, var(--panel) 62%, transparent);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35), 0 30px 60px -34px rgba(20, 24, 30, .45);
+    }
+    .ritual h2 { font: var(--t-title); }
+    .ritual p { font: var(--t-body); }
+    .ritual .ritual-big { font: var(--t-display); text-shadow: none; }
+    .ritual .ritual-rank { rotate: 0deg; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sky, .set-ring.full::after { animation: none; }
+      body[data-screen="practice"] .sky { transition: none; }
+    }
   </style>
 </head>
 <body data-screen="home">
+  <!-- 全屏彩: the colours earned so far fill the screen behind everything (paintSky). -->
+  <div class="sky" id="sky" aria-hidden="true"></div>
   <!-- First run: three short steps (word book, daily goal, reminder), skippable; ends on Home. -->
   <section class="onboard" id="onboardScreen" aria-label="开始使用" data-en-aria="Get started" data-zh-aria="开始使用" hidden>
     <header class="ob-top">
@@ -3369,52 +3570,48 @@
     <main class="main">
 
       <section class="home" id="homeScreen" aria-label="Word Snap">
+        <!-- Home (phone): who and when; one glass card that says how far today is; the one
+             button in the thumb zone; everything else waits in the glass dock. -->
         <header class="home-top">
-          <span class="home-word" lang="en" aria-hidden="true"><i>W</i><i>o</i><i>r</i><i>d</i> Snap</span>
-          <div class="home-chips">
-            <button class="home-lang lang-toggle" type="button" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
-            <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 0C9 2.6 12.5 4.4 12.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2-.1 1.4.5 2.5 1.6 2.9C6.8 5.3 7.6 2.5 8.6 0z"/></svg><b id="homeStreakN">0</b></div>
-          </div>
+          <button class="home-icon" type="button" id="homeSet" aria-label="设置" data-en-aria="Settings" data-zh-aria="设置"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
+          <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
         </header>
-        <!-- The menu: a few colour blocks with real content; tap one to do that thing. -->
-        <div class="tiles" id="tiles">
-          <button class="tile tile-go" type="button" id="homeGo">
-            <span class="tile-kicker" id="todayTitle"></span>
-            <span class="tile-num"><b id="goNum"></b><span id="goUnit"></span></span>
-            <span class="tile-sub" id="todaySub"></span>
-            <span class="tile-action"><span id="goLabel"></span><svg class="tile-arrow" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span class="tile-bar" aria-hidden="true"><i id="goBar"></i></span>
-          </button>
-          <!-- Card rank: against your own last three weeks only (js/habit.js rank()). -->
-          <div class="tile tile-rank" id="homeRank" hidden>
-            <div class="rank-head">
-              <span class="rank-badge" id="rankBadge" aria-hidden="true"></span>
-              <span class="rank-name" id="rankName"></span>
-              <span class="rank-pts" id="rankPts"></span>
+        <!-- Everything on Home lives in one glass card: swipe left and right between today,
+             the library, the rank and settings. One page, one button. -->
+        <div class="home-stage" id="tiles">
+          <div class="deck glass">
+            <div class="deck-track" id="deckTrack">
+              <section class="page" aria-roledescription="page">
+                <span class="goal-kicker" id="todayTitle"></span>
+                <span class="goal-num"><b id="goNum"></b><span id="goUnit"></span></span>
+                <span class="goal-bar" aria-hidden="true"><i id="goBar"></i></span>
+                <span class="goal-meta" id="todaySub"></span>
+                <span class="goal-meta" id="goColours"></span>
+                <button class="lg-button" type="button" id="homeGo"><span id="goLabel"></span></button>
+              </section>
+              <section class="page" aria-roledescription="page">
+                <span class="goal-kicker" data-zh="词库" data-en="Library">词库</span>
+                <span class="page-title" id="bookTitle"></span>
+                <span class="goal-num"><b id="bookNum"></b><span id="bookUnit"></span></span>
+                <span class="goal-meta" id="bookSub"></span>
+                <span class="page-actions">
+                  <button class="lg-button" type="button" id="homeBook" data-zh="打开词库" data-en="Open library">打开词库</button>
+                  <button class="lg-link" type="button" id="homeAdd" data-zh="加词" data-en="Add words">加词</button>
+                </span>
+              </section>
+              <section class="page" aria-roledescription="page" id="rankPage" hidden>
+                <span class="goal-kicker" data-zh="段位" data-en="Rank">段位</span>
+                <div class="rank-sheet" id="homeRank" hidden>
+                  <div class="rank-head"><span class="rank-badge" id="rankBadge" aria-hidden="true"></span><span class="rank-name" id="rankName"></span><span class="rank-pts" id="rankPts"></span></div>
+                  <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
+                  <p class="rank-line" id="rankLine"></p>
+                  <p class="rank-line" id="rankChallenge" hidden></p>
+                  <p class="rank-line" id="rankStop" hidden></p>
+                </div>
+              </section>
             </div>
-            <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
-            <span class="rank-line" id="rankLine"></span>
-            <span class="rank-line" id="rankChallenge"></span>
-            <span class="rank-line" id="rankStop"></span>
           </div>
-          <button class="tile tile-lib" type="button" id="homeBook">
-            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-            <span class="tile-title" data-zh="词库" data-en="Library">词库</span>
-            <span class="tile-name" id="bookTitle"></span>
-            <span class="tile-num tile-num-s"><b id="bookNum"></b><span id="bookUnit"></span></span>
-            <span class="tile-sub" id="bookSub"></span>
-          </button>
-          <button class="tile tile-add" type="button" id="homeAdd">
-            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
-            <span class="tile-title" data-zh="加词" data-en="Add words">加词</span>
-            <span class="tile-sub" data-zh="粘贴词表或导入" data-en="Paste a list or import">粘贴词表或导入</span>
-          </button>
-          <button class="tile tile-set" type="button" id="homeSet">
-            <svg class="tile-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
-            <span class="tile-title" data-zh="设置" data-en="Settings">设置</span>
-            <span class="tile-sub" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span>
-            <span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span>
-          </button>
+          <div class="deck-dots" id="deckDots" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -3438,7 +3635,11 @@
 
         <div class="completion" id="completionView">
           <div class="completion-badge" aria-hidden="true">CLEAR</div>
+          <!-- The set's colours as one ring: all seven for a clean set, one fewer per miss. -->
+          <div class="set-ring" id="setRing" aria-hidden="true"><b id="setRingN"></b><small id="setRingLabel"></small></div>
+          <div class="set-points" id="setPoints" hidden></div>
           <h2 id="completionTitle" data-en="Set complete" data-zh="这一组结束">这一组结束</h2>
+          <p class="set-colours" id="setColours"><b id="setColoursHead"></b><span id="setColoursSub"></span></p>
           <p id="completionText" data-en="The next set starts with the words you know least." data-zh="下一组会先出你最不熟的词。">下一组会先出你最不熟的词。</p>
           <div class="completion-stats" id="completionStats" hidden></div>
           <div class="completion-actions">
@@ -3460,8 +3661,11 @@
               <button class="link-button" type="button" id="drillSkip" data-en="Skip" data-zh="跳过">跳过</button>
             </div>
           </section>
-          <p class="review-heading" id="reviewHeading"></p>
-          <ul class="review-list" id="reviewList"></ul>
+          <!-- The mixed-up words wait folded: open them when you want them. -->
+          <details class="review-fold glass">
+            <summary><span class="review-heading" id="reviewHeading"></span></summary>
+            <ul class="review-list" id="reviewList"></ul>
+          </details>
 
         </div>
 
@@ -3544,6 +3748,11 @@
         <button class="icon-button" type="button" id="closeSettings" aria-label="关闭" data-en-aria="Close" data-zh-aria="关闭"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <section class="modal-section" id="settingsSection">
+        <!-- The app's own language: on the phone this is the only place to switch it. -->
+        <div class="settings-lang">
+          <span data-en="App language" data-zh="界面语言">界面语言</span>
+          <button class="lang-toggle" type="button" aria-label="切换语言" data-en-aria="Switch language" data-zh-aria="切换语言"><span class="lang-opt" data-lang="en">EN</span><span class="sep">/</span><span class="lang-opt" data-lang="zh">中</span></button>
+        </div>
         <!-- Four groups, each a single kind of decision. -->
         <div class="settings-group">
           <h3 data-en="Learning plan" data-zh="学习计划">学习计划</h3>
@@ -3890,6 +4099,7 @@
   <script src="./js/habit.js"></script>
   <script src="./js/fx.js"></script>
   <script src="./js/sfx.js"></script>
+  <script src="./js/routes.js"></script>
   <script src="./js/feedback.js"></script>
   <script src="./js/update.js"></script>
   <script src="./js/shell.js"></script>
@@ -3904,18 +4114,18 @@
     // applyTheme() derives the mixed tones at runtime — DESIGN.md records those.
     const STAGE = {
       dark: {
-        bg: "#1f1e2e", panel: "#2a2940", panel2: "#25243a", line: "#3a3954", lineStrong: "#56557a",
-        text: "#f7f5ee", muted: "#c9c6d8", dim: "#a6a3bb",
-        greenInk: "#2ee6a6", blueInk: "#47b5ff", redInk: "#ff6b8b", yellowInk: "#ffd21f",
-        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
+        bg: "#121415", panel: "#1e2021", panel2: "#282a2b", line: "#333536", lineStrong: "#4a5052",
+        text: "#e2e2e3", muted: "#c2c7ca", dim: "#a2a7aa",
+        greenInk: "#9bd595", blueInk: "#9acee7", redInk: "#ffb2bc", yellowInk: "#f5c64d",
+        primary: "#e2e2e3", onPrimary: "#2f3132", track: "#282a2b", hover: "#282a2b"
       },
       light: {
-        bg: "#fffcf6", panel: "#ffffff", panel2: "#fff7e8", line: "#efe9de", lineStrong: "#dcd3c3",
-        text: "#2b2a3d", muted: "#55546a", dim: "#6b6a80",
-        greenInk: "#1c7a50", blueInk: "#1f5fb0", redInk: "#b13c1f", yellowInk: "#8a6200",
-        primary: "#ffd21f", primaryDark: "#ffb800", onPrimary: "#2b2a3d"
+        bg: "#f9f9fa", panel: "#ffffff", panel2: "#eeeeef", line: "#e2e2e3", lineStrong: "#c2c7ca",
+        text: "#35393b", muted: "#42484a", dim: "#5f6568",
+        greenInk: "#285d2a", blueInk: "#2f657b", redInk: "#9b4052", yellowInk: "#7a5600",
+        primary: "#2f3132", onPrimary: "#f1f0f1", track: "#e8e8e9", hover: "#f3f3f4"
       },
-      accent: { green: "#4fd69c", greenDark: "#2ec27e", blue: "#3b8beb", blueDeep: "#2a74d0", red: "#ff7a59", redDeep: "#c4421f", yellow: "#ffb800" }
+      accent: { green: "#436740", greenDark: "#2a4128", blue: "#2f657b", blueDeep: "#1e3f4e", red: "#9b4052", redDeep: "#7d2f3f", yellow: "#e3b53d" }
     };
     // Pink, sky, lemon, mint, violet. Matched cards are filled with these and keep ink text
     // (#2b2a3d on every one is >= 5:1), in both day and night.
@@ -4063,6 +4273,11 @@
           denied: "Notifications are blocked for Word Snap. Allow them in the phone's settings to get reminders."
         },
         fx: { combo: "{n} in a row", comboWord: "COMBO" },
+        colours: {
+          full: "All seven colours · {route}", fullSub: "{n} in a row, not one miss",
+          some: "{k} of 7 colours · {route}", someSub: "{m} misses, {lost} colours lost · best streak {best}",
+          ringDone: "Set done", ringTime: "Time's up", pairsUnit: "pairs", line: "{m} wrong · {k}/7 colours", lineClean: "All seven colours · {route}", today: "{s} sets · {c} colours today", todayOne: "1 set · {c} colours today"
+        },
         summary: { accuracy: "Accuracy", time: "Time", combo: "Best streak", line: "Max combo {combo} · accuracy {acc} · time {time}" },
         home: {
           leftTitle: "Today's practice", goingTitle: "{d} done today", leftSub: "{list} · about {m} min", unit: "to go", unitDone: "done",
@@ -4356,6 +4571,11 @@
           denied: "Word Snap 的通知被关掉了。在手机设置里允许通知后才能提醒。"
         },
         fx: { combo: "连对 {n} 次", comboWord: "连击" },
+        colours: {
+          full: "七色全齐 · {route}", fullSub: "{n} 连，一次没错",
+          some: "{k} / 7 种颜色 · {route}", someSub: "错了 {m} 次，少了 {lost} 种颜色 · 最长连击 {best}",
+          ringDone: "这一组完成", ringTime: "时间到", pairsUnit: "对", line: "错 {m} 次 · {k}/7 种颜色", lineClean: "七色全齐 · {route}", today: "今天 {s} 组 · {c} 种颜色", todayOne: "今天 1 组 · {c} 种颜色"
+        },
         summary: { accuracy: "正确率", time: "用时", combo: "最高连对", line: "最大连击 {combo} · 正确率 {acc} · 用时 {time}" },
         home: {
           leftTitle: "今天的练习", goingTitle: "今天已练 {d} 个", leftSub: "{list} · 约 {m} 分钟", unit: "个待练", unitDone: "完成",
@@ -5132,18 +5352,17 @@
 
     function applyTheme(index) {
       const i = themeIndexOf(index);
-      const mood = COLOR_THEMES[i];
       const light = resolveColorScheme() === "light";
       const base = light ? STAGE.light : STAGE.dark;
       const a = STAGE.accent;
-      // Paper takes a whisper of the set's colour; panels (cards, dialogs) stay clean.
-      const fixedBg = mixHex(mood.fill, base.bg, light ? 0.16 : 0.07);
+      // One neutral ground: grey surfaces and ink. Colour is earned in practice (the set's
+      // colour route) and shown by the sky (paintSky); nothing else is tinted.
       const root = document.documentElement;
       root.setAttribute("data-color-mode", light ? "light" : "dark");
       const set = (name, value) => root.style.setProperty(name, value);
-      set("--bg", fixedBg);
+      set("--bg", base.bg);
       set("--panel", base.panel);
-      set("--panel-2", mixHex(mood.fill, base.panel, light ? 0.22 : 0.1));
+      set("--panel-2", base.panel2);
       set("--line", base.line);
       set("--line-strong", base.lineStrong);
       set("--text", base.text);
@@ -5160,34 +5379,37 @@
       set("--blue-ink", base.blueInk);
       set("--red-ink", base.redInk);
       set("--yellow-ink", base.yellowInk);
-      set("--primary", mood.fill);
-      set("--primary-dark", mood.deep);
-      set("--on-primary", CONFETTI_INK);
-      set("--primary-shadow", rgbaFromHex(mood.deep, 0.45));
-      set("--panel-soft", mixHex(base.panel, fixedBg, 0.5));
-      set("--track", mixHex(mood.fill, light ? "#f1ece3" : "#34334c", light ? 0.3 : 0.12));
-      set("--selected-bg", mixHex(a.blue, base.panel, light ? 0.09 : 0.22));
-      set("--selected-ink", light ? "#1b3f73" : base.text);
-      const neutralShadow = light ? "rgba(80, 60, 30, .14)" : "rgba(0, 0, 0, .35)";
-      set("--selected-shadow", light ? rgbaFromHex(a.blue, 0.22) : neutralShadow);
-      set("--correct-bg", "#2ee6a6");
-      set("--correct-ink", CONFETTI_INK);
-      set("--correct-shadow", neutralShadow);
-      set("--wrong-bg", mixHex(a.red, base.panel, light ? 0.14 : 0.22));
-      set("--wrong-ink", light ? "#8f2a12" : "#ffe3dc");
-      set("--wrong-shadow", light ? rgbaFromHex(a.red, 0.22) : neutralShadow);
-      set("--on-accent", CONFETTI_INK);
-      set("--warn-ink", "#2b1800");
-      set("--warn-shadow", rgbaFromHex(a.yellow, 0.4));
+      set("--ember-ink", base.text);
+      set("--good-ink", base.greenInk);
+      set("--primary", base.primary);
+      set("--primary-dark", base.primary);
+      set("--on-primary", base.onPrimary);
+      set("--primary-shadow", "transparent");
+      set("--panel-soft", base.panel);
+      set("--track", base.track);
+      set("--selected-bg", base.panel);
+      set("--selected-ink", base.text);
+      const neutralShadow = light ? "rgba(26, 28, 30, .10)" : "rgba(0, 0, 0, .45)";
+      set("--selected-shadow", neutralShadow);
+      set("--correct-bg", base.panel2);
+      set("--correct-ink", base.text);
+      set("--correct-shadow", "transparent");
+      set("--wrong-bg", base.panel);
+      set("--wrong-ink", base.redInk);
+      set("--wrong-shadow", "transparent");
+      set("--on-accent", base.onPrimary);
+      set("--warn-ink", base.text);
+      set("--warn-shadow", "transparent");
       set("--weak-wrong", base.redInk);
       set("--card-shadow", neutralShadow);
-      set("--scrim", light ? "rgba(43, 42, 61, .38)" : "rgba(10, 10, 20, .6)");
-      set("--hover-soft", mixHex(mood.fill, base.panel, light ? 0.14 : 0.08));
+      set("--scrim", light ? "rgba(26, 28, 30, .32)" : "rgba(0, 0, 0, .6)");
+      set("--hover-soft", base.hover);
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute("content", fixedBg);
+      if (meta) meta.setAttribute("content", base.bg);
       try { localStorage.setItem(THEME_KEY, String(i)); } catch (e) {}
       if (state && state.settings) state.settings.themeIndex = i;
       syncSystemBars();
+      if (typeof paintSky === "function") paintSky();
       return i;
     }
 
@@ -5315,6 +5537,29 @@
     const ICON_CHECK = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M2.5 8.5l3.5 3.5 7.5-8"/></svg>';
 
     const RESULT_WORDS = { clear: "CLEAR", fullCombo: "FULL COMBO", timeUp: "TIME UP", start: "START" };
+    /** The end-of-set ring and its line: the colours this set earned, and why some are missing. */
+    function renderCompletionRing() {
+      const ring = document.getElementById("setRing");
+      if (!ring) return;
+      const route = levelRoute(), miss = state.levelMistakes || 0, k = levelColours(true), light = isLight();
+      const timeUp = !state.roundComplete;
+      ring.style.setProperty("--ring", `conic-gradient(from 0deg, ${WordSnapRoutes.stops(route.hues, k, light ? "bar" : "barDark", true)})`);
+      ring.classList.toggle("full", !miss && !timeUp);
+      document.getElementById("setRingLabel").textContent = t(timeUp ? "colours.ringTime" : "colours.pairsUnit");
+      document.getElementById("setPoints").hidden = true;
+      document.getElementById("setRingN").textContent = String(state.completedThisRun || 0);
+      const name = currentLang === "zh" ? route.zh : route.en;
+      const head = document.getElementById("setColoursHead"), sub = document.getElementById("setColoursSub");
+      head.style.setProperty("--grad", `linear-gradient(90deg, ${WordSnapRoutes.stops(route.hues, k, light ? "text" : "textDark")})`);
+      head.classList.remove("full");
+      // One line: what went wrong (if anything) and the colours it left.
+      head.textContent = miss ? t("colours.line", { m: miss, k }) : t("colours.lineClean", { route: name });
+      sub.textContent = "";
+      document.getElementById("setColours").hidden = !(state.completedThisRun > 0);
+      els.completionView.classList.toggle("is-trial", isTrial());
+      paintSky();
+    }
+
     function setResultWord(kind) {
       const badge = els.completionBadge;
       badge.textContent = RESULT_WORDS[kind] || RESULT_WORDS.clear;
@@ -5322,19 +5567,68 @@
       badge.classList.toggle("time-up", kind === "timeUp");
     }
 
-    /** The confetti colour of the set's nth match (0-based), and a deeper edge for its border. */
+    /** The set's colour route (js/routes.js): drawn when a set starts, never the same twice in a row. */
+    function levelRoute() {
+      if (!state.levelRoute) state.levelRoute = WordSnapRoutes.pickRoute(Math.random, state.lastRouteId || "");
+      return state.levelRoute;
+    }
+    const isLight = () => resolveColorScheme() === "light";
+
+    /** The nth matched pair's colour (0-based): it walks the colours earned so far. `edge` is the bright mark tone. */
     function confettiFor(n) {
-      const k = n + (state.levelConfettiStart || 0);
-      const fill = CONFETTI[((k % CONFETTI.length) + CONFETTI.length) % CONFETTI.length];
-      return { fill, edge: mixHex(fill, CONFETTI_INK, 0.78) };
+      const hue = WordSnapRoutes.matchHue(levelRoute(), n, currentRoundTotal() || 25, state.levelMistakes || 0);
+      const light = isLight();
+      return { fill: WordSnapRoutes.colourOf(hue, light ? "card" : "cardDark"), edge: WordSnapRoutes.colourOf(hue, light ? "bar" : "barDark") };
     }
 
-    // The lane is the set's history: one segment per match, in that pair's confetti colour.
+    /** How many of the route's colours the set has earned so far (all of what is left at the end). */
+    function levelColours(final = false) {
+      const total = currentRoundTotal() || 25, miss = state.levelMistakes || 0;
+      return final ? WordSnapRoutes.available(miss) : WordSnapRoutes.shown(state.completedThisRun || 0, total, miss);
+    }
+
+    // The lane: one continuous gradient through the colours earned so far.
     function laneGradient() {
-      const list = state.levelJudgements || [];
-      if (!list.length) return "none";
-      const step = 100 / list.length;
-      return `linear-gradient(90deg, ${list.map((kind, i) => `${confettiFor(i).fill} ${(i * step).toFixed(2)}% ${((i + 1) * step).toFixed(2)}%`).join(", ")})`;
+      return "none"; // the lane is plain ink; the colours live on the cards, the sky and the end ring
+    }
+
+    // ---- 全屏彩: the colours earned fill the screen behind everything ----
+    const TODAY_COLOURS_KEY = "word_snap_today_colours_v1";
+    function todayColours() {
+      let stored = null;
+      try { stored = JSON.parse(localStorage.getItem(TODAY_COLOURS_KEY) || "null"); } catch (e) {}
+      return WordSnapRoutes.today(stored, WordSnapHabit.dayKey(Date.now()));
+    }
+    function addTodayColours() {
+      if (!(state.completedThisRun > 0)) return;
+      const t = WordSnapRoutes.addSet(todayColours(), WordSnapHabit.dayKey(Date.now()), levelRoute(), state.levelMistakes || 0);
+      try { localStorage.setItem(TODAY_COLOURS_KEY, JSON.stringify(t)); } catch (e) {}
+    }
+    let homeProgress = 0;
+    function paintSky() {
+      const sky = document.getElementById("sky");
+      if (!sky || !state) return;
+      const dark = !isLight(), screen = document.body.dataset.screen;
+      let hues = [], p = 0, strength = 0;
+      if (screen === "practice" && state.levelRoute) {
+        const ended = els.completionView && els.completionView.classList.contains("show");
+        const total = currentRoundTotal() || 25, got = state.completedThisRun || 0;
+        hues = state.levelRoute.hues.slice(0, levelColours(ended));
+        p = ended ? 1 : got / total;
+        strength = ended ? 0.5 : 0.6 + 0.4 * p;
+        if (!got && !ended) hues = state.levelRoute.hues.slice(0, 1);
+      } else if (screen === "home") {
+        hues = WordSnapRoutes.todayHues(todayColours());
+        p = homeProgress;
+        strength = 1;
+        // Nothing earned yet today: a faint cool dawn, so the glass has something to hold.
+        if (!hues.length) { hues = [228, 262, 200]; p = 0; strength = 0.45; }
+      }
+      // The blobs are sized for the whole screen, so the colours meet instead of floating as spots.
+      const scale = Math.max(2.2, Math.max(window.innerWidth, window.innerHeight) / 340 * 1.6);
+      if (hues.length) sky.style.setProperty("--sky", WordSnapRoutes.mesh(hues, p, dark, { scale, floor: 0.75 }));
+      sky.style.opacity = String(strength);
+      document.body.classList.toggle("has-sky", strength > 0);
     }
 
     // ---- Daily goal and day streak (js/habit.js) ----
@@ -6108,6 +6402,7 @@
         return;
       }
       els.comboLabel.dataset.tier = tier.name;
+
       els.comboLabel.innerHTML = `<b data-combo-n></b><span>${escapeHtml(t("fx.comboWord"))}</span>`;
       const n = els.comboLabel.querySelector("[data-combo-n]");
       n.dataset.rollText = String(Math.max(0, streak - 1));
@@ -6293,7 +6588,8 @@
       state.levelBestStreak = 0;
       state.levelStreak = 0;
       state.levelJudgements = [];
-      state.levelConfettiStart = currentTheme().confetti;
+      state.lastRouteId = state.levelRoute ? state.levelRoute.id : state.lastRouteId;
+      state.levelRoute = WordSnapRoutes.pickRoute(Math.random, state.lastRouteId || "");
       state.lastCompletion = null;
       state.goalDoneThisSet = false;
       updateCombo(0);
@@ -6911,8 +7207,10 @@
       scheduleEngineFit();
       // Each finished level rotates the color skin.
       advanceThemeAfterLevel();
+      addTodayColours();
       els.practiceView.classList.add("hidden");
       els.completionView.classList.add("show");
+      renderCompletionRing();
       setResultWord(reason === "timeout" ? "timeUp" : !state.levelMistakes && state.completedThisRun > 0 ? "fullCombo" : "clear");
       els.continueBtn.textContent = t("lesson.continueBtn");
       els.main.scrollTop = 0;
@@ -7989,6 +8287,7 @@
           : 0;
       els.progressFill.style.width = `${pct}%`;
       els.progressFill.style.backgroundImage = laneGradient();
+      paintSky();
       renderTimer();
       els.roundLabel.textContent = levelLabel(state.completedThisRun || 0, targetTotal);
       els.score.textContent = state.score;
@@ -9294,6 +9593,7 @@
       if (screen === prev) { syncNavUI(); return; }
       shownScreen = screen;
       document.body.dataset.screen = screen;
+      paintSky();
       els.onboardScreen.hidden = screen !== "onboard";
       if (prev === "practice" && screen !== "practice") pauseLevel();
       if (screen === "home") {
@@ -9321,12 +9621,10 @@
     // True until the first-run setup is finished or skipped: Home's big block opens it.
     let needsSetup = false;
 
-    /** Tap a Home block: its colour floods the screen, and what it stands for opens. */
+    /** Tap something on Home: what it stands for opens at once (the screen transition does the motion). */
     function tapTile(tile, act) {
-      if (document.body.classList.contains("flooding")) return;
       feel("tap");
-      document.body.classList.add("flooding");
-      WordSnapShell.flood(tile, act).catch(() => {}).then(() => document.body.classList.remove("flooding"));
+      act();
     }
 
     function startFromHome() {
@@ -9393,13 +9691,21 @@
       renderRank();
       const full = done && !awaitingTrialChoice();
       if (full) {
-        els.goNum.innerHTML = ICON_CHECK_BIG;
-        els.goUnit.textContent = t("home.unitDone");
+        // Done: the headline says it once; no tick, no "done" unit.
+        els.goNum.textContent = "";
+        els.goUnit.textContent = "";
       } else {
         els.goNum.textContent = num;
         els.goUnit.textContent = unit;
       }
       els.homeGo.setAttribute("aria-label", [title, num && !full ? `${num} ${unit}` : "", sub, btn].filter(Boolean).join(". "));
+      const today = todayColours(), hues = WordSnapRoutes.todayHues(today);
+      homeProgress = full ? 1 : pct / 100;
+
+      const goColours = document.getElementById("goColours");
+      goColours.textContent = hues.length ? t(today.sets.length === 1 ? "colours.todayOne" : "colours.today", { s: today.sets.length, c: hues.length }) : "";
+      goColours.hidden = !hues.length;
+      paintSky();
       // Next frame, so the bar grows from where it was.
       requestAnimationFrame(() => { els.goBar.style.setProperty("--fill", `${full ? 100 : Math.max(pct ? 4 : 0, pct)}%`); });
       els.goBar.parentElement.hidden = needsSetup || !state.words.length;
@@ -9573,6 +9879,17 @@
     els.homeBook.addEventListener("click", () => tapTile(els.homeBook, () => openLibrary()));
     els.homeAdd.addEventListener("click", () => tapTile(els.homeAdd, () => openLibrary("add")));
     els.homeSet.addEventListener("click", () => tapTile(els.homeSet, () => openSettings()));
+    // Home's one card: native swipe (scroll snap); the dots follow the page in view.
+    function paintDeckDots() {
+      const track = document.getElementById("deckTrack"), dots = document.getElementById("deckDots");
+      if (!track || !dots) return;
+      const pages = [...track.children].filter(p => !p.hidden);
+      const w = pages[0] ? pages[0].getBoundingClientRect().width : track.clientWidth;
+      const i = Math.min(pages.length - 1, Math.round(track.scrollLeft / Math.max(1, w)));
+      dots.innerHTML = pages.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("");
+    }
+    document.getElementById("deckTrack").addEventListener("scroll", () => requestAnimationFrame(paintDeckDots), { passive: true });
+    paintDeckDots();
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
@@ -9680,6 +9997,8 @@
       const box = document.getElementById("homeRank");
       if (!box) return;
       box.hidden = isTrial() || !state.words.length || needsSetup;
+      document.getElementById("rankPage").hidden = box.hidden;
+      paintDeckDots();
       if (box.hidden) return;
       const r = WordSnapHabit.rank(habit);
       const top = r.tier === r.ranks - 1;
@@ -9731,14 +10050,23 @@
       const goal = !!state.goalDoneThisSet;
       state.goalDoneThisSet = false;
       const points = pairs + (fullCombo ? 5 : 0) + (goal ? 10 : 0);
-      ritualSteps = [{ kind: "claim", pairs, fullCombo, goal, points, timeUp }];
+      // The points are already counted: claim them now and show them under the ring, no extra tap.
+      WordSnapHabit.claim(habit, { points, fullCombo });
+      saveWords();
+      feel("claim");
+      const pts = document.getElementById("setPoints");
+      if (pts) { pts.hidden = false; WordSnapFx.countUp(pts, points, n => `+${n}`, { delay: 150 }); }
+      ritualSteps = [];
       const r = WordSnapHabit.rank(habit);
-      if (r.last) ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      // The rank card only when something changed; a week that just held needs no card.
+      if (r.last && r.last.kind !== "stay") ritualSteps.push({ kind: "rank", last: r.last, next: r.target });
+      else if (r.last) { WordSnapHabit.markRankSeen(habit); saveWords(); }
       const day = String(WordSnapHabit.dayKey(Date.now()));
       if (habitStatus().done && storeGet(IGNITED_KEY) !== day) {
         ritualSteps.push({ kind: "ignite", day });
         if (isNativeApp() && !state.settings.reminder && !storeGet(REMIND_ASKED_KEY)) ritualSteps.push({ kind: "remind" });
       }
+      if (!ritualSteps.length) return;
       const box = document.getElementById("ritual");
       ritualReturn = document.activeElement;
       box.hidden = false;

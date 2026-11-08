@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+### Changed
+- **The v9 look** (decided in the redesign preview drafts v5–v9, 2026-11-01): one neutral ground (iPhone 15 greys, white cards, ink text) and ink pill buttons replace Confetti Cards (warm paper, five rotating confetti colours, lemon 3D buttons, a set colour tinting the paper). DESIGN.md is rewritten for it.
+- **Colour routes** (`js/routes.js`): each set draws a seven-colour route (晚霞, 极光, 糖果, 果园, 海湾, 彩虹). A clean set keeps all seven colours; each miss takes one away, never below two. Matched cards, the lane (now one continuous gradient), the combo number and the new end-of-set ring show only the colours earned so far; the end screen says «七色全齐 · 晚霞» or «5 / 7 种颜色 · 极光 — 错了 2 次，少了 2 种颜色».
+- **全屏彩** (the maintainer's call, 2026-11-08): the colours earned fill the whole screen behind Home (today's sets, stronger as today's goal fills) and the board (this set's colours, growing as it goes); Library and Settings stay plain. Home's blocks no longer drop in: the first frame is complete.
+- **Home rebuilt to the v9 layout** (2026-11-08, "臃肿、主次不分明"): date and greeting with the streak; one goal card with the only button; rank, library, add words and settings as quiet rows. The tile grid, the wordmark and the colour flood on tap are gone.
+- **System type** (2026-11-08, "字体灾难"): Fredoka is replaced by the system faces everywhere, with lighter weights; the board's heading is visually hidden, judgement stickers become small ink tags, and the end screen drops the stat tiles (the ring says it).
+- **Design critique fixes** (impeccable critique 19/40, 2026-11-08): the near-white button is the brightest thing on every screen; four type steps only (96/200, 22/400, 17/400, 15/500); Home's card hugs the bottom with settings as an icon and three pages (today · library · rank); the board sits low with 80px cards and the sky from the first pair; judgement tags in Chinese; the end screen is ring + pairs + points + one line + one button; points are claimed automatically and the rank card shows only when the rank changed. The v9 styles are rewritten as one sheet (no override layers) and DESIGN.md now matches the code.
+- **No greeting on Home** (2026-11-08): «中午好» and the date said nothing; only the streak stays above the card.
+- **Home is one glass card you swipe** (2026-11-08): today · library · rank · settings are pages of a single card (native scroll-snap, dots below); one button per page. The dock and rank sheet are gone.
+- **Liquid glass buttons**: primary buttons are clear glass catching light, no ink or colour fill.
+- **Fewer rainbows**: the lane, the combo number, the goal bar and the result line are plain ink; colour shows only on matched cards, the sky and the end ring.
+- **One choice when the trial ends**: «先用示例词继续练» and «专项练混淆过的词» are gone; the trial ends in choosing your own words.
+- **Phone-first Home with glass** (2026-11-08, Android only from now on): greeting and streak; one frosted-glass goal card; the one button in the thumb zone; library, add words, rank and settings in a glass dock; the rank opens as a glass sheet instead of sitting on Home. A faint dawn sky fills Home before any colour is earned, so the glass reads. The app language switch moves to Settings.
+- **End of a set, one thing at a time**: the ring, its line and one button; the steps after it (claim, rank, flame, reminder) are frosted-glass cards over a blurred screen; the mixed-up words stay folded until opened.
+- **举重若轻** (2026-11-08): big, light type — thin display numbers and greeting, medium words and buttons, no bold anywhere.
+- **No key numbers on the cards** (2026-11-08): the 1–0 hints are no longer printed; the keys still work.
+- **断弦** (the maintainer's call, 2026-11-08): a wrong match now sounds like a guzheng string snapping — a crack, the string whipping down an octave, a dull slap — instead of a soft sliding sigh.
+
 ## 1.1.0 — 2026-11-07
 
 First release built and signed on the maintainer's Mac (same key as the APK already on the phone, so it installs over it; versionCode 110).
