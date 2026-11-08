@@ -3372,7 +3372,9 @@
       background: var(--panel);
       box-shadow: inset 0 0 0 2px var(--red-ink);
     }
-    .match-card .num { color: var(--dim); }
+    /* No key numbers on the cards (maintainer, 2026-11-08): keys 1–0 still work, the cards just do not print them. */
+    .match-card { grid-template-columns: minmax(0, 1fr); padding: 0 14px; }
+    .match-card .num { display: none; }
 
     /* The lane: one continuous gradient of the colours earned so far (laneGradient). */
     .lesson-top { padding-top: 26px; }

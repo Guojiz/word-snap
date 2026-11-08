@@ -217,6 +217,7 @@ It replaces "Confetti Cards" (paper, five rotating confetti colours, lemon butto
 - Zero wait: Home's first frame is complete (no drop-ins, no fade-in); the sky's slow drift is decoration only.
 - System faces only (Roboto / SF on Latin, PingFang / HarmonyOS Sans / MiSans on Chinese), weights 500–700, tabular figures. The rounded Fredoka face is gone (2026-11-08: "字体灾难").
 - Home is one sentence of structure: date and greeting, the streak; one goal card holding the only button; then quiet rows (rank, library, add words, settings) on one translucent sheet. No tile grid, no drop-in, no colour flood on tap.
+- Cards print no key numbers; keys 1–0 still pick them (2026-11-08).
 - The board shows no heading (screen readers still get it) and judgements are small ink tags; the end screen is the ring and its one line, no stat tiles.
 
 ## Colors
