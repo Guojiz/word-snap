@@ -8,6 +8,10 @@
 - **全屏彩** (the maintainer's call, 2026-11-08): the colours earned fill the whole screen behind Home (today's sets, stronger as today's goal fills) and the board (this set's colours, growing as it goes); Library and Settings stay plain. Home's blocks no longer drop in: the first frame is complete.
 - **Home rebuilt to the v9 layout** (2026-11-08, "臃肿、主次不分明"): date and greeting with the streak; one goal card with the only button; rank, library, add words and settings as quiet rows. The tile grid, the wordmark and the colour flood on tap are gone.
 - **System type** (2026-11-08, "字体灾难"): Fredoka is replaced by the system faces everywhere, with lighter weights; the board's heading is visually hidden, judgement stickers become small ink tags, and the end screen drops the stat tiles (the ring says it).
+- **Home is one glass card you swipe** (2026-11-08): today · library · rank · settings are pages of a single card (native scroll-snap, dots below); one button per page. The dock and rank sheet are gone.
+- **Liquid glass buttons**: primary buttons are clear glass catching light, no ink or colour fill.
+- **Fewer rainbows**: the lane, the combo number, the goal bar and the result line are plain ink; colour shows only on matched cards, the sky and the end ring.
+- **One choice when the trial ends**: «先用示例词继续练» and «专项练混淆过的词» are gone; the trial ends in choosing your own words.
 - **Phone-first Home with glass** (2026-11-08, Android only from now on): greeting and streak; one frosted-glass goal card; the one button in the thumb zone; library, add words, rank and settings in a glass dock; the rank opens as a glass sheet instead of sitting on Home. A faint dawn sky fills Home before any colour is earned, so the glass reads. The app language switch moves to Settings.
 - **End of a set, one thing at a time**: the ring, its line and one button; the steps after it (claim, rank, flame, reminder) are frosted-glass cards over a blurred screen; the mixed-up words stay folded until opened.
 - **举重若轻** (2026-11-08): big, light type — thin display numbers and greeting, medium words and buttons, no bold anywhere.

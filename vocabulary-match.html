@@ -3452,6 +3452,8 @@
        after it (claim, rank, flame, reminder) are glass cards one by one; the mixed-up
        words stay folded until asked for. ---- */
     .completion:not(.is-trial) h2, .completion:not(.is-trial) #completionText { display: none; }
+    /* One choice per screen: the trial ends in choosing your words; no way around it. */
+    #trialKeepBtn, #focusPairsBtn { display: none !important; }
     .completion-actions { display: grid; justify-items: stretch; gap: 6px; margin-top: 8px; }
     .completion-actions .duo-button { width: 100%; }
     .review-fold { margin-top: 18px; border-radius: 24px; text-align: left; }
@@ -3503,116 +3505,75 @@
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .09), 0 24px 48px -30px rgba(0, 0, 0, .8);
     }
 
-    /* ---- Home (phone): greeting, one glass card, the button in the thumb zone, the dock ---- */
-    .home {
-      grid-template-rows: auto 1fr auto auto;
-      gap: 0;
-      min-height: calc(100dvh - var(--sat) - var(--sab) - 56px);
-    }
+    /* ---- Home (phone): greeting, then one glass card whose pages you swipe ---- */
+    .home { grid-template-rows: auto 1fr; gap: 0; min-height: calc(100dvh - var(--sat) - var(--sab) - 56px); }
     .home-top { align-items: flex-end; padding: 8px 4px 0; animation: none; }
     .home-hello small { display: block; color: var(--muted); font-size: 13px; }
     .home-hello b { display: block; margin-top: 6px; color: var(--text); line-height: 1.1; }
-    .home-streak {
-      min-height: 44px;
-      padding: 0 14px;
-      gap: 4px;
-      border-radius: 999px;
-      background: none;
-      box-shadow: none;
-      color: var(--muted);
-      font-size: 20px;
-    }
+    .home-streak { min-height: 44px; padding: 0 14px; gap: 4px; border-radius: 999px; background: none; box-shadow: none; color: var(--muted); font-size: 20px; }
     .home-streak.lit { color: var(--text); }
-    .home-stage { display: grid; align-content: center; padding: 28px 0; }
-    .goal {
-      display: flex;
-      flex-direction: column;
-      padding: 26px 24px 24px;
-      border-radius: 32px;
-      color: var(--text);
-    }
+    .home-stage { display: grid; align-content: center; gap: 16px; padding: 24px 0 8px; }
+    .deck { border-radius: 34px; overflow: hidden; }
+    .deck-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }
+    .deck-track::-webkit-scrollbar { display: none; }
+    .page { flex: 0 0 100%; scroll-snap-align: center; display: flex; flex-direction: column; min-height: 400px; padding: 28px 26px 26px; color: var(--text); }
+    .page[hidden] { display: none; }
     .goal-kicker { color: var(--muted); font-size: 14px; }
-    .goal-num { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+    .page-title { margin-top: 10px; font-size: 22px; line-height: 1.3; }
+    .goal-num { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
     .goal-num b { font-family: var(--num-font); line-height: .95; }
     .goal-num b svg { width: 56px; height: 56px; }
     .goal-num span { color: var(--muted); font-size: 16px; }
     .goal-num:has(b:empty) { display: none; }
-    .goal-bar { display: block; height: 4px; margin-top: 22px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .goal-bar { display: block; height: 3px; margin-top: 24px; overflow: hidden; border-radius: 2px; background: color-mix(in srgb, var(--text) 10%, transparent); }
     .goal-bar[hidden] { display: none; }
-    .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background-color: var(--text); transition: width 900ms var(--spring) 200ms; }
+    .goal-bar i { display: block; width: var(--fill, 0%); height: 100%; border-radius: inherit; background: var(--text); transition: width 900ms var(--spring) 200ms; }
     .goal-meta { margin-top: 12px; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
     .goal-meta + .goal-meta { margin-top: 2px; }
     .goal-meta:empty, .goal-meta[hidden] { display: none; }
-    .home-cta {
-      min-height: 58px;
-      margin: 0 0 14px;
+    .page .lg-button, .page-actions { margin-top: auto; }
+    .page-actions { display: grid; gap: 4px; }
+    .deck-dots { display: flex; justify-content: center; gap: 7px; }
+    .deck-dots i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--text) 22%, transparent); transition: width 200ms var(--ease); }
+    .deck-dots i.on { width: 18px; border-radius: 3px; background: var(--text); }
+
+    /* ---- Liquid glass buttons: no coloured fill, light caught in clear glass ---- */
+    .lg-button, .duo-button:not(.danger) {
+      position: relative;
+      min-height: 56px;
       border: 0;
       border-radius: 999px;
-      color: var(--on-primary);
-      background: var(--primary);
-      box-shadow: 0 18px 36px -20px rgba(20, 24, 30, .6);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .42));
+      -webkit-backdrop-filter: blur(18px) saturate(1.8);
+      backdrop-filter: blur(18px) saturate(1.8);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 0 0 1px rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .05), 0 10px 24px -14px rgba(20, 24, 30, .45);
       font: inherit;
       font-size: 17px;
       font-weight: 500;
-      letter-spacing: .02em;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       transition: scale 160ms var(--ease);
     }
-    .home-cta:active { scale: .97; }
-    .home-cta:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
-    .dock {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 1fr;
-      padding: 6px;
-      border-radius: 26px;
+    :root[data-color-mode="dark"] .lg-button, :root[data-color-mode="dark"] .duo-button:not(.danger) {
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, .08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), inset 0 0 0 1px rgba(255, 255, 255, .1), 0 10px 24px -14px rgba(0, 0, 0, .8);
     }
-    .dock button {
-      position: relative;
-      display: grid;
-      justify-items: center;
-      gap: 3px;
-      min-height: 56px;
-      padding: 8px 4px 6px;
-      border: 0;
-      border-radius: 20px;
-      color: var(--muted);
-      background: none;
-      font: inherit;
-      font-size: 12px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .dock button[hidden] { display: none; }
-    .dock button:active { background: color-mix(in srgb, var(--text) 7%, transparent); }
-    .dock button:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
-    .dock .tile-dot { position: absolute; top: 8px; right: calc(50% - 18px); width: 7px; height: 7px; color: var(--red-ink); }
-    /* The rank sheet: slides up over a soft scrim; tap outside to close. */
-    .sheet-scrim { position: fixed; inset: 0; z-index: 70; background: color-mix(in srgb, #000 22%, transparent); animation: fade-in 200ms ease both; }
-    .sheet {
-      position: fixed;
-      left: 10px;
-      right: 10px;
-      bottom: calc(10px + var(--sab));
-      z-index: 71;
-      padding: 10px 22px 26px;
-      border-radius: 30px;
-      animation: sheet-up 340ms cubic-bezier(.2, .9, .25, 1) both;
-    }
-    .sheet[hidden], .sheet-scrim[hidden] { display: none; }
-    .sheet:focus { outline: none; }
-    .sheet-grip { width: 36px; height: 4px; margin: 0 auto 18px; border-radius: 2px; background: color-mix(in srgb, var(--text) 22%, transparent); }
-    @keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } }
-    @keyframes fade-in { from { opacity: 0; } }
-    .rank-sheet { display: grid; gap: 10px; }
+    .lg-button:active, .duo-button:active { scale: .97; }
+    .lg-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+    .lg-button .tile-dot { position: absolute; top: 14px; right: 22px; width: 7px; height: 7px; color: var(--red-ink); }
+    .lg-link { min-height: 48px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; cursor: pointer; }
+    .rank-sheet { display: grid; gap: 10px; margin-top: 14px; }
     .rank-sheet .rank-head { gap: 12px; }
-    .rank-sheet .rank-name { font-size: 20px; font-weight: 500; }
+    .rank-sheet .rank-name { font-size: 22px; font-weight: 400; }
     .rank-sheet .rank-pts { font-family: var(--num-font); font-weight: 400; color: var(--muted); }
     .rank-sheet .rank-badge { rotate: 0deg; }
-    .rank-sheet .rank-bar { height: 4px; background: color-mix(in srgb, var(--text) 10%, transparent); }
-    .rank-sheet .rank-line { margin: 0; font-size: 14px; line-height: 1.5; }
-    @media (prefers-reduced-motion: reduce) { .sheet, .sheet-scrim { animation: none; } }
+    .rank-sheet .rank-bar { height: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); }
+    .rank-sheet .rank-bar i { background: var(--text) !important; }
+    .rank-sheet .rank-line { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .progress-fill { background-image: none !important; background-color: var(--text) !important; }
+
 
     /* 举重若轻 (2026-11-08): type is big and light, never heavy. Display numbers and the
        greeting are thin at a large size; words, rows and buttons are medium; nothing is bold. */
@@ -3690,33 +3651,47 @@
           <div class="home-hello"><small id="homeDate"></small><b id="homeGreet"></b></div>
           <div class="home-streak" id="homeStreak" role="img"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3c1 3.4 5.5 5.2 5.5 10.3a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.8 2.4-4.9.2 1.8 1 2.9 2.1 3.2-.3-3.3.3-6.2 1-8.6z" fill="currentColor"/></svg><b id="homeStreakN">0</b></div>
         </header>
+        <!-- Everything on Home lives in one glass card: swipe left and right between today,
+             the library, the rank and settings. One page, one button. -->
         <div class="home-stage" id="tiles">
-          <div class="goal glass">
-            <span class="goal-kicker" id="todayTitle"></span>
-            <span class="goal-num"><b id="goNum"></b><span id="goUnit"></span></span>
-            <span class="goal-bar" aria-hidden="true"><i id="goBar"></i></span>
-            <span class="goal-meta" id="todaySub"></span>
-            <span class="goal-meta" id="goColours"></span>
+          <div class="deck glass">
+            <div class="deck-track" id="deckTrack">
+              <section class="page" aria-roledescription="page">
+                <span class="goal-kicker" id="todayTitle"></span>
+                <span class="goal-num"><b id="goNum"></b><span id="goUnit"></span></span>
+                <span class="goal-bar" aria-hidden="true"><i id="goBar"></i></span>
+                <span class="goal-meta" id="todaySub"></span>
+                <span class="goal-meta" id="goColours"></span>
+                <button class="lg-button" type="button" id="homeGo"><span id="goLabel"></span></button>
+              </section>
+              <section class="page" aria-roledescription="page">
+                <span class="goal-kicker" data-zh="词库" data-en="Library">词库</span>
+                <span class="page-title" id="bookTitle"></span>
+                <span class="goal-num"><b id="bookNum"></b><span id="bookUnit"></span></span>
+                <span class="goal-meta" id="bookSub"></span>
+                <span class="page-actions">
+                  <button class="lg-button" type="button" id="homeBook" data-zh="打开词库" data-en="Open library">打开词库</button>
+                  <button class="lg-link" type="button" id="homeAdd" data-zh="加词" data-en="Add words">加词</button>
+                </span>
+              </section>
+              <section class="page" aria-roledescription="page" id="rankPage" hidden>
+                <span class="goal-kicker" data-zh="段位" data-en="Rank">段位</span>
+                <div class="rank-sheet" id="homeRank" hidden>
+                  <div class="rank-head"><span class="rank-badge" id="rankBadge" aria-hidden="true"></span><span class="rank-name" id="rankName"></span><span class="rank-pts" id="rankPts"></span></div>
+                  <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
+                  <p class="rank-line" id="rankLine"></p>
+                  <p class="rank-line" id="rankChallenge"></p>
+                  <p class="rank-line" id="rankStop"></p>
+                </div>
+              </section>
+              <section class="page" aria-roledescription="page">
+                <span class="goal-kicker" data-zh="设置" data-en="Settings">设置</span>
+                <span class="page-title" data-zh="目标 · 提醒 · 外观" data-en="Goal · reminders · look">目标 · 提醒 · 外观</span>
+                <button class="lg-button" type="button" id="homeSet"><span data-zh="打开设置" data-en="Open settings">打开设置</span><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
+              </section>
+            </div>
           </div>
-        </div>
-        <button class="home-cta" type="button" id="homeGo"><span id="goLabel"></span></button>
-        <nav class="dock glass" aria-label="更多" data-en-aria="More" data-zh-aria="更多">
-          <button type="button" id="homeBook"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span data-zh="词库" data-en="Library">词库</span><span class="sr-only"><span id="bookTitle"></span><span id="bookNum"></span><span id="bookUnit"></span><span id="bookSub"></span></span></button>
-          <button type="button" id="homeAdd"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-zh="加词" data-en="Add">加词</span></button>
-          <button type="button" id="homeRankBtn" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3.2l7.6 4.4v8.8L12 20.8l-7.6-4.4V7.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="homeRankLabel" data-zh="段位" data-en="Rank">段位</span></button>
-          <button type="button" id="homeSet"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-zh="设置" data-en="Settings">设置</span><span class="tile-dot" id="homeSetDot" hidden><span class="sr-only" data-en="New version available" data-zh="有新版本">有新版本</span></span></button>
-        </nav>
-        <!-- Card rank: against your own last three weeks only (js/habit.js rank()); a glass sheet on demand. -->
-        <div class="sheet-scrim" id="rankScrim" hidden></div>
-        <div class="sheet glass" id="rankSheet" role="dialog" aria-modal="true" aria-labelledby="rankName" hidden>
-          <div class="sheet-grip" aria-hidden="true"></div>
-          <div class="rank-sheet" id="homeRank" hidden>
-            <div class="rank-head"><span class="rank-badge" id="rankBadge" aria-hidden="true"></span><span class="rank-name" id="rankName"></span><span class="rank-pts" id="rankPts"></span></div>
-            <div class="rank-bar" id="rankBar" aria-hidden="true"><i id="rankFill"></i></div>
-            <p class="rank-line" id="rankLine"></p>
-            <p class="rank-line" id="rankChallenge"></p>
-            <p class="rank-line" id="rankStop"></p>
-          </div>
+          <div class="deck-dots" id="deckDots" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -5656,7 +5631,7 @@
       const name = currentLang === "zh" ? route.zh : route.en;
       const head = document.getElementById("setColoursHead"), sub = document.getElementById("setColoursSub");
       head.style.setProperty("--grad", `linear-gradient(90deg, ${WordSnapRoutes.stops(route.hues, k, light ? "text" : "textDark")})`);
-      head.classList.toggle("full", !miss);
+      head.classList.remove("full");
       head.textContent = miss ? t("colours.some", { k, route: name }) : t("colours.full", { route: name });
       sub.textContent = miss
         ? t("colours.someSub", { m: miss, lost: WordSnapRoutes.N_COLOURS - k, best: state.levelBestStreak || 0 })
@@ -5695,8 +5670,7 @@
 
     // The lane: one continuous gradient through the colours earned so far.
     function laneGradient() {
-      if (!(state.completedThisRun > 0)) return "none";
-      return `linear-gradient(90deg, ${WordSnapRoutes.stops(levelRoute().hues, levelColours(state.roundComplete), isLight() ? "bar" : "barDark")})`;
+      return "none"; // the lane is plain ink; the colours live on the cards, the sky and the end ring
     }
 
     // ---- 全屏彩: the colours earned fill the screen behind everything ----
@@ -6508,10 +6482,7 @@
         return;
       }
       els.comboLabel.dataset.tier = tier.name;
-      if (state.levelRoute) {
-        const hue = state.levelRoute.hues[levelColours() - 1];
-        els.comboLabel.style.color = WordSnapRoutes.colourOf(hue, isLight() ? "text" : "textDark");
-      }
+
       els.comboLabel.innerHTML = `<b data-combo-n></b><span>${escapeHtml(t("fx.comboWord"))}</span>`;
       const n = els.comboLabel.querySelector("[data-combo-n]");
       n.dataset.rollText = String(Math.max(0, streak - 1));
@@ -9812,7 +9783,7 @@
       els.homeGo.setAttribute("aria-label", [title, num && !full ? `${num} ${unit}` : "", sub, btn].filter(Boolean).join(". "));
       const today = todayColours(), hues = WordSnapRoutes.todayHues(today);
       homeProgress = full ? 1 : pct / 100;
-      els.goBar.style.backgroundImage = hues.length ? `linear-gradient(90deg, ${WordSnapRoutes.stops(hues, hues.length, isLight() ? "bar" : "barDark")})` : "";
+
       const goColours = document.getElementById("goColours");
       goColours.textContent = hues.length ? t(today.sets.length === 1 ? "colours.todayOne" : "colours.today", { s: today.sets.length, c: hues.length }) : "";
       goColours.hidden = !hues.length;
@@ -9990,14 +9961,16 @@
     els.homeBook.addEventListener("click", () => tapTile(els.homeBook, () => openLibrary()));
     els.homeAdd.addEventListener("click", () => tapTile(els.homeAdd, () => openLibrary("add")));
     els.homeSet.addEventListener("click", () => tapTile(els.homeSet, () => openSettings()));
-    // The rank waits behind the dock: a glass sheet slides up when asked for.
-    (() => {
-      const btn = document.getElementById("homeRankBtn"), sheet = document.getElementById("rankSheet"), scrim = document.getElementById("rankScrim");
-      const close = () => { sheet.hidden = true; scrim.hidden = true; btn.focus(); };
-      btn.addEventListener("click", () => { feel("tap"); sheet.hidden = false; scrim.hidden = false; sheet.setAttribute("tabindex", "-1"); sheet.focus(); });
-      scrim.addEventListener("click", close);
-      sheet.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
-    })();
+    // Home's one card: native swipe (scroll snap); the dots follow the page in view.
+    function paintDeckDots() {
+      const track = document.getElementById("deckTrack"), dots = document.getElementById("deckDots");
+      if (!track || !dots) return;
+      const pages = [...track.children].filter(p => !p.hidden);
+      const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      dots.innerHTML = pages.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("");
+    }
+    document.getElementById("deckTrack").addEventListener("scroll", () => requestAnimationFrame(paintDeckDots), { passive: true });
+    paintDeckDots();
 
     /** Android back (MainActivity asks this): true when the app handled it, false to leave the app. */
     window.wordSnapBack = function () {
@@ -10105,7 +10078,8 @@
       const box = document.getElementById("homeRank");
       if (!box) return;
       box.hidden = isTrial() || !state.words.length || needsSetup;
-      document.getElementById("homeRankBtn").hidden = box.hidden;
+      document.getElementById("rankPage").hidden = box.hidden;
+      paintDeckDots();
       if (box.hidden) return;
       const r = WordSnapHabit.rank(habit);
       const top = r.tier === r.ranks - 1;
@@ -10129,7 +10103,6 @@
       const stop = WordSnapHabit.nextStop(streakNow);
       document.getElementById("rankStop").textContent = !streakNow ? t("rank.stopFirst") : stop ? t("rank.stop", stop) : "";
       box.setAttribute("aria-label", t("rank.aria", { name, p: r.pts, target: r.target }));
-      document.getElementById("homeRankLabel").textContent = name;
       box.setAttribute("role", "group");
     }
 
